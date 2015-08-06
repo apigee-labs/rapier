@@ -1,0 +1,85 @@
+patterns:
+    link_style: simple-property
+    path_selector_style: path-parameter
+    collection_style: simple-object
+    versioning_strategy: no-versioning
+    security_method: 
+        oauth2-bearer-token:
+            header: Authorization
+    selfLink_property: selfLink
+    type_property: type
+    id_property: id
+entities:
+    PropertyTracker:
+        well_known_URL: /
+        query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner]
+        relationships:
+            dogs:
+                type: "#/entities/Dog"
+                multiplicity: 0:n
+                read_only: true
+            bicycles:
+                type: "#/entities/Bicycle"
+                multiplicity: 0:n
+                read_only: true
+            people:
+                type: "#/entities/Person"
+                multiplicity: 0:n
+                read_only: true
+            institutions:
+                type: "#/entities/Institution"
+                multiplicity: 0:n
+                read_only: true
+    Dog:
+        properties:
+            name:
+                type: string
+            birth_date:
+                type: string
+            fur_color:
+                type: string
+        relationships:
+            owner:
+                type:
+                    - "#/entities/Person"
+                    - "#/entities/Institution"
+                multiplicity: 0:1
+    Bicycle:
+        properties:
+            name:
+                type: string
+            purchase_date:
+                type: string
+            paint_color: 
+                type: string
+        relationships:
+            owner:
+                type:
+                    - "#/entities/Person"
+                    - "#/entities/Institution"
+    Person:
+        properties:
+            name:
+                type: string
+            birth-date:
+                type: string
+        relationships:
+            possessions:
+                read_only: true
+                type:
+                    - "#/entities/Dog"
+                    - "#/entities/Bicycle"
+                multiplicity: 0:n
+    Institution:
+        properties:
+            name:
+                type: string
+            birth-date:
+                type: string
+        relationships:
+            assets:
+                read_only: true
+                type:
+                    - "#/entities/Dog"
+                    - "#/entities/Bicycle"
+                multiplicity: 0:n
