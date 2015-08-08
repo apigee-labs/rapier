@@ -2,21 +2,25 @@ import yaml, sys
 
 class Swagger_generator(object):
 
-    swagger = dict()
-    interfaces = dict()
-    paths = dict()
-    definitions = dict()
+    def __init__(self):
+        self.swagger = {
+            'swagger': '2.0'
+            }
+        self.paths = dict()
+        self.definitions = self.build_standard_definitions()
+        self.swagger['definitions'] = self.definitions
+        self.responses = self.build_standard_responses()
+        self.collection_get = self.build_collection_get()
     
     def swagger_from_chutzpah(self, filename):
         with open(filename) as f:
            spec = yaml.load(f.read())
            patterns = spec.get('patterns')
+           self.swagger['info'] = spec['info'].copy()
     
            if 'entities' in spec:
                entities = spec['entities']
                self.swagger['definitions'] = self.definitions
-               self.definitions['ErrorResponse'] = self.build_error_definition()
-               self.definitions['Collection'] = self.build_collection_definition()
                for entity_name, entity_spec in entities.iteritems():
                    definition = {}
                    self.definitions[entity_name] = definition
@@ -25,6 +29,9 @@ class Swagger_generator(object):
                for entity_name, entity_spec in entities.iteritems():
                    if 'query_paths' in entity_spec:
                        query_paths = entity_spec['query_paths'][:]
+                       if 'well_known_URL' in entity_spec:
+                           paths = self.swagger.setdefault('paths', self.paths)
+                           paths[entity_spec['well_known_URL']] = self.build_entity_interface([[None, None, entity_name, entity_spec]])
                        if 'relationships' in entity_spec:
                            definition = self.definitions[entity_name]
                            properties = definition.setdefault('properties',dict())
@@ -33,22 +40,15 @@ class Swagger_generator(object):
                                properties[rel_name] = rel_def
                                rel_def['type'] = 'string'
                                if 'well_known_URL' in entity_spec:
-                                   paths = self.swagger.setdefault('paths', self.paths)
-                                   paths[entity_spec['well_known_URL']] = self.get_entity_interface(entity_name)
-                                   self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, [[rel_name, rel_spec, None, None]])
+                                   rel_tuples = [[rel_name, rel_spec, None, None]]
+                                   self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_tuples)
                        if len(query_paths) > 0:
                            for query_path in query_paths:
                                print 'query path not valid or listed more than once: %s' % query_path
                            return 'Error'
                                        
            return self.swagger
-           
-    def build_error_definition(self):
-        return {'required': ['message'], 'properties': {'message': {'type': 'string'}}}
-    
-    def build_collection_definition(self):
-        return {'required': ['selfLink', 'id', 'type'], 'properties': {'selfLink': {'type': 'string'}, 'id': {'type': 'string'}, 'type': {'type': 'string'}}}
-        
+                
     def add_query_paths(self, well_known_URL, query_paths, chutzpah_spec, rel_tuples):
         rel_tuple = rel_tuples[-1]
         rel_spec = rel_tuple[1]
@@ -80,38 +80,108 @@ class Swagger_generator(object):
         path = '/'.join([self.path_segment(rel_tuple) for rel_tuple in rel_tuples])
         sep = '' if well_known_URL.endswith('/') else '/'
         abs_path = sep.join((well_known_URL, path))
-        path_spec = self.get_entity_interface(rel_tuples[-1][2])
+        path_spec = self.build_entity_interface(rel_tuples)
         self.paths[abs_path] = path_spec
         if multivalued:
             path = '/'.join([self.path_segment(rel_tuple, inx==len(rel_tuples)-1) for inx, rel_tuple in enumerate(rel_tuples)])
             sep = '' if well_known_URL.endswith('/') else '/'
             abs_path = sep.join((well_known_URL, path))
-            path_spec = self.get_relationship_interface(rel_tuples[-1][0])
+            path_spec = self.build_relationship_interface(rel_tuples)
             self.paths[abs_path] = path_spec
             
-    def get_entity_interface(self, entity_name):
-        if entity_name in self.interfaces:
-            return self.interfaces[entity_name]
-        else:
-            self.interfaces[entity_name] = self.build_entity_interface(entity_name)
-            return self.interfaces[entity_name]
-
-    def build_entity_interface(self, entity_name):
-        path_spec = {'get': {'responses': {'200': {'schema': self.definitions[entity_name]}, 
-                                       'default': {'schema': self.definitions['ErrorResponse']}}}}
+    def build_entity_interface(self, rel_tuples):
+        entity_name = rel_tuples[-1][2]
+        entity_spec = rel_tuples[-1][3]
+        response_200 = {
+            'description': 'successful',
+            'schema': self.definitions[entity_name],
+            'headers': {
+                'Content-Location': {
+                    'type': 'string',
+                    'description': 'perma-link URL of resource'
+                    },
+                'ETag': {
+                    'description': 'this value must be echoed in the If-Match header of every PATCH',
+                    'type': 'string'
+                    }
+                }
+            }
+        path_spec = {
+            'get': {
+                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'responses': {
+                    '200': response_200, 
+                    '400': self.responses['400'],
+                    '401': self.responses['401'], 
+                    '403': self.responses['403'], 
+                    '404': self.responses['404'], 
+                    '406': self.responses['406'], 
+                    'default': self.responses['default']
+                    }
+                }
+            }
+        read_only = 'well_known_URL' in entity_spec
+        if not read_only:
+            path_spec['patch']= {
+                'description': 'Update %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'responses': { 
+                    '200': response_200, 
+                    '400': self.responses['400'],
+                    '401': self.responses['401'], 
+                    '403': self.responses['403'], 
+                    '404': self.responses['404'], 
+                    '406': self.responses['406'], 
+                    '409': self.responses['409'],
+                    'default': self.responses['default']
+                    }
+                }
+            path_spec['delete'] = {
+                'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'responses': {
+                    '200': response_200, 
+                    '400': self.responses['400'],
+                    '401': self.responses['401'], 
+                    '403': self.responses['403'], 
+                    '404': self.responses['404'], 
+                    '406': self.responses['406'], 
+                    'default': self.responses['default']
+                    }
+                }
+        if rel_tuples[-1][0]:
+            parameters = self.build_parameters(rel_tuples)
+            if parameters:
+                path_spec['parameters'] = parameters
         return path_spec
     
-    def get_relationship_interface(self, relationship_name):
-        relationship_name = 'Collection'
-        if relationship_name in self.interfaces:
-            return self.interfaces[relationship_name]
-        else:
-            self.interfaces[relationship_name] = self.build_relationship_interface(relationship_name)
-            return self.interfaces[relationship_name]
-
-    def build_relationship_interface(self, relationship_name):
-        path_spec = {'get': {'responses': {'200': {'schema': self.definitions['Collection']}, 
-                                       'default': {'schema': self.definitions['ErrorResponse']}}}}
+    def build_relationship_interface(self, rel_tuples):
+        relationship_name = rel_tuples[-1][0]
+        entity_name = rel_tuples[-1][2]
+        path_spec = {
+            'get': self.collection_get,
+            'post': {
+                'responses': {
+                    '201': {
+                        'description': 'Create a new %s' % entity_name,
+                        'schema': self.definitions[entity_name],
+                        'headers': {
+                            'Location': {
+                                'type': 'string',
+                                'description': 'perma-link URL of newly-created %s'  % entity_name
+                                }
+                            }
+                        }, 
+                    '400': self.responses['400'],
+                    '401': self.responses['401'], 
+                    '403': self.responses['403'], 
+                    '404': self.responses['404'], 
+                    '406': self.responses['406'], 
+                    'default': self.responses['default']
+                    }                
+                }
+            }
+        parameters = self.build_parameters(rel_tuples[:-1]) 
+        if parameters:
+            path_spec['parameters'] = parameters
         return path_spec
     
     def path_segment(self, rel_tuple, allow_multivalued = False):
@@ -124,10 +194,128 @@ class Swagger_generator(object):
             multiplicity = rel_spec.get('multiplicity')
             dereference_multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
         return '%s;{%s_id}' % (rel_name, entity_name) if dereference_multivalued else rel_name
+        
+    def build_parameters(self, rel_tuples):
+        result = []
+        for rel_tuple in rel_tuples:
+            rel_name = rel_tuple[0]
+            rel_spec = rel_tuple[1]
+            entity_name = rel_tuple[2]
+            multiplicity = rel_spec.get('multiplicity')
+            multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
+            if multivalued:
+                result.append( {
+                    'name': '%s_id' % entity_name,
+                    'in': 'path',
+                    'type': 'string',
+                    'description': "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name),
+                    'required': True
+                    } )
+        return result
+          
+    def build_standard_responses(self):
+        return {
+            '303': {
+                'description': 'See other. Server is redirecting client to a different resource',
+                'headers': {
+                    'Location': {
+                        'type': 'string',
+                        'description': 'URL of other resource'
+                        }
+                    }
+                },
+            '400': {
+                'description': 'Bad Request. Client request in error',
+                'schema': self.definitions['ErrorResponse']
+                },
+            '401': {
+                'description': 'Unauthorized. Client authentication token missing from request',
+                'schema': self.definitions['ErrorResponse']
+                }, 
+            '403': {
+                'description': 'Forbidden. Client authentication token does not permit this method on this resource',
+                'schema': self.definitions['ErrorResponse']
+                }, 
+            '404': {
+                'description': 'Not Found. Resource not found',
+                'schema': self.definitions['ErrorResponse']
+                }, 
+            '406': {
+                'description': 'Not Acceptable. Requested media type not availalble',
+                'schema': self.definitions['ErrorResponse']
+                }, 
+            '409': {
+                'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
+                'schema': self.definitions['ErrorResponse']
+                }, 
+            'default': {
+                'description': '5xx errors and other stuff',
+                'schema': self.definitions['ErrorResponse']
+                }
+            }
+        
+    def build_collection_get(self):
+        return {
+            'responses': {
+                '200': {
+                    'description': 'description',
+                    'schema': self.definitions['Collection'],
+                    'headers': {
+                        'Content-Location': {
+                            'type': 'string',
+                            'description': 'perma-link URL of collection'
+                            }
+                        }
+                    }, 
+                '303': self.responses['403'],
+                '400': self.responses['400'],
+                '401': self.responses['401'], 
+                '403': self.responses['403'], 
+                '404': self.responses['404'], 
+                '406': self.responses['406'], 
+                'default': self.responses['default']
+                }
+            }
+ 
+    def build_standard_definitions(self):
+        return {
+            'ErrorResponse': build_error_definition(),
+            'Collection': build_collection_definition()
+            }
+    
+def build_error_definition():
+    return {
+        'required': ['message'], 
+        'properties': {
+            'message': {
+                'type': 'string'
+                }
+            }
+        }
+
+def build_collection_definition():
+    return {
+        'required': ['selfLink', 'id', 'type'], 
+        'properties': {
+            'selfLink': {
+                'type': 'string'
+                }, 
+            'id': {
+                'type': 'string'
+                }, 
+            'type': {
+                'type': 'string'
+                },
+            'contents_type': {
+                'type': 'string'
+                }
+            }
+        }
+   
 
 def main(args):
     generator = Swagger_generator()
-    print yaml.dump(generator.swagger_from_chutzpah(*args[1:]))
+    print yaml.dump(generator.swagger_from_chutzpah(*args[1:]), default_flow_style=False)
         
 if __name__ == "__main__":
     main(sys.argv)

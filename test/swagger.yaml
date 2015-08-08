@@ -1,0 +1,477 @@
+definitions:
+  Bicycle: &id010
+    properties:
+      name:
+        type: string
+      paint_color:
+        type: string
+      purchase_date:
+        type: string
+  Collection: &id003
+    properties:
+      contents_type:
+        type: string
+      id:
+        type: string
+      selfLink:
+        type: string
+      type:
+        type: string
+    required:
+    - selfLink
+    - id
+    - type
+  Dog: &id016
+    properties:
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      name:
+        type: string
+  ErrorResponse: &id002
+    properties:
+      message:
+        type: string
+    required:
+    - message
+  Institution: &id019
+    properties:
+      birth-date:
+        type: string
+      name:
+        type: string
+  Person: &id012
+    properties:
+      birth-date:
+        type: string
+      name:
+        type: string
+  PropertyTracker: &id001
+    properties:
+      bicycles:
+        type: string
+      dogs:
+        type: string
+      institutions:
+        type: string
+      people:
+        type: string
+info:
+  title: PropertyTracker
+  version: '0.1'
+paths:
+  /:
+    get:
+      description: Retrieve a PropertyTracker
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id001
+        '400': &id005
+          description: Bad Request. Client request in error
+          schema: *id002
+        '401': &id006
+          description: Unauthorized. Client authentication token missing from request
+          schema: *id002
+        '403': &id004
+          description: Forbidden. Client authentication token does not permit this
+            method on this resource
+          schema: *id002
+        '404': &id007
+          description: Not Found. Resource not found
+          schema: *id002
+        '406': &id008
+          description: Not Acceptable. Requested media type not availalble
+          schema: *id002
+        default: &id009
+          description: 5xx errors and other stuff
+          schema: *id002
+  /bicycles:
+    get: &id015
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema: *id003
+        '303': *id004
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    post:
+      responses:
+        '201':
+          description: Create a new Bicycle
+          headers:
+            Location:
+              description: perma-link URL of newly-created Bicycle
+              type: string
+          schema: *id010
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+  /bicycles;{Bicycle_id}:
+    delete:
+      description: Delete a Bicycle
+      responses:
+        '200': &id011
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id010
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve a Bicycle
+      responses:
+        '200': *id011
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Bicycle' entity from multi-valued relationship
+        'bicycles'
+      in: path
+      name: Bicycle_id
+      required: true
+      type: string
+    patch:
+      description: Update a Bicycle
+      responses:
+        '200': *id011
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': &id014
+          description: Conflict. Value provided in If-Match header does not match
+            current ETag value of resource
+          schema: *id002
+        default: *id009
+  /bicycles;{Bicycle_id}/owner:
+    delete:
+      description: Delete a Person
+      responses:
+        '200': &id013
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id012
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve a Person
+      responses:
+        '200': *id013
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Bicycle' entity from multi-valued relationship
+        'bicycles'
+      in: path
+      name: Bicycle_id
+      required: true
+      type: string
+    patch:
+      description: Update a Person
+      responses:
+        '200': *id013
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': *id014
+        default: *id009
+  /dogs:
+    get: *id015
+    post:
+      responses:
+        '201':
+          description: Create a new Dog
+          headers:
+            Location:
+              description: perma-link URL of newly-created Dog
+              type: string
+          schema: *id016
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+  /dogs;{Dog_id}:
+    delete:
+      description: Delete a Dog
+      responses:
+        '200': &id017
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id016
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve a Dog
+      responses:
+        '200': *id017
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+      in: path
+      name: Dog_id
+      required: true
+      type: string
+    patch:
+      description: Update a Dog
+      responses:
+        '200': *id017
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': *id014
+        default: *id009
+  /dogs;{Dog_id}/owner:
+    delete:
+      description: Delete a Person
+      responses:
+        '200': &id018
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id012
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve a Person
+      responses:
+        '200': *id018
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+      in: path
+      name: Dog_id
+      required: true
+      type: string
+    patch:
+      description: Update a Person
+      responses:
+        '200': *id018
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': *id014
+        default: *id009
+  /institutions:
+    get: *id015
+    post:
+      responses:
+        '201':
+          description: Create a new Institution
+          headers:
+            Location:
+              description: perma-link URL of newly-created Institution
+              type: string
+          schema: *id019
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+  /institutions;{Institution_id}:
+    delete:
+      description: Delete an Institution
+      responses:
+        '200': &id020
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id019
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve an Institution
+      responses:
+        '200': *id020
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Institution' entity from multi-valued relationship
+        'institutions'
+      in: path
+      name: Institution_id
+      required: true
+      type: string
+    patch:
+      description: Update an Institution
+      responses:
+        '200': *id020
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': *id014
+        default: *id009
+  /people:
+    get: *id015
+    post:
+      responses:
+        '201':
+          description: Create a new Person
+          headers:
+            Location:
+              description: perma-link URL of newly-created Person
+              type: string
+          schema: *id012
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+  /people;{Person_id}:
+    delete:
+      description: Delete a Person
+      responses:
+        '200': &id021
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema: *id012
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    get:
+      description: Retrieve a Person
+      responses:
+        '200': *id021
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        default: *id009
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person_id
+      required: true
+      type: string
+    patch:
+      description: Update a Person
+      responses:
+        '200': *id021
+        '400': *id005
+        '401': *id006
+        '403': *id004
+        '404': *id007
+        '406': *id008
+        '409': *id014
+        default: *id009
+swagger: '2.0'
+
