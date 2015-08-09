@@ -15,59 +15,81 @@ class Swagger_generator(object):
         self.swagger['parameters'] = self.header_parameters
         self.collection_get = self.build_collection_get()
     
-    def swagger_from_substance(self, filename):
+    def swagger_from_apier(self, filename):
         with open(filename) as f:
-           spec = yaml.load(f.read())
-           patterns = spec.get('patterns')
-           self.swagger['info'] = spec['info'].copy()
-    
-           if 'entities' in spec:
-               entities = spec['entities']
-               self.swagger['definitions'] = self.definitions
-               for entity_name, entity_spec in entities.iteritems():
-                   definition = {}
-                   self.definitions[entity_name] = definition
-                   if 'properties' in entity_spec:
-                       definition['properties'] = entity_spec['properties'].copy()
-               for entity_name, entity_spec in entities.iteritems():
-                   if 'query_paths' in entity_spec:
-                       query_paths = entity_spec['query_paths'][:]
-                       if 'well_known_URL' in entity_spec:
-                           paths = self.swagger.setdefault('paths', self.paths)
-                           paths[entity_spec['well_known_URL']] = self.build_entity_interface([[None, None, entity_name, entity_spec]])
-                       if 'relationships' in entity_spec:
-                           definition = self.definitions[entity_name]
-                           properties = definition.setdefault('properties',dict())
-                           for rel_name, rel_spec in entity_spec['relationships'].iteritems():
-                               rel_def = {}
-                               properties[rel_name] = rel_def
-                               rel_def['type'] = 'string'
-                               if 'well_known_URL' in entity_spec:
-                                   rel_tuples = [[rel_name, rel_spec, None, None]]
-                                   self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_tuples)
-                       if len(query_paths) > 0:
-                           for query_path in query_paths:
-                               print 'query path not valid or listed more than once: %s' % query_path
-                           return 'Error'
-                                       
-           return self.swagger
-                
-    def add_query_paths(self, well_known_URL, query_paths, substance_spec, rel_tuples):
+            spec = yaml.load(f.read())
+            patterns = spec.get('patterns')
+            self.swagger['info'] = spec['info'].copy()
+            
+            if 'entities' in spec:
+                entities = spec['entities']
+                self.swagger['definitions'] = self.definitions
+                for entity_name, entity_spec in entities.iteritems():
+                    definition = {}
+                    self.definitions[entity_name] = definition
+                    if 'properties' in entity_spec:
+                        definition['properties'] = entity_spec['properties'].copy()
+                for entity_name, entity_spec in entities.iteritems():
+                    if 'well_known_URL' in entity_spec:
+                        paths = self.swagger.setdefault('paths', self.paths)
+                        paths[entity_spec['well_known_URL']] = self.build_entity_interface([[None, None, entity_name, entity_spec]])
+                    else:
+                        if 'query_paths' in entity_spec:
+                            print 'error: query_path may only be set if well_known_URL is also set'
+                            return None
+                    relationship_property_specs = self.get_relationship_property_specs(spec, entity_name)
+                    if len(relationship_property_specs) > 0:
+                        definition = self.definitions[entity_name]
+                        properties = definition.setdefault('properties',dict())
+                        for rel_name in relationship_property_specs.iterkeys():
+                            properties[rel_name] = {'type': 'string'}
+                    if 'query_paths' in entity_spec:
+                        query_paths = entity_spec['query_paths'][:]
+                        for rel_name, rel_spec in relationship_property_specs.iteritems():
+                            if 'well_known_URL' in entity_spec:
+                                rel_tuples = [[rel_name, rel_spec, None, None]]
+                                self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_tuples)
+                        if len(query_paths) > 0:
+                            for query_path in query_paths:
+                                print 'query path not valid or listed more than once: %s' % query_path
+                            return 'Error'                                     
+            return self.swagger
+ 
+    def get_relationship_property_specs(self, spec, entity_name):
+        result = {}
+        def add_type(one_end, other_end):
+            if 'property' in one_end:
+                property_name = one_end['property']
+                if property_name not in result:
+                    result[property_name] = {
+                        'multiplicity': one_end['multiplicity'], 
+                        'source_entity': one_end['entity'],
+                        'target_entities': [other_end['entity']]
+                        }
+                else:
+                    result[property_name]['target_entities'].append(other_end['entity'])
+           
+        if 'relationships' in spec:
+            relationships = spec['relationships']
+            for relationship in relationships.itervalues():
+                if relationship['one_end']['entity'] == entity_name:
+                    add_type(relationship['one_end'], relationship['other_end'])
+                elif relationship['other_end']['entity'] == entity_name:
+                    add_type(relationship['other_end'], relationship['one_end'])
+        return result
+        
+    def add_query_paths(self, well_known_URL, query_paths, apier_spec, rel_tuples):
         rel_tuple = rel_tuples[-1]
         rel_spec = rel_tuple[1]
-        type_refs = rel_spec['type'] if isinstance(rel_spec['type'], list) else [rel_spec['type']]
-        for type_ref in type_refs:
-            ref_parts = type_ref.split('/')
-            entity = substance_spec
-            for ref_part in ref_parts[1:]:
-                entity = entity[ref_part]
-            rel_tuple[2] = ref_part
-            rel_tuple[3] = entity
-            if 'relationships' in entity:
-                for rel_name, rel_spec in entity['relationships'].iteritems():
-                    if len([rel_tuple for rel_tuple in rel_tuples if rel_tuple[1] is rel_spec]) == 0:
-                        rel_tuples.append([rel_name, rel_spec, None, None])
-                        self.add_query_paths(well_known_URL, query_paths, substance_spec, rel_tuples)
+        for target_entity_name in rel_spec['target_entities']:
+            entity_spec = apier_spec['entities'][target_entity_name]
+            rel_tuple[2] = target_entity_name
+            rel_tuple[3] = entity_spec
+            relationship_property_specs = self.get_relationship_property_specs(apier_spec, target_entity_name)
+            for rel_name, rel_spec in relationship_property_specs.iteritems():
+                if rel_spec not in [rel_tuple[1] for rel_tuple in rel_tuples]:
+                    rel_tuples.append([rel_name, rel_spec, None, None])
+                    self.add_query_paths(well_known_URL, query_paths, apier_spec, rel_tuples)
             rel_path = '/'.join([rel_tuple[0] for rel_tuple in rel_tuples])
             if rel_path in query_paths:
                 self.emit_query_path(well_known_URL, rel_tuples)
@@ -341,7 +363,7 @@ def build_collection_definition():
 
 def main(args):
     generator = Swagger_generator()
-    print yaml.dump(generator.swagger_from_substance(*args[1:]), default_flow_style=False)
+    print yaml.dump(generator.swagger_from_apier(*args[1:]), default_flow_style=False)
         
 if __name__ == "__main__":
     main(sys.argv)

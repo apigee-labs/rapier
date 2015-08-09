@@ -16,23 +16,6 @@ entities:
     PropertyTracker:
         well_known_URL: /
         query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner]
-        relationships:
-            dogs:
-                type: "#/entities/Dog"
-                multiplicity: 0:n
-                read_only: true
-            bicycles:
-                type: "#/entities/Bicycle"
-                multiplicity: 0:n
-                read_only: true
-            people:
-                type: "#/entities/Person"
-                multiplicity: 0:n
-                read_only: true
-            institutions:
-                type: "#/entities/Institution"
-                multiplicity: 0:n
-                read_only: true
     Dog:
         properties:
             name:
@@ -41,12 +24,6 @@ entities:
                 type: string
             fur_color:
                 type: string
-        relationships:
-            owner:
-                type:
-                    - "#/entities/Person"
-                    - "#/entities/Institution"
-                multiplicity: 0:1
     Bicycle:
         properties:
             name:
@@ -55,34 +32,80 @@ entities:
                 type: string
             paint_color: 
                 type: string
-        relationships:
-            owner:
-                type:
-                    - "#/entities/Person"
-                    - "#/entities/Institution"
     Person:
         properties:
             name:
                 type: string
             birth-date:
                 type: string
-        relationships:
-            possessions:
-                read_only: true
-                type:
-                    - "#/entities/Dog"
-                    - "#/entities/Bicycle"
-                multiplicity: 0:n
     Institution:
         properties:
             name:
                 type: string
             birth-date:
                 type: string
-        relationships:
-            assets:
-                read_only: true
-                type:
-                    - "#/entities/Dog"
-                    - "#/entities/Bicycle"
-                multiplicity: 0:n
+relationships:
+    tracker-to-dogs:
+        one_end:
+            entity: PropertyTracker
+            property: dogs
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+    tracker-to-people:
+        one_end:
+            entity: PropertyTracker
+            property: people
+            multiplicity: 0:n
+        other_end:
+            entity: Person
+    tracker-to-bicycles:
+        one_end:
+            entity: PropertyTracker
+            property: bicycles
+            multiplicity: 0:n
+        other_end:
+            entity: Bicycle
+    tracker-to-institutions:
+        one_end:
+            entity: PropertyTracker
+            property: institutions
+            multiplicity: 0:n
+        other_end:
+            entity: Institution
+    dogs-to-people:
+        one_end:
+            entity: Person
+            property: possessions
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1
+    dogs-to-institutions:
+        one_end:
+            entity: Institution
+            property: assets
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1
+    bicycles-to-people:
+        one_end:
+            entity: Person
+            property: possessions
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1
+    bicycles-to-institutions:
+        one_end:
+            entity: Institution
+            property: assets
+            multiplicity: 0:n
+        other_end:
+            entity: Bicycle
+            property: owner
+            multiplicity: 0:1

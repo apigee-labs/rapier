@@ -16,15 +16,6 @@ entities:
     PropertyTracker:
         well_known_URL: /
         query_paths: [dogs, people, dogs/owner, people/dogs]
-        relationships:
-            dogs:
-                type: "#/entities/Dog"
-                multiplicity: 0:n
-                read_only: true
-            people:
-                type: "#/entities/Person"
-                multiplicity: 0:n
-                read_only: true
     Dog:
         properties:
             name:
@@ -33,18 +24,33 @@ entities:
                 type: string
             fur_color:
                 type: string
-        relationships:
-            owner:
-                type: "#/entities/Person"
-                multiplicity: 0:1
-    Person:
+    Person: 
         properties:
             name:
                 type: string
             birth-date:
                 type: string
-        relationships:
-            dogs:
-                read_only: true
-                type: "#/entities/Dog"
-                multiplicity: 0:n
+relationships:
+    tracker-to-dogs:
+        one_end:
+            entity: PropertyTracker
+            property: dogs
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+    tracker-to-people:
+        one_end:
+            entity: PropertyTracker
+            property: people
+            multiplicity: 0:n
+        other_end:
+            entity: Person
+    dogs-to-people:
+        one_end:
+            entity: Person
+            property: dogs
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1

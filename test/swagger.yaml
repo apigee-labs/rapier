@@ -3,6 +3,8 @@ definitions:
     properties:
       name:
         type: string
+      owner:
+        type: string
       paint_color:
         type: string
       purchase_date:
@@ -25,12 +27,16 @@ definitions:
         type: string
       name:
         type: string
+      owner:
+        type: string
   ErrorResponse:
     properties:
       message:
         type: string
   Institution:
     properties:
+      assets:
+        type: string
       birth-date:
         type: string
       name:
@@ -40,6 +46,8 @@ definitions:
       birth-date:
         type: string
       name:
+        type: string
+      possessions:
         type: string
   PropertyTracker:
     properties:
@@ -216,7 +224,7 @@ paths:
           $ref: '#/responses/default'
   /bicycles;{Bicycle_id}/owner:
     delete:
-      description: Delete a Person
+      description: Delete an Institution
       responses:
         '200': &id002
           description: successful
@@ -229,7 +237,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Institution'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -243,7 +251,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Person
+      description: Retrieve an Institution
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -266,7 +274,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Person
+      description: Update an Institution
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -383,7 +391,7 @@ paths:
           $ref: '#/responses/default'
   /dogs;{Dog_id}/owner:
     delete:
-      description: Delete a Person
+      description: Delete an Institution
       responses:
         '200': &id005
           description: successful
@@ -396,7 +404,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Institution'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -410,7 +418,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Person
+      description: Retrieve an Institution
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -432,7 +440,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Person
+      description: Update an Institution
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
