@@ -36,10 +36,25 @@ definitions:
 info:
   title: PropertyTracker
   version: '0.1'
+parameters:
+  Accept:
+    description: specifies the requested media type - required
+    in: header
+    name: Accept
+    required: true
+    type: string
+  If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: true
+    type: string
 paths:
   /:
     get:
       description: Retrieve a PropertyTracker
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200':
           description: successful
@@ -140,6 +155,8 @@ paths:
           $ref: '#/responses/default'
     get:
       description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200': *id001
         '401':
@@ -160,6 +177,8 @@ paths:
       type: string
     patch:
       description: Update a Dog
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200': *id001
         '400':
@@ -206,6 +225,8 @@ paths:
           $ref: '#/responses/default'
     get:
       description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200': *id002
         '401':
@@ -226,6 +247,8 @@ paths:
       type: string
     patch:
       description: Update a Person
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200': *id002
         '400':
@@ -298,6 +321,8 @@ paths:
           $ref: '#/responses/default'
     get:
       description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200': *id004
         '401':
@@ -319,6 +344,8 @@ paths:
       type: string
     patch:
       description: Update a Person
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200': *id004
         '400':
@@ -398,6 +425,8 @@ paths:
           $ref: '#/responses/default'
     get:
       description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200': *id005
         '401':
@@ -424,6 +453,8 @@ paths:
       type: string
     patch:
       description: Update a Dog
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200': *id005
         '400':

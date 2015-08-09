@@ -11,6 +11,8 @@ class Swagger_generator(object):
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['responses'] = self.responses
+        self.header_parameters = self.build_standard_header_parameters()
+        self.swagger['parameters'] = self.header_parameters
         self.collection_get = self.build_collection_get()
     
     def swagger_from_chutzpah(self, filename):
@@ -110,6 +112,7 @@ class Swagger_generator(object):
         path_spec = {
             'get': {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
                     '200': response_200, 
                     '401': self.global_response_ref('401'), 
@@ -124,6 +127,7 @@ class Swagger_generator(object):
         if not read_only:
             path_spec['patch']= {
                 'description': 'Update %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'parameters': [{'$ref': '#/parameters/If-Match'}],
                 'responses': { 
                     '200': response_200, 
                     '400': self.global_response_ref('400'),
@@ -287,6 +291,24 @@ class Swagger_generator(object):
         return {
             'ErrorResponse': build_error_definition(),
             'Collection': build_collection_definition()
+            }
+            
+    def build_standard_header_parameters(self):
+        return {
+            'If-Match': {
+                'name': 'If-Match',
+                'in': 'header',
+                'type': 'string',
+                'description': 'specifies the last known ETag value of the resource being modified',
+                'required': True
+                },
+            'Accept': {
+                'name': 'Accept',
+                'in': 'header',
+                'type': 'string',
+                'description': 'specifies the requested media type - required',
+                'required': True
+                }
             }
     
 def build_error_definition():
