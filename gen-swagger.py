@@ -15,7 +15,7 @@ class Swagger_generator(object):
         self.swagger['parameters'] = self.header_parameters
         self.collection_get = self.build_collection_get()
     
-    def swagger_from_chutzpah(self, filename):
+    def swagger_from_substance(self, filename):
         with open(filename) as f:
            spec = yaml.load(f.read())
            patterns = spec.get('patterns')
@@ -52,13 +52,13 @@ class Swagger_generator(object):
                                        
            return self.swagger
                 
-    def add_query_paths(self, well_known_URL, query_paths, chutzpah_spec, rel_tuples):
+    def add_query_paths(self, well_known_URL, query_paths, substance_spec, rel_tuples):
         rel_tuple = rel_tuples[-1]
         rel_spec = rel_tuple[1]
         type_refs = rel_spec['type'] if isinstance(rel_spec['type'], list) else [rel_spec['type']]
         for type_ref in type_refs:
             ref_parts = type_ref.split('/')
-            entity = chutzpah_spec
+            entity = substance_spec
             for ref_part in ref_parts[1:]:
                 entity = entity[ref_part]
             rel_tuple[2] = ref_part
@@ -67,7 +67,7 @@ class Swagger_generator(object):
                 for rel_name, rel_spec in entity['relationships'].iteritems():
                     if len([rel_tuple for rel_tuple in rel_tuples if rel_tuple[1] is rel_spec]) == 0:
                         rel_tuples.append([rel_name, rel_spec, None, None])
-                        self.add_query_paths(well_known_URL, query_paths, chutzpah_spec, rel_tuples)
+                        self.add_query_paths(well_known_URL, query_paths, substance_spec, rel_tuples)
             rel_path = '/'.join([rel_tuple[0] for rel_tuple in rel_tuples])
             if rel_path in query_paths:
                 self.emit_query_path(well_known_URL, rel_tuples)
@@ -341,7 +341,7 @@ def build_collection_definition():
 
 def main(args):
     generator = Swagger_generator()
-    print yaml.dump(generator.swagger_from_chutzpah(*args[1:]), default_flow_style=False)
+    print yaml.dump(generator.swagger_from_substance(*args[1:]), default_flow_style=False)
         
 if __name__ == "__main__":
     main(sys.argv)
