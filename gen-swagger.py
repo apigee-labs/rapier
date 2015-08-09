@@ -10,6 +10,7 @@ class Swagger_generator(object):
         self.definitions = self.build_standard_definitions()
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
+        self.swagger['responses'] = self.responses
         self.collection_get = self.build_collection_get()
     
     def swagger_from_chutzpah(self, filename):
@@ -94,7 +95,7 @@ class Swagger_generator(object):
         entity_spec = rel_tuples[-1][3]
         response_200 = {
             'description': 'successful',
-            'schema': self.definitions[entity_name],
+            'schema': self.global_definition_ref(entity_name),
             'headers': {
                 'Content-Location': {
                     'type': 'string',
@@ -111,12 +112,11 @@ class Swagger_generator(object):
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
                     '200': response_200, 
-                    '400': self.responses['400'],
-                    '401': self.responses['401'], 
-                    '403': self.responses['403'], 
-                    '404': self.responses['404'], 
-                    '406': self.responses['406'], 
-                    'default': self.responses['default']
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    '406': self.global_response_ref('406'), 
+                    'default': self.global_response_ref('default')
                     }
                 }
             }
@@ -126,25 +126,25 @@ class Swagger_generator(object):
                 'description': 'Update %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': { 
                     '200': response_200, 
-                    '400': self.responses['400'],
-                    '401': self.responses['401'], 
-                    '403': self.responses['403'], 
-                    '404': self.responses['404'], 
-                    '406': self.responses['406'], 
-                    '409': self.responses['409'],
-                    'default': self.responses['default']
+                    '400': self.global_response_ref('400'),
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    '406': self.global_response_ref('406'), 
+                    '409': self.global_response_ref('409'),
+                    'default': self.global_response_ref('default')
                     }
                 }
             path_spec['delete'] = {
                 'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
                     '200': response_200, 
-                    '400': self.responses['400'],
-                    '401': self.responses['401'], 
-                    '403': self.responses['403'], 
-                    '404': self.responses['404'], 
-                    '406': self.responses['406'], 
-                    'default': self.responses['default']
+                    '400': self.global_response_ref('400'),
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    '406': self.global_response_ref('406'), 
+                    'default': self.global_response_ref('default')
                     }
                 }
         if rel_tuples[-1][0]:
@@ -162,7 +162,7 @@ class Swagger_generator(object):
                 'responses': {
                     '201': {
                         'description': 'Create a new %s' % entity_name,
-                        'schema': self.definitions[entity_name],
+                        'schema': self.global_definition_ref(entity_name),
                         'headers': {
                             'Location': {
                                 'type': 'string',
@@ -170,12 +170,13 @@ class Swagger_generator(object):
                                 }
                             }
                         }, 
-                    '400': self.responses['400'],
-                    '401': self.responses['401'], 
-                    '403': self.responses['403'], 
-                    '404': self.responses['404'], 
-                    '406': self.responses['406'], 
-                    'default': self.responses['default']
+                    '303': self.global_response_ref('303'),
+                    '400': self.global_response_ref('400'),
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    '406': self.global_response_ref('406'), 
+                    'default': self.global_response_ref('default')
                     }                
                 }
             }
@@ -183,6 +184,12 @@ class Swagger_generator(object):
         if parameters:
             path_spec['parameters'] = parameters
         return path_spec
+
+    def global_response_ref(self, key):
+        return {'$ref': '#/responses/%s' % key}
+    
+    def global_definition_ref(self, key):
+        return {'$ref': '#/definitions/%s' % key}
     
     def path_segment(self, rel_tuple, allow_multivalued = False):
         rel_name = rel_tuple[0]
@@ -226,31 +233,31 @@ class Swagger_generator(object):
                 },
             '400': {
                 'description': 'Bad Request. Client request in error',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 },
             '401': {
                 'description': 'Unauthorized. Client authentication token missing from request',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '403': {
                 'description': 'Forbidden. Client authentication token does not permit this method on this resource',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '404': {
                 'description': 'Not Found. Resource not found',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '406': {
                 'description': 'Not Acceptable. Requested media type not availalble',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '409': {
                 'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             'default': {
                 'description': '5xx errors and other stuff',
-                'schema': self.definitions['ErrorResponse']
+                'schema': self.global_definition_ref('ErrorResponse')
                 }
             }
         
@@ -259,7 +266,7 @@ class Swagger_generator(object):
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': self.definitions['Collection'],
+                    'schema': self.global_definition_ref('Collection'),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
@@ -267,13 +274,12 @@ class Swagger_generator(object):
                             }
                         }
                     }, 
-                '303': self.responses['403'],
-                '400': self.responses['400'],
-                '401': self.responses['401'], 
-                '403': self.responses['403'], 
-                '404': self.responses['404'], 
-                '406': self.responses['406'], 
-                'default': self.responses['default']
+                '303': self.global_response_ref('403'),
+                '401': self.global_response_ref('401'), 
+                '403': self.global_response_ref('403'), 
+                '404': self.global_response_ref('404'), 
+                '406': self.global_response_ref('406'), 
+                'default': self.global_response_ref('default')
                 }
             }
  
