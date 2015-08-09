@@ -9,10 +9,6 @@ definitions:
         type: string
       type:
         type: string
-    required:
-    - selfLink
-    - id
-    - type
   Dog:
     properties:
       birth_date:
@@ -25,8 +21,6 @@ definitions:
     properties:
       message:
         type: string
-    required:
-    - message
   Person:
     properties:
       birth-date:
@@ -59,8 +53,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/PropertyTracker'
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -84,8 +76,6 @@ paths:
             $ref: '#/definitions/Collection'
         '303':
           $ref: '#/responses/403'
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -152,8 +142,6 @@ paths:
       description: Retrieve a Dog
       responses:
         '200': *id001
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -220,8 +208,6 @@ paths:
       description: Retrieve a Person
       responses:
         '200': *id002
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -314,8 +300,6 @@ paths:
       description: Retrieve a Person
       responses:
         '200': *id004
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -416,8 +400,6 @@ paths:
       description: Retrieve a Dog
       responses:
         '200': *id005
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':

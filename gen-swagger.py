@@ -291,7 +291,6 @@ class Swagger_generator(object):
     
 def build_error_definition():
     return {
-        'required': ['message'], 
         'properties': {
             'message': {
                 'type': 'string'
@@ -301,7 +300,6 @@ def build_error_definition():
 
 def build_collection_definition():
     return {
-        'required': ['selfLink', 'id', 'type'], 
         'properties': {
             'selfLink': {
                 'type': 'string'
