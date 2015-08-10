@@ -107,7 +107,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
  resource appearing in the relationships section.
  
  You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
- and you can DELETE itesm to remove them. You can also performa GET on `http://example.org/items/yyyyy`, which will yield:
+ and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
  
     {
      'self_link': 'http://example.org/items/yyyyy',
