@@ -18,21 +18,36 @@ definitions:
       id: *id001
       name:
         type: string
+      owner:
+        type: string
       selfLink: *id002
       type: *id003
-  DogTracker:
+  Dog_tracker:
     properties:
       dogs:
         type: string
       id: *id001
+      people:
+        type: string
       selfLink: *id002
       type: *id003
   ErrorResponse:
     properties:
       message:
         type: string
+  Person:
+    properties:
+      birth-date:
+        type: string
+      dogs:
+        type: string
+      id: *id001
+      name:
+        type: string
+      selfLink: *id002
+      type: *id003
 info:
-  title: PropertyTracker
+  title: Dog_tracker
   version: '0.1'
 parameters:
   Accept:
@@ -48,9 +63,9 @@ parameters:
     required: true
     type: string
 paths:
-  /:
+  /dog-tracker:
     get:
-      description: Retrieve a DogTracker
+      description: Retrieve a Dog_tracker
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -65,7 +80,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/Dog_tracker'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -77,7 +92,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a DogTracker
+      description: Update a Dog_tracker
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -96,8 +111,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dogs:
-    get:
+  /dog-tracker/dogs:
+    get: &id007
       responses:
         '200':
           description: description
@@ -120,9 +135,10 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
+      description: Create a new Dog
       responses:
         '201':
-          description: Create a new Dog
+          description: Created new Dog
           headers:
             Location:
               description: perma-link URL of newly-created Dog
@@ -143,7 +159,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dogs/{Dog_id}:
+  /dog-tracker/dogs;{Dog_id}:
     delete:
       description: Delete a Dog
       responses:
@@ -211,6 +227,208 @@ paths:
           $ref: '#/responses/406'
         '409':
           $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /dog-tracker/dogs;{Dog_id}/owner:
+    delete:
+      description: Delete a Person
+      responses:
+        '200': &id006
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id006
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+      in: path
+      name: Dog_id
+      required: true
+      type: string
+    patch:
+      description: Update a Person
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id006
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /dog-tracker/people:
+    get: *id007
+    post:
+      description: Create a new Person
+      responses:
+        '201':
+          description: Created new Person
+          headers:
+            Location:
+              description: perma-link URL of newly-created Person
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /dog-tracker/people;{Person_id}:
+    delete:
+      description: Delete a Person
+      responses:
+        '200': &id008
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id008
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person_id
+      required: true
+      type: string
+    patch:
+      description: Update a Person
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id008
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /dog-tracker/people;{Person_id}/dogs:
+    get: *id007
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person_id
+      required: true
+      type: string
+    post:
+      description: Create a new Dog
+      responses:
+        '201':
+          description: Created new Dog
+          headers:
+            Location:
+              description: perma-link URL of newly-created Dog
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
 responses:

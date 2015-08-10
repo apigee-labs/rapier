@@ -69,16 +69,16 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
             other_end:
                 entity: Item
                 
-This API defines a single resource at the URL `to-dos` whose type is `To_do_list`. In the relationships section, you can see that `To_do_list` has a property
-called `items` that represents a multi-valued relationship to the items of the list. The value of the `items` property with be a URL that points to a Collection
-resource that contains information on each item of the `To_do_list`. The `To_do_list` at `/to-dos` will actually look like this:
+This API defines a single resource at the URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
+called `items` that represents a multi-valued relationship to the items of the list. The value of the `items` property will be a URL that points to a Collection
+resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
     {'selfLink': 'http://example.org/message',
      'type': 'To_do_list',
      'items': 'http://example.org/xxxxx'
     }
     
-The Collection at `http://example.org/to-dos` will look like this:
+In JSON, the Collection at `http://example.org/to-dos` will look like this:
 
     {'selfLink': 'http://example.org/xxxxx',
      'type': 'Collection',
@@ -93,9 +93,75 @@ The Collection at `http://example.org/to-dos` will look like this:
       ]
     }
  
- The API does not specify what `xxxx` will look like, but we know from the `query_paths` property of the API specification that `http://example.org/to-dos/items` 
- is a valid URL with the same meaning as `http://example.org/xxxxx`, so it would not be surprising if `xxxxx` was in fact `to-dos/items`.
+ The API does not specify what the string `xxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
+ is a valid URL with the same meaning as `http://example.org/xxxxx`. It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
+ the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the resource appearing in the relationahips section.
  
  You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, and you can DELETE itesm to remove them.
  
- If you want to see the genenrated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
+ If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
+ 
+ Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
+ 
+    info:
+        title: Dog_tracker
+        version: "0.1"
+    conventions:
+        selector_location: path-parameter
+    entities:
+        Dog_tracker:
+            well_known_URLs: /dog-tracker
+            query_paths: [dogs, people, dogs/owner, people/dogs]
+        Dog:
+            properties:
+                name:
+                    type: string
+                birth_date:
+                    type: string
+                fur_color:
+                    type: string
+        Person:
+            properties:
+                name:
+                    type: string
+                birth-date:
+                    type: string
+    relationships:
+        tracker-to-dogs:
+            one_end:
+                entity: Dog_tracker
+                property: dogs
+                multiplicity: 0:n
+            other_end:
+                entity: Dog
+        tracker-to-people:
+            one_end:
+                entity: Dog_tracker
+                property: people
+                multiplicity: 0:n
+            other_end:
+                entity: Person
+        dogs-to-people:
+            one_end:
+                entity: Person
+                property: dogs
+                multiplicity: 0:n
+            other_end:
+                entity: Dog
+                property: owner
+                multiplicity: 0:1
+                
+This API defines a single resource at the URL `/dog-tracker` whose type is `To_do_list`. In the relationships section, you can see that each `Dog_tracker` has properties
+called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
+resource that contains information on each Dog or Property. You can POST to either of these collections to create new \[records for\] Dogs or Persons. From the `query_paths` 
+property of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
+
+The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The 'owner' property is settable on each Dog - this is in fact
+the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the owner may be set. If a Dog is POSTed to the `dogs` Collection of a specific
+Person, the server will set the owner appropriately.
+
+If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
+
+Our last example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution. People and Institutions can own Bicycles as well as Dogs.
+The [source for this example is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/property-tracker.yaml). 
+This example strains the expressive power of Swagger - for completeness we include a generated [Swagger document here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-property-tracker.yaml).

@@ -191,9 +191,10 @@ class Swagger_generator(object):
         path_spec = {
             'get': self.global_collection_get(),
             'post': {
+                'description': 'Create a new %s' % entity_name,
                 'responses': {
                     '201': {
-                        'description': 'Create a new %s' % entity_name,
+                        'description': 'Created new %s' % entity_name,
                         'schema': self.global_definition_ref(entity_name),
                         'headers': {
                             'Location': {

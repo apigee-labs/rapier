@@ -1,10 +1,12 @@
 info:
-    title: PropertyTracker
+    title: Dog_tracker
     version: "0.1"
+conventions:
+    selector_location: path-parameter
 entities:
-    DogTracker:
-        well_known_URLs: /
-        query_paths: [dogs]
+    Dog_tracker:
+        well_known_URLs: /dog-tracker
+        query_paths: [dogs, people, dogs/owner, people/dogs]
     Dog:
         properties:
             name:
@@ -13,11 +15,33 @@ entities:
                 type: string
             fur_color:
                 type: string
+    Person:
+        properties:
+            name:
+                type: string
+            birth-date:
+                type: string
 relationships:
     tracker-to-dogs:
         one_end:
-            entity: DogTracker
+            entity: Dog_tracker
             property: dogs
             multiplicity: 0:n
         other_end:
             entity: Dog
+    tracker-to-people:
+        one_end:
+            entity: Dog_tracker
+            property: people
+            multiplicity: 0:n
+        other_end:
+            entity: Person
+    dogs-to-people:
+        one_end:
+            entity: Person
+            property: dogs
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1
