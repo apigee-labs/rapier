@@ -556,6 +556,39 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
+  /institutions;{Institution_id}/assets:
+    get: *id003
+    parameters:
+    - description: Specifies which 'Institution' entity from multi-valued relationship
+        'institutions'
+      in: path
+      name: Institution_id
+      required: true
+      type: string
+    post:
+      responses:
+        '201':
+          description: Create a new Dog
+          headers:
+            Location:
+              description: perma-link URL of newly-created Dog
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
   /people:
     get: *id003
     post:
@@ -651,6 +684,39 @@ paths:
           $ref: '#/responses/406'
         '409':
           $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /people;{Person_id}/possessions:
+    get: *id003
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person_id
+      required: true
+      type: string
+    post:
+      responses:
+        '201':
+          description: Create a new Dog
+          headers:
+            Location:
+              description: perma-link URL of newly-created Dog
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
 responses:

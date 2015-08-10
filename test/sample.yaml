@@ -15,7 +15,7 @@ patterns:
 entities:
     PropertyTracker:
         well_known_URL: /
-        query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner]
+        query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner, institutions/assets, people/possessions]
     Dog:
         properties:
             name:
