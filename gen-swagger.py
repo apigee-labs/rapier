@@ -15,10 +15,10 @@ class Swagger_generator(object):
         self.swagger['parameters'] = self.header_parameters
         self.collection_get = self.build_collection_get()
     
-    def swagger_from_apier(self, filename):
+    def swagger_from_rapier(self, filename):
         with open(filename) as f:
             spec = yaml.load(f.read())
-            self.apier_spec = spec
+            self.rapier_spec = spec
             patterns = spec.get('patterns')
             self.swagger['info'] = spec['info'].copy()
             
@@ -76,15 +76,15 @@ class Swagger_generator(object):
                     add_type(relationship['other_end'], relationship['one_end'])
         return result
         
-    def add_query_paths(self, well_known_URL, query_paths, apier_spec, rel_property_spec_stack):
+    def add_query_paths(self, well_known_URL, query_paths, rapier_spec, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity = rel_property_spec['target_entity']
-        entity_spec = apier_spec['entities'][target_entity]
-        rel_property_specs = self.get_relationship_property_specs(apier_spec, target_entity)
+        entity_spec = rapier_spec['entities'][target_entity]
+        rel_property_specs = self.get_relationship_property_specs(rapier_spec, target_entity)
         for rel_spec in rel_property_specs:
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
-                self.add_query_paths(well_known_URL, query_paths, apier_spec, rel_property_spec_stack)
+                self.add_query_paths(well_known_URL, query_paths, rapier_spec, rel_property_spec_stack)
         rel_path = '/'.join([rel_property_spec['property_name'] for rel_property_spec in rel_property_spec_stack])
         if rel_path in query_paths:
             self.emit_query_path(well_known_URL, rel_property_spec_stack)
@@ -111,7 +111,7 @@ class Swagger_generator(object):
     def build_entity_interface(self, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         entity_name = rel_property_spec['target_entity']
-        entity_spec = self.apier_spec['entities'][entity_name]
+        entity_spec = self.rapier_spec['entities'][entity_name]
         response_200 = {
             'description': 'successful',
             'schema': self.global_definition_ref(entity_name),
@@ -361,7 +361,7 @@ standard_properties = {
             
 def main(args):
     generator = Swagger_generator()
-    print yaml.dump(generator.swagger_from_apier(*args[1:]), default_flow_style=False)
+    print yaml.dump(generator.swagger_from_rapier(*args[1:]), default_flow_style=False)
         
 if __name__ == "__main__":
     main(sys.argv)
