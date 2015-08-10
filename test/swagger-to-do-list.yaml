@@ -9,30 +9,28 @@ definitions:
         type: string
       type: &id003
         type: string
-  Dog:
-    properties:
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      id: *id001
-      name:
-        type: string
-      selfLink: *id002
-      type: *id003
-  DogTracker:
-    properties:
-      dogs:
-        type: string
-      id: *id001
-      selfLink: *id002
-      type: *id003
   ErrorResponse:
     properties:
       message:
         type: string
+  Item:
+    properties:
+      description:
+        type: string
+      due_date:
+        type: string
+      id: *id001
+      selfLink: *id002
+      type: *id003
+  To_do_list:
+    properties:
+      id: *id001
+      items:
+        type: string
+      selfLink: *id002
+      type: *id003
 info:
-  title: PropertyTracker
+  title: To_do_list
   version: '0.1'
 parameters:
   Accept:
@@ -50,11 +48,11 @@ parameters:
 paths:
   /:
     get:
-      description: Retrieve a DogTracker
+      description: Retrieve a To_do_list
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200':
+        '200': &id004
           description: successful
           headers:
             Content-Location:
@@ -65,7 +63,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/To_do_list'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -76,7 +74,27 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dogs:
+    patch:
+      description: Update a To_do_list
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id004
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /items:
     get:
       responses:
         '200':
@@ -102,13 +120,13 @@ paths:
     post:
       responses:
         '201':
-          description: Create a new Dog
+          description: Create a new Item
           headers:
             Location:
-              description: perma-link URL of newly-created Dog
+              description: perma-link URL of newly-created Item
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Item'
         '303':
           $ref: '#/responses/303'
         '400':
@@ -123,11 +141,11 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog_id}:
+  /items;{Item_id}:
     delete:
-      description: Delete a Dog
+      description: Delete an Item
       responses:
-        '200': &id004
+        '200': &id005
           description: successful
           headers:
             Content-Location:
@@ -138,7 +156,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Item'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -152,11 +170,11 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Dog
+      description: Retrieve an Item
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id004
+        '200': *id005
         '401':
           $ref: '#/responses/401'
         '403':
@@ -168,17 +186,17 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+    - description: Specifies which 'Item' entity from multi-valued relationship 'items'
       in: path
-      name: Dog_id
+      name: Item_id
       required: true
       type: string
     patch:
-      description: Update a Dog
+      description: Update an Item
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id004
+        '200': *id005
         '400':
           $ref: '#/responses/400'
         '401':

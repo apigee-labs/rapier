@@ -3,7 +3,7 @@ info:
     version: "0.1"
 entities:
     DogTracker:
-        well_known_URL: /
+        well_known_URLs: /
         query_paths: [dogs]
     Dog:
         properties:

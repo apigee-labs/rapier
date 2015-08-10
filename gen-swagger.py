@@ -7,13 +7,12 @@ class Swagger_generator(object):
             'swagger': '2.0'
             }
         self.paths = dict()
-        self.definitions = self.build_standard_definitions()
+        self.definitions = self.build_error_definitions()
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['responses'] = self.responses
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
-        self.collection_get = self.build_collection_get()
     
     def swagger_from_rapier(self, filename):
         with open(filename) as f:
@@ -31,9 +30,10 @@ class Swagger_generator(object):
                     definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
                     definition['properties'].update(standard_properties)
                 for entity_name, entity_spec in entities.iteritems():
-                    if 'well_known_URL' in entity_spec:
+                    if 'well_known_URLs' in entity_spec:
                         paths = self.swagger.setdefault('paths', self.paths)
-                        paths[entity_spec['well_known_URL']] = self.build_entity_interface([{'target_entity': entity_name}])
+                        for well_known_URL in entity_spec['well_known_URLs'].split():
+                            paths[well_known_URL] = self.build_entity_interface([{'target_entity': entity_name}])
                     else:
                         if 'query_paths' in entity_spec:
                             print 'error: query_path may only be set if well_known_URL is also set'
@@ -47,9 +47,13 @@ class Swagger_generator(object):
                     if 'query_paths' in entity_spec:
                         query_paths = entity_spec['query_paths'][:]
                         for rel_property_spec in rel_property_specs:
-                            if 'well_known_URL' in entity_spec:
+                            if 'well_known_URLs' in entity_spec:
                                 rel_property_spec_stack = [rel_property_spec]
-                                self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_property_spec_stack)
+                                well_known_URLs = entity_spec['well_known_URLs']
+                                if not isinstance(well_known_URLs, list):
+                                    well_known_URLs = well_known_URLs.split()
+                                for well_known_URL in well_known_URLs:
+                                    self.add_query_paths(well_known_URL, query_paths, spec, rel_property_spec_stack)
                         if len(query_paths) > 0:
                             for query_path in query_paths:
                                 print 'query path not valid or listed more than once: %s' % query_path
@@ -140,7 +144,7 @@ class Swagger_generator(object):
                     }
                 }
             }
-        read_only = 'well_known_URL' in entity_spec
+        read_only = entity_spec.get('read_only')
         if not read_only:
             path_spec['patch']= {
                 'description': 'Update %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
@@ -156,6 +160,8 @@ class Swagger_generator(object):
                     'default': self.global_response_ref('default')
                     }
                 }
+        well_known = entity_spec.get('well_known_URLs')
+        if not well_known:        
             path_spec['delete'] = {
                 'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
@@ -179,7 +185,7 @@ class Swagger_generator(object):
         relationship_name = rel_property_spec['property_name']
         entity_name = rel_property_spec['target_entity']
         path_spec = {
-            'get': self.collection_get,
+            'get': self.global_collection_get(),
             'post': {
                 'responses': {
                     '201': {
@@ -207,6 +213,11 @@ class Swagger_generator(object):
             path_spec['parameters'] = parameters
         return path_spec
 
+    def global_collection_get(self):
+        if not hasattr(self, 'collection_get'):
+            self.collection_get = self.build_collection_get()
+        return self.collection_get
+        
     def global_response_ref(self, key):
         return {'$ref': '#/responses/%s' % key}
     
@@ -282,6 +293,8 @@ class Swagger_generator(object):
             }
         
     def build_collection_get(self):
+        if 'Collection' not in self.definitions:
+            self.definitions['Collection'] = build_collection_definition()
         return {
             'responses': {
                 '200': {
@@ -303,10 +316,9 @@ class Swagger_generator(object):
                 }
             }
  
-    def build_standard_definitions(self):
+    def build_error_definitions(self):
         return {
-            'ErrorResponse': build_error_definition(),
-            'Collection': build_collection_definition()
+            'ErrorResponse': build_error_definition()
             }
             
     def build_standard_header_parameters(self):

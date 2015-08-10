@@ -1,0 +1,21 @@
+info:
+    title: To_do_list
+    version: "0.1"
+entities:
+    To_do_list:
+        well_known_URLs: /
+        query_paths: [items]
+    Item:
+        properties:
+            description:
+                type: string
+            due_date:
+                type: string
+relationships:
+    list-to-items:
+        one_end:
+            entity: To_do_list
+            property: items
+            multiplicity: 0:n
+        other_end:
+            entity: Item

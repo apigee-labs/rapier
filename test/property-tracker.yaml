@@ -1,5 +1,5 @@
 info:
-    title: PropertyTracker
+    title: Property_tracker
     version: "0.1"
 patterns:
     link_style: simple-property
@@ -13,8 +13,8 @@ patterns:
     type_property: type
     id_property: id
 entities:
-    PropertyTracker:
-        well_known_URL: /
+    Property_tracker:
+        well_known_URLs: /
         query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner, institutions/assets, people/possessions]
     Dog:
         properties:
@@ -47,28 +47,28 @@ entities:
 relationships:
     tracker-to-dogs:
         one_end:
-            entity: PropertyTracker
+            entity: Property_tracker
             property: dogs
             multiplicity: 0:n
         other_end:
             entity: Dog
     tracker-to-people:
         one_end:
-            entity: PropertyTracker
+            entity: Property_tracker
             property: people
             multiplicity: 0:n
         other_end:
             entity: Person
     tracker-to-bicycles:
         one_end:
-            entity: PropertyTracker
+            entity: Property_tracker
             property: bicycles
             multiplicity: 0:n
         other_end:
             entity: Bicycle
     tracker-to-institutions:
         one_end:
-            entity: PropertyTracker
+            entity: Property_tracker
             property: institutions
             multiplicity: 0:n
         other_end:
