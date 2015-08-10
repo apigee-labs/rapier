@@ -1,4 +1,4 @@
-Welcome to Rapier - REST APIs from Entities and Relationships.
+#Welcome to Rapier - REST APIs from Entities and Relationships.
 
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other APIs specification languages, and to
 produce specifications that describe higher quality APIs. (Following Fred Brooks, we take consistency as being the primary measure of
