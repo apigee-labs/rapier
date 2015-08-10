@@ -112,7 +112,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
     }
  
  The API does not specify what the string `xxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
- is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items' relationship. 
+ is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
  It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
  the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
  resource appearing in the relationships section.
