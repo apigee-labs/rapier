@@ -366,7 +366,7 @@ def build_collection_definition():
         }
    
 standard_properties = {
-    'selfLink': {
+    'self_link': {
         'type': 'string'
         }, 
     'id': {

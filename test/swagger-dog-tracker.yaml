@@ -5,7 +5,7 @@ definitions:
         type: string
       id: &id001
         type: string
-      selfLink: &id002
+      self_link: &id002
         type: string
       type: &id003
         type: string
@@ -20,7 +20,7 @@ definitions:
         type: string
       owner:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   Dog_tracker:
     properties:
@@ -29,7 +29,7 @@ definitions:
       id: *id001
       people:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   ErrorResponse:
     properties:
@@ -44,7 +44,7 @@ definitions:
       id: *id001
       name:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
 info:
   title: Dog_tracker

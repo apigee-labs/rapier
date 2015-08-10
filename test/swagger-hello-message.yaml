@@ -7,7 +7,7 @@ definitions:
     properties:
       id:
         type: string
-      selfLink:
+      self_link:
         type: string
       text:
         type: string

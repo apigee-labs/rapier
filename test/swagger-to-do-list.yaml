@@ -5,7 +5,7 @@ definitions:
         type: string
       id: &id001
         type: string
-      selfLink: &id002
+      self_link: &id002
         type: string
       type: &id003
         type: string
@@ -21,14 +21,14 @@ definitions:
         format: date-time
         type: string
       id: *id001
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   To_do_list:
     properties:
       id: *id001
       items:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
 info:
   title: To-do List
@@ -119,9 +119,10 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
+      description: Create a new Item
       responses:
         '201':
-          description: Create a new Item
+          description: Created new Item
           headers:
             Location:
               description: perma-link URL of newly-created Item

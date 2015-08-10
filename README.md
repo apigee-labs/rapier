@@ -1,10 +1,10 @@
 Welcome to Rapier - REST APIs from Entities and Relationships.
 
-The goals of Rapier are to allow REST APIs to be specified with 10x less effort than with other APIs specification languages, and to
+The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other APIs specification languages, and to
 produce specifications that describe much higher quality REST APIs. (Following Fred Brooks, we take consistency as being the primary measure of
 quality of an API.)
 
-Rapier takes a data-oriented approach to API design, consistent with the model of REST and the world-wide-web. If your mental model of
+Rapier takes a data-oriented approach to API design, which consistent with the model of REST and the world-wide-web. If your mental model of
 an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model.

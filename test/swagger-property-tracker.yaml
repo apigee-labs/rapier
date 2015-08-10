@@ -11,7 +11,7 @@ definitions:
         type: string
       purchase_date:
         type: string
-      selfLink: &id002
+      self_link: &id002
         type: string
       type: &id003
         type: string
@@ -20,7 +20,7 @@ definitions:
       contents_type:
         type: string
       id: *id001
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   Dog:
     properties:
@@ -33,7 +33,7 @@ definitions:
         type: string
       owner:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   ErrorResponse:
     properties:
@@ -48,7 +48,7 @@ definitions:
       id: *id001
       name:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   Person:
     properties:
@@ -59,7 +59,7 @@ definitions:
         type: string
       possessions:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
   Property_tracker:
     properties:
@@ -72,7 +72,7 @@ definitions:
         type: string
       people:
         type: string
-      selfLink: *id002
+      self_link: *id002
       type: *id003
 info:
   title: Property_tracker
@@ -163,9 +163,10 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
+      description: Create a new Bicycle
       responses:
         '201':
-          description: Create a new Bicycle
+          description: Created new Bicycle
           headers:
             Location:
               description: perma-link URL of newly-created Bicycle
@@ -331,9 +332,10 @@ paths:
   /dogs:
     get: *id007
     post:
+      description: Create a new Dog
       responses:
         '201':
-          description: Create a new Dog
+          description: Created new Dog
           headers:
             Location:
               description: perma-link URL of newly-created Dog
@@ -497,9 +499,10 @@ paths:
   /institutions:
     get: *id007
     post:
+      description: Create a new Institution
       responses:
         '201':
-          description: Create a new Institution
+          description: Created new Institution
           headers:
             Location:
               description: perma-link URL of newly-created Institution
@@ -601,9 +604,10 @@ paths:
       required: true
       type: string
     post:
+      description: Create a new Dog
       responses:
         '201':
-          description: Create a new Dog
+          description: Created new Dog
           headers:
             Location:
               description: perma-link URL of newly-created Dog
@@ -627,9 +631,10 @@ paths:
   /people:
     get: *id007
     post:
+      description: Create a new Person
       responses:
         '201':
-          description: Create a new Person
+          description: Created new Person
           headers:
             Location:
               description: perma-link URL of newly-created Person
@@ -731,9 +736,10 @@ paths:
       required: true
       type: string
     post:
+      description: Create a new Dog
       responses:
         '201':
-          description: Create a new Dog
+          description: Created new Dog
           headers:
             Location:
               description: perma-link URL of newly-created Dog
