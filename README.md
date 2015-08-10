@@ -47,10 +47,9 @@ Rapier provides a tool — gen-swagger.py — that will generate a Swagger docum
 Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger to
 understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. The Swagger
 documents may continue to be useful for integrating your API specification with tools that are Swagger-based. Swagger is also useful for
-documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. If
-you would like to see the Swagger generated for this sample, [look here:](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml).
-As you can see, our 9 lines of Rapier produced around 120 lines of Swagger - a good ratio. The Swagger is also more complex - we used both
-JSON Refs and YAML anchors and aliases to try to avoid repetition.
+documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
+[The Swagger generated for this 9-line Rapier sample](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml) contains around 120 lines, which illustrates the efficiency of Rapier. 
+The Swagger is also more complex - we used both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would have been even longer.
 
 Traditionally, the next example after 'Hello world' is 'To-do List':
 
