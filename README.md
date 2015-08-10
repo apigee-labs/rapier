@@ -23,6 +23,8 @@ SDK generators and server implementation frameworks.
 
 ## Examples
 
+### Hello World
+
 Here is a 'Hello-world' example in Rapier:
 
     info:
@@ -44,7 +46,7 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
     {'self_link': 'http://example.org/message',
      'id': '1234567',
      'type': 'Hello_message',
-     'message': 'Hello world'
+     'message': 'Hello, world'
     }
  
 Rapier provides a tool — gen-swagger.py — that will generate a Swagger document that will spell out the conventions used by Rapier for this API.
@@ -54,6 +56,8 @@ documents may continue to be useful for integrating your API specification with 
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
 The Swagger generated for this 9-line Rapier sample, [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml), contains around 120 lines, which illustrates the efficiency of Rapier. 
 The Swagger is also more complex - we used both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would have been even longer.
+
+### To-do List
 
 Traditionally, the next example after 'Hello world' is 'To-do List':
 
@@ -93,6 +97,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
 
     {'self_link': 'http://example.org/xxxxx',
      'type': 'Collection',
+     'id': '5647382',
      'contents_type': 'Item',
      'contents': [{
          'self_link': 'http://example.org/items/yyyyy',
@@ -121,6 +126,8 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
     }
  
  If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
+ 
+ ### Dog Tracker
  
  Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
  
@@ -182,6 +189,8 @@ the only way to change which Person owns a Dog. When a Dog is created by POSTing
 Person, the server will set the owner appropriately.
 
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
+
+### Property Tracker
 
 Our last example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/property-tracker.yaml). 
