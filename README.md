@@ -95,3 +95,7 @@ The Collection at `http://example.org/to-dos` will look like this:
  
  The API does not specify what `xxxx` will look like, but we know from the `query_paths` property of the API specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`, so it would not be surprising if `xxxxx` was in fact `to-dos/items`.
+ 
+ You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, and you can DELETE itesm to remove them.
+ 
+ If you want to see the genenrated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
