@@ -13,6 +13,12 @@ You define an API with Rapier by specifying in YAML the entities and relationshi
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP standard specifications, plus a few conventions 
 that we have added. In the future we will allow more options for these conventions - for now they are mostly fixed.
 
+Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that Rapier does
+and was absolutely consistent in applying them.
+
+Today, Rapier provides only a language for API specifications and a tool for generating Swagger docments from them. In the future we will work on test tools,
+SDK generators and server implementation frameworks (in that order).  
+
 Here is a 'Hello-world' example in Rapier:
 
     info:
@@ -70,7 +76,7 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
                 entity: Item
                 
 This API defines a single resource at the URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
-called `items` that represents a multi-valued relationship to the items of the list. The value of the `items` property will be a URL that points to a Collection
+called `items` that represents a multi-valued relationship to the `Items` of the list. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
     {'self_link': 'http://example.org/message',
@@ -78,7 +84,7 @@ resource that contains information on each item of the `To_do_list`. In JSON, th
      'items': 'http://example.org/xxxxx'
     }
     
-In JSON, the Collection at `http://example.org/to-dos` will look like this:
+In JSON, the Collection at `http://example.org/xxxxx` will look like this:
 
     {'self_link': 'http://example.org/xxxxx',
      'type': 'Collection',
