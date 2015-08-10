@@ -18,6 +18,7 @@ class Swagger_generator(object):
     def swagger_from_apier(self, filename):
         with open(filename) as f:
             spec = yaml.load(f.read())
+            self.apier_spec = spec
             patterns = spec.get('patterns')
             self.swagger['info'] = spec['info'].copy()
             
@@ -32,23 +33,23 @@ class Swagger_generator(object):
                 for entity_name, entity_spec in entities.iteritems():
                     if 'well_known_URL' in entity_spec:
                         paths = self.swagger.setdefault('paths', self.paths)
-                        paths[entity_spec['well_known_URL']] = self.build_entity_interface([[None, None, entity_name, entity_spec]])
+                        paths[entity_spec['well_known_URL']] = self.build_entity_interface([{'target_entity': entity_name}])
                     else:
                         if 'query_paths' in entity_spec:
                             print 'error: query_path may only be set if well_known_URL is also set'
                             return None
-                    relationship_property_specs = self.get_relationship_property_specs(spec, entity_name)
-                    if len(relationship_property_specs) > 0:
+                    rel_property_specs = self.get_relationship_property_specs(spec, entity_name)
+                    if len(rel_property_specs) > 0:
                         definition = self.definitions[entity_name]
                         properties = definition.setdefault('properties',dict())
-                        for rel_name in relationship_property_specs.iterkeys():
+                        for rel_name in {rel_property_spec['property_name'] for rel_property_spec in rel_property_specs}:
                             properties[rel_name] = {'type': 'string'}
                     if 'query_paths' in entity_spec:
                         query_paths = entity_spec['query_paths'][:]
-                        for rel_name, rel_spec in relationship_property_specs.iteritems():
+                        for rel_property_spec in rel_property_specs:
                             if 'well_known_URL' in entity_spec:
-                                rel_tuples = [[rel_name, rel_spec, None, None]]
-                                self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_tuples)
+                                rel_property_spec_stack = [rel_property_spec]
+                                self.add_query_paths(entity_spec['well_known_URL'], query_paths, spec, rel_property_spec_stack)
                         if len(query_paths) > 0:
                             for query_path in query_paths:
                                 print 'query path not valid or listed more than once: %s' % query_path
@@ -56,18 +57,15 @@ class Swagger_generator(object):
             return self.swagger
  
     def get_relationship_property_specs(self, spec, entity_name):
-        result = {}
+        result = []
         def add_type(one_end, other_end):
             if 'property' in one_end:
-                property_name = one_end['property']
-                if property_name not in result:
-                    result[property_name] = {
-                        'multiplicity': one_end['multiplicity'], 
-                        'source_entity': one_end['entity'],
-                        'target_entities': [other_end['entity']]
-                        }
-                else:
-                    result[property_name]['target_entities'].append(other_end['entity'])
+                result.append({
+                    'property_name': one_end['property'],
+                    'multiplicity': one_end['multiplicity'], 
+                    'source_entity': one_end['entity'],
+                    'target_entity': other_end['entity']
+                    })
            
         if 'relationships' in spec:
             relationships = spec['relationships']
@@ -78,45 +76,42 @@ class Swagger_generator(object):
                     add_type(relationship['other_end'], relationship['one_end'])
         return result
         
-    def add_query_paths(self, well_known_URL, query_paths, apier_spec, rel_tuples):
-        rel_tuple = rel_tuples[-1]
-        rel_spec = rel_tuple[1]
-        for target_entity_name in rel_spec['target_entities']:
-            entity_spec = apier_spec['entities'][target_entity_name]
-            rel_tuple[2] = target_entity_name
-            rel_tuple[3] = entity_spec
-            relationship_property_specs = self.get_relationship_property_specs(apier_spec, target_entity_name)
-            for rel_name, rel_spec in relationship_property_specs.iteritems():
-                if rel_spec not in [rel_tuple[1] for rel_tuple in rel_tuples]:
-                    rel_tuples.append([rel_name, rel_spec, None, None])
-                    self.add_query_paths(well_known_URL, query_paths, apier_spec, rel_tuples)
-            rel_path = '/'.join([rel_tuple[0] for rel_tuple in rel_tuples])
-            if rel_path in query_paths:
-                self.emit_query_path(well_known_URL, rel_tuples)
-                query_paths.remove(rel_path)
-        rel_tuples.pop()
+    def add_query_paths(self, well_known_URL, query_paths, apier_spec, rel_property_spec_stack):
+        rel_property_spec = rel_property_spec_stack[-1]
+        target_entity = rel_property_spec['target_entity']
+        entity_spec = apier_spec['entities'][target_entity]
+        rel_property_specs = self.get_relationship_property_specs(apier_spec, target_entity)
+        for rel_spec in rel_property_specs:
+            if rel_spec not in rel_property_spec_stack:
+                rel_property_spec_stack.append(rel_spec)
+                self.add_query_paths(well_known_URL, query_paths, apier_spec, rel_property_spec_stack)
+        rel_path = '/'.join([rel_property_spec['property_name'] for rel_property_spec in rel_property_spec_stack])
+        if rel_path in query_paths:
+            self.emit_query_path(well_known_URL, rel_property_spec_stack)
+            query_paths.remove(rel_path)
+        rel_property_spec_stack.pop()
         
-    def emit_query_path(self, well_known_URL, rel_tuples):
-        rel_tuple = rel_tuples[-1]
-        rel_spec = rel_tuple[1]
-        multiplicity = rel_spec.get('multiplicity')
+    def emit_query_path(self, well_known_URL, rel_property_spec_stack):
+        rel_property_spec = rel_property_spec_stack[-1]
+        multiplicity = rel_property_spec.get('multiplicity')
         multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
     
-        path = '/'.join([self.path_segment(rel_tuple) for rel_tuple in rel_tuples])
+        path = '/'.join([self.path_segment(rel_property_spec) for rel_property_spec in rel_property_spec_stack])
         sep = '' if well_known_URL.endswith('/') else '/'
         abs_path = sep.join((well_known_URL, path))
-        path_spec = self.build_entity_interface(rel_tuples)
+        path_spec = self.build_entity_interface(rel_property_spec_stack)
         self.paths[abs_path] = path_spec
         if multivalued:
-            path = '/'.join([self.path_segment(rel_tuple, inx==len(rel_tuples)-1) for inx, rel_tuple in enumerate(rel_tuples)])
+            path = '/'.join([self.path_segment(rel_property_spec, inx==len(rel_property_spec_stack)-1) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
             sep = '' if well_known_URL.endswith('/') else '/'
             abs_path = sep.join((well_known_URL, path))
-            path_spec = self.build_relationship_interface(rel_tuples)
+            path_spec = self.build_relationship_interface(rel_property_spec_stack)
             self.paths[abs_path] = path_spec
             
-    def build_entity_interface(self, rel_tuples):
-        entity_name = rel_tuples[-1][2]
-        entity_spec = rel_tuples[-1][3]
+    def build_entity_interface(self, rel_property_spec_stack):
+        rel_property_spec = rel_property_spec_stack[-1]
+        entity_name = rel_property_spec['target_entity']
+        entity_spec = self.apier_spec['entities'][entity_name]
         response_200 = {
             'description': 'successful',
             'schema': self.global_definition_ref(entity_name),
@@ -173,15 +168,16 @@ class Swagger_generator(object):
                     'default': self.global_response_ref('default')
                     }
                 }
-        if rel_tuples[-1][0]:
-            parameters = self.build_parameters(rel_tuples)
+        if 'property_name' in rel_property_spec:
+            parameters = self.build_parameters(rel_property_spec_stack)
             if parameters:
                 path_spec['parameters'] = parameters
         return path_spec
     
-    def build_relationship_interface(self, rel_tuples):
-        relationship_name = rel_tuples[-1][0]
-        entity_name = rel_tuples[-1][2]
+    def build_relationship_interface(self, rel_property_spec_stack):
+        rel_property_spec = rel_property_spec_stack[-1]
+        relationship_name = rel_property_spec['property_name']
+        entity_name = rel_property_spec['target_entity']
         path_spec = {
             'get': self.collection_get,
             'post': {
@@ -206,7 +202,7 @@ class Swagger_generator(object):
                     }                
                 }
             }
-        parameters = self.build_parameters(rel_tuples[:-1]) 
+        parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:
             path_spec['parameters'] = parameters
         return path_spec
@@ -217,24 +213,22 @@ class Swagger_generator(object):
     def global_definition_ref(self, key):
         return {'$ref': '#/definitions/%s' % key}
     
-    def path_segment(self, rel_tuple, allow_multivalued = False):
-        rel_name = rel_tuple[0]
-        rel_spec = rel_tuple[1]
-        entity_name = rel_tuple[2]
+    def path_segment(self, rel_property_spec, allow_multivalued = False):
+        rel_name = rel_property_spec['property_name']
+        entity_name = rel_property_spec['target_entity']
         if allow_multivalued:
             dereference_multivalued = False
         else:
-            multiplicity = rel_spec.get('multiplicity')
+            multiplicity = rel_property_spec.get('multiplicity')
             dereference_multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
         return '%s;{%s_id}' % (rel_name, entity_name) if dereference_multivalued else rel_name
         
-    def build_parameters(self, rel_tuples):
+    def build_parameters(self, rel_property_spec_stack):
         result = []
-        for rel_tuple in rel_tuples:
-            rel_name = rel_tuple[0]
-            rel_spec = rel_tuple[1]
-            entity_name = rel_tuple[2]
-            multiplicity = rel_spec.get('multiplicity')
+        for rel_property_spec in rel_property_spec_stack:
+            rel_name = rel_property_spec['property_name']
+            entity_name = rel_property_spec['target_entity']
+            multiplicity = rel_property_spec.get('multiplicity')
             multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
             if multivalued:
                 result.append( {
