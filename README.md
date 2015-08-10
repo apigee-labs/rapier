@@ -4,7 +4,7 @@ The goals of Rapier are to allow REST APIs to be specified with one tenth the ef
 produce specifications that describe much higher quality REST APIs. (Following Fred Brooks, we take consistency as being the primary measure of
 quality of an API.)
 
-Rapier takes a data-oriented approach to API design, which consistent with the model of REST and the world-wide-web. If your mental model of
+Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
 an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model.
@@ -25,7 +25,7 @@ Here is a 'Hello-world' example in Rapier:
                 text:
                     type: string
                     
-The API defined by this Rapier specification exposes a single resource whose type is `Hello-message` at the URL `/message`. This Entity has a single declared property called `text`.
+The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This Entity has a single declared property called `text`.
 The API implied by this specification does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. This is an example of the 'conventions' we mentioned. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. Rapier also assumes that the server will add
@@ -37,10 +37,10 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
     }
  
 Rapier provides a tool - gen-swagger.py - that will generate a Swagger document that will spell out the conventions used by Rapier for this API.
-Swagger cannot describe everything that is important in the API, but it is a good start. Once you have seen a few examples of the Swagger to
+Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger to
 understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. However, the Swagger
-documents may continue to be useful for integrating your API specification with tools that are Swagger-based. \[Swagger is also useful for
-documenting APIs that are less consistent than Rapier APIs, or which follow a service-oriented rather than a data-oriented design patern.\] If
+documents may continue to be useful for integrating your API specification with tools that are Swagger-based. Swagger is also useful for
+documenting APIs that are less consistent than Rapier APIs, or which follow a service-oriented rather than a data-oriented design patern. If
 you would like to see the Swagger generated for this sample, [look here:](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml).
 As you can see, our 9 lines of Rapier produced around 120 lines of Swagger - a good ratio. The Swagger is also more complex - we used both
 JSON Refs and YAML anchors and aliases to try to avoid repetition.
@@ -151,10 +151,10 @@ In JSON, the Collection at `http://example.org/to-dos` will look like this:
                 property: owner
                 multiplicity: 0:1
                 
-This API defines a single resource at the URL `/dog-tracker` whose type is `To_do_list`. In the relationships section, you can see that each `Dog_tracker` has properties
+This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
-resource that contains information on each Dog or Property. You can POST to either of these collections to create new \[records for\] Dogs or Persons. From the `query_paths` 
-property of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
+resource that contains information on each Dog or Property. You can POST to either of these collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
+properties of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
 
 The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The 'owner' property is settable on each Dog - this is in fact
 the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the owner may be set. If a Dog is POSTed to the `dogs` Collection of a specific
@@ -162,6 +162,6 @@ Person, the server will set the owner appropriately.
 
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
 
-Our last example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution. People and Institutions can own Bicycles as well as Dogs.
+Our last example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/property-tracker.yaml). 
 This example strains the expressive power of Swagger - for completeness we include a generated [Swagger document here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-property-tracker.yaml).
