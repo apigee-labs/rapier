@@ -1,5 +1,7 @@
 # Welcome to Rapier - REST APIs from Entities and Relationships.
 
+## Introduction
+
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other APIs specification languages, and to
 produce specifications that describe higher quality APIs. (Following Fred Brooks, we take consistency as being the primary measure of
 quality of an API.)
@@ -18,6 +20,8 @@ and was absolutely consistent in applying them.
 
 Today, Rapier provides only a language for API specifications and a tool for generating Swagger docments from them. In the future we intend to work on test tools,
 SDK generators and server implementation frameworks.  
+
+## Examples
 
 Here is a 'Hello-world' example in Rapier:
 
