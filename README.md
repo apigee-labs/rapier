@@ -23,6 +23,8 @@ SDK generators and server implementation frameworks.
 
 ## Examples
 
+Rapier is very easy to understand and learn. The easiest way is by example.
+
 ### Hello World
 
 Here is a 'Hello-world' example in Rapier:
