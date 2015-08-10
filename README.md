@@ -1,19 +1,19 @@
 Welcome to Rapier - REST APIs from Entities and Relationships.
 
 The goals of Rapier are to allow REST APIs to be specified with 10x less effort than with other APIs specification languages, and to
-produce specifications of much higher quality REST APIs. (Following Fred Brooks, we take consistency as being the primary measure of
+produce specifications that describe much higher quality REST APIs. (Following Fred Brooks, we take consistency as being the primary measure of
 quality of an API.)
 
 Rapier takes a data-oriented approach to API design, consistent with the model of REST and the world-wide-web. If your mental model of
 an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
-consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented view), you may find the Rapier approach does not 
+consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model.
 
-You define an API with Rapier by specifying the entities and relationships that describe the resources in YAML. The details of the API's 
-HTTP messages are deduced from this specification using the standard patterns described in the API spoecifications, plus a few conventions 
-that we have added. In the future we will allow more options in selection of conventions - for now they are fixed.
+You define an API with Rapier by specifying in YAML the entities and relationships that describe the resources of the API. The details of the API's 
+HTTP messages are deduced from this specification using the standard patterns described in the HTTP standard specifications, plus a few conventions 
+that we have added. In the future we will allow more options for these conventions - for now they are mostly fixed.
 
-Here is a 'Hello-world' example:
+Here is a 'Hello-world' example in Rapier:
 
     info:
         title: Hello message
@@ -25,7 +25,7 @@ Here is a 'Hello-world' example:
                 text:
                     type: string
                     
-This API defines a single resource at the URL `/message` whose type is `Hello-message`. This Entity has a single declared property called `text`.
+The API defined by this Rapier specification exposes a single resource whose type is `Hello-message` at the URL `/message`. This Entity has a single declared property called `text`.
 The API implied by this specification does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. This is an example of the 'conventions' we mentioned. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. Rapier also assumes that the server will add
