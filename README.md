@@ -112,7 +112,8 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
     }
  
  The API does not specify what the string `xxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
- is a valid URL with the same meaning as `http://example.org/xxxxx`. It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
+ is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items' relationship. 
+ It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
  the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
  resource appearing in the relationships section.
  
@@ -183,7 +184,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
                 
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
-resource that contains information on each Dog or Property. You can POST to either of these collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
+resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
 properties of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
 
 The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The 'owner' property is settable on each Dog - this is in fact
