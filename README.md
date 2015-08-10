@@ -34,7 +34,7 @@ Here is a 'Hello-world' example in Rapier:
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. This is an example of the 'conventions' we mentioned. Rapier also assumes that a GET response
-includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. Rapier also assumes that the server will add
+includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. In Rapier APIs, the server will add
 a few standard properties to the `Hello-message` entity. The `Hello-message` at `/message` will actually look like this:
 
     {'self_link': 'http://example.org/message',
@@ -43,9 +43,9 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
      'message': 'Hello world'
     }
  
-Rapier provides a tool - gen-swagger.py - that will generate a Swagger document that will spell out the conventions used by Rapier for this API.
+Rapier provides a tool — gen-swagger.py — that will generate a Swagger document that will spell out the conventions used by Rapier for this API.
 Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger to
-understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. However, the Swagger
+understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. The Swagger
 documents may continue to be useful for integrating your API specification with tools that are Swagger-based. Swagger is also useful for
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. If
 you would like to see the Swagger generated for this sample, [look here:](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml).
@@ -103,9 +103,19 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
  
  The API does not specify what the string `xxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`. It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
- the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the resource appearing in the relationahips section.
+ the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
+ resource appearing in the relationships section.
  
- You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, and you can DELETE itesm to remove them.
+ You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
+ and you can DELETE itesm to remove them. You can also performa GET on `http://example.org/items/yyyyy`, which will yield:
+ 
+    {
+     'self_link': 'http://example.org/items/yyyyy',
+     'id': 'yyyyy',
+     'type': 'Item'
+     'description': 'Get milk on the way home',
+     'due': '1439228983'
+    }
  
  If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
