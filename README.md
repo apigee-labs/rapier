@@ -31,7 +31,7 @@ retrieved using GET and modified using PATCH. This is an example of the 'convent
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. Rapier also assumes that the server will add
 a few standard properties to the `Hello-message` entity. The `Hello-message` at `/message` will actually look like this:
 
-    {'selfLink': 'http://example.org/message',
+    {'self_link': 'http://example.org/message',
      'type': 'Hello_message',
      'message': 'Hello world'
     }
@@ -73,18 +73,18 @@ This API defines a single resource at the URL `/to-dos` whose type is `To_do_lis
 called `items` that represents a multi-valued relationship to the items of the list. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
-    {'selfLink': 'http://example.org/message',
+    {'self_link': 'http://example.org/message',
      'type': 'To_do_list',
      'items': 'http://example.org/xxxxx'
     }
     
 In JSON, the Collection at `http://example.org/to-dos` will look like this:
 
-    {'selfLink': 'http://example.org/xxxxx',
+    {'self_link': 'http://example.org/xxxxx',
      'type': 'Collection',
      'contents_type': 'Item',
      'contents': [{
-         'selfLink': 'http://example.org/items/yyyyy',
+         'self_link': 'http://example.org/items/yyyyy',
          'id': 'yyyyy',
          'type': 'Item'
          'description': 'Get milk on the way home',
