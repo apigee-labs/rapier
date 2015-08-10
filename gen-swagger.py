@@ -28,8 +28,8 @@ class Swagger_generator(object):
                 for entity_name, entity_spec in entities.iteritems():
                     definition = {}
                     self.definitions[entity_name] = definition
-                    if 'properties' in entity_spec:
-                        definition['properties'] = entity_spec['properties'].copy()
+                    definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
+                    definition['properties'].update(standard_properties)
                 for entity_name, entity_spec in entities.iteritems():
                     if 'well_known_URL' in entity_spec:
                         paths = self.swagger.setdefault('paths', self.paths)
@@ -337,24 +337,28 @@ def build_error_definition():
         }
 
 def build_collection_definition():
-    return {
-        'properties': {
-            'selfLink': {
-                'type': 'string'
-                }, 
-            'id': {
-                'type': 'string'
-                }, 
-            'type': {
-                'type': 'string'
-                },
-            'contents_type': {
-                'type': 'string'
-                }
+    properties = {
+        'contents_type': {
+            'type': 'string'
             }
         }
+    properties.update(standard_properties)
+    return {
+        'properties': properties
+        }
    
-
+standard_properties = {
+    'selfLink': {
+        'type': 'string'
+        }, 
+    'id': {
+        'type': 'string'
+        }, 
+    'type': {
+        'type': 'string'
+        }
+    }
+            
 def main(args):
     generator = Swagger_generator()
     print yaml.dump(generator.swagger_from_apier(*args[1:]), default_flow_style=False)

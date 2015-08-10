@@ -3,11 +3,11 @@ definitions:
     properties:
       contents_type:
         type: string
-      id:
+      id: &id001
         type: string
-      selfLink:
+      selfLink: &id002
         type: string
-      type:
+      type: &id003
         type: string
   Dog:
     properties:
@@ -15,10 +15,13 @@ definitions:
         type: string
       fur_color:
         type: string
+      id: *id001
       name:
         type: string
       owner:
         type: string
+      selfLink: *id002
+      type: *id003
   ErrorResponse:
     properties:
       message:
@@ -29,14 +32,20 @@ definitions:
         type: string
       dogs:
         type: string
+      id: *id001
       name:
         type: string
+      selfLink: *id002
+      type: *id003
   PropertyTracker:
     properties:
       dogs:
         type: string
+      id: *id001
       people:
         type: string
+      selfLink: *id002
+      type: *id003
 info:
   title: PropertyTracker
   version: '0.1'
@@ -83,7 +92,7 @@ paths:
         default:
           $ref: '#/responses/default'
   /dogs:
-    get: &id003
+    get: &id006
       responses:
         '200':
           description: description
@@ -133,7 +142,7 @@ paths:
     delete:
       description: Delete a Dog
       responses:
-        '200': &id001
+        '200': &id004
           description: successful
           headers:
             Content-Location:
@@ -162,7 +171,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id001
+        '200': *id004
         '401':
           $ref: '#/responses/401'
         '403':
@@ -184,7 +193,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id001
+        '200': *id004
         '400':
           $ref: '#/responses/400'
         '401':
@@ -203,7 +212,7 @@ paths:
     delete:
       description: Delete a Person
       responses:
-        '200': &id002
+        '200': &id005
           description: successful
           headers:
             Content-Location:
@@ -232,7 +241,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id002
+        '200': *id005
         '401':
           $ref: '#/responses/401'
         '403':
@@ -254,7 +263,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id002
+        '200': *id005
         '400':
           $ref: '#/responses/400'
         '401':
@@ -270,7 +279,7 @@ paths:
         default:
           $ref: '#/responses/default'
   /people:
-    get: *id003
+    get: *id006
     post:
       responses:
         '201':
@@ -299,7 +308,7 @@ paths:
     delete:
       description: Delete a Person
       responses:
-        '200': &id004
+        '200': &id007
           description: successful
           headers:
             Content-Location:
@@ -328,7 +337,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id004
+        '200': *id007
         '401':
           $ref: '#/responses/401'
         '403':
@@ -351,7 +360,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id004
+        '200': *id007
         '400':
           $ref: '#/responses/400'
         '401':
@@ -367,7 +376,7 @@ paths:
         default:
           $ref: '#/responses/default'
   /people;{Person_id}/dogs:
-    get: *id003
+    get: *id006
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -397,82 +406,6 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-  /people;{Person_id}/dogs;{Dog_id}:
-    delete:
-      description: Delete a Dog
-      responses:
-        '200': &id005
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve a Dog
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id005
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person_id
-      required: true
-      type: string
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog_id
-      required: true
-      type: string
-    patch:
-      description: Update a Dog
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id005
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
 responses:

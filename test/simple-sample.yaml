@@ -1,17 +1,6 @@
 info:
     title: PropertyTracker
     version: "0.1"
-patterns:
-    link_style: simple-property
-    path_selector_style: path-parameter
-    collection_style: simple-object
-    versioning_strategy: no-versioning
-    security_method: 
-        oauth2-bearer-token:
-            header: Authorization
-    selfLink_property: selfLink
-    type_property: type
-    id_property: id
 entities:
     PropertyTracker:
         well_known_URL: /
