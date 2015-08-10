@@ -31,13 +31,14 @@ Here is a 'Hello-world' example in Rapier:
                 text:
                     type: string
                     
-The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This Entity has a single declared property called `text`.
-The API implied by this specification does not allow this resource to be deleted, because it is well-known, but it does allow it to be
+The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
+The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. This is an example of the 'conventions' we mentioned. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. Rapier also assumes that the server will add
 a few standard properties to the `Hello-message` entity. The `Hello-message` at `/message` will actually look like this:
 
     {'self_link': 'http://example.org/message',
+     'id': '1234567',
      'type': 'Hello_message',
      'message': 'Hello world'
     }
@@ -46,7 +47,7 @@ Rapier provides a tool - gen-swagger.py - that will generate a Swagger document 
 Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger to
 understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. However, the Swagger
 documents may continue to be useful for integrating your API specification with tools that are Swagger-based. Swagger is also useful for
-documenting APIs that are less consistent than Rapier APIs, or which follow a service-oriented rather than a data-oriented design patern. If
+documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. If
 you would like to see the Swagger generated for this sample, [look here:](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml).
 As you can see, our 9 lines of Rapier produced around 120 lines of Swagger - a good ratio. The Swagger is also more complex - we used both
 JSON Refs and YAML anchors and aliases to try to avoid repetition.
@@ -80,6 +81,7 @@ called `items` that represents a multi-valued relationship to the `Items` of the
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
     {'self_link': 'http://example.org/message',
+     'id': '987655443',
      'type': 'To_do_list',
      'items': 'http://example.org/xxxxx'
     }
