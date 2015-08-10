@@ -17,7 +17,8 @@ definitions:
     properties:
       description:
         type: string
-      due_date:
+      due:
+        format: date-time
         type: string
       id: *id001
       selfLink: *id002
@@ -30,7 +31,7 @@ definitions:
       selfLink: *id002
       type: *id003
 info:
-  title: To_do_list
+  title: To-do List
   version: '0.1'
 parameters:
   Accept:
@@ -46,7 +47,7 @@ parameters:
     required: true
     type: string
 paths:
-  /:
+  /to-dos:
     get:
       description: Retrieve a To_do_list
       parameters:
@@ -94,7 +95,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /items:
+  /to-dos/items:
     get:
       responses:
         '200':
@@ -141,7 +142,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /items;{Item_id}:
+  /to-dos/items/{Item_id}:
     delete:
       description: Delete an Item
       responses:

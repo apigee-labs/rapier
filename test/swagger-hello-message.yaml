@@ -3,7 +3,7 @@ definitions:
     properties:
       message:
         type: string
-  Hello-message:
+  Hello_message:
     properties:
       id:
         type: string
@@ -30,9 +30,9 @@ parameters:
     required: true
     type: string
 paths:
-  /:
+  /message:
     get:
-      description: Retrieve a Hello-message
+      description: Retrieve a Hello_message
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -47,7 +47,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Hello-message'
+            $ref: '#/definitions/Hello_message'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -59,7 +59,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Hello-message
+      description: Update a Hello_message
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

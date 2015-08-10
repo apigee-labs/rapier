@@ -18,6 +18,10 @@ class Swagger_generator(object):
         with open(filename) as f:
             spec = yaml.load(f.read())
             self.rapier_spec = spec
+            self.selector_location = spec['conventions']['selector_location'] if 'conventions' in spec and 'selector_location' in spec['conventions'] else 'path-segment'
+            if not self.selector_location in ['path-segment', 'path-parameter']:
+                print 'error: invalid value for selector_location: %s' % self.selector_location
+                return None
             patterns = spec.get('patterns')
             self.swagger['info'] = spec['info'].copy()
             
@@ -232,7 +236,8 @@ class Swagger_generator(object):
         else:
             multiplicity = rel_property_spec.get('multiplicity')
             dereference_multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
-        return '%s;{%s_id}' % (rel_name, entity_name) if dereference_multivalued else rel_name
+        pattern = '%s;{%s_id}' if self.selector_location == 'path-parameter' else '%s/{%s_id}'
+        return pattern % (rel_name, entity_name) if dereference_multivalued else rel_name
         
     def build_parameters(self, rel_property_spec_stack):
         result = []

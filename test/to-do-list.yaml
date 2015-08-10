@@ -1,16 +1,17 @@
 info:
-    title: To_do_list
+    title: To-do List
     version: "0.1"
 entities:
     To_do_list:
-        well_known_URLs: /
+        well_known_URLs: /to-dos
         query_paths: [items]
     Item:
         properties:
             description:
                 type: string
-            due_date:
+            due:
                 type: string
+                format: date-time
 relationships:
     list-to-items:
         one_end:

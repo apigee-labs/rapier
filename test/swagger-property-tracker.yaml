@@ -186,7 +186,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle_id}:
+  /bicycles/{Bicycle_id}:
     delete:
       description: Delete a Bicycle
       responses:
@@ -257,7 +257,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle_id}/owner:
+  /bicycles/{Bicycle_id}/owner:
     delete:
       description: Delete an Institution
       responses:
@@ -354,7 +354,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog_id}:
+  /dogs/{Dog_id}:
     delete:
       description: Delete a Dog
       responses:
@@ -424,7 +424,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog_id}/owner:
+  /dogs/{Dog_id}/owner:
     delete:
       description: Delete an Institution
       responses:
@@ -520,7 +520,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /institutions;{Institution_id}:
+  /institutions/{Institution_id}:
     delete:
       description: Delete an Institution
       responses:
@@ -591,7 +591,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /institutions;{Institution_id}/assets:
+  /institutions/{Institution_id}/assets:
     get: *id007
     parameters:
     - description: Specifies which 'Institution' entity from multi-valued relationship
@@ -650,7 +650,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /people;{Person_id}:
+  /people/{Person_id}:
     delete:
       description: Delete a Person
       responses:
@@ -721,7 +721,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /people;{Person_id}/possessions:
+  /people/{Person_id}/possessions:
     get: *id007
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship

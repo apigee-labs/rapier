@@ -2,8 +2,8 @@ info:
     title: Hello message
     version: "0.1"
 entities:
-    Hello-message:
-        well_known_URLs: /
+    Hello_message:
+        well_known_URLs: /message
         properties:
             text:
                 type: string
