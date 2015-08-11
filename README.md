@@ -133,9 +133,9 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
  
  If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
- ### Dog Tracker
+### Dog Tracker
  
- Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
+Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
  
     info:
         title: Dog_tracker
