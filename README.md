@@ -129,7 +129,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
  
  URLs matching the URL template `http://example.org/todos/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
  the API will support an extra segment that is used to select a particular resource from the multi-valued collection. (An option allows the selector value to be in a path parameter instead of 
- a path segment - see the last example). 
+ a path segment - see the 'Property Tracker' example). 
  
  If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
