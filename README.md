@@ -190,9 +190,9 @@ called `dogs` and `people` that point to the Dogs and Persons that are tracked. 
 resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
 properties of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
 
-The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The 'owner' property is settable on each Dog - this is in fact
-the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the owner may be set. If a Dog is POSTed to the `dogs` Collection of a specific
-Person, the server will set the owner appropriately.
+The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The `owner` property is settable on each Dog - this is in fact
+the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set. If a Dog is POSTed to the `dogs` Collection of a specific
+Person, the server will set the `owner` property appropriately.
 
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
 
