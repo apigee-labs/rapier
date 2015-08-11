@@ -31,7 +31,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: To-do List
+  title: To-do List API
   version: '0.1'
 parameters:
   Accept:

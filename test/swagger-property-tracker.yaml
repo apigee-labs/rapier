@@ -75,7 +75,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: Property_tracker
+  title: Property-tracker API
   version: '0.1'
 parameters:
   Accept:

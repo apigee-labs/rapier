@@ -1,5 +1,5 @@
 info:
-    title: Dog_tracker
+    title: Dog-Tracker API
     version: "0.1"
 conventions:
     selector_location: path-parameter

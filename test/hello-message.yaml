@@ -1,5 +1,5 @@
 info:
-    title: Hello message
+    title: Hello World API
     version: "0.1"
 entities:
     Hello_message:

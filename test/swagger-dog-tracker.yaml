@@ -47,7 +47,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: Dog_tracker
+  title: Dog-Tracker API
   version: '0.1'
 parameters:
   Accept:

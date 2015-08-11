@@ -14,7 +14,7 @@ definitions:
       type:
         type: string
 info:
-  title: Hello message
+  title: Hello World API
   version: '0.1'
 parameters:
   Accept:

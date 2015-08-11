@@ -29,7 +29,7 @@ Rapier is very easy to understand and learn. The easiest way is by example.
 Here is a 'Hello-world' example in Rapier:
 
     info:
-        title: Hello message
+        title: Hello World API
         version: "0.1"
     entities:
         Hello_message:
@@ -63,7 +63,7 @@ The Swagger is also more complex - we used both JSON Refs and YAML anchors and a
 Traditionally, the next example after 'Hello world' is 'To-do List':
 
     info:
-        title: To-do List
+        title: To-do List API
         version: "0.1"
     entities:
         To_do_list:
@@ -138,7 +138,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
 Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
  
     info:
-        title: Dog_tracker
+        title: Dog-tracker API
         version: "0.1"
     conventions:
         selector_location: path-parameter

@@ -1,5 +1,5 @@
 info:
-    title: To-do List
+    title: To-do List API
     version: "0.1"
 entities:
     To_do_list:
