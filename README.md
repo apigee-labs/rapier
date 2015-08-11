@@ -8,9 +8,9 @@ produce specifications that describe higher quality APIs. \[1\]
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
 an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
-fit with your mental model. The data-oriented style and the service-oriented style have equivalant expressiveness but they look different and require you to think differently.
+fit with your mental model. The data-oriented style and the service-oriented styles have equivalant expressiveness but they look different and require you to think differently.
 
-You specify an API with Rapier by specifying in YAML the entities and relationships that describe the resources of the API. The details of the API's 
+You specify an API with Rapier by specifying, in YAML, the entities and relationships that describe the resources of the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP standard specifications, plus a few conventions 
 that we have added. In the future we will allow more options for these add-on conventions - for now they are mostly fixed.
 
@@ -51,11 +51,11 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
     }
  
 Rapier provides a tool — gen-swagger.py — that will generate a Swagger document that will spell out the conventions used by Rapier for this API.
-Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger to
-understand the conventions, you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. The Swagger
+Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger, you will
+understand the conventions and you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. The Swagger
 documents may continue to be useful for integrating your API specification with tools that are Swagger-based. Swagger is also useful for
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
-The Swagger generated for this 9-line Rapier sample, [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml), contains around 120 lines, which illustrates the efficiency of Rapier. 
+The Swagger generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). It contains around 120 lines, which illustrates the efficiency of Rapier. 
 The Swagger is also more complex - we used both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would have been even longer.
 
 ### To-do List
@@ -110,7 +110,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
       ]
     }
  
- The API does not specify what the string `xxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
+ The API does not specify what the string `xxxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
  It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
  the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
@@ -126,6 +126,10 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
      'description': 'Get milk on the way home',
      'due': '1439228983'
     }
+ 
+ URLs matching the URL template `http://example.org/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
+ the API will support an extra segment that is used to select a particular resource from the multi-valued collection. (An option allows the selector value to be in  apath paramter instead of 
+ a path segment - see the last example). 
  
  If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
