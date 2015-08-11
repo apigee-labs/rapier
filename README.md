@@ -88,7 +88,7 @@ This API defines a single resource at the URL `/to-dos` whose type is `To_do_lis
 called `items` that represents a multi-valued relationship to the `Items` of the list. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
-    {'self_link': 'http://example.org/message',
+    {'self_link': 'http://example.org/to-dos',
      'id': '987655443',
      'type': 'To_do_list',
      'items': 'http://example.org/xxxxx'
@@ -127,7 +127,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
      'due': '1439228983'
     }
  
- URLs matching the URL template `http://example.org/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
+ URLs matching the URL template `http://example.org/todos/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
  the API will support an extra segment that is used to select a particular resource from the multi-valued collection. (An option allows the selector value to be in  apath paramter instead of 
  a path segment - see the last example). 
  
