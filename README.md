@@ -40,7 +40,7 @@ Here is a 'Hello-world' example in Rapier:
                     
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH. This is an example of the 'conventions' we mentioned. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our extensions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. In Rapier APIs, the server will add
 a few standard properties to the `Hello-message` entity. The `Hello-message` at `/message` will actually look like this:
 
