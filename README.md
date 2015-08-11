@@ -4,7 +4,7 @@
 
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other APIs specification languages, and to
 produce specifications that describe higher quality APIs. (Following Fred Brooks, we take consistency as being the primary measure of
-quality of an API.)
+quality of an API.[^1](“Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict the remainder”)
 
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
 an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
