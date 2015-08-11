@@ -6,7 +6,7 @@ The goals of Rapier are to allow REST APIs to be specified with one tenth the ef
 produce specifications that describe higher quality APIs. \[1\]
 
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
-an API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
+a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model. The data-oriented style and the service-oriented styles have equivalant expressiveness but they look different and require you to think differently.
 
