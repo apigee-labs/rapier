@@ -11,7 +11,7 @@ consists of 'end-points' with 'parameters' (i.e. a more traditional service-orie
 fit with your mental model. The data-oriented and service-oriented styles have equivalent expressiveness but they look different and require you to think differently.
 
 You specify an API with Rapier by specifying, in YAML, the entities and relationships that describe the resources of the API. The details of the API's 
-HTTP messages are deduced from this specification using the standard patterns described in the HTTP standard specifications, plus a few conventions 
+HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. In the future we will allow more options for these add-on conventions - for now they are mostly fixed.
 
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that Rapier does
