@@ -114,8 +114,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
  
  The API does not specify what the string `xxxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
- Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
- resource appearing in the relationships section.
+ Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of `To_do_list` appearing in the relationships section.
  
  You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
  and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
