@@ -55,10 +55,10 @@ Swagger cannot describe everything that is important in the API, but it is a goo
 understand the conventions and you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. You can stop generating the Swagger
 documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
 people who know Swagger but not Rapier. Swagger is also useful for
-documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
-The Swagger generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
+documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design pattern. 
+The Swagger document generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
 It contains around 120 lines, which illustrates the efficiency of Rapier. 
-The Swagger is also more complex - we used both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would have been even longer.
+The Swagger document is also more complex - it contains both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would be even longer.
 
 ### To-do List
 
@@ -87,7 +87,7 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
                 entity: Item
                 
 This API defines a single resource at the URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
-called `items` that represents a multi-valued relationship to the `Items` of the list. The value of the `items` property will be a URL that points to a Collection
+called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
     {'self_link': 'http://example.org/to-dos',
@@ -96,7 +96,7 @@ resource that contains information on each item of the `To_do_list`. In JSON, th
      'items': 'http://example.org/xxxxx'
     }
     
-In JSON, the Collection at `http://example.org/xxxxx` will look like this:
+The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
     {'self_link': 'http://example.org/xxxxx',
      'type': 'Collection',
@@ -114,8 +114,7 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this:
  
  The API does not specify what the string `xxxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
- It would not be surprising if `xxxxx` was in fact `to-dos/items`, but the API does not require this and 
- the server gets to decide what `xxxxx` looks like. Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
+ Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of the 
  resource appearing in the relationships section.
  
  You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
