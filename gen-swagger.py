@@ -14,85 +14,89 @@ class Swagger_generator(object):
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.entity_specs = {}
-    
-    def swagger_from_rapier(self, filename):
+
+    def set_rapier_spec_from_filename(self, filename):
         with open(filename) as f:
-            spec = yaml.load(f.read())
-            self.rapier_spec = spec
-            self.selector_location = spec['conventions']['selector_location'] if 'conventions' in spec and 'selector_location' in spec['conventions'] else 'path-segment'
-            if not self.selector_location in ['path-segment', 'path-parameter']:
-                print 'error: invalid value for selector_location: %s' % self.selector_location
-                return None
-            patterns = spec.get('patterns')
-            self.swagger['info'] = {}
-            self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
-            self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-            if 'produces' in spec:
-                produces = spec.get('produces')
-                if isinstance(produces, basestring):
-                    produces = produces.split()
-                    self.swagger['produces'] = produces
-            else:
-                self.swagger['produces'] = ['application/json']
-            if 'consumes' in spec:
-                consumes = spec.get('consumes')
-                if isinstance(consumes, basestring):
-                    consumes = consumes.split()
-                    self.swagger['consumes'] = consumes
-            else:
-                self.swagger['consumes'] = ['application/json']
+            self.rapier_spec = yaml.load(f.read())
+            
+    def swagger_from_rapier(self, filename= None):
+        if filename:
+            self.set_rapier_spec_from_filename(filename)
+        spec = self.rapier_spec            
+        self.selector_location = spec['conventions']['selector_location'] if 'conventions' in spec and 'selector_location' in spec['conventions'] else 'path-segment'
+        if not self.selector_location in ['path-segment', 'path-parameter']:
+            print 'error: invalid value for selector_location: %s' % self.selector_location
+            return None
+        patterns = spec.get('patterns')
+        self.swagger['info'] = {}
+        self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
+        self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
+        if 'produces' in spec:
+            produces = spec.get('produces')
+            if isinstance(produces, basestring):
+                produces = produces.split()
+                self.swagger['produces'] = produces
+        else:
+            self.swagger['produces'] = ['application/json']
+        if 'consumes' in spec:
+            consumes = spec.get('consumes')
+            if isinstance(consumes, basestring):
+                consumes = consumes.split()
+                self.swagger['consumes'] = consumes
+        else:
+            self.swagger['consumes'] = ['application/json']
+            
+        if 'entities' in spec:
+            entities = spec['entities']
+            self.swagger['definitions'] = self.definitions
+            for entity_name, entity_spec in entities.iteritems():
+                definition = {}
+                self.definitions[entity_name] = definition
+                structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+                if structured:
+                    definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
+                    definition['properties'].update(standard_properties)
+                else:
+                    if 'properties' in spec:
+                        print 'error: unstructured entities must not have properties'
+                        return None
                 
-            if 'entities' in spec:
-                entities = spec['entities']
-                self.swagger['definitions'] = self.definitions
-                for entity_name, entity_spec in entities.iteritems():
-                    definition = {}
-                    self.definitions[entity_name] = definition
-                    structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
-                    if structured:
-                        definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
-                        definition['properties'].update(standard_properties)
-                    else:
-                        if 'properties' in spec:
-                            print 'error: unstructured entities must not have properties'
-                            return None
-                    
-                for entity_name, entity_spec in entities.iteritems():
-                    if 'well_known_URLs' in entity_spec:
-                        paths = self.swagger.setdefault('paths', self.paths)
-                        for well_known_URL in entity_spec['well_known_URLs'].split():
-                            paths[well_known_URL] = self.get_entity_interface([{'target_entity': entity_name}])
-                    else:
-                        if 'query_paths' in entity_spec:
-                            print 'error: query_path may only be set if well_known_URL is also set'
-                            return None
-                    rel_property_specs = self.get_relationship_property_specs(entity_name)
-                    if len(rel_property_specs) > 0:
-                        definition = self.definitions[entity_name]
-                        properties = definition.setdefault('properties',dict())
-                        structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
-                        for rel_prop_name in {rel_property_spec['property_name'] for rel_property_spec in rel_property_specs}:
-                            if not structured:
-                                rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
-                                print 'error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name)
-                                return None
-                            properties[rel_prop_name] = {'type': 'string'}
+            for entity_name, entity_spec in entities.iteritems():
+                if 'well_known_URLs' in entity_spec:
+                    paths = self.swagger.setdefault('paths', self.paths)
+                    for well_known_URL in entity_spec['well_known_URLs'].split():
+                        paths[well_known_URL] = self.get_entity_interface([{'target_entity': entity_name}])
+                else:
                     if 'query_paths' in entity_spec:
-                        query_paths = entity_spec['query_paths']
-                        query_paths = query_paths.split() if isinstance(query_paths, basestring) else query_paths[:]
-                        for rel_property_spec in rel_property_specs:
-                            if 'well_known_URLs' in entity_spec:
-                                rel_property_spec_stack = [rel_property_spec]
-                                well_known_URLs = entity_spec['well_known_URLs']
-                                if isinstance(well_known_URLs, basestring):
-                                    well_known_URLs = well_known_URLs.split()
-                                for well_known_URL in well_known_URLs:
-                                    self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
-                        if len(query_paths) > 0:
-                            for query_path in query_paths:
-                                print 'query path not valid or listed more than once: %s' % query_path
-                            return 'Error'                                     
-            return self.swagger
+                        print 'error: query_path may only be set if well_known_URL is also set'
+                        return None
+                rel_property_specs = self.get_relationship_property_specs(entity_name)
+                if len(rel_property_specs) > 0:
+                    definition = self.definitions[entity_name]
+                    properties = definition.setdefault('properties',dict())
+                    structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+                    for rel_prop_name in {rel_property_spec['property_name'] for rel_property_spec in rel_property_specs}:
+                        if not structured:
+                            rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
+                            print 'error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name)
+                            return None
+                        properties[rel_prop_name] = {'type': 'string'}
+                if 'query_paths' in entity_spec:
+                    query_paths = entity_spec['query_paths']
+                    query_paths = query_paths.split() if isinstance(query_paths, basestring) else query_paths[:]
+                    for rel_property_spec in rel_property_specs:
+                        if 'well_known_URLs' in entity_spec:
+                            rel_property_spec_stack = [rel_property_spec]
+                            well_known_URLs = entity_spec['well_known_URLs']
+                            if isinstance(well_known_URLs, basestring):
+                                well_known_URLs = well_known_URLs.split()
+                            for well_known_URL in well_known_URLs:
+                                self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
+                    if len(query_paths) > 0:
+                        for query_path in query_paths:
+                            print 'query path not valid or listed more than once: %s' % query_path
+                        return 'Error'                                     
+        return self.swagger
  
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
@@ -434,7 +438,8 @@ standard_properties = {
             
 def main(args):
     generator = Swagger_generator()
-    print yaml.dump(generator.swagger_from_rapier(*args[1:]), default_flow_style=False)
+    generator.set_rapier_spec_from_filename(*args[1:])
+    print yaml.dump(generator.swagger_from_rapier(), default_flow_style=False)
         
 if __name__ == "__main__":
     main(sys.argv)
