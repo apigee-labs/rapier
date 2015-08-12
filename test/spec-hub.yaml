@@ -16,11 +16,12 @@ entities:
         properties:
             content_type:
                 type: string
-            version_history:
-                type: array
-                items:
-                    type: string
-                    format: URL
+            content_set:
+                type: boolean
+    Spec-version:
+        properties:
+            content_type:
+                type: string
     Content:
         content_type: text
         consumes: text/yaml
@@ -51,6 +52,22 @@ relationships:
     spec-to-content:
         one_end:
             entity: Spec
+            property: content
+            multiplicity: 0:1
+        other_end:
+            entity: Content
+    spec_to_versions:
+        one_end:
+            entity: Spec
+            property: versions
+            multiplicity: 0:n
+        other_end:
+            entity: Spec-version
+            property: version_of
+            multiplicity: 0:1
+    version-to-content:
+        one_end:
+            entity: Spec-version
             property: content
             multiplicity: 0:1
         other_end:
