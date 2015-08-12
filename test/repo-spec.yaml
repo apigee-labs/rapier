@@ -12,7 +12,10 @@ entities:
         properties:
             name:
                 type: string
-    Spec: {}
+    Spec:
+        properties:
+            content_type:
+                type: string
     Content:
         content_type: text
         consumes: text/yaml

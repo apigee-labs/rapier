@@ -58,6 +58,8 @@ definitions:
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Content'
+      content_type:
+        type: string
       id: *id001
       repo:
         format: URL
