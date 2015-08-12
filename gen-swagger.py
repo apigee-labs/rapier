@@ -32,17 +32,11 @@ class Swagger_generator(object):
         self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
         if 'produces' in spec:
-            produces = spec.get('produces')
-            if isinstance(produces, basestring):
-                produces = produces.split()
-                self.swagger['produces'] = produces
+            self.swagger['produces'] = as_list(spec.get('produces'))
         else:
             self.swagger['produces'] = ['application/json']
         if 'consumes' in spec:
-            consumes = spec.get('consumes')
-            if isinstance(consumes, basestring):
-                consumes = consumes.split()
-                self.swagger['consumes'] = consumes
+            self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
             self.swagger['consumes'] = ['application/json']
             
@@ -64,7 +58,7 @@ class Swagger_generator(object):
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     paths = self.swagger.setdefault('paths', self.paths)
-                    for well_known_URL in entity_spec['well_known_URLs'].split():
+                    for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         paths[well_known_URL] = self.get_entity_interface([{'target_entity': entity_name}])
                 else:
                     if 'query_paths' in entity_spec:
@@ -82,14 +76,11 @@ class Swagger_generator(object):
                             return None
                         properties[rel_prop_name] = {'type': 'string'}
                 if 'query_paths' in entity_spec:
-                    query_paths = entity_spec['query_paths']
-                    query_paths = query_paths.split() if isinstance(query_paths, basestring) else query_paths[:]
+                    query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
                         if 'well_known_URLs' in entity_spec:
                             rel_property_spec_stack = [rel_property_spec]
-                            well_known_URLs = entity_spec['well_known_URLs']
-                            if isinstance(well_known_URLs, basestring):
-                                well_known_URLs = well_known_URLs.split()
+                            well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             for well_known_URL in well_known_URLs:
                                 self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
                     if len(query_paths) > 0:
@@ -165,9 +156,7 @@ class Swagger_generator(object):
         entity_name = rel_property_spec['target_entity']
         entity_spec = self.rapier_spec['entities'][entity_name]
         if 'consumes' in entity_spec:
-            consumes = entity_spec['consumes']
-            if isinstance(consumes, basestring):
-                consumes = consumes.split()  
+            consumes = as_list(entity_spec['consumes'])
         else:
             consumes = None                      
         structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
@@ -435,6 +424,19 @@ standard_properties = {
         'type': 'string'
         }
     }
+    
+def as_list(value, separator = None):
+    if isinstance(value, basestring):
+        if separator:
+            result = [item.strip() for item in value.split(separator)]
+        else:
+            result = value.split()
+    else:
+        if isinstance(value, (list, tuple)):
+            result = value
+        else:
+            result = [value]
+    return result
             
 def main(args):
     generator = Swagger_generator()
