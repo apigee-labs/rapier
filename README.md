@@ -53,7 +53,7 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
 Rapier provides a tool that will generate a Swagger document from a Rapier specification. The Swagger document spells out the conventions used by Rapier for this API.
 Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger, you will
 understand the conventions and you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. You can stop generating the Swagger
-documents, which are not required, or you may continue to genenrate them for integrating your API specification with tools that are Swagger-based, or for communicating with
+documents, which are not required, or you may continue to generate them for integrating your API specification with tools that are Swagger-based, or for communicating with
 people who already know Swagger, but not Rapier. Swagger is also useful for
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
 The Swagger generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
