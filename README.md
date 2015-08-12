@@ -54,7 +54,7 @@ Rapier provides a tool that will generate a Swagger document from a Rapier speci
 Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger, you will
 understand the conventions and you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. You can stop generating the Swagger
 documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
-people who already know Swagger, but not Rapier. Swagger is also useful for
+people who know Swagger but not Rapier. Swagger is also useful for
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design patern. 
 The Swagger generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
 It contains around 120 lines, which illustrates the efficiency of Rapier. 
