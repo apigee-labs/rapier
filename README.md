@@ -17,7 +17,7 @@ that we have added. In the future we will allow more options for these add-on co
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that Rapier does
 and was absolutely consistent in applying them.
 
-Today, Rapier provides only a language for API specifications and a tool for generating Swagger docments from them. In the future we intend to work on test tools,
+Today, Rapier provides a language for API specifications and a tool for generating Swagger documents from them. In the future we intend to work on test tools,
 SDK generators and server implementation frameworks.  
 
 ## Examples
