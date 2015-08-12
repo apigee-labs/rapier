@@ -1,0 +1,49 @@
+title: Spec Hub API
+version: "0.1"
+consumes: application/json
+produces: application/yaml text/yaml application/json text/html
+conventions:
+    selector_location: path-parameter
+entities:
+    Hub:
+        well_known_URLs: /
+        query_paths: [repos, specs, repos/specs, specs/repo, specs/content]
+    Repo:
+        properties:
+            name:
+                type: string
+    Spec: {}
+    Content:
+        content_type: text
+        consumes: text/yaml
+relationships:
+    hub-to-repo:
+        one_end:
+            entity: Hub
+            property: repos
+            multiplicity: 0:n
+        other_end:
+            entity: Repo
+    hub-to-spec:
+        one_end:
+            entity: Hub
+            property: specs
+            multiplicity: 0:n
+        other_end:
+            entity: Spec
+    repo-to-spec:
+        one_end:
+            entity: Repo
+            property: specs
+            multiplicity: 0:n
+        other_end:
+            entity: Spec
+            property: repo
+            multiplicity: 0:1
+    spec-to-content:
+        one_end:
+            entity: Spec
+            property: content
+            multiplicity: 0:1
+        other_end:
+            entity: Content

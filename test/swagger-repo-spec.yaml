@@ -1,0 +1,568 @@
+consumes:
+- application/json
+definitions:
+  Collection:
+    properties:
+      id: &id001
+        type: string
+      item_type:
+        type: string
+      items:
+        items:
+          type: object
+        type: array
+      self_link: &id002
+        type: string
+      type: &id003
+        type: string
+  Content: {}
+  ErrorResponse:
+    properties:
+      message:
+        type: string
+  Hub:
+    properties:
+      id: *id001
+      repos:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Repo'
+      self_link: *id002
+      specs:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Spec'
+      type: *id003
+  Repo:
+    properties:
+      id: *id001
+      name:
+        type: string
+      self_link: *id002
+      specs:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Spec'
+      type: *id003
+  Spec:
+    properties:
+      content:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Content'
+      id: *id001
+      repo:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Repo'
+      self_link: *id002
+      type: *id003
+info:
+  title: Spec Hub API
+  version: '0.1'
+parameters:
+  Accept:
+    description: specifies the requested media type - required
+    in: header
+    name: Accept
+    required: true
+    type: string
+  If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: true
+    type: string
+paths:
+  /:
+    get:
+      description: Retrieve a Hub
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': &id004
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Hub'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update a Hub
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id004
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /repos:
+    get: &id006
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/403'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Repo
+      responses:
+        '201':
+          description: Created new Repo
+          headers:
+            Location:
+              description: perma-link URL of newly-created Repo
+              type: string
+          schema:
+            $ref: '#/definitions/Repo'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /repos;{Repo_id}:
+    delete:
+      description: Delete a Repo
+      responses:
+        '200': &id005
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Repo'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id005
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Repo' entity from multi-valued relationship 'repos'
+      in: path
+      name: Repo_id
+      required: true
+      type: string
+    patch:
+      description: Update a Repo
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id005
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /repos;{Repo_id}/specs:
+    get: *id006
+    parameters:
+    - description: Specifies which 'Repo' entity from multi-valued relationship 'repos'
+      in: path
+      name: Repo_id
+      required: true
+      type: string
+    post:
+      description: Create a new Spec
+      responses:
+        '201':
+          description: Created new Spec
+          headers:
+            Location:
+              description: perma-link URL of newly-created Spec
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /specs:
+    get: *id006
+    post:
+      description: Create a new Spec
+      responses:
+        '201':
+          description: Created new Spec
+          headers:
+            Location:
+              description: perma-link URL of newly-created Spec
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /specs;{Spec_id}:
+    delete:
+      description: Delete a Spec
+      responses:
+        '200': &id007
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id007
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
+      in: path
+      name: Spec_id
+      required: true
+      type: string
+    patch:
+      description: Update a Spec
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id007
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /specs;{Spec_id}/content:
+    delete:
+      description: Delete a Content
+      responses:
+        '200': &id008
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id008
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
+      in: path
+      name: Spec_id
+      required: true
+      type: string
+    put:
+      consumes:
+      - text/yaml
+      description: Update a Content
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id008
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /specs;{Spec_id}/repo:
+    delete:
+      description: Delete a Repo
+      responses:
+        '200': &id009
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Repo'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id009
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
+      in: path
+      name: Spec_id
+      required: true
+      type: string
+    patch:
+      description: Update a Repo
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id009
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+produces:
+- application/yaml
+- text/yaml
+- application/json
+- text/html
+responses:
+  '303':
+    description: See other. Server is redirecting client to a different resource
+    headers:
+      Location:
+        description: URL of other resource
+        type: string
+  '400':
+    description: Bad Request. Client request in error
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '401':
+    description: Unauthorized. Client authentication token missing from request
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '403':
+    description: Forbidden. Client authentication token does not permit this method
+      on this resource
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '404':
+    description: Not Found. Resource not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '406':
+    description: Not Acceptable. Requested media type not availalble
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '409':
+    description: Conflict. Value provided in If-Match header does not match current
+      ETag value of resource
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  default:
+    description: 5xx errors and other stuff
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+swagger: '2.0'
+
