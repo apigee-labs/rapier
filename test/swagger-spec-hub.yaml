@@ -76,17 +76,9 @@ definitions:
         type: string
         x-rapier-relationship:
           type:
-            $ref: '#/definitions/Spec-version'
-  Spec-version:
+            $ref: '#/definitions/Version'
+  Version:
     properties:
-      content:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          type:
-            $ref: '#/definitions/Content'
-      content_type:
-        type: string
       id: *id001
       self_link: *id002
       type: *id003

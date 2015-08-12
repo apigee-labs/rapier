@@ -18,10 +18,7 @@ entities:
                 type: string
             content_set:
                 type: boolean
-    Spec-version:
-        properties:
-            content_type:
-                type: string
+    Version: {}
     Content:
         content_type: text
         consumes: text/yaml
@@ -62,13 +59,6 @@ relationships:
             property: versions
             multiplicity: 0:n
         other_end:
-            entity: Spec-version
+            entity: Version
             property: version_of
             multiplicity: 0:1
-    version-to-content:
-        one_end:
-            entity: Spec-version
-            property: content
-            multiplicity: 0:1
-        other_end:
-            entity: Content
