@@ -61,7 +61,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Hello_message
+      description: Update a Hello_message entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

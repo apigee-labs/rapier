@@ -166,7 +166,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Property_tracker
+      description: Update a Property_tracker entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -285,7 +285,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Bicycle
+      description: Update a Bicycle entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -356,7 +356,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update an Institution
+      description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -453,7 +453,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Dog
+      description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -523,7 +523,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update an Institution
+      description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -621,7 +621,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update an Institution
+      description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -753,7 +753,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Person
+      description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

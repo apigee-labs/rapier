@@ -86,7 +86,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a To_do_list
+      description: Update a To_do_list entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -204,7 +204,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update an Item
+      description: Update an Item entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
