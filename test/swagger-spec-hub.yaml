@@ -115,7 +115,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Hub
+      description: Update a Hub entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -233,7 +233,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Repo
+      description: Update a Repo entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -363,7 +363,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Spec
+      description: Update a Spec entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -435,11 +435,19 @@ paths:
     put:
       consumes:
       - text/yaml
-      description: Update a Content
+      description: Create or Update a Content entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id008
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -505,7 +513,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Repo
+      description: Update a Repo entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

@@ -210,7 +210,7 @@ class Swagger_generator(object):
             }
         update_verb = 'patch' if structured else 'put'
         path_spec[update_verb] = {
-            'description': 'Update %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+            'description': ('Update %s %s entity' if structured else 'Create or Update %s %s entity') % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
             'parameters': [{'$ref': '#/parameters/If-Match'}],
             'responses': { 
                 '200': response_200, 
@@ -223,6 +223,17 @@ class Swagger_generator(object):
                 'default': self.global_response_ref('default')
                 }
             }
+        if not structured:
+            path_spec['put']['responses']['201'] = {
+                'description': 'Created new %s' % entity_name,
+                'schema': self.global_definition_ref(entity_name),
+                'headers': {
+                    'Location': {
+                        'type': 'string',
+                        'description': 'perma-link URL of newly-created %s'  % entity_name
+                        }
+                    }
+                }
         if consumes:
             path_spec[update_verb]['consumes'] = consumes
         well_known = entity_spec.get('well_known_URLs')
