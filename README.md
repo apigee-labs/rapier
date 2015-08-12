@@ -114,7 +114,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
  
  The API does not specify what the string `xxxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
  is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
- Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of `To_do_list` appearing in the relationships section.
+ Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of `To_do_list` in the relationships section.
  
  You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
  and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
@@ -190,8 +190,8 @@ called `dogs` and `people` that point to the Dogs and Persons that are tracked. 
 resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
 properties of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
 
-The API also defines a relationship between Dogs and Persons, which is called owner on one side and dogs on the other. The `owner` property is settable on each Dog - this is in fact
-the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set. If a Dog is POSTed to the `dogs` Collection of a specific
+The API also defines a relationship between Dogs and Persons, which is called `owner` on one side and `dogs` on the other. The `owner` property is settable on each Dog - this is in fact
+the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set by the client. If a Dog is POSTed to the `dogs` Collection of a specific
 Person, the server will set the `owner` property appropriately.
 
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
@@ -201,6 +201,12 @@ If you want to see the generated Swagger document for this API specification, [i
 Our last example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/property-tracker.yaml). 
 This example strains the expressive power of Swagger - for completeness we include a generated [Swagger document here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-property-tracker.yaml).
+
+### Spec Repo
+
+Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
+Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/spec-hub.yaml) 
+shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-spec-hub.yaml).
 
 
 \[1\] Following Fred Brooks, we take consistency as being the primary measure of
