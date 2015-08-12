@@ -1,3 +1,5 @@
+consumes:
+- application/json
 definitions:
   Bicycle:
     properties:
@@ -17,9 +19,13 @@ definitions:
         type: string
   Collection:
     properties:
-      contents_type:
-        type: string
       id: *id001
+      item_type:
+        type: string
+      items:
+        items:
+          type: object
+        type: array
       self_link: *id002
       type: *id003
   Dog:
@@ -760,6 +766,8 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+produces:
+- application/json
 responses:
   '303':
     description: See other. Server is redirecting client to a different resource

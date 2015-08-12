@@ -1,3 +1,5 @@
+consumes:
+- application/json
 definitions:
   ErrorResponse:
     properties:
@@ -78,6 +80,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
+produces:
+- application/json
 responses:
   '303':
     description: See other. Server is redirecting client to a different resource

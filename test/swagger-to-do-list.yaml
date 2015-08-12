@@ -1,10 +1,16 @@
+consumes:
+- application/json
 definitions:
   Collection:
     properties:
-      contents_type:
-        type: string
       id: &id001
         type: string
+      item_type:
+        type: string
+      items:
+        items:
+          type: object
+        type: array
       self_link: &id002
         type: string
       type: &id003
@@ -213,6 +219,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
+produces:
+- application/json
 responses:
   '303':
     description: See other. Server is redirecting client to a different resource

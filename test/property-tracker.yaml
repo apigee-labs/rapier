@@ -1,6 +1,5 @@
-info:
-    title: Property-tracker API
-    version: "0.1"
+title: Property-tracker API
+version: "0.1"
 patterns:
     link_style: simple-property
     path_selector_style: path-parameter
