@@ -8,7 +8,13 @@ definitions:
       name:
         type: string
       owner:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            one_of:
+            - $ref: '#/definitions/Institution'
+            - $ref: '#/definitions/Person'
       paint_color:
         type: string
       purchase_date:
@@ -38,7 +44,13 @@ definitions:
       name:
         type: string
       owner:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            one_of:
+            - $ref: '#/definitions/Institution'
+            - $ref: '#/definitions/Person'
       self_link: *id002
       type: *id003
   ErrorResponse:
@@ -48,7 +60,13 @@ definitions:
   Institution:
     properties:
       assets:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            one_of:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
       birth-date:
         type: string
       id: *id001
@@ -64,20 +82,42 @@ definitions:
       name:
         type: string
       possessions:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            one_of:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
       self_link: *id002
       type: *id003
   Property_tracker:
     properties:
       bicycles:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Bicycle'
       dogs:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Dog'
       id: *id001
       institutions:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Institution'
       people:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Person'
       self_link: *id002
       type: *id003
 info:

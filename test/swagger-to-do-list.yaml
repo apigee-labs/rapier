@@ -33,7 +33,11 @@ definitions:
     properties:
       id: *id001
       items:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Item'
       self_link: *id002
       type: *id003
 info:

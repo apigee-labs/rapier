@@ -25,16 +25,28 @@ definitions:
       name:
         type: string
       owner:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Person'
       self_link: *id002
       type: *id003
   Dog_tracker:
     properties:
       dogs:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Dog'
       id: *id001
       people:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Person'
       self_link: *id002
       type: *id003
   ErrorResponse:
@@ -46,7 +58,11 @@ definitions:
       birth-date:
         type: string
       dogs:
+        format: URL
         type: string
+        x-rapier-relationship:
+          type:
+            $ref: '#/definitions/Dog'
       id: *id001
       name:
         type: string

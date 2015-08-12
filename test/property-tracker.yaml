@@ -96,7 +96,7 @@ relationships:
             property: possessions
             multiplicity: 0:n
         other_end:
-            entity: Dog
+            entity: Bicycle
             property: owner
             multiplicity: 0:1
     bicycles-to-institutions:

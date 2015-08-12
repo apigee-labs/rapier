@@ -69,12 +69,19 @@ class Swagger_generator(object):
                     definition = self.definitions[entity_name]
                     properties = definition.setdefault('properties',dict())
                     structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
-                    for rel_prop_name in {rel_property_spec['property_name'] for rel_property_spec in rel_property_specs}:
+                    rel_prop_spec_dict = {}
+                    for rel_property_spec in rel_property_specs:
+                        rel_prop_name = rel_property_spec['property_name']
+                        if rel_prop_name in rel_prop_spec_dict:
+                            rel_prop_spec_dict[rel_prop_name].append(rel_property_spec)
+                        else:
+                            rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
+                    for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
                         if not structured:
                             rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
                             print 'error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name)
                             return None
-                        properties[rel_prop_name] = {'type': 'string'}
+                        properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                 if 'query_paths' in entity_spec:
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
@@ -88,7 +95,21 @@ class Swagger_generator(object):
                             print 'query path not valid or listed more than once: %s' % query_path
                         return 'Error'                                     
         return self.swagger
- 
+
+    def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
+        if len({get_multiplicity(rel_prop_spec) for rel_prop_spec in rel_prop_specs}) > 1:
+            print 'error: all multiplicities for relationship property %s must be the same' % rel_prop_name
+            return None
+        return {
+            'type': 'string',
+            'format': 'URL',
+            'x-rapier-relationship': {
+                'type': {
+                    'one_of': [{'$ref': '#/definitions/%s' % rel_prop_spec['target_entity']} for rel_prop_spec in rel_prop_specs if 'property_name' in rel_prop_spec]
+                    } if len(rel_prop_specs) > 1 else
+                    {'$ref': '#/definitions/%s' % rel_prop_specs[0]['target_entity'] }
+                }
+            } 
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
         result = []
@@ -129,8 +150,7 @@ class Swagger_generator(object):
         
     def emit_query_path(self, well_known_URL, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
-        multiplicity = rel_property_spec.get('multiplicity')
-        multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
+        multivalued = get_multiplicity(rel_property_spec) == 'n'
         if multivalued:
             path = '/'.join([self.path_segment(rel_property_spec, inx==len(rel_property_spec_stack)-1) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
             sep = '' if well_known_URL.endswith('/') else '/'
@@ -277,7 +297,7 @@ class Swagger_generator(object):
             dereference_multivalued = False
         else:
             multiplicity = rel_property_spec.get('multiplicity')
-            dereference_multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
+            dereference_multivalued = get_multiplicity(rel_property_spec) == 'n'
         pattern = '%s;{%s_id}' if self.selector_location == 'path-parameter' else '%s/{%s_id}'
         return pattern % (rel_name, entity_name) if dereference_multivalued else rel_name
         
@@ -286,8 +306,7 @@ class Swagger_generator(object):
         for rel_property_spec in rel_property_spec_stack:
             rel_name = rel_property_spec['property_name']
             entity_name = rel_property_spec['target_entity']
-            multiplicity = rel_property_spec.get('multiplicity')
-            multivalued = multiplicity and multiplicity.split(':')[-1] == 'n'
+            multivalued = get_multiplicity(rel_property_spec) == 'n'
             if multivalued:
                 result.append( {
                     'name': '%s_id' % entity_name,
@@ -437,6 +456,10 @@ def as_list(value, separator = None):
         else:
             result = [value]
     return result
+    
+def get_multiplicity(rel_property_spec):
+    multiplicity = rel_property_spec.get('multiplicity')
+    return multiplicity.split(':')[-1] if multiplicity else 1
             
 def main(args):
     generator = Swagger_generator()
