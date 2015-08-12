@@ -69,6 +69,11 @@ definitions:
             $ref: '#/definitions/Repo'
       self_link: *id002
       type: *id003
+      version_history:
+        items:
+          format: URL
+          type: string
+        type: array
 info:
   title: Spec Hub API
   version: '0.1'

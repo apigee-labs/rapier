@@ -16,6 +16,11 @@ entities:
         properties:
             content_type:
                 type: string
+            version_history:
+                type: array
+                items:
+                    type: string
+                    format: URL
     Content:
         content_type: text
         consumes: text/yaml
