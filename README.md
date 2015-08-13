@@ -50,11 +50,14 @@ a few standard properties to the `Hello-message` entity. The `Hello-message` at 
      'message': 'Hello, world'
     }
  
-Rapier provides a tool that will generate a Swagger document from a Rapier specification. The Swagger document spells out the conventions used by Rapier for this API.
-Swagger cannot describe everything that is important in the API, but it is a good tool. Once you have seen a few examples of the Swagger, you will
+Rapier documents are complete API spceicifications. You can give them directly to API developers to implement servers and to app developers to 
+implement clients without additional documentation (other than the HTTP specs themselves). Since the Rapier specification language is not yet widely 
+known and understood, we provide a tool that will generate a 
+Swagger document from a Rapier specification. The Swagger document spells out the conventions used by Rapier for this API in a way that is familiar to many.
+Once you have seen a few examples of the generated Swagger, you will
 understand the conventions and you will stop looking at the Swagger, whose details are repetitive and will become quickly obvious. You can stop generating the Swagger
 documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
-people who know Swagger but not Rapier. Swagger is also useful for
+people who know Swagger but not Rapier. Swagger will likely remain important to you for
 documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design pattern. 
 The Swagger document generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
 It contains around 120 lines, which illustrates the efficiency of Rapier. 
