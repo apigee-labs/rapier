@@ -230,5 +230,6 @@ Resources with this characteristic must be updated with PUT instead of PATCH, an
 shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-spec-hub.yaml).
 
 
-\[1\] Following Fred Brooks, we take consistency as being the primary measure of
-quality of an API. “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict the remainder”
+\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
+“Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
+the remainder” - Fred Brooks, "The Design of Design", 2010
