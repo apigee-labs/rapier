@@ -205,7 +205,17 @@ The API also defines a relationship between Dogs and Persons, which is called `o
 the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set by the client. If a Dog is POSTed to the `dogs` Collection of a specific
 Person, the server will set the `owner` property appropriately.
 
-If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
+From the `well_known_URLs` and `query_paths` properties, you can infer that the following URLs and URL templates are part of the API:
+
+    /dog-tracker
+    /dog-tracker/dogs
+    /dog-tracker/dogs;{Dog_id}
+    /dog-tracker/dogs;{Dog_id}/owner
+    /dog-tracker/people
+    /dog-tracker/people;{Person_id}
+    /dog-tracker/people;{Person_id}/dogs
+
+Since you know the pattern, you already know what all these mean, but if you want to see a generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
 
 ### Property Tracker
 
