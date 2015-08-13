@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other APIs specification languages, and to
+The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. \[1\]
 
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
@@ -120,7 +120,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
-    /todos/items/{Item_id}
+    /to-dos/items/{Item_id}
     
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
