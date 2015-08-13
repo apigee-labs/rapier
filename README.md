@@ -10,7 +10,7 @@ a web API is network of HTTP resources identified and located using URLs, you sh
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model.
 
-You specify an API with Rapier by specifying, in YAML, the entities and relationships that describe the resources of the API. The details of the API's 
+You specify an API with Rapier by specifying, in a YAML file, the entities and relationships that describe the resources of the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. In the future we will allow more options for these add-on conventions - for now they are mostly fixed.
 
