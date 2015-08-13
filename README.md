@@ -132,19 +132,16 @@ Rapier calls `{Item_id}` a selector. A Rapier option allows the selector value t
 a path segment - see the 'Property Tracker' example.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
-and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
+and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
  
     {
-     'self_link': 'http://example.org/items/yyyyy',
-     'id': 'yyyyy',
+     'self_link': 'http://example.org/yyyyy',
+     'id': '10293847',
      'type': 'Item'
      'description': 'Get milk on the way home',
      'due': '1439228983'
     }
  
-URLs matching the URL template `http://example.org/todos/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
-the API will support an extra segment that is used to select a particular resource from the multi-valued collection. 
-
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
 ### Dog Tracker
