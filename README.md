@@ -128,8 +128,8 @@ and `http://example.org/todos/items` are the same resource, and although there i
 Since `items` is from a multi-valued relationship to the `Items` entity,
 Rapier conventions say that we can tack on `Item_id` on to the end of `todos/items/` to resolve to a single `Item`. From this we know that
 `http://example.org/yyyyy` is equivalant to `http://example.org/items/10293847`, and that will be the URL used by most servers. 
-[`{Item_id}` is called a selector. A Rapier option allows the selector value to be in a path parameter instead of 
-a path segment - see the 'Property Tracker' example.]
+Rapier calls `{Item_id}` a selector. A Rapier option allows the selector value to be in a path parameter instead of 
+a path segment - see the 'Property Tracker' example.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
