@@ -8,7 +8,7 @@ produce specifications that describe higher quality APIs. \[1\]
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
 a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
 consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
-fit with your mental model. The data-oriented and service-oriented styles have equivalent expressiveness but they look different and require you to think differently.
+fit with your mental model.
 
 You specify an API with Rapier by specifying, in YAML, the entities and relationships that describe the resources of the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
