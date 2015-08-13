@@ -51,8 +51,9 @@ Here is a 'Hello-world' example in Rapier:
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our extensions. Rapier also assumes that a GET response
-includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. In Rapier APIs, the server will add
-a few standard properties to the `Hello-message` entity. The `Hello-message` at `/message` will actually look like this:
+includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
+In Rapier APIs, the server will add
+a few standard properties to the `Hello-message` entity — the `Hello-message` at `/message` will actually look like this:
 
     {'self_link': 'http://example.org/message',
      'id': '1234567',
@@ -90,7 +91,7 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
             other_end:
                 entity: Item
                 
-This API defines a single resource at the URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
+This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
@@ -107,8 +108,8 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
      'id': '5647382',
      'contents_type': 'Item',
      'contents': [{
-         'self_link': 'http://example.org/items/yyyyy',
-         'id': 'yyyyy',
+         'self_link': 'http://example.org/yyyyy',
+         'id': '10293847',
          'type': 'Item'
          'description': 'Get milk on the way home',
          'due': '1439228983'
@@ -116,12 +117,22 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
       ]
     }
  
- The API does not specify what the string `xxxxx` will look like, but we know from the `query_paths` property of the `To_do_list` entity specification that `http://example.org/to-dos/items` 
- is a valid URL with the same meaning as `http://example.org/xxxxx`. We know it has the same meaning, because `items` as a query_path means 'follow the items relationship'. 
- Note that in order for the `query_path` called `items` to be valid, `items` has to be one of the declared properties of `To_do_list` in the relationships section.
- 
- You can POST items to `http://example.org/to-dos/items` (and also `http://example.org/xxxxx` if that URL is different) to create new items, you can PATCH items to change them, 
- and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
+The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
+
+    /to-dos/items
+    /todos/items/{Item_id}
+    
+The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
+and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
+and `http://example.org/todos/items` are the same resource, and although there is no requirement on the server to use the same URL, most will do so.
+Since `items` is from a multi-valued relationship to the `Items` entity,
+Rapier conventions say that we can tack on `Item_id` on to the end of `todos/items/` to resolve to a single `Item`. From this we know that
+`http://example.org/yyyyy` is equivalant to `http://example.org/items/10293847`, and that will be the URL used by most servers. 
+[`{Item_id}` is called a selector. A Rapier option allows the selector value to be in a path parameter instead of 
+a path segment - see the 'Property Tracker' example.]
+  
+You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
+and you can DELETE items to remove them. You can also perform a GET on `http://example.org/items/yyyyy`, which will yield:
  
     {
      'self_link': 'http://example.org/items/yyyyy',
@@ -131,11 +142,10 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
      'due': '1439228983'
     }
  
- URLs matching the URL template `http://example.org/todos/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
- the API will support an extra segment that is used to select a particular resource from the multi-valued collection. (An option allows the selector value to be in a path parameter instead of 
- a path segment - see the 'Property Tracker' example). 
- 
- If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
+URLs matching the URL template `http://example.org/todos/items/{Item_id}` are also supported by the API. Whenever a `query_path` contains a segment that corresponds to a multi-valued relationship,
+the API will support an extra segment that is used to select a particular resource from the multi-valued collection. 
+
+If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
  
 ### Dog Tracker
  
