@@ -3,17 +3,15 @@ consumes:
 definitions:
   Collection:
     properties:
-      id: &id001
-        type: string
       item_type:
         type: string
       items:
         items:
           type: object
         type: array
-      self_link: &id002
+      self_link:
         type: string
-      type: &id003
+      type:
         type: string
   Dog:
     properties:
@@ -21,7 +19,8 @@ definitions:
         type: string
       fur_color:
         type: string
-      id: *id001
+      id: &id001
+        type: string
       name:
         type: string
       owner:
@@ -30,8 +29,10 @@ definitions:
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Person'
-      self_link: *id002
-      type: *id003
+      self_link: &id002
+        type: string
+      type: &id003
+        type: string
   Dog_tracker:
     properties:
       dogs:

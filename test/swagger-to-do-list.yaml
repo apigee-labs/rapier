@@ -3,17 +3,15 @@ consumes:
 definitions:
   Collection:
     properties:
-      id: &id001
-        type: string
       item_type:
         type: string
       items:
         items:
           type: object
         type: array
-      self_link: &id002
+      self_link:
         type: string
-      type: &id003
+      type:
         type: string
   ErrorResponse:
     properties:
@@ -26,9 +24,12 @@ definitions:
       due:
         format: date-time
         type: string
-      id: *id001
-      self_link: *id002
-      type: *id003
+      id: &id001
+        type: string
+      self_link: &id002
+        type: string
+      type: &id003
+        type: string
   To_do_list:
     properties:
       id: *id001

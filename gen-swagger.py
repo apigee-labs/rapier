@@ -22,8 +22,9 @@ class Swagger_generator(object):
     def swagger_from_rapier(self, filename= None):
         if filename:
             self.set_rapier_spec_from_filename(filename)
-        spec = self.rapier_spec            
-        self.selector_location = spec['conventions']['selector_location'] if 'conventions' in spec and 'selector_location' in spec['conventions'] else 'path-segment'
+        spec = self.rapier_spec 
+        self.conventions = spec['conventions'] if 'conventions' in spec else {}     
+        self.selector_location = self.conventions['selector_location'] if 'selector_location' in self.conventions else 'path-segment'
         if not self.selector_location in ['path-segment', 'path-parameter']:
             print 'error: invalid value for selector_location: %s' % self.selector_location
             return None
@@ -39,6 +40,8 @@ class Swagger_generator(object):
             self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
             self.swagger['consumes'] = ['application/json']
+        self.standard_entity_properties = self.conventions['standard_entity_properties'] if 'standard_entity_properties' in self.conventions else standard_entity_properties
+        self.standard_collection_properties = self.conventions['standard_collection_properties'] if 'standard_collection_properties' in self.conventions else standard_collection_properties
             
         if 'entities' in spec:
             entities = spec['entities']
@@ -49,7 +52,7 @@ class Swagger_generator(object):
                 structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
                 if structured:
                     definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
-                    definition['properties'].update(standard_properties)
+                    definition['properties'].update(standard_entity_properties)
                 else:
                     if 'properties' in spec:
                         print 'error: unstructured entities must not have properties'
@@ -438,16 +441,25 @@ def build_collection_definition():
                 } 
             }
         }
-    properties.update(standard_properties)
+    properties.update(standard_collection_properties)
     return {
         'properties': properties
         }
    
-standard_properties = {
+standard_entity_properties = {
     'self_link': {
         'type': 'string'
         }, 
     'id': {
+        'type': 'string'
+        }, 
+    'type': {
+        'type': 'string'
+        }
+    }
+    
+standard_collection_properties = {
+    'self_link': {
         'type': 'string'
         }, 
     'type': {

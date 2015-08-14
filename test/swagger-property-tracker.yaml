@@ -25,15 +25,16 @@ definitions:
         type: string
   Collection:
     properties:
-      id: *id001
       item_type:
         type: string
       items:
         items:
           type: object
         type: array
-      self_link: *id002
-      type: *id003
+      self_link:
+        type: string
+      type:
+        type: string
   Dog:
     properties:
       birth_date:
