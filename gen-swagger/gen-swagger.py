@@ -374,7 +374,7 @@ class Swagger_generator(object):
         
     def build_collection_get(self):
         if 'Collection' not in self.definitions:
-            self.definitions['Collection'] = build_collection_definition()
+            self.definitions['Collection'] = self.build_collection_definition()
         return {
             'responses': {
                 '200': {
@@ -398,7 +398,7 @@ class Swagger_generator(object):
  
     def build_error_definitions(self):
         return {
-            'ErrorResponse': build_error_definition()
+            'ErrorResponse': self.build_error_definition()
             }
             
     def build_standard_header_parameters(self):
@@ -419,32 +419,32 @@ class Swagger_generator(object):
                 }
             }
     
-def build_error_definition():
-    return {
-        'properties': {
-            'message': {
-                'type': 'string'
+    def build_error_definition(self):
+        return {
+            'properties': {
+                'message': {
+                    'type': 'string'
+                    }
                 }
             }
-        }
-
-def build_collection_definition():
-    properties = {
-        'item_type': {
-            'type': 'string'
-            },
-        'items':
-            {
-            'type': 'array',
-            'items': {
-                'type': 'object'
-                } 
+    
+    def build_collection_definition(self):
+        properties = {
+            'item_type': {
+                'type': 'string'
+                },
+            'items':
+                {
+                'type': 'array',
+                'items': {
+                    'type': 'object'
+                    } 
+                }
             }
-        }
-    properties.update(self.standard_collection_properties)
-    return {
-        'properties': properties
-        }
+        properties.update(self.standard_collection_properties)
+        return {
+            'properties': properties
+            }
    
 standard_entity_properties = {
     'self_link': {
