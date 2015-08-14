@@ -52,7 +52,7 @@ class Swagger_generator(object):
                 structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
                 if structured:
                     definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
-                    definition['properties'].update(standard_entity_properties)
+                    definition['properties'].update(self.standard_entity_properties)
                 else:
                     if 'properties' in spec:
                         print 'error: unstructured entities must not have properties'
@@ -441,7 +441,7 @@ def build_collection_definition():
                 } 
             }
         }
-    properties.update(standard_collection_properties)
+    properties.update(self.standard_collection_properties)
     return {
         'properties': properties
         }
