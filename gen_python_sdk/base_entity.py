@@ -15,17 +15,17 @@ class BaseEntity(BaseResource):
     def refresh(self):
         # issue a GET to refresh this object from API
         if not self.self:
-            raise ValueError('self_link not set')
+            raise ValueError('self URL not set')
             
     def update(self):
         # issue a PATCH or PUT to update this object from API
         if not self.self:
-            raise ValueError('self_link not set')
+            raise ValueError('self URL not set')
             
     def delete(self):
         # issue a DELETE to remove this object from API
         if not self.self:
-            raise ValueError('self_link not set')
+            raise ValueError('self URL not set')
         self_parts = list(urlparse(self.self))
         self_parts[0] = self_parts[1] = None
         rel_url = urlunparse(self_parts)
