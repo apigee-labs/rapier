@@ -14,7 +14,7 @@ var message = {
 }
 
 app.get('/message', function(req, res) {
-  var accept_type = req.get('Accept')
+  var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     res.set('ETag', modcount.toString());
     res.set('Content-Type', 'application/json');
@@ -24,6 +24,17 @@ app.get('/message', function(req, res) {
     res.status(406).send('Unrecognized accept header media type: ' + accept_type)
   }
 });
+
+app.delete('/message', function(req, res) {
+  res.status(405);
+  var error_msg = 'cannot delete well-known resource: /message';
+  var accept_type = req.get('Accept');
+  if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
+    res.json({text: error_msg});
+  } else {
+    res.send(error_msg)
+  }
+})
 
 console.log('Listening on %d', PORT);
 app.listen(PORT);

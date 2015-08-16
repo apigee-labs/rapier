@@ -1,12 +1,22 @@
 import requests
 
 class API(object):
-    def accept_header_value(self):
-        return 'application/json'
-        
-    def get_headers(self):
+
+    def retrieve_headers(self):
         return {
-            'Accept': self.accept_header_value()
+            'Accept': 'application/json'
+            }
+
+    def update_headers(self, etag):
+        return {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'If-Match': etag
+            }
+
+    def delete_headers(self):
+        return {
+            'Accept': 'application/json'
             }
 
     def type_property(self):
@@ -23,9 +33,24 @@ class API(object):
         #    raise Exception('resource class name %s not in scope' % resource_class_name)
         raise Exception('abstract method resource_class must be overridden')
             
-    def retrieve(self, url):
+    def retrieve(self, url, entity=None, headers=None):
         # issue a GET to retrieve a resource from the API and create an object for it
-        r = requests.get(url, headers = self.get_headers())
+        r = requests.get(url, headers = headers if headers else self.retrieve_headers())
+        return self.process_entity_result(url, r, entity)
+        
+    def update(self, url, etag, changes, entity=None, headers=None):
+        r = requests.patch(url, json=changes, headers = headers if headers else self.update_headers(etag))
+        return self.process_entity_result(url, r, entity)
+            
+    def delete(self, url, entity=None, headers=None):
+        r = requests.delete(url, headers = headers if headers else self.delete_headers())
+        return self.process_entity_result(url, r, entity)
+            
+    def create(self, url, body, entity=None, headers=None):
+        r = requests.post(url, json=body, headers = headers if headers else self.delete_headers())
+        return self.process_entity_result(url, r, entity)
+            
+    def process_entity_result(self, url, r, entity=None):
         if r.status_code == 200:
             if 'Content-Location' in r.headers:
                 content_location = r.headers['Content-Location']
@@ -37,13 +62,23 @@ class API(object):
                             json = r.json()
                             type_name = json.get(self.type_property())
                             if type_name:
-                                resource_class = self.resource_class(type_name)
-                                if resource_class:
-                                    return resource_class(content_location, json, etag)
+                                if entity:
+                                    if entity.type == type_name:
+                                        entity.update(content_location, json, etag)
+                                        return entity
+                                    else:
+                                        raise Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
                                 else:
-                                    raise Exception('no resource_class for type %s') % r_type                        
+                                    resource_class = self.resource_class(type_name)
+                                    if resource_class:
+                                        return resource_class(content_location, json, etag)
+                                    else:
+                                        raise Exception('no resource_class for type %s') % r_type                        
                             else:
-                                raise Exception('no type property %s in json %s') % (self.type_property(), json.dumps())                        
+                                if entity:
+                                    entity.update(content_location, json, etag)
+                                else:
+                                    raise Exception('no type property %s in json %s') % (self.type_property(), json.dumps())                        
                         else:
                             raise Exception('non-json content type %s' %  r.headers['Content-Type'])
                     else:
@@ -53,4 +88,4 @@ class API(object):
             else:
                 raise Exception('server failed to provide Content-Location header for url %s' % url)
         else:
-            raise Exception('unexpected HTTP status_code code %s' % r.status_code)
+            raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))

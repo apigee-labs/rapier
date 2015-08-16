@@ -4,6 +4,6 @@ rslt = api.get_well_known_resource('http://localhost:3000/message')
 if isinstance(rslt, Exception):
     print rslt
 else:
-    print rslt, rslt.json_representation
+    print rslt, rslt.__dict__
     
     print rslt.delete()

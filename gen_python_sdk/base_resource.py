@@ -2,6 +2,9 @@
 class BaseResource(object):
     
     def __init__(self, url = None, json_representation = None, etag = None):
+        self.update_attrs(url, json_representation, etag)
+
+    def update_attrs(self, url = None, json_representation = None, etag = None):
         if url:
             self.url = url
         if json_representation:

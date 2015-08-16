@@ -3,8 +3,8 @@ from base_resource import BaseBase
 
 class BaseCollection(BaseBase):
 
-    def __init__(self, url, json_representation, etag):
-        super(Base_entity, self).__init__(url, json_representation, etag)
+    def update_attrs(self, url, json_representation, etag):
+        super(Base_entity, self).update_attrs(url, json_representation, etag)
         if self.items_name() in json_representation:
             items = json_representation[self.items_name]
             for item in items:
