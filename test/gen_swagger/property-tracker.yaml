@@ -1,4 +1,4 @@
-title: Property-tracker API
+title: PropertyTrackerAPI
 version: "0.1"
 patterns:
     link_style: simple-property
@@ -12,7 +12,7 @@ patterns:
     type_property: type
     id_property: id
 entities:
-    Property_tracker:
+    PropertyTracker:
         well_known_URLs: /
         query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner, institutions/assets, people/possessions]
     Dog:
@@ -46,28 +46,28 @@ entities:
 relationships:
     tracker-to-dogs:
         one_end:
-            entity: Property_tracker
+            entity: PropertyTracker
             property: dogs
             multiplicity: 0:n
         other_end:
             entity: Dog
     tracker-to-people:
         one_end:
-            entity: Property_tracker
+            entity: PropertyTracker
             property: people
             multiplicity: 0:n
         other_end:
             entity: Person
     tracker-to-bicycles:
         one_end:
-            entity: Property_tracker
+            entity: PropertyTracker
             property: bicycles
             multiplicity: 0:n
         other_end:
             entity: Bicycle
     tracker-to-institutions:
         one_end:
-            entity: Property_tracker
+            entity: PropertyTracker
             property: institutions
             multiplicity: 0:n
         other_end:

@@ -1,9 +1,9 @@
-title: Dog-Tracker API
+name: DogTrackerAPI
 version: "0.1"
 conventions:
     selector_location: path-parameter
 entities:
-    Dog_tracker:
+    DogTracker:
         well_known_URLs: /dog-tracker
         query_paths: [dogs, people, dogs/owner, people/dogs]
     Dog:
@@ -23,14 +23,14 @@ entities:
 relationships:
     tracker-to-dogs:
         one_end:
-            entity: Dog_tracker
+            entity: DogTracker
             property: dogs
             multiplicity: 0:n
         other_end:
             entity: Dog
     tracker-to-people:
         one_end:
-            entity: Dog_tracker
+            entity: DogTracker
             property: people
             multiplicity: 0:n
         other_end:

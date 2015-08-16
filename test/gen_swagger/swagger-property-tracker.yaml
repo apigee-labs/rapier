@@ -92,7 +92,7 @@ definitions:
             - $ref: '#/definitions/Bicycle'
       self_link: *id002
       type: *id003
-  Property_tracker:
+  PropertyTracker:
     properties:
       bicycles:
         format: URL
@@ -122,7 +122,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: Property-tracker API
+  name: unnamed
   version: '0.1'
 parameters:
   Accept:
@@ -140,7 +140,7 @@ parameters:
 paths:
   /:
     get:
-      description: Retrieve a Property_tracker
+      description: Retrieve a PropertyTracker
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -155,7 +155,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Property_tracker'
+            $ref: '#/definitions/PropertyTracker'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -167,7 +167,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Property_tracker entity
+      description: Update a PropertyTracker entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

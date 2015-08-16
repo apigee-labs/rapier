@@ -30,7 +30,7 @@ definitions:
         type: string
       type: &id003
         type: string
-  To_do_list:
+  TodoList:
     properties:
       id: *id001
       items:
@@ -42,7 +42,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: To-do List API
+  name: TodoListAPI
   version: '0.1'
 parameters:
   Accept:
@@ -60,7 +60,7 @@ parameters:
 paths:
   /to-dos:
     get:
-      description: Retrieve a To_do_list
+      description: Retrieve a TodoList
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -75,7 +75,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/To_do_list'
+            $ref: '#/definitions/TodoList'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -87,7 +87,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a To_do_list entity
+      description: Update a TodoList entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

@@ -1,7 +1,7 @@
-title: Hello World API
+name: HelloWorldAPI
 version: "0.1"
 entities:
-    Hello_message:
+    HelloMessage:
         well_known_URLs: /message
         properties:
             text:

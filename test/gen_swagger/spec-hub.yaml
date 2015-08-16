@@ -1,4 +1,4 @@
-title: Spec Hub API
+title: SpecHubAPI
 version: "0.1"
 consumes: application/json
 produces: application/yaml text/yaml application/json text/html

@@ -5,7 +5,7 @@ definitions:
     properties:
       message:
         type: string
-  Hello_message:
+  HelloMessage:
     properties:
       id:
         type: string
@@ -16,7 +16,7 @@ definitions:
       type:
         type: string
 info:
-  title: Hello World API
+  name: HelloWorldAPI
   version: '0.1'
 parameters:
   Accept:
@@ -34,7 +34,7 @@ parameters:
 paths:
   /message:
     get:
-      description: Retrieve a Hello_message
+      description: Retrieve a HelloMessage
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -49,7 +49,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Hello_message'
+            $ref: '#/definitions/HelloMessage'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -61,7 +61,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Hello_message entity
+      description: Update a HelloMessage entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

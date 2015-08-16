@@ -33,7 +33,7 @@ definitions:
         type: string
       type: &id003
         type: string
-  Dog_tracker:
+  DogTracker:
     properties:
       dogs:
         format: URL
@@ -70,7 +70,7 @@ definitions:
       self_link: *id002
       type: *id003
 info:
-  title: Dog-Tracker API
+  name: DogTrackerAPI
   version: '0.1'
 parameters:
   Accept:
@@ -88,7 +88,7 @@ parameters:
 paths:
   /dog-tracker:
     get:
-      description: Retrieve a Dog_tracker
+      description: Retrieve a DogTracker
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -103,7 +103,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Dog_tracker'
+            $ref: '#/definitions/DogTracker'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -115,7 +115,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Dog_tracker entity
+      description: Update a DogTracker entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

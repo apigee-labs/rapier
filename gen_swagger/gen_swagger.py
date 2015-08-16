@@ -30,7 +30,7 @@ class Swagger_generator(object):
             return None
         patterns = spec.get('patterns')
         self.swagger['info'] = {}
-        self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
+        self.swagger['info']['name'] = spec['name'] if 'name' in spec else 'unnamed'
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
         if 'produces' in spec:
             self.swagger['produces'] = as_list(spec.get('produces'))

@@ -1,7 +1,7 @@
-title: To-do List API
+name: TodoListAPI
 version: "0.1"
 entities:
-    To_do_list:
+    TodoList:
         well_known_URLs: /to-dos
         query_paths: [items]
     Item:
@@ -14,7 +14,7 @@ entities:
 relationships:
     list-to-items:
         one_end:
-            entity: To_do_list
+            entity: TodoList
             property: items
             multiplicity: 0:n
         other_end:
