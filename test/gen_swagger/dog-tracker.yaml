@@ -1,4 +1,4 @@
-name: DogTrackerAPI
+title: DogTrackerAPI
 version: "0.1"
 conventions:
     selector_location: path-parameter

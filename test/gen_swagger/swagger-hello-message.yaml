@@ -16,7 +16,7 @@ definitions:
       type:
         type: string
 info:
-  name: HelloWorldAPI
+  title: HelloWorldAPI
   version: '0.1'
 parameters:
   Accept:
