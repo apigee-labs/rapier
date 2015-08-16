@@ -1,7 +1,7 @@
 import requests
-from base_base import Base_base
+from base_resource import BaseBase
 
-class Base_collection(Base_base):
+class BaseCollection(BaseBase):
 
     def __init__(self, url, json_representation, etag):
         super(Base_entity, self).__init__(url, json_representation, etag)
