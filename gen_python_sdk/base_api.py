@@ -64,7 +64,7 @@ class API(object):
                             if type_name:
                                 if entity:
                                     if entity.type == type_name:
-                                        entity.update(content_location, json, etag)
+                                        entity.update_attrs(content_location, json, etag)
                                         return entity
                                     else:
                                         raise Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 

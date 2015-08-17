@@ -5,5 +5,18 @@ if isinstance(rslt, Exception):
     print rslt
 else:
     print rslt, rslt.__dict__
+
+    changes = {'text': 'goodbye, world'}
+    rslt = rslt.update(changes)
     
-    print rslt.delete()
+    if isinstance(rslt, Exception):
+        print rslt
+    else:
+        print rslt, rslt.__dict__
+            
+        rslt = rslt.delete()
+        
+        if isinstance(rslt, Exception):
+            print rslt
+        else:
+            print rslt, rslt.__dict__
