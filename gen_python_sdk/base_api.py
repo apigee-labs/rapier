@@ -30,8 +30,8 @@ class API(object):
         #if resource_class_name in globals():
         #    return globals()[resource_class_name]
         #else:
-        #    raise Exception('resource class name %s not in scope' % resource_class_name)
-        raise Exception('abstract method resource_class must be overridden')
+        #    return Exception('resource class name %s not in scope' % resource_class_name)
+        return Exception('abstract method resource_class must be overridden')
             
     def retrieve(self, url, entity=None, headers=None):
         # issue a GET to retrieve a resource from the API and create an object for it
@@ -67,25 +67,26 @@ class API(object):
                                         entity.update_attrs(content_location, json, etag)
                                         return entity
                                     else:
-                                        raise Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
+                                        return Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
                                 else:
                                     resource_class = self.resource_class(type_name)
                                     if resource_class:
                                         return resource_class(content_location, json, etag)
                                     else:
-                                        raise Exception('no resource_class for type %s') % r_type                        
+                                        return Exception('no resource_class for type %s') % r_type                        
                             else:
                                 if entity:
-                                    entity.update(content_location, json, etag)
+                                    entity.update_attrs(content_location, json, etag)
+                                    return entity
                                 else:
-                                    raise Exception('no type property %s in json %s') % (self.type_property(), json.dumps())                        
+                                    return Exception('no type property %s in json %s') % (self.type_property(), json.dumps())                        
                         else:
-                            raise Exception('non-json content type %s' %  r.headers['Content-Type'])
+                            return Exception('non-json content type %s' %  r.headers['Content-Type'])
                     else:
-                        raise Exception('server did not declare content_type')
+                        return Exception('server did not declare content_type')
                 else:
-                    raise Exception('server did not provide etag')
+                    return Exception('server did not provide etag')
             else:
-                raise Exception('server failed to provide Content-Location header for url %s' % url)
+                return Exception('server failed to provide Content-Location header for url %s' % url)
         else:
-            raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
+            return Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
