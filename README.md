@@ -24,8 +24,10 @@ Swagger document from a Rapier specification. The Swagger documents spell out th
 Once you have seen a few examples of the generated Swagger, the conventions will become quickly obvious and you will stop looking at the Swagger. 
 You can stop generating the Swagger
 documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
-people who know Swagger but not Rapier. Swagger will likely remain important to you for
-documenting APIs that are less consistent than Rapier APIs, follow different conventions to the ones Rapier currently understands, or which follow a service-oriented rather than a data-oriented design pattern. 
+people who know Swagger but not Rapier. 
+
+Swagger will likely remain important to you for
+documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
 
 In the future we intend to work on test tools,
 SDK generators and server implementation frameworks.  
