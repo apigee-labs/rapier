@@ -7,8 +7,6 @@ class HelloMessage(base_entity.BaseEntity):
         super(HelloMessage, self).update_attrs(url, json_representation, etag)
         if 'text' in json_representation:
             self.text = json_representation['text']
-        else:
-            raise Exception(520, 'server did not provide text property')
 
     def api(self):
         return hello_world_api.api

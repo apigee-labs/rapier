@@ -8,6 +8,7 @@ class BaseCollection(BaseBase):
         if self.items_name() in json_representation:
             items = json_representation[self.items_name]
             for item in items:
+                pass
 
     def items_name(self):
         return 'items'

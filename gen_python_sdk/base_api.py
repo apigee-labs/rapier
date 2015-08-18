@@ -1,4 +1,6 @@
 import requests
+from base_entity import BaseEntity
+from urlparse import urlparse, urlunparse
 
 class API(object):
 
@@ -26,12 +28,12 @@ class API(object):
         return type_name
                             
     def resource_class(self, type_name):
-        #resource_class_name = self.resource_class_name(type_name)
-        #if resource_class_name in globals():
-        #    return globals()[resource_class_name]
-        #else:
-        #    return Exception('resource class name %s not in scope' % resource_class_name)
-        return Exception('abstract method resource_class must be overridden')
+        api_class = self.api_class()
+        return api_class.resource_classes[type_name] \
+            if type_name in api_class.resource_classes else BaseEntity
+            
+    def api_class(self):
+        raise Exception('api_class methos must be overidden in subclass')
             
     def retrieve(self, url, entity=None, headers=None):
         # issue a GET to retrieve a resource from the API and create an object for it
@@ -49,6 +51,13 @@ class API(object):
     def create(self, url, body, entity=None, headers=None):
         r = requests.post(url, json=body, headers = headers if headers else self.delete_headers())
         return self.process_entity_result(url, r, entity)
+
+    def retrieve_well_known_resource(self, url):
+        url_parts = list(urlparse(url))
+        url_parts[0] = url_parts[1] = None
+        
+        if urlunparse(url_parts) in self.api_class().well_known_URLs:
+            return self.retrieve(url)
             
     def process_entity_result(self, url, r, entity=None):
         if r.status_code == 200:

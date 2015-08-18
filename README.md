@@ -17,7 +17,7 @@ that we have added. In the future we will allow more options for these add-on co
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that Rapier does
 and was absolutely consistent in applying them.
 
-Rapier documents are complete API spceicifications — you can give them directly to API developers to implement servers and to app developers to 
+Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
 known and understood, we provide a tool that will generate a 
 Swagger document from a Rapier specification. The Swagger documents spell out the conventions used by Rapier in a way that is familiar to many.
