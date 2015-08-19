@@ -8,8 +8,12 @@ class BaseResource(object):
         if location:
             self.location = location
         else:
-            if json_representation and 'location' in json_representation:
-                self.location = json_representation['location']
+            if json_representation:
+                if 'location' in json_representation:
+                    self.location = json_representation['location']
+                else:
+                    if 'self' in json_representation:
+                        self.location = json_representation['self']                    
         if etag:
             self.etag = etag
         else:
