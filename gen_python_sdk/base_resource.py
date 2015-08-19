@@ -1,12 +1,20 @@
 
 class BaseResource(object):
     
-    def __init__(self, url = None, json_representation = None, etag = None):
-        self.update_attrs(url, json_representation, etag)
+    def __init__(self, json_representation = None, location = None, etag = None):
+        self.update_attrs(json_representation, location, etag)
 
-    def update_attrs(self, url = None, json_representation = None, etag = None):
-        if url:
-            self.url = url
+    def update_attrs(self, json_representation = None, location = None, etag = None):
+        if location:
+            self.location = location
+        else:
+            if json_representation and 'location' in json_representation:
+                self.location = json_representation['location']
+        if etag:
+            self.etag = etag
+        else:
+            if json_representation and 'etag' in json_representation:
+                self.etag = json_representation['etag']
         if json_representation:
             self.json_representation = json_representation
             if 'self' in json_representation:
@@ -15,5 +23,6 @@ class BaseResource(object):
                 self.type = json_representation['type']
             if 'id' in json_representation:
                 self.type = json_representation['id']
-        if etag:
-            self.etag = etag
+        
+    def api():
+        raise Exception('api method must be overridden')

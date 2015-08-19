@@ -3,12 +3,11 @@ from base_resource import BaseBase
 
 class BaseCollection(BaseBase):
 
-    def update_attrs(self, url, json_representation, etag):
-        super(Base_entity, self).update_attrs(url, json_representation, etag)
+    def update_attrs(self, json_representation, url, etag):
+        super(Base_entity, self).update_attrs(json_representation, url, etag)
         if self.items_name() in json_representation:
-            items = json_representation[self.items_name]
-            for item in items:
-                pass
+            items_array = [self.api().build_entity_from_json(item) for item in items]
+            self.items = {item.location: item for item in items_array}
 
     def items_name(self):
         return 'items'
@@ -17,14 +16,25 @@ class BaseCollection(BaseBase):
         # create a new entity in the API by POSTing
         if self.self:
             if entity.self:
-                raise Error('entity already exists in API %s' % entity)
+                return Error('entity already exists in API %s' % entity)
             r = requests.post(self.self, json=entity.get_property_dict())
             if r.status_code == 201:
                 if 'Location' in r.headers:
-                    entity.self = r.headers['Content-Location']
+                    if 'ETag' in r.headers:
+                        rslt = self.build_entity_from_json(r.body, entity, r.headers['Location'], r.headers['ETag'])
+                        if not isinstance(rslt, Exception):
+                            if not hasattr(self, 'items'): 
+                                self.items = {}
+                            else:
+                                if rslt.location in self.items:
+                                    return Exception('Duplicate location')
+                            self.items[rslt.location] = rslt
+                        return rslt
+                    else:
+                        return Error('server failed to return ETag on POST. URL: %s entity: %s' % (self.self, entity))
                 else:
-                    raise Error('server failed to return Location header on POST. URL: %s entity: %s' % (self.self, entity))
+                    return Error('server failed to return Location header on POST. URL: %s entity: %s' % (self.self, entity))
             else:
-                raise Error('Unable to create entity in API. status_code: %s error-text: %s entity: %s' % (r.status_code, r.text, entity)) 
+                return Error('Unable to create entity in API. status_code: %s error-text: %s entity: %s' % (r.status_code, r.text, entity)) 
         else:
-            raise Error('Collection has no self URL')
+            return Error('Collection has no self Content-Location')

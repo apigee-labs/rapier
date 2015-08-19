@@ -50,7 +50,7 @@ class API(object):
             
     def create(self, url, body, entity=None, headers=None):
         r = requests.post(url, json=body, headers = headers if headers else self.delete_headers())
-        return self.process_entity_result(url, r, entity)
+        return self.process_entity_result(url, r, entity, 'Location')
 
     def retrieve_well_known_resource(self, url):
         url_parts = list(urlparse(url))
@@ -59,36 +59,17 @@ class API(object):
         if urlunparse(url_parts) in self.api_class().well_known_URLs:
             return self.retrieve(url)
             
-    def process_entity_result(self, url, r, entity=None):
+    def process_entity_result(self, url, r, entity=None, location_header = 'Content-Location'):
         if r.status_code == 200:
-            if 'Content-Location' in r.headers:
-                content_location = r.headers['Content-Location']
+            if location_header in r.headers:
+                location = r.headers[location_header]
                 if 'ETag' in r.headers:
                     etag = r.headers['ETag']
                     if 'Content-Type' in r.headers:
                         content_type = r.headers['Content-Type'].split(';')[0]
                         if content_type == 'application/json':
                             json = r.json()
-                            type_name = json.get(self.type_property())
-                            if type_name:
-                                if entity:
-                                    if entity.type == type_name:
-                                        entity.update_attrs(content_location, json, etag)
-                                        return entity
-                                    else:
-                                        return Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
-                                else:
-                                    resource_class = self.resource_class(type_name)
-                                    if resource_class:
-                                        return resource_class(content_location, json, etag)
-                                    else:
-                                        return Exception('no resource_class for type %s') % r_type                        
-                            else:
-                                if entity:
-                                    entity.update_attrs(content_location, json, etag)
-                                    return entity
-                                else:
-                                    return Exception('no type property %s in json %s') % (self.type_property(), json.dumps())                        
+                            return self.build_entity_from_json(json, entity, location, etag)
                         else:
                             return Exception('non-json content type %s' %  r.headers['Content-Type'])
                     else:
@@ -96,6 +77,28 @@ class API(object):
                 else:
                     return Exception('server did not provide etag')
             else:
-                return Exception('server failed to provide Content-Location header for url %s' % url)
+                return Exception('server failed to provide %s header for url %s' % (location_header, url))
         else:
             return Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
+            
+    def build_entity_from_json(self, json, entity=None, location=None, etag=None):
+        type_name = json.get(self.type_property())
+        if type_name:
+            if entity:
+                if entity.type == type_name:
+                    entity.update_attrs(json, location, etag)
+                    return entity
+                else:
+                    return Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
+            else:
+                resource_class = self.resource_class(type_name)
+                if resource_class:
+                    return resource_class(json, location, etag)
+                else:
+                    return Exception('no resource_class for type %s') % r_type                        
+        else:
+            if entity:
+                entity.update_attrs(location, json, etag)
+                return entity
+            else:
+                return Exception('no type property %s in json %s') % (self.type_property(), json.dumps())
