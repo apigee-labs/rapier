@@ -58,6 +58,8 @@ class BaseAPI(object):
         
         if urlunparse(url_parts) in self.api_class().well_known_URLs:
             return self.retrieve(url)
+        else:
+            return Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts)), self.api_class().well_known_URLs)
             
     def process_entity_result(self, url, r, entity=None, location_header = 'Content-Location'):
         if r.status_code == 200:

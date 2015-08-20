@@ -25,8 +25,21 @@ class BaseResource(object):
                 self.self = json_representation['self']
             if 'type' in json_representation:
                 self.type = json_representation['type']
-            if 'id' in json_representation:
-                self.type = json_representation['id']
+
+    def retrieve(self):
+        # issue a GET to refresh this object from API
+        if not self.location:
+            raise ValueError('self location not set')
+        return self.api().retrieve(self.location, self)
+            
+    def get_update_representation(self):
+        update_representation = dict()
+        if hasattr(self, 'type'):
+            if hasattr(self, 'json_representation') and 'type' in self.json_representation and self.type == self.json_representation['type']:
+                pass
+            else:
+                update_representation['type'] = self.type
+        return update_representation
         
     def api():
         raise Exception('api method must be overridden')

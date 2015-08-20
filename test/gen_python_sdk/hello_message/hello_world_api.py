@@ -1,5 +1,4 @@
 from rapier.gen_python_sdk.base_api import BaseAPI 
-from urlparse import urlparse, urlunparse
 from hello_message import HelloMessage
 
 class HelloWorldAPI(BaseAPI):
