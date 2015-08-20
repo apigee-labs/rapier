@@ -1,9 +1,8 @@
-from rapier.gen_python_sdk.base_api import API 
+from rapier.gen_python_sdk.base_api import BaseAPI 
 from urlparse import urlparse, urlunparse
-from HelloMessage import HelloMessage
-import rapier.gen_python_sdk.base_entity as base_entity
+from hello_message import HelloMessage
 
-class HelloWorldAPI(API):
+class HelloWorldAPI(BaseAPI):
 
     well_known_URLs = ['/message']
     resource_classes = {'HelloMessage': HelloMessage}

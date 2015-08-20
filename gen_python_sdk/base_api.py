@@ -2,7 +2,7 @@ import requests
 from base_entity import BaseEntity
 from urlparse import urlparse, urlunparse
 
-class API(object):
+class BaseAPI(object):
 
     def retrieve_headers(self):
         return {

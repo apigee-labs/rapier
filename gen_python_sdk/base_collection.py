@@ -1,7 +1,7 @@
 import requests
-from base_resource import BaseBase
+from base_resource import BaseResource
 
-class BaseCollection(BaseBase):
+class BaseCollection(BaseResource):
 
     def update_attrs(self, json_representation, url, etag):
         super(Base_entity, self).update_attrs(json_representation, url, etag)
