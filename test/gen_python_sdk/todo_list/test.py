@@ -34,9 +34,11 @@ def test_api():
     new_item2.update()
     assert(new_item2._etag == str(int(new_item._etag) + 1))
     assert(new_item2.description == 'buy more milk')
-    new_item.delete()
+    new_item3 = Item(None, new_item._location)
+    new_item3.delete()
+    assert(new_item3._etag == new_item2._etag)
     items.retrieve()
-    assert(new_item._location not in items.items)
+    assert(new_item3._location not in items.items)
     
 def main():
     test_objects()
