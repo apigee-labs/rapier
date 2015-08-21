@@ -1,6 +1,5 @@
 import requests
 from urlparse import urlparse, urlunparse
-import json
 
 class BaseAPI(object):
 
@@ -89,7 +88,7 @@ class BaseAPI(object):
                 entity.update_attrs(location, jso, etag)
                 return entity
             else:
-                raise Exception('no kind property %s in json %s' % ('kind', json.dumps(jso)))               
+                raise Exception('no kind property %s in json %s' % ('kind', jso))               
 
 class BaseResource(object):
     
