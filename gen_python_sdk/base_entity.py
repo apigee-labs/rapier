@@ -4,18 +4,13 @@ from urlparse import urlparse, urlunparse
 class BaseEntity(BaseResource):
     
     def __init__(self, json_representation = None, location = None, etag = None):
-        self.retrieved = dict()
-        return super(BaseEntity, self).__init__(json_representation, location, etag)
-
-    def update_attrs(self, json_representation, location=None, etag=None):
-        super(BaseEntity, self).update_attrs(json_representation, location, etag)
-        id_name = self.id_property_name()
-        if id_name in json_representation:
-            setattr(self, id_name, json_representation['id'])
-
-    def id_property_name(self):
-        return 'id'
+        self._retrieved = dict()
+        self.type = type(self).__name__
+        super(BaseEntity, self).__init__(json_representation, location, etag)
         
+    def get_update_representation(self):
+        return {key: value for key, value in self.__dict__.iteritems() if not key.startswith('_')}
+
     def update(self, changes):
         # issue a PATCH or PUT to update this object from API
         if not self.location:
@@ -35,15 +30,10 @@ class BaseEntity(BaseResource):
         if relationship:
             if hasattr(self, relationship):
                 url = getattr(self, relationship)
-            elif relationship in self.json_representation:
-                url = self.json_representation[relationship]
-            if url:
                 rslt = self.api().retrieve(url)
-                if isinstance(rslt, Exception):
-                    return rslt
-                else:
-                    self.retrieved[relationship] = rslt
-                    return rslt
+                if not isinstance(rslt, Exception):
+                    self._retrieved[relationship] = rslt
+                return rslt
             else:
                 return Exception('no value set for items URL')
         else:

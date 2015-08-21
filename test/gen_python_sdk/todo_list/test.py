@@ -14,11 +14,11 @@ def main():
     
     assert(not isinstance(item, Exception))
     
-    assert(item.location)
+    assert(item._location)
                 
     items.retrieve()
     
-    assert(item.location in items.items)
+    assert(item._location in items.items)
 
 if __name__ == '__main__':
     main()

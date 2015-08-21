@@ -5,15 +5,11 @@ class BaseCollection(BaseResource):
 
     def update_attrs(self, json_representation, url, etag):
         super(BaseCollection, self).update_attrs(json_representation, url, etag)
-        items_name = self.items_name()
-        if items_name in json_representation:
-            items = json_representation[items_name]
+        if 'items' in json_representation:
+            items = json_representation['items']
             items_array = [self.api().build_entity_from_json(item) for item in items]
-            self.items = {item.location: item for item in items_array}
+            self.items = {item._location: item for item in items_array}
 
-    def items_name(self):
-        return 'items'
-        
     def create(self, entity):
         # create a new entity in the API by POSTing
         if self.self:
@@ -24,10 +20,10 @@ class BaseCollection(BaseResource):
                 if 'Location' in r.headers:
                     if 'ETag' in r.headers:
                         entity.update_attrs(r.json(), r.headers['Location'], r.headers['ETag'])
-                        if entity.location in self.items:
+                        if entity._location in self.items:
                             return Exception('Duplicate location')
                         else:
-                            self.items[entity.location] = entity
+                            self.items[entity._location] = entity
                             return entity
                     else:
                         return Exception('server failed to return ETag on POST. URL: %s entity: %s' % (self.self, entity))

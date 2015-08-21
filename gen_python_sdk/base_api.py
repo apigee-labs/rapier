@@ -24,17 +24,6 @@ class BaseAPI(object):
     def type_property(self):
         return 'type'
         
-    def resource_class_name(self, type_name):
-        return type_name
-                            
-    def resource_class(self, type_name):
-        api_class = self.api_class()
-        return api_class.resource_classes[type_name] \
-            if type_name in api_class.resource_classes else BaseEntity
-            
-    def api_class(self):
-        raise Exception('api_class methos must be overidden in subclass')
-            
     def retrieve(self, url, entity=None, headers=None):
         # issue a GET to retrieve a resource from the API and create an object for it
         r = requests.get(url, headers = headers if headers else self.retrieve_headers())
@@ -56,7 +45,7 @@ class BaseAPI(object):
         url_parts = list(urlparse(url))
         url_parts[0] = url_parts[1] = None
         
-        if urlunparse(url_parts) in self.api_class().well_known_URLs:
+        if urlunparse(url_parts) in self.well_known_URLs():
             return self.retrieve(url)
         else:
             return Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts)), self.api_class().well_known_URLs)

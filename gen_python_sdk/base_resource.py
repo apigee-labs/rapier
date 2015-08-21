@@ -5,41 +5,22 @@ class BaseResource(object):
         self.update_attrs(json_representation, location, etag)
 
     def update_attrs(self, json_representation = None, location = None, etag = None):
+        if json_representation:
+            for key, value in json_representation.iteritems():
+                setattr(self, key, value)
+            json_self = json_representation.get('self')
+            if json_self:
+                self._location = json_self
         if location:
-            self.location = location
-        else:
-            if json_representation:
-                if 'location' in json_representation:
-                    self.location = json_representation['location']
-                else:
-                    if 'self' in json_representation:
-                        self.location = json_representation['self']                    
+            self._location = location
         if etag:
             self.etag = etag
-        else:
-            if json_representation and 'etag' in json_representation:
-                self.etag = json_representation['etag']
-        if json_representation:
-            self.json_representation = json_representation
-            if 'self' in json_representation:
-                self.self = json_representation['self']
-            if 'type' in json_representation:
-                self.type = json_representation['type']
 
     def retrieve(self):
         # issue a GET to refresh this object from API
-        if not self.location:
+        if not self._location:
             raise ValueError('self location not set')
-        return self.api().retrieve(self.location, self)
+        return self.api().retrieve(self._location, self)
             
-    def get_update_representation(self):
-        update_representation = dict()
-        if hasattr(self, 'type'):
-            if hasattr(self, 'json_representation') and 'type' in self.json_representation and self.type == self.json_representation['type']:
-                pass
-            else:
-                update_representation['type'] = self.type
-        return update_representation
-        
     def api():
         raise Exception('api method must be overridden')

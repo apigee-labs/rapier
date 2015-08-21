@@ -1,12 +1,12 @@
 from rapier.gen_python_sdk.base_api import BaseAPI 
-from hello_message import HelloMessage
 
 class HelloWorldAPI(BaseAPI):
 
-    well_known_URLs = ['/message']
-    resource_classes = {'HelloMessage': HelloMessage}
+    def well_known_URLs(self):
+        return ['/message']
     
-    def api_class(self):
-        return HelloWorldAPI
+    def resource_class(self, type_name):
+        cls = globals().get(type_name)
+        return cls if cls else BaseEntity
         
 api = HelloWorldAPI()
