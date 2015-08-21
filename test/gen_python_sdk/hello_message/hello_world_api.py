@@ -1,5 +1,4 @@
-from rapier.gen_python_sdk.base_api import BaseAPI 
-from rapier.gen_python_sdk.base_entity import BaseEntity
+from rapier.gen_python_sdk.base_api import BaseAPI, BaseEntity
 
 class HelloWorldAPI(BaseAPI):
 
