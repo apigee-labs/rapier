@@ -19,7 +19,7 @@ class BaseResource(object):
     def retrieve(self):
         # issue a GET to refresh this object from API
         if not self._location:
-            raise ValueError('self location not set')
+            raise Exception('self location not set')
         return self.api().retrieve(self._location, self)
             
     def api():

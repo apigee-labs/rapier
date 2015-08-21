@@ -88,7 +88,7 @@ app.patch('/items;:itemid', function(req, res) {
         var changes = req.body;
         var error = null;
         for (var property in changes) {
-          if (['type', 'self', 'id', 'etag'].indexOf(property) > -1) {
+          if (['type', 'self', 'id', '_etag'].indexOf(property) > -1) {
             res.status(400).send({'text': 'Cannot set property '+ property})
             error = 400
           }
@@ -97,10 +97,10 @@ app.patch('/items;:itemid', function(req, res) {
           for (var property in changes) {
             item[property] = changes[property]            
           }
-          item.etag++
+          item._etag++
           res.set('Content-Type', 'application/json');
           res.set('Content-Location', item.self);
-          res.set('ETag', item.etag);
+          res.set('ETag', item._etag);
           res.status(200);
           res.json(item);
         }
@@ -132,7 +132,7 @@ app.delete('/items;:itemid', function(req, res) {
       if (item !== null) {
         res.set('Content-Type', 'application/json');
         res.set('Content-Location', item.self);
-        res.set('ETag', item.etag);
+        res.set('ETag', item._etag);
         res.status(200);
         res.json(item);
       } else {
@@ -156,9 +156,9 @@ app.post('/to-dos/items', function(req, res) {
         var itemid = ITEMID++;
         item.self = BASE_PREFIX + '/items/' + itemid.toString();
         item.id = itemid.toString();
-        item.etag = 0;
+        item._etag = 0;
         ITEMS.items.push(item);
-        res.set('ETag', item.etag);
+        res.set('ETag', item._etag);
         res.set('Location', item.self);
         res.status(201).json(item)
       } else {

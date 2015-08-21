@@ -48,7 +48,7 @@ class BaseAPI(object):
         if urlunparse(url_parts) in self.well_known_URLs():
             return self.retrieve(url)
         else:
-            return Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts)), self.api_class().well_known_URLs)
+            raise Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts)), self.api_class().well_known_URLs)
             
     def process_entity_result(self, url, r, entity=None, location_header = 'Content-Location'):
         if r.status_code == 200:
@@ -62,15 +62,15 @@ class BaseAPI(object):
                             json = r.json()
                             return self.build_entity_from_json(json, entity, location, etag)
                         else:
-                            return Exception('non-json content type %s' %  r.headers['Content-Type'])
+                            raise Exception('non-json content type %s' %  r.headers['Content-Type'])
                     else:
-                        return Exception('server did not declare content_type')
+                        raise Exception('server did not declare content_type')
                 else:
-                    return Exception('server did not provide etag')
+                    raise Exception('server did not provide etag')
             else:
-                return Exception('server failed to provide %s header for url %s' % (location_header, url))
+                raise Exception('server failed to provide %s header for url %s' % (location_header, url))
         else:
-            return Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
+            raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
             
     def build_entity_from_json(self, json, entity=None, location=None, etag=None):
         type_name = json.get(self.type_property())
@@ -80,16 +80,16 @@ class BaseAPI(object):
                     entity.update_attrs(json, location, etag)
                     return entity
                 else:
-                    return Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
+                    raise Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
             else:
                 resource_class = self.resource_class(type_name)
                 if resource_class:
                     return resource_class(json, location, etag)
                 else:
-                    return Exception('no resource_class for type %s') % r_type                        
+                    raise Exception('no resource_class for type %s') % r_type                        
         else:
             if entity:
                 entity.update_attrs(location, json, etag)
                 return entity
             else:
-                return Exception('no type property %s in json %s') % (self.type_property(), json.dumps())
+                raise Exception('no type property %s in json %s') % (self.type_property(), json.dumps())
