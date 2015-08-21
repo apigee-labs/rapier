@@ -68,34 +68,34 @@ class BaseAPI(object):
         else:
             raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
             
-    def build_entity_from_json(self, jso, entity=None, location=None, etag=None):
+    def build_entity_from_json(self, jso, entity=None, url=None, etag=None):
         kind = jso.get('kind')
         if kind:
             if entity:
-                if entity.kind == kind:
-                    entity.update_attrs(jso, location, etag)
+                if not hasattr(entity, 'kind') or entity.kind == kind:
+                    entity.update_attrs(jso, url, etag)
                     return entity
                 else:
                     raise Exception('SDK cannot handle change of kind from %s to %s' % (entity.kind, kind)) 
             else:
                 resource_class = self.resource_class(kind)
                 if resource_class:
-                    return resource_class(jso, location, etag)
+                    return resource_class(jso, url, etag)
                 else:
                     raise Exception('no resource_class for kind %s') % kind                        
         else:
-            if entity:
-                entity.update_attrs(location, jso, etag)
+            if entity and entity.kind:
+                entity.update_attrs(url, jso, etag)
                 return entity
             else:
                 raise Exception('no kind property %s in json %s' % ('kind', jso))               
 
 class BaseResource(object):
     
-    def __init__(self, jso = None, location = None, etag = None):
-        self.update_attrs(jso, location, etag)
+    def __init__(self, jso = None, url = None, etag = None):
+        self.update_attrs(jso, url, etag)
 
-    def update_attrs(self, jso = None, location = None, etag = None):
+    def update_attrs(self, jso = None, url = None, etag = None):
         if jso:
             for key, value in jso.iteritems():
                 setattr(self, key, value)
@@ -103,10 +103,8 @@ class BaseResource(object):
             if json_self:
                 self._location = json_self
             self._jso = jso
-        else:
-            self._jso = dict()
-        if location:
-            self._location = location
+        if url:
+            self._location = url
         if etag:
             self._etag = etag
 
@@ -118,19 +116,19 @@ class BaseResource(object):
         
 class BaseEntity(BaseResource):
     
-    def __init__(self, jso = None, location = None, etag = None):
+    def __init__(self, jso = None, url = None, etag = None):
         self._retrieved = dict()
         self.kind = type(self).__name__
-        super(BaseEntity, self).__init__(jso, location, etag)
+        super(BaseEntity, self).__init__(jso, url, etag)
         
-    def get_update_representation(self):
-        jso = self._jso
-        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (key in jso and jso[key] == value))}
+    def get_update_representation(self, update=False):
+        jso = self._jso if hasattr(self, '_jso') else None
+        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (jso and key in jso and jso[key] == value) or (key == 'kind' and update))}
 
     def update(self, changes=None):
         # issue a PATCH or PUT to update this object from API
         if changes == None:
-            changes = self.get_update_representation()
+            changes = self.get_update_representation(update = True)
         if not self._location:
             raise Exception('self location not set')
         if not self._etag:
@@ -161,21 +159,22 @@ class BaseCollection(BaseResource):
 
     def update_attrs(self, jso, url, etag):
         super(BaseCollection, self).update_attrs(jso, url, etag)
-        if 'items' in jso:
+        if jso and 'items' in jso:
             items = jso['items']
             items_array = [self.api().build_entity_from_json(item) for item in items]
             self.items = {item._location: item for item in items_array}
 
     def create(self, entity):
         # create a new entity in the API by POSTing
-        if self._self:
+        if self._location:
             if hasattr(entity, '_self') and entity._self:
                 raise Exception('entity already exists in API %s' % entity)
-            rslt = self.api().create(self._self, entity.get_update_representation(), entity)
-            if entity._self in self.items:
-                raise Exception('Duplicate location')
-            else:
-                self.items[entity._self] = entity
-                return entity
+            rslt = self.api().create(self._location, entity.get_update_representation(), entity)
+            if hasattr(self, 'items'):
+                if entity._self in self.items:
+                    raise Exception('Duplicate id')
+                else:
+                    self.items[entity._self] = entity
+            return entity
         else:
             raise Exception('Collection has no _self property')

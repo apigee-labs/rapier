@@ -1,6 +1,6 @@
-from rapier.test.gen_python_sdk.todo_list.todo_list_api import api, Item
+from rapier.test.gen_python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
 
-def main():
+def test_objects():
     todo_list = api.retrieve_well_known_resource('http://localhost:3001/to-dos')
     items = todo_list.retrieve('items')
     new_item = Item({'description':'buy milk'})
@@ -16,6 +16,31 @@ def main():
     new_item.delete()
     items.retrieve()
     assert(new_item._location not in items.items)
+    
+def test_api():
+    todo_list = TodoList(None, 'http://localhost:3001/to-dos')
+    todo_list.retrieve()
+    assert(hasattr(todo_list,'items'))
+    items = Collection(None, 'http://localhost:3001/to-dos/items')
+    new_item = Item({'description':'buy milk'})
+    items.create(new_item)
+    assert(hasattr(new_item, '_location') and new_item._location)                
+    items.retrieve()
+    assert(new_item._location in items.items)
+    new_item2 = Item(None, new_item._location)
+    new_item2.description = 'buy more milk'
+    new_item2.due = 'tonight'
+    new_item2._etag = new_item._etag
+    new_item2.update()
+    assert(new_item2._etag == str(int(new_item._etag) + 1))
+    assert(new_item2.description == 'buy more milk')
+    new_item.delete()
+    items.retrieve()
+    assert(new_item._location not in items.items)
+    
+def main():
+    test_objects()
+    test_api()
 
 if __name__ == '__main__':
     main()
