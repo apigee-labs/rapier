@@ -1,4 +1,5 @@
 from rapier.gen_python_sdk.base_api import BaseAPI 
+from rapier.gen_python_sdk.base_entity import BaseEntity
 
 class HelloWorldAPI(BaseAPI):
 
@@ -10,3 +11,8 @@ class HelloWorldAPI(BaseAPI):
         return cls if cls else BaseEntity
         
 api = HelloWorldAPI()
+
+class HelloMessage(BaseEntity):
+
+    def api(self):
+        return api

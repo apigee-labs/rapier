@@ -1,8 +1,6 @@
 from rapier.gen_python_sdk.base_api import BaseAPI 
 from rapier.gen_python_sdk.base_entity import BaseEntity
-from todo_list import TodoList
-from item import Item
-from collection import Collection
+from rapier.gen_python_sdk.base_collection import BaseCollection
 
 class TodoListAPI(BaseAPI):
 
@@ -14,3 +12,20 @@ class TodoListAPI(BaseAPI):
         return cls if cls else BaseEntity
                     
 api = TodoListAPI()
+
+class TodoListAPIClass(object):
+            
+    def api(self):
+        return api
+        
+class TodoList(BaseEntity, TodoListAPIClass):
+            
+    pass
+        
+class Item(BaseEntity, TodoListAPIClass):
+    
+    pass   
+        
+class Collection(BaseCollection, TodoListAPIClass):
+    
+    pass

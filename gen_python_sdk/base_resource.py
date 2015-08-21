@@ -21,6 +21,3 @@ class BaseResource(object):
         if not self._location:
             raise Exception('self location not set')
         return self.api().retrieve(self._location, self)
-            
-    def api():
-        raise Exception('api method must be overridden')
