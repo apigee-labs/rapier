@@ -92,19 +92,19 @@ class BaseAPI(object):
 
 class BaseResource(object):
     
-    def __init__(self, json_representation = None, location = None, etag = None):
-        self.update_attrs(json_representation, location, etag)
+    def __init__(self, jso = None, location = None, etag = None):
+        self.update_attrs(jso, location, etag)
 
-    def update_attrs(self, json_representation = None, location = None, etag = None):
-        if json_representation:
-            for key, value in json_representation.iteritems():
+    def update_attrs(self, jso = None, location = None, etag = None):
+        if jso:
+            for key, value in jso.iteritems():
                 setattr(self, key, value)
-            json_self = json_representation.get('_self')
+            json_self = jso.get('_self')
             if json_self:
                 self._location = json_self
-            self._json_representation = json_representation
+            self._jso = jso
         else:
-            self._json_representation = dict()
+            self._jso = dict()
         if location:
             self._location = location
         if etag:
@@ -118,14 +118,14 @@ class BaseResource(object):
         
 class BaseEntity(BaseResource):
     
-    def __init__(self, json_representation = None, location = None, etag = None):
+    def __init__(self, jso = None, location = None, etag = None):
         self._retrieved = dict()
         self.kind = type(self).__name__
-        super(BaseEntity, self).__init__(json_representation, location, etag)
+        super(BaseEntity, self).__init__(jso, location, etag)
         
     def get_update_representation(self):
-        json_representation = self._json_representation
-        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (key in json_representation and json_representation[key] == value))}
+        jso = self._jso
+        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (key in jso and jso[key] == value))}
 
     def update(self, changes=None):
         # issue a PATCH or PUT to update this object from API
@@ -159,12 +159,12 @@ class BaseEntity(BaseResource):
             
 class BaseCollection(BaseResource):
 
-    def update_attrs(self, json_representation, url, etag):
-        super(BaseCollection, self).update_attrs(json_representation, url, etag)
-        if '_items' in json_representation:
-            items = json_representation['_items']
+    def update_attrs(self, jso, url, etag):
+        super(BaseCollection, self).update_attrs(jso, url, etag)
+        if 'items' in jso:
+            items = jso['items']
             items_array = [self.api().build_entity_from_json(item) for item in items]
-            self._items = {item._location: item for item in items_array}
+            self.items = {item._location: item for item in items_array}
 
     def create(self, entity):
         # create a new entity in the API by POSTing
@@ -172,10 +172,10 @@ class BaseCollection(BaseResource):
             if hasattr(entity, '_self') and entity._self:
                 raise Exception('entity already exists in API %s' % entity)
             rslt = self.api().create(self._self, entity.get_update_representation(), entity)
-            if entity._self in self._items:
+            if entity._self in self.items:
                 raise Exception('Duplicate location')
             else:
-                self._items[entity._self] = entity
+                self.items[entity._self] = entity
                 return entity
         else:
             raise Exception('Collection has no _self property')

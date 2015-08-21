@@ -12,12 +12,12 @@ var TODOS_URL =  BASE_PREFIX + '/to-dos';
 var TODOS = {
   _self: BASE_PREFIX + '/to-dos',
   kind: 'TodoList',
-  _items: BASE_PREFIX + '/to-dos/items'
+  items: BASE_PREFIX + '/to-dos/items'
 }
 var ITEMS = {
   _self: BASE_PREFIX + '/to-dos/items',
   kind: 'Collection',
-  _items: [],
+  items: [],
   item_type: 'Item'
 }
 
@@ -49,7 +49,7 @@ app.get('/items;:itemid', function(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     var itemid = req.params.itemid;
-    var items = ITEMS._items;
+    var items = ITEMS.items;
     var item = null;
     for (var i = 0; i < items.length; i++) {
       if (items[i]._id == itemid) {
@@ -76,7 +76,7 @@ app.patch('/items;:itemid', function(req, res) {
     var content_type = req.get('Content-Type');
     if (typeof content_type == 'undefined' || content_type === 'application/json') {
       var itemid = req.params.itemid;
-      var items = ITEMS._items;
+      var items = ITEMS.items;
       var item = null;
       for (var i = 0; i < items.length; i++) {
         if (items[i]._id == itemid) {
@@ -124,7 +124,7 @@ app.delete('/items;:itemid', function(req, res) {
     var content_type = req.get('Content-Type');
     if (typeof content_type == 'undefined' || content_type === 'application/json') {
       var itemid = req.params.itemid;
-      var items = ITEMS._items;
+      var items = ITEMS.items;
       var item = null;
       for (var i = 0; i < items.length; i++) {
         if (items[i]._id == itemid) {
@@ -160,7 +160,7 @@ app.post('/to-dos/items', function(req, res) {
         item._self = BASE_PREFIX + '/items;' + itemid.toString();
         item._id = itemid.toString();
         item._etag = 0;
-        ITEMS._items.push(item);
+        ITEMS.items.push(item);
         res.set('ETag', item._etag);
         res.set('Location', item._self);
         res.status(201).json(item)
