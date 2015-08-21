@@ -1,4 +1,4 @@
-python gen_swagger/gen_swagger.py test/hello-message.yaml > test/gen_swagger/swagger-hello-message.yaml
-python gen_swagger/gen_swagger.py test/to-do-list.yaml > test/gen_swagger/swagger-to-do-list.yaml
-python gen_swagger/gen_swagger.py test/dog-tracker.yaml > test/gen_swagger/swagger-dog-tracker.yaml
-python gen_swagger/gen_swagger.py test/property-tracker.yaml > test/gen_swagger/swagger-property-tracker.yaml
+python rapier/gen_swagger/gen_swagger.py rapier/test/hello-message.yaml > rapier/test/gen_swagger/swagger-hello-message.yaml
+python rapier/gen_swagger/gen_swagger.py rapier/test/todo-list.yaml > rapier/test/gen_swagger/swagger-todo-list.yaml
+python rapier/gen_swagger/gen_swagger.py rapier/test/dog-tracker.yaml > rapier/test/gen_swagger/swagger-dog-tracker.yaml
+python rapier/gen_swagger/gen_swagger.py rapier/test/property-tracker.yaml > rapier/test/gen_swagger/swagger-property-tracker.yaml

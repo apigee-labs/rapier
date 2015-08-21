@@ -7,13 +7,13 @@ definitions:
         type: string
   HelloMessage:
     properties:
-      id:
+      _id:
         type: string
-      self_link:
+      _self:
+        type: string
+      kind:
         type: string
       text:
-        type: string
-      type:
         type: string
 info:
   title: HelloWorldAPI

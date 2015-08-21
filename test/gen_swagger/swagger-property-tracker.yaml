@@ -3,7 +3,11 @@ consumes:
 definitions:
   Bicycle:
     properties:
-      id: &id001
+      _id: &id001
+        type: string
+      _self: &id002
+        type: string
+      kind: &id003
         type: string
       name:
         type: string
@@ -19,29 +23,27 @@ definitions:
         type: string
       purchase_date:
         type: string
-      self_link: &id002
-        type: string
-      type: &id003
-        type: string
   Collection:
     properties:
+      _self:
+        type: string
       item_type:
         type: string
       items:
         items:
           type: object
         type: array
-      self_link:
-        type: string
-      type:
+      kind:
         type: string
   Dog:
     properties:
+      _id: *id001
+      _self: *id002
       birth_date:
         type: string
       fur_color:
         type: string
-      id: *id001
+      kind: *id003
       name:
         type: string
       owner:
@@ -52,14 +54,14 @@ definitions:
             one_of:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
-      self_link: *id002
-      type: *id003
   ErrorResponse:
     properties:
       message:
         type: string
   Institution:
     properties:
+      _id: *id001
+      _self: *id002
       assets:
         format: URL
         type: string
@@ -70,16 +72,16 @@ definitions:
             - $ref: '#/definitions/Bicycle'
       birth-date:
         type: string
-      id: *id001
+      kind: *id003
       name:
         type: string
-      self_link: *id002
-      type: *id003
   Person:
     properties:
+      _id: *id001
+      _self: *id002
       birth-date:
         type: string
-      id: *id001
+      kind: *id003
       name:
         type: string
       possessions:
@@ -90,10 +92,10 @@ definitions:
             one_of:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-      self_link: *id002
-      type: *id003
   PropertyTracker:
     properties:
+      _id: *id001
+      _self: *id002
       bicycles:
         format: URL
         type: string
@@ -106,21 +108,19 @@ definitions:
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Dog'
-      id: *id001
       institutions:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Institution'
+      kind: *id003
       people:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Person'
-      self_link: *id002
-      type: *id003
 info:
   title: PropertyTrackerAPI
   version: '0.1'

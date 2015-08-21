@@ -447,22 +447,22 @@ class Swagger_generator(object):
             }
    
 standard_entity_properties = {
-    'self_link': {
+    '_self': {
         'type': 'string'
         }, 
-    'id': {
+    '_id': {
         'type': 'string'
         }, 
-    'type': {
+    'kind': {
         'type': 'string'
         }
     }
     
 standard_collection_properties = {
-    'self_link': {
+    '_self': {
         'type': 'string'
         }, 
-    'type': {
+    'kind': {
         'type': 'string'
         }
     }

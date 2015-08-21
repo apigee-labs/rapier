@@ -1,6 +1,6 @@
 import requests
-from base_entity import BaseEntity
 from urlparse import urlparse, urlunparse
+import json
 
 class BaseAPI(object):
 
@@ -21,9 +21,6 @@ class BaseAPI(object):
             'Accept': 'application/json'
             }
 
-    def type_property(self):
-        return 'type'
-        
     def retrieve(self, url, entity=None, headers=None):
         # issue a GET to retrieve a resource from the API and create an object for it
         r = requests.get(url, headers = headers if headers else self.retrieve_headers())
@@ -39,7 +36,7 @@ class BaseAPI(object):
             
     def create(self, url, body, entity=None, headers=None):
         r = requests.post(url, json=body, headers = headers if headers else self.delete_headers())
-        return self.process_entity_result(url, r, entity, 'Location')
+        return self.process_entity_result(url, r, entity, location_header = 'Location')
 
     def retrieve_well_known_resource(self, url):
         url_parts = list(urlparse(url))
@@ -59,10 +56,10 @@ class BaseAPI(object):
                     if 'Content-Type' in r.headers:
                         content_type = r.headers['Content-Type'].split(';')[0]
                         if content_type == 'application/json':
-                            json = r.json()
-                            return self.build_entity_from_json(json, entity, location, etag)
+                            jso = r.json()
+                            return self.build_entity_from_json(jso, entity, location, etag)
                         else:
-                            raise Exception('non-json content type %s' %  r.headers['Content-Type'])
+                            raise Exception('non-json content_type %s' %  r.headers['Content-Type'])
                     else:
                         raise Exception('server did not declare content_type')
                 else:
@@ -72,27 +69,27 @@ class BaseAPI(object):
         else:
             raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
             
-    def build_entity_from_json(self, json, entity=None, location=None, etag=None):
-        type_name = json.get(self.type_property())
-        if type_name:
+    def build_entity_from_json(self, jso, entity=None, location=None, etag=None):
+        kind = jso.get('kind')
+        if kind:
             if entity:
-                if entity.type == type_name:
-                    entity.update_attrs(json, location, etag)
+                if entity.kind == kind:
+                    entity.update_attrs(jso, location, etag)
                     return entity
                 else:
-                    raise Exception('SDK cannot handle change of type from %s to %s' % (entity.type, type_name)) 
+                    raise Exception('SDK cannot handle change of kind from %s to %s' % (entity.kind, kind)) 
             else:
-                resource_class = self.resource_class(type_name)
+                resource_class = self.resource_class(kind)
                 if resource_class:
-                    return resource_class(json, location, etag)
+                    return resource_class(jso, location, etag)
                 else:
-                    raise Exception('no resource_class for type %s') % r_type                        
+                    raise Exception('no resource_class for kind %s') % kind                        
         else:
             if entity:
-                entity.update_attrs(location, json, etag)
+                entity.update_attrs(location, jso, etag)
                 return entity
             else:
-                raise Exception('no type property %s in json %s') % (self.type_property(), json.dumps())               
+                raise Exception('no kind property %s in json %s' % ('kind', json.dumps(jso)))               
 
 class BaseResource(object):
     
@@ -103,13 +100,16 @@ class BaseResource(object):
         if json_representation:
             for key, value in json_representation.iteritems():
                 setattr(self, key, value)
-            json_self = json_representation.get('self')
+            json_self = json_representation.get('_self')
             if json_self:
                 self._location = json_self
+            self._json_representation = json_representation
+        else:
+            self._json_representation = dict()
         if location:
             self._location = location
         if etag:
-            self.etag = etag
+            self._etag = etag
 
     def retrieve(self):
         # issue a GET to refresh this object from API
@@ -121,28 +121,31 @@ class BaseEntity(BaseResource):
     
     def __init__(self, json_representation = None, location = None, etag = None):
         self._retrieved = dict()
-        self.type = type(self).__name__
+        self.kind = type(self).__name__
         super(BaseEntity, self).__init__(json_representation, location, etag)
         
     def get_update_representation(self):
-        return {key: value for key, value in self.__dict__.iteritems() if not key.startswith('_')}
+        json_representation = self._json_representation
+        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (key in json_representation and json_representation[key] == value))}
 
-    def update(self, changes):
+    def update(self, changes=None):
         # issue a PATCH or PUT to update this object from API
-        if not self.location:
+        if changes == None:
+            changes = self.get_update_representation()
+        if not self._location:
             raise Exception('self location not set')
-        if not self.etag:
+        if not self._etag:
             raise Exception('ETag not set')
-        return self.api().update(self.location, self.etag, changes, self)
+        return self.api().update(self._location, self._etag, changes, self)
             
     def delete(self):
         # issue a DELETE to remove this object from API
-        if not self.location:
+        if not self._location:
             raise Exception('self location not set')
         else:
-            return self.api().delete(self.location, self)
+            return self.api().delete(self._location, self)
             
-    def retrieve(self, relationship):
+    def retrieve(self, relationship=None):
         if relationship:
             if hasattr(self, relationship):
                 url = getattr(self, relationship)
@@ -151,7 +154,7 @@ class BaseEntity(BaseResource):
                     self._retrieved[relationship] = rslt
                 return rslt
             else:
-                raise Exception('no value set for items URL')
+                raise Exception('no value set for %s URL' % relationship)
         else:
             return super(BaseEntity, self).retrieve()
             
@@ -159,21 +162,21 @@ class BaseCollection(BaseResource):
 
     def update_attrs(self, json_representation, url, etag):
         super(BaseCollection, self).update_attrs(json_representation, url, etag)
-        if 'items' in json_representation:
-            items = json_representation['items']
+        if '_items' in json_representation:
+            items = json_representation['_items']
             items_array = [self.api().build_entity_from_json(item) for item in items]
-            self.items = {item._location: item for item in items_array}
+            self._items = {item._location: item for item in items_array}
 
     def create(self, entity):
         # create a new entity in the API by POSTing
-        if self.self:
-            if hasattr(entity, 'self') and entity.self:
+        if self._self:
+            if hasattr(entity, '_self') and entity._self:
                 raise Exception('entity already exists in API %s' % entity)
-            rslt = self.api().create(self.self, entity.get_update_representation(), entity)
-            if entity._location in self.items:
+            rslt = self.api().create(self._self, entity.get_update_representation(), entity)
+            if entity._self in self._items:
                 raise Exception('Duplicate location')
             else:
-                self.items[entity._location] = entity
+                self._items[entity._self] = entity
                 return entity
         else:
-            raise Exception('Collection has no self property')
+            raise Exception('Collection has no _self property')

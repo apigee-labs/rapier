@@ -3,23 +3,27 @@ consumes:
 definitions:
   Collection:
     properties:
+      _self:
+        type: string
       item_type:
         type: string
       items:
         items:
           type: object
         type: array
-      self_link:
-        type: string
-      type:
+      kind:
         type: string
   Dog:
     properties:
+      _id: &id001
+        type: string
+      _self: &id002
+        type: string
       birth_date:
         type: string
       fur_color:
         type: string
-      id: &id001
+      kind: &id003
         type: string
       name:
         type: string
@@ -29,33 +33,31 @@ definitions:
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Person'
-      self_link: &id002
-        type: string
-      type: &id003
-        type: string
   DogTracker:
     properties:
+      _id: *id001
+      _self: *id002
       dogs:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Dog'
-      id: *id001
+      kind: *id003
       people:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Person'
-      self_link: *id002
-      type: *id003
   ErrorResponse:
     properties:
       message:
         type: string
   Person:
     properties:
+      _id: *id001
+      _self: *id002
       birth-date:
         type: string
       dogs:
@@ -64,11 +66,9 @@ definitions:
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Dog'
-      id: *id001
+      kind: *id003
       name:
         type: string
-      self_link: *id002
-      type: *id003
 info:
   title: DogTrackerAPI
   version: '0.1'
