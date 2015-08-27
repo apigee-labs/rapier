@@ -9,8 +9,8 @@ var PORT = 3000;
 var HOST = 'localhost';
 var MESSAGE_URL = 'http://' + HOST + ':' + PORT + '/message';
 var message = {
-  self: MESSAGE_URL,
-  type: 'HelloMessage',
+  _self: MESSAGE_URL,
+  kind: 'HelloMessage',
   text: 'Hello, world'
 }
 
