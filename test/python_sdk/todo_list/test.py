@@ -1,4 +1,4 @@
-from rapier.test.gen_python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
+from rapier.test.python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
 
 def test_objects():
     todo_list = api.retrieve_well_known_resource('http://localhost:3001/to-dos')
