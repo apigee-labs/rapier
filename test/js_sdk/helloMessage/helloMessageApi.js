@@ -1,3 +1,15 @@
+var baseApi = require('./../../../js_sdk/base_api')
+
+function HelloMessageAPI() {
+  
+}
+
+HelloMessageAPI.prototype = new base_api.BaseAPI()
+
+var api = new HelloMessageAPI()
+console.log(api.retrieve_headers())
+
+/*
 from rapier.python_sdk.base_api import BaseAPI, BaseEntity
 
 class HelloWorldAPI(BaseAPI):
@@ -15,3 +27,4 @@ class HelloMessage(BaseEntity):
 
     def api(self):
         return api
+*/
