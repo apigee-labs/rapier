@@ -117,6 +117,9 @@ class BaseResource(object):
 class BaseEntity(BaseResource):
     
     def __init__(self, jso = None, url = None, etag = None):
+        if url and (not jso or not etag):
+            raise Exception('To load and entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
+Creating an Entity first and loading it implies guessing the type at the end of the URL')
         self._retrieved = dict()
         self.kind = type(self).__name__
         super(BaseEntity, self).__init__(jso, url, etag)
@@ -129,9 +132,9 @@ class BaseEntity(BaseResource):
         # issue a PATCH or PUT to update this object from API
         if changes == None:
             changes = self.get_update_representation(update = True)
-        if not self._location:
+        if not (hasattr(self, '_etag') and self._location):
             raise Exception('self location not set')
-        if not self._etag:
+        if not hasattr(self, '_etag') or self._etag == None:
             raise Exception('ETag not set')
         return self.api().update(self._location, self._etag, changes, self)
             

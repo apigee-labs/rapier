@@ -18,24 +18,22 @@ def test_objects():
     assert(new_item._location not in items.items)
     
 def test_api():
-    todo_list = TodoList(None, 'http://localhost:3001/to-dos')
+    todo_list = api.retrieve('http://localhost:3001/to-dos')
     todo_list.retrieve()
     assert(hasattr(todo_list,'items'))
-    items = Collection(None, 'http://localhost:3001/to-dos/items')
+    items = api.retrieve('http://localhost:3001/to-dos/items')
     new_item = Item({'description':'buy milk'})
     items.create(new_item)
     assert(hasattr(new_item, '_location') and new_item._location)                
     items.retrieve()
     assert(new_item._location in items.items)
-    new_item2 = Item(None, new_item._location)
+    new_item2 = items.items[new_item._location]
     new_item2.description = 'buy more milk'
     new_item2.due = 'tonight'
-    new_item2._etag = new_item._etag
     new_item2.update()
     assert(new_item2._etag == str(int(new_item._etag) + 1))
     assert(new_item2.description == 'buy more milk')
-    new_item3 = Item(None, new_item._location)
-    new_item3.delete()
+    new_item3 = api.delete(new_item._location)
     assert(new_item3._etag == new_item2._etag)
     items.retrieve()
     assert(new_item3._location not in items.items)
