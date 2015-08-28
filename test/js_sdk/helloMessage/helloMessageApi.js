@@ -1,30 +1,35 @@
-var baseApi = require('./../../../js_sdk/base_api')
+var helloMessageAPI = function() {
 
-function HelloMessageAPI() {
-  
-}
-
-HelloMessageAPI.prototype = new base_api.BaseAPI()
-
-var api = new HelloMessageAPI()
-console.log(api.retrieve_headers())
-
-/*
-from rapier.python_sdk.base_api import BaseAPI, BaseEntity
-
-class HelloWorldAPI(BaseAPI):
-
-    def well_known_URLs(self):
-        return ['/message']
+    var baseApi = require('./../../../js_sdk/base_api')
     
-    def resource_class(self, type_name):
-        cls = globals().get(type_name)
-        return cls if cls else BaseEntity
+    function HelloMessageAPI() {}
+    
+    HelloMessageAPI.prototype = new baseApi.BaseAPI()
+    
+    HelloMessageAPI.prototype.well_known_URLs = function() {
+        return ['/message']
+    }
+    
+    function HelloMessage() {}
+    
+    HelloMessage.prototype = new baseApi.BaseEntity()
+    
+    var classToKindMap = {HelloMessage: HelloMessage}
         
-api = HelloWorldAPI()
+    HelloMessageAPI.prototype.resourceClass = function(type_name) {
+        return  type_name in classToKindMap ? classToKindMap[type_name] : baseApi.BaseEntity      
+    }
+    
+    var api = new HelloMessageAPI()
 
-class HelloMessage(BaseEntity):
+    HelloMessage.prototype.api = function() {
+        return api        
+    }
 
-    def api(self):
-        return api
-*/
+    return {
+        api: api,
+        HelloMessage: HelloMessage        
+        }
+}
+    
+module.exports = helloMessageAPI()
