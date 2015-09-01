@@ -126,7 +126,7 @@ Creating an Entity first and loading it implies guessing the type at the end of 
         
     def get_update_representation(self, update=False):
         jso = self._jso if hasattr(self, '_jso') else None
-        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (jso and key in jso and jso[key] == value) or (key == 'kind' and update))}
+        return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (jso and key in jso and jso[key] == value))}
 
     def update(self, changes=None):
         # issue a PATCH or PUT to update this object from API
