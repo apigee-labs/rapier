@@ -2,8 +2,10 @@ from rapier.test.python_sdk.hello_message.hello_world_api import api
 
 def main():
     rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
-    changes = {'text': 'goodbye, world'}
-    rslt = rslt.update(changes)    
+    rslt.text = 'goodbye, world'
+    rslt = rslt.update()
+    rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
+    assert(rslt.text == 'goodbye, world')    
     try:    
         rslt = rslt.delete()
     except Exception as e:

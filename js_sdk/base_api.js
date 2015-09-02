@@ -25,7 +25,6 @@ var base_api = function() {
   
     BaseAPI.prototype.retrieve = function(url, callback, entity, headers) {
         // issue a GET to retrieve a resource from the API and create an object for it
-        if (!headers) {headers = this.retrieveHeaders()}
         var self = this; 
         request({
             url: url,
@@ -74,7 +73,7 @@ var base_api = function() {
             var kind = jso.kind; 
             if (entity) {
                 if (!('kind' in entity) || entity.kind == kind) {
-                    entity.update_attrs(jso, url, etag);
+                    entity.updateProperties(jso, url, etag);
                     callback(null, entity)
                 } else {
                     callback({args: ['SDK cannot handle change of kind from' + entity.kind + ' to ' + kind]})
@@ -82,7 +81,6 @@ var base_api = function() {
             } else {
                 var resourceClass = this.resourceClass(kind);
                 if (resourceClass) {
-                    console.log(resourceClass)
                     callback(null, new resourceClass(jso, url, etag))
                 } else {
                     callback({args: ['no resourceClass for kind ' + kind]})
@@ -90,7 +88,7 @@ var base_api = function() {
             }
         } else {
             if (!!entity && entity.kind) {
-                entity.update_attrs(url, jso, etag);
+                entity.updateProperties(url, jso, etag);
                 callback(null, entity)
             } else {
                 callback({args: ['no kind property in json ' + jso]})
@@ -98,8 +96,71 @@ var base_api = function() {
         }            
     }
     
-    function BaseEntity() {}
+    function BaseResource(jso, url, etag) {
+        this.updateProperties(jso, url, etag)
+    }
+    
+    BaseResource.prototype.updateProperties = function(jso, url, etag) {
+        if (jso) {
+            for (var key in jso) {
+                this[key] = jso.key
+            }
+            if ('_self' in jso) {
+                this._location = jso._self
+            }
+            this._jso = jso
+        }
+        if (url) {
+            this._location = url
+        }
+        if (etag) {
+            this._etag = etag
+        }
+    }
+
+    BaseResource.prototype.refresh = function(callback) {
+        if (!!this._location) {
+            callback({args: ['no _location property' + this]})
+        }
+        this.api().retrieve(this._location, callback, this)
+
+    }
   
+    function BaseEntity(jso, url, etag) {
+        if (url && (!jso || !etag)) {
+            throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
+Creating an Entity first and loading it implies guessing the type at the end of the URL']}
+        }
+        this._relatedResources = {}
+        BaseResource.call(this, jso, url, etag)
+    }
+    
+    BaseEntity.prototype = Object.create(BaseResource.prototype);
+    BaseEntity.prototype.constructor = BaseEntity;
+
+    BaseEntity.prototype.getUpdateRepresentation = function() {
+        var jso = '_jso' in this ? this._jso : {}
+        var rslt = {}
+        for (var key in this) {
+            if (key.indexOf('_') !== 0 && (!(key in jso) || jso[key] != this[key])) {
+                rslt[key] = this[key]
+            }
+        }
+        return rslt
+    }
+
+    BaseEntity.prototype.update = function(callback) {
+        // issue a PATCH or PUT to update this object from API
+        var changes = this.getUpdateRepresentation()
+        if (! ('_location' in this) || !this._location) {
+            callback({args: ['this _location not set']})
+        }
+        if (! ('_etag' in this) || !this._location) {
+            callback({args: ['self _etag not set']})
+        }
+        this.api().update(self._location, self._etag, changes, callback, this)
+    }
+
     return {
       BaseAPI: BaseAPI,    
       BaseEntity: BaseEntity

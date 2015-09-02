@@ -1,12 +1,12 @@
 var helloMessageAPI = require('./helloMessageAPI')
 var api = helloMessageAPI.api
-console.log(api.retrieveHeaders())
 
 // rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
 rslt = api.retrieve('http://localhost:3000/message', function(error, entity) {
     if (error) {
         console.log(error)
     } else {
+        console.log(entity instanceof helloMessageAPI.HelloMessage)
         console.log(entity)
     }
 })

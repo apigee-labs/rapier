@@ -6,26 +6,26 @@ def test_objects():
     new_item = Item({'description':'buy milk'})
     items.create(new_item)
     assert(hasattr(new_item, '_location') and new_item._location)                
-    items.retrieve()
+    items.refresh()
     assert(new_item._location in items.items)
     new_item.description = 'buy more milk'
     new_item.due = 'tonight'
     new_item.update()
-    new_item.retrieve()
+    new_item.refresh()
     assert(new_item.description == 'buy more milk')
     new_item.delete()
-    items.retrieve()
+    items.refresh()
     assert(new_item._location not in items.items)
     
 def test_api():
     todo_list = api.retrieve('http://localhost:3001/to-dos')
-    todo_list.retrieve()
+    todo_list.refresh()
     assert(hasattr(todo_list,'items'))
     items = api.retrieve('http://localhost:3001/to-dos/items')
     new_item = Item({'description':'buy milk'})
     items.create(new_item)
     assert(hasattr(new_item, '_location') and new_item._location)                
-    items.retrieve()
+    items.refresh()
     assert(new_item._location in items.items)
     new_item2 = items.items[new_item._location]
     new_item2.description = 'buy more milk'
@@ -35,7 +35,7 @@ def test_api():
     assert(new_item2.description == 'buy more milk')
     new_item3 = api.delete(new_item._location)
     assert(new_item3._etag == new_item2._etag)
-    items.retrieve()
+    items.refresh()
     assert(new_item3._location not in items.items)
     
 def main():

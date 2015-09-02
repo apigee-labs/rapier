@@ -99,16 +99,15 @@ class BaseResource(object):
         if jso:
             for key, value in jso.iteritems():
                 setattr(self, key, value)
-            json_self = jso.get('_self')
-            if json_self:
-                self._location = json_self
+            if '_self' in jso:
+                self._location = jso['_self']
             self._jso = jso
         if url:
             self._location = url
         if etag:
             self._etag = etag
 
-    def retrieve(self):
+    def refresh(self):
         # issue a GET to refresh this object from API
         if not self._location:
             raise Exception('self location not set')
@@ -118,24 +117,23 @@ class BaseEntity(BaseResource):
     
     def __init__(self, jso = None, url = None, etag = None):
         if url and (not jso or not etag):
-            raise Exception('To load and entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
+            raise Exception('To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
 Creating an Entity first and loading it implies guessing the type at the end of the URL')
-        self._retrieved = dict()
+        self._relatedResources = dict()
         self.kind = type(self).__name__
         super(BaseEntity, self).__init__(jso, url, etag)
         
-    def get_update_representation(self, update=False):
+    def get_update_representation(self):
         jso = self._jso if hasattr(self, '_jso') else None
         return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (jso and key in jso and jso[key] == value))}
 
-    def update(self, changes=None):
+    def update(self):
         # issue a PATCH or PUT to update this object from API
-        if changes == None:
-            changes = self.get_update_representation(update = True)
-        if not (hasattr(self, '_etag') and self._location):
-            raise Exception('self location not set')
+        changes = self.get_update_representation()
+        if not (hasattr(self, '_location') and self._location):
+            raise Exception('self _location not set')
         if not hasattr(self, '_etag') or self._etag == None:
-            raise Exception('ETag not set')
+            raise Exception('self _etag not set')
         return self.api().update(self._location, self._etag, changes, self)
             
     def delete(self):
@@ -145,18 +143,20 @@ Creating an Entity first and loading it implies guessing the type at the end of 
         else:
             return self.api().delete(self._location, self)
             
-    def retrieve(self, relationship=None):
-        if relationship:
-            if hasattr(self, relationship):
-                url = getattr(self, relationship)
-                rslt = self.api().retrieve(url)
-                if not isinstance(rslt, Exception):
-                    self._retrieved[relationship] = rslt
-                return rslt
-            else:
-                raise Exception('no value set for %s URL' % relationship)
+    def retrieve(self, relationship):
+        # fetch a related resource
+        if hasattr(self, relationship):
+            url = getattr(self, relationship)
+            rslt = self.api().retrieve(url)
+            if not isinstance(rslt, Exception):
+                self._relatedResources[relationship] = rslt
+            return rslt
         else:
-            return super(BaseEntity, self).retrieve()
+            raise Exception('no value set for %s URL' % relationship)
+
+    def get_related(self, relationship, default_value):
+        # return a previously-fetched related resource
+        return self._relatedResources.get(relationship, default_value)
             
 class BaseCollection(BaseResource):
 
