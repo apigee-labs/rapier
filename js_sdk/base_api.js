@@ -28,12 +28,35 @@ var base_api = function() {
         var self = this; 
         request({
             url: url,
-            headers: headers ? headers : self.retrieveHeaders()
+            headers: headers || self.retrieveHeaders()
             },
             function (error, response, body) {
                 self.processResourceResult(error, response, body, url, callback, entity)
            })
     }            
+
+    BaseAPI.prototype.update = function(url, etag, changes, callback, entity, headers) {
+        var self = this; 
+        request.patch({
+            url: url,
+            headers: headers || self.updateHeaders(),
+            body: JSON.stringify(changes)
+            },
+            function (error, response, body) {
+                self.processResourceResult(error, response, body, url, callback, entity)
+           })
+    }
+
+    BaseAPI.prototype.delete = function(url, callback, entity, headers) {
+        var self = this; 
+        request.del({
+            url: url,
+            headers: headers || self.deleteHeaders()
+            },
+            function (error, response, body) {
+                self.processResourceResult(error, response, body, url, callback, entity)
+           })
+    }
   
     BaseAPI.prototype.processResourceResult = function(error, response, body, url, callback, entity, location_header) {
         location_header = location_header ? location_header : 'content-location';
@@ -47,7 +70,7 @@ var base_api = function() {
                             var content_type = response.headers['content-type'].split(';')[0]
                             if (content_type == 'application/json') {
                                 var jso = JSON.parse(body);
-                                this.buildResourceFromJson(callback, jso, entity, location, etag)
+                                this.buildResourceFromJson(callback, entity, jso, location, etag)
                             } else {
                                 callback({args: ['non-json content_type ' + response.headers['content-type']]})
                             }
@@ -68,7 +91,7 @@ var base_api = function() {
         }
     }
             
-    BaseAPI.prototype.buildResourceFromJson = function(callback, jso, entity, url, etag) {
+    BaseAPI.prototype.buildResourceFromJson = function(callback, entity, jso, url, etag) {
         if ('kind' in jso) {
             var kind = jso.kind; 
             if (entity) {
@@ -88,7 +111,7 @@ var base_api = function() {
             }
         } else {
             if (!!entity && entity.kind) {
-                entity.updateProperties(url, jso, etag);
+                entity.updateProperties(jso, url, etag);
                 callback(null, entity)
             } else {
                 callback({args: ['no kind property in json ' + jso]})
@@ -103,7 +126,7 @@ var base_api = function() {
     BaseResource.prototype.updateProperties = function(jso, url, etag) {
         if (jso) {
             for (var key in jso) {
-                this[key] = jso.key
+                this[key] = jso[key]
             }
             if ('_self' in jso) {
                 this._location = jso._self
@@ -158,9 +181,18 @@ Creating an Entity first and loading it implies guessing the type at the end of 
         if (! ('_etag' in this) || !this._location) {
             callback({args: ['self _etag not set']})
         }
-        this.api().update(self._location, self._etag, changes, callback, this)
+        this.api().update(this._location, this._etag, changes, callback, this)
     }
 
+    BaseEntity.prototype.delete = function(callback) {
+        // issue a DELETE to remove this object from API
+        if (!this._location) {
+            callback({args: ['self location not set']})
+        } else {
+            return this.api().delete(this._location, callback, this)
+        }
+    }
+            
     return {
       BaseAPI: BaseAPI,    
       BaseEntity: BaseEntity
