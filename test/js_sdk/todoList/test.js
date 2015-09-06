@@ -1,26 +1,39 @@
 var todoListAPI = require('./todoListAPI')
 var api = todoListAPI.api
 
-
-function add_item(items) {
-    var item = new api.Item({'description':'buy milk'});
-}
-// rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
-rslt = api.retrieve('http://localhost:3001/to-dos', function(error, todoList) {
-    if (error) {
-        console.log(error)
-    } else {
+function get_todos() {
+    api.retrieve('http://localhost:3001/to-dos', function(error, todoList) {
+        if (error) throw error;
         if (!(todoList instanceof todoListAPI.TodoList)) throw 'assert';
         todoList.retrieve('items', function(error, entity) {
-            if (error) {
-                console.log('error', error)
-            } else {
-                console.log(Object.getPrototypeOf(entity).className)
-                console.log('entity', entity)
-            }
-        })
-    }
-})
+            if (error) throw error;
+            if (!(entity instanceof todoListAPI.Collection)) throw 'assert';
+            var new_item = new todoListAPI.Item({'description':'buy milk'});
+            var items = entity;
+            entity.create(new_item, function(error, entity) {
+                if (error) throw error;
+                if (!(entity === new_item)) throw 'assert';
+                if (!(entity._self)) throw 'assert';
+                todoList.retrieve('items', function(error, entity) {
+                    if (error) throw error;
+                    var items = entity
+                    if (!(new_item._self in items.items)) throw 'assert';
+                    new_item.description = 'buy more milk'
+                    new_item.due = 'tonight'
+                    new_item.update(function(error, entity) {
+                        if (error) throw JSON.stringify(error);
+                        new_item.refresh(function(error, entity) {   
+                            if (error) throw error;
+                            if (!(entity.description == 'buy more milk')) throw 'assert';                   
+                        })
+                    })
+                })
+            })
+        }) 
+    })
+}
+
+get_todos()
 /*
 from rapier.test.python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
 

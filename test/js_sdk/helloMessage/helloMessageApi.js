@@ -8,7 +8,7 @@ var helloMessageAPI = function() {
     
     HelloMessage.prototype = Object.create(baseAPI.BaseEntity.prototype);
     HelloMessage.prototype.constructor = HelloMessage;
-    HelloMessage.prototype.className = 'HelloMessage';
+    HelloMessage.prototype._className = 'HelloMessage';
     
     var classToKindMap = {HelloMessage: HelloMessage};
         

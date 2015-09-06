@@ -73,7 +73,7 @@ var base_api = function() {
             body: JSON.stringify(body)
             },
             function (error, response, body) {
-                self.processResourceResult(error, response, body, url, callback, entity, 'Location')
+                self.processResourceResult(error, response, body, url, callback, entity, 'location')
            });
     }
   
@@ -104,7 +104,7 @@ var base_api = function() {
                         callback({args: ['server did not provide etag']})
                     }
                 } else {
-                    callback({args: ['server failed to provide ' + location_header + ' header for url ' + url + 'headers' + JSON.stringify(response.headers)]})
+                    callback({args: ['server failed to provide ' + location_header + ' header for url ' + url + 'headers ' + JSON.stringify(response.headers)]})
                 }
             } else {
                 callback({args: ['unexpected HTTP statusCode code: ' + response.statusCode + ' url: ' + url + ' text: ' + response.text]})
@@ -141,19 +141,19 @@ var base_api = function() {
             }   
         }            
     }
+
+    BaseAPI.prototype._className = 'BaseAPI' 
     
     function BaseResource(jso, url, etag) {
         if (url && (!jso || !etag)) {
             throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
 Creating an Entity first and loading it implies guessing the type at the end of the URL']}
         }
-        this.kind =  Object.getPrototypeOf(this).className
-        console.log(Object.getPrototypeOf(this).className)
+        this.kind =  Object.getPrototypeOf(this)._className
         this.updateProperties(jso, url, etag)
     }
     
     BaseResource.prototype.updateProperties = function(jso, url, etag) {
-        console.log('BaseResurce updateproperties')
         if (jso) {
             for (var key in jso) {
                 this[key] = jso[key]
@@ -172,20 +172,22 @@ Creating an Entity first and loading it implies guessing the type at the end of 
     }
 
     BaseResource.prototype.refresh = function(callback) {
-        if (!!this._location) {
-            callback({args: ['no _location property' + this]})
+        if (!this._location) {
+            callback({args: ['no _location property' + JSON.stringify(this)]})
         }
         this.api().retrieve(this._location, callback, this)
 
     }
-  
+
+    BaseResource.prototype._className = 'BaseResource' 
+
     function BaseEntity(jso, url, etag) {
         if (url && (!jso || !etag)) {
             throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
 Creating an Entity first and loading it implies guessing the type at the end of the URL']}
         }
         this._related = {}
-        this.kind =  Object.getPrototypeOf(this).className
+        this.kind =  Object.getPrototypeOf(this)._className
         BaseResource.call(this, jso, url, etag)
     }
     
@@ -239,9 +241,10 @@ Creating an Entity first and loading it implies guessing the type at the end of 
             throw {args: ['no value set for property ' + relationship]}
         }
     }
+
+    BaseEntity.prototype._className = 'BaseEntity' 
       
     function BaseCollection(jso, url, etag) {
-        console.log('BaseCollection constrcutor')
         BaseResource.call(this, jso, url, etag)
     }
     
@@ -249,7 +252,6 @@ Creating an Entity first and loading it implies guessing the type at the end of 
     BaseCollection.prototype.constructor = BaseCollection;
 
     BaseCollection.prototype.updateProperties = function(jso, url, etag) {
-        console.log('BaseCollection updateproperties')
         BaseResource.prototype.updateProperties.call(this, jso, url, etag)
         if (jso && 'items' in jso) {
             var items = jso['items'];
@@ -268,7 +270,7 @@ Creating an Entity first and loading it implies guessing the type at the end of 
             if ('_self' in entity && entity._self) {
                 throw 'entity already exists in API: ' + entity
             }
-            this.api().create(this._location, entity.get_update_representation(), function(error, entity) {
+            this.api().create(this._location, entity.getUpdateRepresentation(), function(error, entity) {
                 if (!error && 'items' in self) {
                     if (entity._self in self.items) {
                         throw 'Duplicate id'
@@ -282,6 +284,8 @@ Creating an Entity first and loading it implies guessing the type at the end of 
             throw 'Collection has no _self property'
         }
     }
+    
+    BaseCollection.prototype._className = 'BaseCollection' 
     
     return {
       BaseAPI: BaseAPI,    

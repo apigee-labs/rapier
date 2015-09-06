@@ -8,7 +8,7 @@ var todoListAPI = function() {
     
     TodoList.prototype = Object.create(baseAPI.BaseEntity.prototype);
     TodoList.prototype.constructor = TodoList;
-    TodoList.prototype.className = 'TodoList';
+    TodoList.prototype._className = 'TodoList';
     
     function Item(jso, url, etag) {
         baseAPI.BaseEntity.call(this, jso, url, etag)
@@ -16,7 +16,7 @@ var todoListAPI = function() {
     
     Item.prototype = Object.create(baseAPI.BaseEntity.prototype);
     Item.prototype.constructor = Item;
-    Item.prototype.className = 'Item';
+    Item.prototype._className = 'Item';
         
     function Collection(jso, url, etag) {
         baseAPI.BaseCollection.call(this, jso, url, etag)
@@ -24,7 +24,7 @@ var todoListAPI = function() {
     
     Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
     Collection.prototype.constructor = Collection;
-    Collection.prototype.className = 'Collection';
+    Collection.prototype._className = 'Collection';
         
     var classToKindMap = {
         TodoList: TodoList,
