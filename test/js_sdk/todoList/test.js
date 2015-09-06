@@ -1,9 +1,32 @@
+var todoListAPI = require('./todoListAPI')
+var api = todoListAPI.api
+
+
+function add_item(items) {
+    var item = new api.Item({'description':'buy milk'});
+}
+// rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
+rslt = api.retrieve('http://localhost:3001/to-dos', function(error, todoList) {
+    if (error) {
+        console.log(error)
+    } else {
+        if (!(todoList instanceof todoListAPI.TodoList)) throw 'assert';
+        todoList.retrieve('items', function(error, entity) {
+            if (error) {
+                console.log('error', error)
+            } else {
+                console.log(Object.getPrototypeOf(entity).className)
+                console.log('entity', entity)
+            }
+        })
+    }
+})
+/*
 from rapier.test.python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
 
 def test_objects():
     todo_list = api.retrieve_well_known_resource('http://localhost:3001/to-dos')
     items = todo_list.retrieve('items')
-    assert(isinstance(items, Collection))
     new_item = Item({'description':'buy milk'})
     items.create(new_item)
     assert(hasattr(new_item, '_location') and new_item._location)                
@@ -20,9 +43,9 @@ def test_objects():
     
 def test_api():
     todo_list = api.retrieve('http://localhost:3001/to-dos')
+    todo_list.refresh()
     assert(hasattr(todo_list,'items'))
     items = api.retrieve('http://localhost:3001/to-dos/items')
-    assert(isinstance(items, Collection))
     new_item = Item({'description':'buy milk'})
     items.create(new_item)
     assert(hasattr(new_item, '_location') and new_item._location)                
@@ -45,3 +68,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+*/

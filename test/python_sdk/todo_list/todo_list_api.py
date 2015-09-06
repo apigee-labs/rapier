@@ -16,14 +16,11 @@ class APIClass(object):
     def api(self):
         return api
         
-class TodoList(BaseEntity, APIClass):
-            
+class TodoList(BaseEntity, APIClass):            
     pass
         
 class Item(BaseEntity, APIClass):
-    
     pass   
         
 class Collection(BaseCollection, APIClass):
-    
     pass

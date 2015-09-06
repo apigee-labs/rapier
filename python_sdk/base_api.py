@@ -93,6 +93,9 @@ class BaseAPI(object):
 class BaseResource(object):
     
     def __init__(self, jso = None, url = None, etag = None):
+        if url and (not jso or not etag):
+            raise Exception('To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
+Creating an Entity first and loading it implies guessing the type at the end of the URL')
         self.update_attrs(jso, url, etag)
 
     def update_attrs(self, jso = None, url = None, etag = None):
@@ -116,10 +119,7 @@ class BaseResource(object):
 class BaseEntity(BaseResource):
     
     def __init__(self, jso = None, url = None, etag = None):
-        if url and (not jso or not etag):
-            raise Exception('To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
-Creating an Entity first and loading it implies guessing the type at the end of the URL')
-        self._relatedResources = dict()
+        self._related = dict()
         self.kind = type(self).__name__
         super(BaseEntity, self).__init__(jso, url, etag)
         
@@ -149,23 +149,24 @@ Creating an Entity first and loading it implies guessing the type at the end of 
             url = getattr(self, relationship)
             rslt = self.api().retrieve(url)
             if not isinstance(rslt, Exception):
-                self._relatedResources[relationship] = rslt
+                self._related[relationship] = rslt
             return rslt
         else:
             raise Exception('no value set for %s URL' % relationship)
 
     def get_related(self, relationship, default_value):
         # return a previously-fetched related resource
-        return self._relatedResources.get(relationship, default_value)
+        return self._related.get(relationship, default_value)
             
 class BaseCollection(BaseResource):
 
     def update_attrs(self, jso, url, etag):
         super(BaseCollection, self).update_attrs(jso, url, etag)
         if jso and 'items' in jso:
-            items = jso['items']
-            items_array = [self.api().build_resource_from_json(item) for item in items]
-            self.items = {item._location: item for item in items_array}
+            self.items = {}
+            for item in jso['items']:
+                item_object = self.api().build_resource_from_json(item)
+                self.items[item_object._location] = item_object
 
     def create(self, entity):
         # create a new entity in the API by POSTing

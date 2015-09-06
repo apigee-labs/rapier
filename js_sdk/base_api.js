@@ -23,6 +23,13 @@ var base_api = function() {
             }        
         }
   
+    BaseAPI.prototype.createHeaders = function() {
+        return {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            }      
+        }
+  
     BaseAPI.prototype.retrieve = function(url, callback, entity, headers) {
         // issue a GET to retrieve a resource from the API and create an object for it
         var self = this; 
@@ -57,6 +64,18 @@ var base_api = function() {
                 self.processResourceResult(error, response, body, url, callback, entity)
            })
     }
+
+    BaseAPI.prototype.create = function(url, body, callback, entity, headers) {
+        var self = this; 
+        request.post({
+            url: url,
+            headers: headers || self.createHeaders(),
+            body: JSON.stringify(body)
+            },
+            function (error, response, body) {
+                self.processResourceResult(error, response, body, url, callback, entity, 'Location')
+           });
+    }
   
     BaseAPI.prototype.processResourceResult = function(error, response, body, url, callback, entity, location_header) {
         location_header = location_header ? location_header : 'content-location';
@@ -70,7 +89,11 @@ var base_api = function() {
                             var content_type = response.headers['content-type'].split(';')[0]
                             if (content_type == 'application/json') {
                                 var jso = JSON.parse(body);
-                                this.buildResourceFromJson(callback, entity, jso, location, etag)
+                                try {
+                                    callback(null, this.buildResourceFromJson(jso, location, etag, entity))
+                                } catch(err) {
+                                    callback(err)
+                                }
                             } else {
                                 callback({args: ['non-json content_type ' + response.headers['content-type']]})
                             }
@@ -91,39 +114,46 @@ var base_api = function() {
         }
     }
             
-    BaseAPI.prototype.buildResourceFromJson = function(callback, entity, jso, url, etag) {
+    BaseAPI.prototype.buildResourceFromJson = function(jso, url, etag, entity) {
         if ('kind' in jso) {
             var kind = jso.kind; 
             if (entity) {
                 if (!('kind' in entity) || entity.kind == kind) {
                     entity.updateProperties(jso, url, etag);
-                    callback(null, entity)
+                    return entity
                 } else {
-                    callback({args: ['SDK cannot handle change of kind from' + entity.kind + ' to ' + kind]})
+                    throw {args: ['SDK cannot handle change of kind from' + entity.kind + ' to ' + kind]}
                 } 
-            } else {
+            } else {        
                 var resourceClass = this.resourceClass(kind);
                 if (resourceClass) {
-                    callback(null, new resourceClass(jso, url, etag))
+                    return new resourceClass(jso, url, etag)
                 } else {
-                    callback({args: ['no resourceClass for kind ' + kind]})
+                    throw {args: ['no resourceClass for kind ' + kind]}
                 }
             }
         } else {
             if (!!entity && entity.kind) {
                 entity.updateProperties(jso, url, etag);
-                callback(null, entity)
+                return entity
             } else {
-                callback({args: ['no kind property in json ' + jso]})
+                throw {args: ['no kind property in json ' + jso]}
             }   
         }            
     }
     
     function BaseResource(jso, url, etag) {
+        if (url && (!jso || !etag)) {
+            throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
+Creating an Entity first and loading it implies guessing the type at the end of the URL']}
+        }
+        this.kind =  Object.getPrototypeOf(this).className
+        console.log(Object.getPrototypeOf(this).className)
         this.updateProperties(jso, url, etag)
     }
     
     BaseResource.prototype.updateProperties = function(jso, url, etag) {
+        console.log('BaseResurce updateproperties')
         if (jso) {
             for (var key in jso) {
                 this[key] = jso[key]
@@ -154,7 +184,8 @@ var base_api = function() {
             throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
 Creating an Entity first and loading it implies guessing the type at the end of the URL']}
         }
-        this._relatedResources = {}
+        this._related = {}
+        this.kind =  Object.getPrototypeOf(this).className
         BaseResource.call(this, jso, url, etag)
     }
     
@@ -192,10 +223,70 @@ Creating an Entity first and loading it implies guessing the type at the end of 
             return this.api().delete(this._location, callback, this)
         }
     }
-            
+    
+    BaseEntity.prototype.retrieve = function(relationship, callback) {
+        // fetch a related resource
+        var self = this;
+        if (relationship in this) {
+            var url = this[relationship];
+            this.api().retrieve(url, function(error, entity) {
+                if (!error) {
+                    self._related[relationship] = entity;
+                }
+                callback(error, entity);
+            });
+        } else {
+            throw {args: ['no value set for property ' + relationship]}
+        }
+    }
+      
+    function BaseCollection(jso, url, etag) {
+        console.log('BaseCollection constrcutor')
+        BaseResource.call(this, jso, url, etag)
+    }
+    
+    BaseCollection.prototype = Object.create(BaseResource.prototype);
+    BaseCollection.prototype.constructor = BaseCollection;
+
+    BaseCollection.prototype.updateProperties = function(jso, url, etag) {
+        console.log('BaseCollection updateproperties')
+        BaseResource.prototype.updateProperties.call(this, jso, url, etag)
+        if (jso && 'items' in jso) {
+            var items = jso['items'];
+            this.items = {}
+            for (var i = 0; i < items.length; i++) {
+                var item = this.api().buildResourceFromJson(items[i]);
+                this.items[item._location] = item
+            }
+        }
+    }
+
+    BaseCollection.prototype.create = function(entity, callback) {
+        // create a new entity in the API by POSTing
+        var self = this;
+        if (this._location) {
+            if ('_self' in entity && entity._self) {
+                throw 'entity already exists in API: ' + entity
+            }
+            this.api().create(this._location, entity.get_update_representation(), function(error, entity) {
+                if (!error && 'items' in self) {
+                    if (entity._self in self.items) {
+                        throw 'Duplicate id'
+                    } else {
+                        self.items[entity._self] = entity
+                    }
+                }
+                callback(error, entity)                
+            }, entity)
+        } else {
+            throw 'Collection has no _self property'
+        }
+    }
+    
     return {
       BaseAPI: BaseAPI,    
-      BaseEntity: BaseEntity
+      BaseEntity: BaseEntity,
+      BaseCollection: BaseCollection
     }
 }
 
