@@ -107,7 +107,7 @@ var base_api = function() {
                     callback({args: ['server failed to provide ' + location_header + ' header for url ' + url + 'headers ' + JSON.stringify(response.headers)]})
                 }
             } else {
-                callback({args: ['unexpected HTTP statusCode code: ' + response.statusCode + ' url: ' + url + ' text: ' + response.text]})
+                callback({args: ['unexpected HTTP statusCode code: ' + response.statusCode + ' url: ' + url + ' text: ' + response.body]})
             }
         } else {
             callback({args: ['http error' + error]})
