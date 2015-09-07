@@ -9,7 +9,7 @@ var todoListAPI = function() {
         return ['/to-dos']
     }
     TodoListAPI.prototype.resourceClass = function(type_name) {
-        return  type_name in classToKindMap ? classToKindMap[type_name] : baseAPI.BaseEntity      
+        return  type_name in classToKindMap ? classToKindMap[type_name] : baseAPI.BaseResource      
     }
     
     var api = new TodoListAPI();

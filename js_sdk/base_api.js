@@ -289,6 +289,7 @@ Creating an Entity first and loading it implies guessing the type at the end of 
     
     return {
       BaseAPI: BaseAPI,    
+      BaseResource: BaseResource,
       BaseEntity: BaseEntity,
       BaseCollection: BaseCollection
     }

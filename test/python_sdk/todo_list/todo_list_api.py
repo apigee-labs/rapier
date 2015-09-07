@@ -1,10 +1,10 @@
-from rapier.python_sdk.base_api import BaseAPI, BaseEntity, BaseCollection
+from rapier.python_sdk.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
 
 class API(BaseAPI):
     def well_known_URLs(self):
         return ['/to-dos']
     def resource_class(self, type_name):
-        return classToKindMap.get(type_name, BaseEntity)
+        return classToKindMap.get(type_name, BaseResource)
                     
 api = API()
 
