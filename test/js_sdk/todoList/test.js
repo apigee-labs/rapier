@@ -9,9 +9,9 @@ function test_objects() {
         function(callback) {
             api.retrieve('http://localhost:3001/to-dos', function(error, todoList) {
                 if (error) 
-                    callback(error)
+                    callback(error);
                 else if (!(todoList instanceof todoListAPI.TodoList))
-                    callback('expected type TodoList')
+                    callback('expected type TodoList');
                 else
                     callback(null, todoList)
             })
@@ -19,9 +19,9 @@ function test_objects() {
         function(todoList, callback) {
             todoList.retrieve('items', function(error, items) {
                 if (error) 
-                    callback(error)
+                    callback(error);
                 else if (!(items instanceof todoListAPI.Collection))
-                    callback('expected type Collection')
+                    callback('expected type Collection');
                 else
                     callback(null, todoList, items)
             })
@@ -46,12 +46,12 @@ function test_objects() {
                         else if (!(new_item._self in items.items))
                             callback('new item not in items array');
                         else
-                            callback(null, 'verified item in list');
+                            callback(null, 'verified item in list')
                     })
                 },
                 function(callback) {
-                    new_item.description = 'buy more milk'
-                    new_item.due = 'tonight'
+                    new_item.description = 'buy more milk';
+                    new_item.due = 'tonight';
                     new_item.update(function(error) {
                         if (error)  
                             callback(error);
@@ -72,9 +72,9 @@ function test_objects() {
                 function(callback) {
                     new_item.delete(function(error) {
                         if (error)
-                            callback(error)
+                            callback(error);
                         else
-                            callback(null, 'deleted new item')
+                            callback(null, 'deleted new item');
                     })
                 },
                 function (callback) {
@@ -89,17 +89,17 @@ function test_objects() {
                 }
             ], function(error, results) {
                 if (error) {
-                    console.log('error', error)
+                    console.log('error', error);
                     w_callback(error)
                 } else {
-                    console.log(results)
+                    console.log(results);
                     w_callback(null, 'successfully created, updated and deleted item')
                 }
             })
         }
     ], function(error, result) {
         if (error)
-            console.log('error', error)
+            console.log('error', error);
         else
             console.log(result)
     })
