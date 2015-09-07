@@ -6,8 +6,7 @@ class API(BaseAPI):
         return ['/to-dos']
     
     def resource_class(self, type_name):
-        cls = globals().get(type_name)
-        return cls if cls else BaseEntity
+        return classToKindMap.get(type_name, BaseEntity)
                     
 api = API()
 
@@ -24,3 +23,9 @@ class Item(BaseEntity, APIClass):
         
 class Collection(BaseCollection, APIClass):
     pass
+    
+classToKindMap = {
+    'TodoList': TodoList,
+    'Item': Item,
+    'Collection': Collection
+    }
