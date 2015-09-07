@@ -1,3 +1,5 @@
+'use strict'
+
 var todoListAPI = require('./todoListAPI')
 var api = todoListAPI.api
 

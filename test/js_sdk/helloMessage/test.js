@@ -1,8 +1,9 @@
+'use strict'
+
 var helloMessageAPI = require('./helloMessageAPI')
 var api = helloMessageAPI.api
 
-// rslt = api.retrieve_well_known_resource('http://localhost:3000/message')
-rslt = api.retrieve('http://localhost:3000/message', function(error, message) {
+api.retrieve('http://localhost:3000/message', function(error, message) {
     if (error) {
         console.log(error)
     } else {

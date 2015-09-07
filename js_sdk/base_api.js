@@ -1,4 +1,6 @@
-request = require('request')
+'use strict'
+
+var request = require('request')
 
 var base_api = function() {
     function BaseAPI() {}
@@ -82,7 +84,7 @@ var base_api = function() {
         if (!error) {
             if (response.statusCode == 200 || response.statusCode == 201) {
                 if (location_header in response.headers) {
-                    location = response.headers[location_header];
+                    var location = response.headers[location_header];
                     if ('etag' in response.headers) {
                         var etag = response.headers['etag'];
                         if ('content-type' in response.headers) {
