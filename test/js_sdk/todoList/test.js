@@ -9,26 +9,22 @@ function test_objects() {
             if (error) throw error;
             if (!(items instanceof todoListAPI.Collection)) throw 'assert';
             var new_item = new todoListAPI.Item({'description':'buy milk'});
-            items.create(new_item, function(error, entity) {
+            items.create(new_item, function(error) {
                 if (error) throw error;
-                if (!(entity === new_item)) throw 'assert';
                 if (!(new_item._self)) throw 'assert';
                 todoList.retrieve('items', function(error, items) {
                     if (error) throw error;
                     if (!(new_item._self in items.items)) throw 'assert';
                     new_item.description = 'buy more milk'
                     new_item.due = 'tonight'
-                    new_item.update(function(error, entity) {
+                    new_item.update(function(error) {
                         if (error) throw error;
-                        if (!(entity === new_item)) throw 'assert';
-                        new_item.refresh(function(error, entity) {   
+                        new_item.refresh(function(error) {   
                             if (error) throw error;
-                            if (!(entity === new_item)) throw 'assert';
                             if (!(new_item.description == 'buy more milk')) throw 'assert';                   
-                            new_item.delete(function(error, entity) {
+                            new_item.delete(function(error) {
                                 if (error) throw error;
-                                if (!(entity === new_item)) throw 'assert';
-                                items.refresh(function(error, entity) {
+                                items.refresh(function(error) {
                                     if (error) throw error;
                                     if (new_item._self in items.items) throw 'assert';                   
                                 })
