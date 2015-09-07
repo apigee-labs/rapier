@@ -7,7 +7,6 @@ rslt = api.retrieve('http://localhost:3000/message', function(error, entity) {
         console.log(error)
     } else {
         if (!(entity instanceof helloMessageAPI.HelloMessage)) throw 'assert'
-        console.log(entity);
         entity.text = "It's a JS world";
         entity.update(function(error, entity) {
             if (error) throw error.args[0];
@@ -15,8 +14,6 @@ rslt = api.retrieve('http://localhost:3000/message', function(error, entity) {
             entity.delete(function(error, entity) {
                 if (!error) {
                     throw 'should not be allowed to delete well-known resource'
-                } else {
-                    console.log('delete refused as expected: ' + error.args[0])
                 }
             }) 
         })
