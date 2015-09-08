@@ -50,21 +50,30 @@ function test_api() {
         api.retrieve('http://localhost:3001/to-dos/items', function(error, entity) {
             if (error) throw error;
             if (!(entity instanceof todoListAPI.Collection)) throw 'assert';
-            api.create('http://localhost:3001/to-dos/items', {kind: 'Item', description:'buy milk'}, function(error, entity) {
-                if (error) throw JSON.stringify(error);
+            var body = {
+                kind: 'Item', 
+                description:'buy milk'
+                };
+            api.create('http://localhost:3001/to-dos/items', body, function(error, entity) {
+                if (error) throw error;
                 if (!(entity._self)) throw 'assert';
                 if (!(entity._etag)) throw 'assert';
                 var new_item = entity;
                 api.retrieve('http://localhost:3001/to-dos/items', function(error, entity) {
-                    if (error) throw JSON.stringify(error);
+                    if (error) throw error;
                     if (!(new_item._self in entity.items)) throw 'assert';
-                    var changes = {description: 'buy more milk', due: 'tonight'};
+                    var changes = {
+                        description: 'buy more milk', 
+                        due: 'tonight'
+                        };
                     api.update(new_item._location, new_item._etag, changes, function(error, entity) {
                         if (error) throw error;
+                        if (new_item._etag == entity._etag) throw 'assert';
                         api.retrieve(new_item._location, function(error, entity) {   
                             if (error) throw error;
                             if (!(entity.description == 'buy more milk')) throw 'assert';                   
                             if (!(entity.due == 'tonight')) throw 'assert';                   
+                            if (new_item._etag == entity._etag) throw 'assert';
                             api.delete(new_item._location, function(error, entity) {
                                 if (error) throw error;
                                 api.retrieve('http://localhost:3001/to-dos/items', function(error, entity) {
