@@ -118,13 +118,15 @@ class SwaggerGenerator(object):
         result = []
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
-                result.append({
+                p_spec = {
                     'property_name': one_end['property'],
-                    'multiplicity': one_end['multiplicity'], 
                     'source_entity': one_end['entity'],
                     'target_entity': other_end['entity'],
                     'rel_name': rel_name
-                    })
+                    }
+                if 'multiplicity' in one_end: p_spec['multiplicity'] = one_end['multiplicity'] 
+                if 'selector' in one_end: p_spec['selector'] = one_end['selector']
+                result.append(p_spec)
            
         if 'relationships' in spec:
             relationships = spec['relationships']
@@ -306,14 +308,16 @@ class SwaggerGenerator(object):
     
     def path_segment(self, rel_property_spec, allow_multivalued = False):
         rel_name = rel_property_spec['property_name']
-        entity_name = rel_property_spec['target_entity']
         if allow_multivalued:
-            dereference_multivalued = False
+            return rel_name
         else:
-            multiplicity = rel_property_spec.get('multiplicity')
-            dereference_multivalued = get_multiplicity(rel_property_spec) == 'n'
-        pattern = '%s;{%s_id}' if self.selector_location == 'path-parameter' else '%s/{%s_id}'
-        return pattern % (rel_name, entity_name) if dereference_multivalued else rel_name
+            if get_multiplicity(rel_property_spec) == 'n':
+                entity_name = rel_property_spec['target_entity']
+                selector = rel_property_spec.get('selector', '_id')
+                pattern = '%s;{%s%s}' if self.selector_location == 'path-parameter' else '%s/{%s%s}'
+                return pattern % (rel_name, entity_name, selector)
+            else:
+                return rel_name
         
     def build_parameters(self, rel_property_spec_stack):
         result = []
