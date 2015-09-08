@@ -11,17 +11,20 @@ function test_objects() {
         todoList.retrieve('items', function(error, items) {
             if (error) throw error;
             if (!(items instanceof todoListAPI.Collection)) throw 'assert';
-            var new_item = new todoListAPI.Item({'description':'buy milk'});
+            var new_item = new todoListAPI.Item();
+            new_item.description = 'buy milk';
             items.create(new_item, function(error) {
                 if (error) throw error;
                 if (!(new_item._self)) throw 'assert';
                 todoList.retrieve('items', function(error, items) {
                     if (error) throw error;
                     if (!(new_item._self in items.items)) throw 'assert';
-                    new_item.description = 'buy more milk'
-                    new_item.due = 'tonight'
+                    new_item.description = 'buy more milk';
+                    new_item.due = 'tonight';
+                    var etag = new_item._etag;
                     new_item.update(function(error) {
                         if (error) throw error;
+                        if (etag == new_item._etag) throw 'assert';
                         new_item.refresh(function(error) {   
                             if (error) throw error;
                             if (!(new_item.description == 'buy more milk')) throw 'assert';                   
