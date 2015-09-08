@@ -10,12 +10,12 @@ var HOST = 'localhost';
 var BASE_PREFIX = 'http://' + HOST + ':' + PORT
 var TODOS_URL =  BASE_PREFIX + '/to-dos';
 var TODOS = {
-  _self: BASE_PREFIX + '/to-dos',
+  _self: TODOS_URL,
   kind: 'TodoList',
-  items: BASE_PREFIX + '/to-dos/items'
+  items: BASE_PREFIX + '/items'
 }
 var ITEMS = {
-  _self: BASE_PREFIX + '/to-dos/items',
+  _self: BASE_PREFIX + '/items',
   kind: 'Collection',
   items: [],
   item_type: 'Item'
@@ -34,7 +34,7 @@ app.get('/to-dos', function(req, res) {
   }
 });
 
-app.get('/to-dos/items', function(req, res) {
+function getItems(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     res.set('Content-Type', 'application/json');
@@ -43,9 +43,12 @@ app.get('/to-dos/items', function(req, res) {
   } else {
     res.status(406).send('Unrecognized accept header media type: ' + accept_type)
   }
-});
+}
 
-app.get('/items;:itemid', function(req, res) {
+app.get('/to-dos/items', getItems);
+app.get('/items', getItems);
+
+function getItem(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     var itemid = req.params.itemid;
@@ -68,9 +71,12 @@ app.get('/items;:itemid', function(req, res) {
   } else {
     res.status(406).send('Unrecognized accept header media type: ' + accept_type)
   }
-});
+}
 
-app.patch('/items;:itemid', function(req, res) {
+app.get('/item/:itemid', getItem);
+app.get('/to-dos/items;:itemid', getItem);
+
+function patchItem(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     var content_type = req.get('Content-Type');
@@ -116,9 +122,12 @@ app.patch('/items;:itemid', function(req, res) {
   } else {
     res.status(406).send('Unrecognized Accept header media type: ' + accept_type)
   }
-});
+}
 
-app.delete('/items;:itemid', function(req, res) {
+app.patch('/item/:itemid', patchItem);
+app.patch('/to-dos/items;:itemid', patchItem);
+
+function deleteItem(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     var content_type = req.get('Content-Type');
@@ -147,9 +156,12 @@ app.delete('/items;:itemid', function(req, res) {
   } else {
     res.status(406).send('Unrecognized Accept header media type: ' + accept_type)
   }
-});
+}
 
-app.post('/to-dos/items', function(req, res) {
+app.delete('/item/:itemid', deleteItem);
+app.delete('/to-dos/items;:itemid', deleteItem);
+
+function postItem(req, res) {
   var accept_type = req.get('Accept');
   if (typeof accept_type == 'undefined' || accept_type === '*/*'|| accept_type === 'application/json') {
     var content_type = req.get('Content-Type');
@@ -157,7 +169,7 @@ app.post('/to-dos/items', function(req, res) {
       var item = req.body;
       if ('kind' in item) {
         var itemid = ITEMID++;
-        item._self = BASE_PREFIX + '/items;' + itemid.toString();
+        item._self = BASE_PREFIX + '/item/' + itemid.toString();
         item._id = itemid.toString();
         item._etag = 0;
         ITEMS.items.push(item);
@@ -173,7 +185,10 @@ app.post('/to-dos/items', function(req, res) {
   } else {
     res.status(406).send('Unrecognized Accept header media type: ' + accept_type)
   }
-});
+}
+
+app.post('/to-dos/items', postItem);
+app.post('/items', postItem);
 
 console.log('Listening on %d', PORT);
 app.listen(PORT);
