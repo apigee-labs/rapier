@@ -156,7 +156,7 @@ class SwaggerGenerator(object):
     def emit_query_path(self, well_known_URL, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = get_multiplicity(rel_property_spec) == 'n'
-        if multivalued:
+        if multivalued and 'selector' in rel_property_spec:
             path = '/'.join([self.path_segment(rel_property_spec, inx==len(rel_property_spec_stack)-1) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
             sep = '' if well_known_URL.endswith('/') else '/'
             abs_path = sep.join((well_known_URL, path))
@@ -313,8 +313,8 @@ class SwaggerGenerator(object):
         else:
             if get_multiplicity(rel_property_spec) == 'n':
                 entity_name = rel_property_spec['target_entity']
-                selector = rel_property_spec.get('selector', '_id')
-                pattern = '%s;{%s%s}' if self.selector_location == 'path-parameter' else '%s/{%s%s}'
+                selector = rel_property_spec['selector']
+                pattern = '%s;{%s_%s}' if self.selector_location == 'path-parameter' else '%s/{%s-%s}'
                 return pattern % (rel_name, entity_name, selector)
             else:
                 return rel_name
@@ -327,7 +327,7 @@ class SwaggerGenerator(object):
             multivalued = get_multiplicity(rel_property_spec) == 'n'
             if multivalued:
                 result.append( {
-                    'name': '%s_id' % entity_name,
+                    'name': '%s-%s' % (entity_name, rel_property_spec['selector']),
                     'in': 'path',
                     'type': 'string',
                     'description': "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name),
@@ -452,9 +452,6 @@ class SwaggerGenerator(object):
    
 standard_entity_properties = {
     '_self': {
-        'type': 'string'
-        }, 
-    '_id': {
         'type': 'string'
         }, 
     'kind': {

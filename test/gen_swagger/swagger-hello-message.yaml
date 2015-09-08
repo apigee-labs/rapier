@@ -7,8 +7,6 @@ definitions:
         type: string
   HelloMessage:
     properties:
-      _id:
-        type: string
       _self:
         type: string
       kind:

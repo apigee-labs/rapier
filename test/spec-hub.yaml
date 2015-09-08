@@ -14,6 +14,8 @@ entities:
                 type: string
     Spec:
         properties:
+            name:
+                type: string
             content_type:
                 type: string
             content_set:
@@ -28,6 +30,7 @@ relationships:
             entity: Hub
             property: repos
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Repo
     hub-to-spec:
@@ -35,6 +38,7 @@ relationships:
             entity: Hub
             property: specs
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Spec
     repo-to-spec:

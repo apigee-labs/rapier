@@ -6,6 +6,8 @@ entities:
         query_paths: [items]
     Item:
         properties:
+            _id:
+                type: string
             description:
                 type: string
             due:
@@ -17,5 +19,6 @@ relationships:
             entity: TodoList
             property: items
             multiplicity: 0:n
+            selector: _id
         other_end:
             entity: Item

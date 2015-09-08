@@ -49,6 +49,7 @@ relationships:
             entity: PropertyTracker
             property: dogs
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Dog
     tracker-to-people:
@@ -56,6 +57,7 @@ relationships:
             entity: PropertyTracker
             property: people
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Person
     tracker-to-bicycles:
@@ -63,6 +65,7 @@ relationships:
             entity: PropertyTracker
             property: bicycles
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Bicycle
     tracker-to-institutions:
@@ -70,6 +73,7 @@ relationships:
             entity: PropertyTracker
             property: institutions
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Institution
     dogs-to-people:
@@ -77,6 +81,7 @@ relationships:
             entity: Person
             property: possessions
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Dog
             property: owner
@@ -86,6 +91,7 @@ relationships:
             entity: Institution
             property: assets
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Dog
             property: owner
@@ -95,6 +101,7 @@ relationships:
             entity: Person
             property: possessions
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Bicycle
             property: owner
@@ -104,6 +111,7 @@ relationships:
             entity: Institution
             property: assets
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Bicycle
             property: owner

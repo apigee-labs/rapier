@@ -26,6 +26,7 @@ relationships:
             entity: DogTracker
             property: dogs
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Dog
     tracker-to-people:
@@ -33,6 +34,7 @@ relationships:
             entity: DogTracker
             property: people
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Person
     dogs-to-people:
@@ -40,6 +42,7 @@ relationships:
             entity: Person
             property: dogs
             multiplicity: 0:n
+            selector: name
         other_end:
             entity: Dog
             property: owner

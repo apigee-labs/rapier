@@ -19,28 +19,27 @@ definitions:
         type: string
   Item:
     properties:
-      _id: &id001
+      _id:
         type: string
-      _self: &id002
+      _self: &id001
         type: string
       description:
         type: string
       due:
         format: date-time
         type: string
-      kind: &id003
+      kind: &id002
         type: string
   TodoList:
     properties:
-      _id: *id001
-      _self: *id002
+      _self: *id001
       items:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Item'
-      kind: *id003
+      kind: *id002
 info:
   title: TodoListAPI
   version: '0.1'
@@ -64,7 +63,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': &id004
+        '200': &id003
           description: successful
           headers:
             Content-Location:
@@ -91,7 +90,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id004
+        '200': *id003
         '400':
           $ref: '#/responses/400'
         '401':
@@ -154,11 +153,11 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /to-dos/items/{Item_id}:
+  /to-dos/items/{Item-_id}:
     delete:
       description: Delete an Item
       responses:
-        '200': &id005
+        '200': &id004
           description: successful
           headers:
             Content-Location:
@@ -187,7 +186,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id005
+        '200': *id004
         '401':
           $ref: '#/responses/401'
         '403':
@@ -201,7 +200,7 @@ paths:
     parameters:
     - description: Specifies which 'Item' entity from multi-valued relationship 'items'
       in: path
-      name: Item_id
+      name: Item-_id
       required: true
       type: string
     patch:
@@ -209,7 +208,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id005
+        '200': *id004
         '400':
           $ref: '#/responses/400'
         '401':
