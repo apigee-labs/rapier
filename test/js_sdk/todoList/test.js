@@ -73,7 +73,6 @@ function test_api() {
                             if (error) throw error;
                             if (!(entity.description == 'buy more milk')) throw 'assert';                   
                             if (!(entity.due == 'tonight')) throw 'assert';                   
-                            if (new_item._etag == entity._etag) throw 'assert';
                             api.delete(new_item._location, function(error, entity) {
                                 if (error) throw error;
                                 api.retrieve('http://localhost:3001/to-dos/items', function(error, entity) {
