@@ -63,6 +63,7 @@ function getItem(req, res) {
     if (item !== null) {
       res.set('Content-Type', 'application/json');
       res.set('Content-Location', item._self);
+      res.set('ETag', item._etag);
       res.status(200);
       res.json(item);
     } else {
