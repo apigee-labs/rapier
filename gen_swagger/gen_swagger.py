@@ -1,6 +1,6 @@
 import yaml, sys
 
-class Swagger_generator(object):
+class SwaggerGenerator(object):
 
     def __init__(self):
         self.swagger = {
@@ -485,7 +485,7 @@ def get_multiplicity(rel_property_spec):
     return multiplicity.split(':')[-1] if multiplicity else 1
             
 def main(args):
-    generator = Swagger_generator()
+    generator = SwaggerGenerator()
     generator.set_rapier_spec_from_filename(*args[1:])
     print yaml.dump(generator.swagger_from_rapier(), default_flow_style=False)
         

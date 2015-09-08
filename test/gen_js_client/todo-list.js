@@ -1,7 +1,7 @@
-var baseAPI = require('./../../../js_sdk/base_api')
+var baseAPI = require('rapier')
 
 var exports = function() {
-
+            
     function API() {}
     
     API.prototype = Object.create(baseAPI.BaseAPI.prototype);
@@ -25,7 +25,7 @@ var exports = function() {
     TodoList.prototype.constructor = TodoList;
     TodoList.prototype._className = 'TodoList';
     TodoList.prototype.api = api_function;
-    
+
     function Item(jso, url, etag) {
         baseAPI.BaseEntity.call(this, jso, url, etag)
     }
@@ -33,28 +33,28 @@ var exports = function() {
     Item.prototype.constructor = Item;
     Item.prototype._className = 'Item';
     Item.prototype.api = api_function;
-        
+
     function Collection(jso, url, etag) {
-        baseAPI.BaseCollection.call(this, jso, url, etag)
+        baseAPI.BaseEntity.call(this, jso, url, etag)
     }
     Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
     Collection.prototype.constructor = Collection;
     Collection.prototype._className = 'Collection';
     Collection.prototype.api = api_function;
-            
+
     var classToKindMap = {
         TodoList: TodoList,
         Item: Item,
         Collection: Collection
-        };
-        
+        }
+
     return {
         api: api,
         TodoList: TodoList,
         Item: Item,
-        Collection: Collection   
+        Collection: Collection
         }
-
+        
 }
     
 module.exports = exports()

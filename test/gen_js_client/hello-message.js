@@ -1,7 +1,7 @@
-var baseAPI = require('./../../../js_sdk/base_api')
+var baseAPI = require('rapier')
 
 var exports = function() {
-    
+            
     function API() {}
     
     API.prototype = Object.create(baseAPI.BaseAPI.prototype);
@@ -9,9 +9,9 @@ var exports = function() {
         return ['/message']
     }
     API.prototype.resourceClass = function(type_name) {
-        return  type_name in classToKindMap ? classToKindMap[type_name] : baseAPI.BaseEntity      
+        return  type_name in classToKindMap ? classToKindMap[type_name] : baseAPI.BaseResource      
     }
-        
+    
     var api = new API();
 
     var api_function = function() {
@@ -25,15 +25,26 @@ var exports = function() {
     HelloMessage.prototype.constructor = HelloMessage;
     HelloMessage.prototype._className = 'HelloMessage';
     HelloMessage.prototype.api = api_function;
-    
+
+    function Collection(jso, url, etag) {
+        baseAPI.BaseEntity.call(this, jso, url, etag)
+    }
+    Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
+    Collection.prototype.constructor = Collection;
+    Collection.prototype._className = 'Collection';
+    Collection.prototype.api = api_function;
+
     var classToKindMap = {
-        HelloMessage: HelloMessage
-        };
-        
+        HelloMessage: HelloMessage,
+        Collection: Collection
+        }
+
     return {
         api: api,
-        HelloMessage: HelloMessage        
+        HelloMessage: HelloMessage,
+        Collection: Collection
         }
+        
 }
     
 module.exports = exports()
