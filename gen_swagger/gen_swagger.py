@@ -211,6 +211,31 @@ class SwaggerGenerator(object):
                     '406': self.global_response_ref('406'), 
                     'default': self.global_response_ref('default')
                     }
+                },
+            'head': {
+                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'parameters': [{'$ref': '#/parameters/Accept'}],
+                'responses': {
+                    '200': self.global_response_ref('head_200'), 
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    'default': self.global_response_ref('default')
+                    }
+                },
+            'options': {
+                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'parameters': [ 
+                    {'$ref': '#/parameters/Access-Control-Request-Method'}, 
+                    {'$ref': '#/parameters/Access-Control-Request-Headers'} 
+                    ],
+                'responses': {
+                    '200': self.global_response_ref('options_200'), 
+                    '401': self.global_response_ref('401'), 
+                    '403': self.global_response_ref('403'), 
+                    '404': self.global_response_ref('404'), 
+                    'default': self.global_response_ref('default')
+                    }
                 }
             }
         update_verb = 'patch' if structured else 'put'
@@ -337,6 +362,40 @@ class SwaggerGenerator(object):
           
     def build_standard_responses(self):
         return {
+            'head_200': {
+                'description': 'successful',
+                'headers': {
+                    'Content-Location': {
+                        'type': 'string',
+                        'description': 'perma-link URL of resource'
+                        },
+                    'ETag': {
+                        'description': 'this value must be echoed in the If-Match header of every PATCH',
+                        'type': 'string'
+                        }
+                    }
+                },
+            'options_200': {
+                'description': 'successful',
+                'headers': {
+                    'Access-Control-Allow-Origin': {
+                        'type': 'string',
+                        'description': 'origins allowed'
+                        },
+                    'Access-Control-Allow-Methods': {
+                        'description': 'methods allowed',
+                        'type': 'string'
+                        },
+                    'Access-Control-Allow-Headers': {
+                        'description': 'headers allowed',
+                        'type': 'string'
+                        },
+                    'Access-Control-Max-Age': {
+                        'description': 'length of time response can be cached',
+                        'type': 'string'
+                        }
+                    }
+                },
             '303': {
                 'description': 'See other. Server is redirecting client to a different resource',
                 'headers': {
@@ -420,6 +479,20 @@ class SwaggerGenerator(object):
                 'type': 'string',
                 'description': 'specifies the requested media type - required',
                 'required': True
+                },
+            'Access-Control-Request-Method': {
+                'name': 'Access-Control-Request-Method',
+                'description': 'specifies the method the client wishes to use',
+                'in': 'header',
+                'required': True,
+                'type': 'string'
+                },
+            'Access-Control-Request-Headers': {
+                'name': 'Access-Control-Request-Headers',
+                'description': 'specifies the custom headers the client wishes to use',
+                'in': 'header',
+                'required': True,
+                'type': 'string'
                 }
             }
     

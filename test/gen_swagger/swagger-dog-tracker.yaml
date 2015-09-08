@@ -75,6 +75,18 @@ parameters:
     name: Accept
     required: true
     type: string
+  Access-Control-Request-Headers:
+    description: specifies the custom headers the client wishes to use
+    in: header
+    name: Access-Control-Request-Headers
+    required: true
+    type: string
+  Access-Control-Request-Method:
+    description: specifies the method the client wishes to use
+    in: header
+    name: Access-Control-Request-Method
+    required: true
+    type: string
   If-Match:
     description: specifies the last known ETag value of the resource being modified
     in: header
@@ -108,6 +120,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve a DogTracker
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a DogTracker
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     patch:
@@ -222,6 +265,37 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
       in: path
@@ -290,6 +364,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     parameters:
@@ -387,6 +492,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     parameters:
@@ -489,5 +625,29 @@ responses:
     description: 5xx errors and other stuff
     schema:
       $ref: '#/definitions/ErrorResponse'
+  head_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+        type: string
+  options_200:
+    description: successful
+    headers:
+      Access-Control-Allow-Headers:
+        description: headers allowed
+        type: string
+      Access-Control-Allow-Methods:
+        description: methods allowed
+        type: string
+      Access-Control-Allow-Origin:
+        description: origins allowed
+        type: string
+      Access-Control-Max-Age:
+        description: length of time response can be cached
+        type: string
 swagger: '2.0'
 
