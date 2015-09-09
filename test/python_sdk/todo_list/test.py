@@ -22,8 +22,8 @@ def test_api():
     changes = {'description': 'buy gallon of milk',
                'due': 'tonight'
               }
-    api.update(new_item._location, new_item._etag, changes)
-    api.delete(new_item._location)
+    api.update('http://localhost:3001/to-dos/items;' + new_item.id, new_item._etag, changes)
+    api.delete('http://localhost:3001/to-dos/items;' + new_item.id)
 
 def test_raw():
     import requests

@@ -57,10 +57,10 @@ includes an ETag header that must be echoed in the 'If-Match' request header of 
 In Rapier APIs, the server will add
 a few standard properties to the `Hello-message` entity — the `Hello-message` at `/message` will actually look like this:
 
-    {'self_link': 'http://example.org/message',
-     'id': '1234567',
-     'type': 'Hello_message',
-     'message': 'Hello, world'
+    {"_self": "http://example.org/message",
+     "id": "1234567",
+     "kind": "Hello_message",
+     "message": "Hello, world"
     }
  
 The Swagger document generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
@@ -97,24 +97,24 @@ This API defines a single resource at the well_known_URL `/to-dos` whose type is
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 
-    {'self_link': 'http://example.org/to-dos',
-     'id': '987655443',
-     'type': 'To_do_list',
-     'items': 'http://example.org/xxxxx'
+    {"_self": "http://example.org/to-dos",
+     "id": "987655443",
+     "kind": "To_do_list",
+     "items": "http://example.org/xxxxx"
     }
     
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
-    {'self_link': 'http://example.org/xxxxx',
-     'type': 'Collection',
-     'id': '5647382',
-     'contents_type': 'Item',
-     'contents': [{
-         'self_link': 'http://example.org/yyyyy',
-         'id': '10293847',
-         'type': 'Item'
-         'description': 'Get milk on the way home',
-         'due': '1439228983'
+    {"_self": "http://example.org/xxxxx",
+     "kind": "Collection",
+     "id": "5647382",
+     "contents_type": "Item",
+     "contents": [{
+         "_self": "http://example.org/yyyyy",
+         "id": "10293847",
+         "kind": "Item"
+         "description": "Get milk on the way home",
+         "due": "1439228983"
          }
       ]
     }
@@ -137,11 +137,11 @@ You can POST items to `http://example.org/to-dos/items` to create new items, you
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
  
     {
-     'self_link': 'http://example.org/yyyyy',
-     'id': '10293847',
-     'type': 'Item'
-     'description': 'Get milk on the way home',
-     'due': '1439228983'
+     "_self": "http://example.org/yyyyy",
+     "id": "10293847",
+     "kind": "Item"
+     "description": "Get milk on the way home",
+     "due": "1439228983"
     }
  
 If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
