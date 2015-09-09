@@ -19,14 +19,14 @@ definitions:
         type: string
   Item:
     properties:
-      _id:
-        type: string
       _self: &id001
         type: string
       description:
         type: string
       due:
         format: date-time
+        type: string
+      id:
         type: string
       kind: &id002
         type: string
@@ -197,7 +197,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /to-dos/items/{Item-_id}:
+  /to-dos/items/{Item-id}:
     delete:
       description: Delete an Item
       responses:
@@ -275,7 +275,7 @@ paths:
     parameters:
     - description: Specifies which 'Item' entity from multi-valued relationship 'items'
       in: path
-      name: Item-_id
+      name: Item-id
       required: true
       type: string
     patch:

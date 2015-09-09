@@ -55,7 +55,7 @@ function getItem(req, res) {
     var items = ITEMS.items;
     var item = null;
     for (var i = 0; i < items.length; i++) {
-      if (items[i]._id == itemid) {
+      if (items[i].id == itemid) {
         item = items[i];
         break;
       }
@@ -86,7 +86,7 @@ function patchItem(req, res) {
       var items = ITEMS.items;
       var item = null;
       for (var i = 0; i < items.length; i++) {
-        if (items[i]._id == itemid) {
+        if (items[i].id == itemid) {
           item = items[i];
           break;
         }
@@ -95,7 +95,7 @@ function patchItem(req, res) {
         var changes = req.body;
         var error = null;
         for (var property in changes) {
-          if (property.indexOf('_') == 0 || property == 'kind') {
+          if (property.indexOf('_') == 0 || property == 'kind' || property == 'id') {
             res.status(400);
             res.set('Content-Type', 'application/json');
             res.json({'text': 'Cannot modify property '+ property});
@@ -137,7 +137,7 @@ function deleteItem(req, res) {
       var items = ITEMS.items;
       var item = null;
       for (var i = 0; i < items.length; i++) {
-        if (items[i]._id == itemid) {
+        if (items[i].id == itemid) {
           item = items.splice(i,1)[0]
           break;
         }
@@ -171,7 +171,7 @@ function postItem(req, res) {
       if ('kind' in item) {
         var itemid = ITEMID++;
         item._self = BASE_PREFIX + '/item/' + itemid.toString();
-        item._id = itemid.toString();
+        item.id = itemid.toString();
         item._etag = 0;
         ITEMS.items.push(item);
         res.set('ETag', item._etag);
