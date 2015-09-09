@@ -3,7 +3,7 @@ consumes:
 definitions:
   Collection:
     properties:
-      id: &id001
+      _self:
         type: string
       item_type:
         type: string
@@ -11,9 +11,7 @@ definitions:
         items:
           type: object
         type: array
-      self_link: &id002
-        type: string
-      type: &id003
+      kind:
         type: string
   Content: {}
   ErrorResponse:
@@ -22,80 +20,78 @@ definitions:
         type: string
   Hub:
     properties:
-      id: *id001
+      _self: &id001
+        type: string
+      kind: &id002
+        type: string
       repos:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Repo'
-      self_link: *id002
       specs:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Spec'
-      type: *id003
   Repo:
     properties:
-      id: *id001
+      _self: *id001
+      kind: *id002
       name:
         type: string
-      self_link: *id002
       specs:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Spec'
-      type: *id003
   Spec:
     properties:
-      content:
+      _self: *id001
+      committed:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Content'
-      content_set:
-        type: boolean
-      content_type:
-        type: string
-      id: *id001
+      kind: *id002
       repo:
         format: URL
         type: string
         x-rapier-relationship:
           type:
             $ref: '#/definitions/Repo'
-      self_link: *id002
-      type: *id003
-      versions:
+      title:
+        type: string
+      working:
         format: URL
         type: string
         x-rapier-relationship:
           type:
-            $ref: '#/definitions/Version'
-  Version:
-    properties:
-      id: *id001
-      self_link: *id002
-      type: *id003
-      version_of:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          type:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Content'
 info:
-  title: Spec Hub API
+  title: SpecHubAPI
   version: '0.1'
 parameters:
   Accept:
     description: specifies the requested media type - required
     in: header
     name: Accept
+    required: true
+    type: string
+  Access-Control-Request-Headers:
+    description: specifies the custom headers the client wishes to use
+    in: header
+    name: Access-Control-Request-Headers
+    required: true
+    type: string
+  Access-Control-Request-Method:
+    description: specifies the method the client wishes to use
+    in: header
+    name: Access-Control-Request-Method
     required: true
     type: string
   If-Match:
@@ -111,7 +107,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': &id004
+        '200': &id003
           description: successful
           headers:
             Content-Location:
@@ -133,12 +129,43 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Hub
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Hub
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a Hub entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id004
+        '200': *id003
         '400':
           $ref: '#/responses/400'
         '401':
@@ -154,7 +181,7 @@ paths:
         default:
           $ref: '#/responses/default'
   /repos:
-    get: &id006
+    get: &id005
       responses:
         '200':
           description: description
@@ -201,11 +228,11 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /repos;{Repo_id}:
+  /repos;{Repo_name}:
     delete:
       description: Delete a Repo
       responses:
-        '200': &id005
+        '200': &id004
           description: successful
           headers:
             Content-Location:
@@ -234,7 +261,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id005
+        '200': *id004
         '401':
           $ref: '#/responses/401'
         '403':
@@ -245,10 +272,41 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Repo' entity from multi-valued relationship 'repos'
       in: path
-      name: Repo_id
+      name: Repo-name
       required: true
       type: string
     patch:
@@ -256,7 +314,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id005
+        '200': *id004
         '400':
           $ref: '#/responses/400'
         '401':
@@ -271,41 +329,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /repos;{Repo_id}/specs:
-    get: *id006
-    parameters:
-    - description: Specifies which 'Repo' entity from multi-valued relationship 'repos'
-      in: path
-      name: Repo_id
-      required: true
-      type: string
-    post:
-      description: Create a new Spec
-      responses:
-        '201':
-          description: Created new Spec
-          headers:
-            Location:
-              description: perma-link URL of newly-created Spec
-              type: string
-          schema:
-            $ref: '#/definitions/Spec'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
   /specs:
-    get: *id006
+    get: *id005
     post:
       description: Create a new Spec
       responses:
@@ -331,11 +356,11 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_id}:
+  /specs;{Spec_name}:
     delete:
       description: Delete a Spec
       responses:
-        '200': &id007
+        '200': &id006
           description: successful
           headers:
             Content-Location:
@@ -364,7 +389,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id007
+        '200': *id006
         '401':
           $ref: '#/responses/401'
         '403':
@@ -375,10 +400,41 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
       in: path
-      name: Spec_id
+      name: Spec-name
       required: true
       type: string
     patch:
@@ -386,7 +442,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id007
+        '200': *id006
         '400':
           $ref: '#/responses/400'
         '401':
@@ -401,11 +457,11 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_id}/content:
+  /specs;{Spec_name}/committed:
     delete:
       description: Delete a Content
       responses:
-        '200': &id008
+        '200': &id007
           description: successful
           headers:
             Content-Location:
@@ -434,7 +490,7 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id008
+        '200': *id007
         '401':
           $ref: '#/responses/401'
         '403':
@@ -445,10 +501,41 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
       in: path
-      name: Spec_id
+      name: Spec-name
       required: true
       type: string
     put:
@@ -458,7 +545,7 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id008
+        '200': *id007
         '201':
           description: Created new Content
           headers:
@@ -481,11 +568,11 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_id}/repo:
+  /specs;{Spec_name}/repo:
     delete:
       description: Delete a Repo
       responses:
-        '200': &id009
+        '200': &id008
           description: successful
           headers:
             Content-Location:
@@ -514,6 +601,107 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
+        '200': *id008
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Repo
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
+      in: path
+      name: Spec-name
+      required: true
+      type: string
+    patch:
+      description: Update a Repo entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id008
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /specs;{Spec_name}/working:
+    delete:
+      description: Delete a Content
+      responses:
+        '200': &id009
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
         '200': *id009
         '401':
           $ref: '#/responses/401'
@@ -525,18 +713,59 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Spec' entity from multi-valued relationship 'specs'
       in: path
-      name: Spec_id
+      name: Spec-name
       required: true
       type: string
-    patch:
-      description: Update a Repo entity
+    put:
+      consumes:
+      - text/yaml
+      description: Create or Update a Content entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id009
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -593,5 +822,29 @@ responses:
     description: 5xx errors and other stuff
     schema:
       $ref: '#/definitions/ErrorResponse'
+  head_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+        type: string
+  options_200:
+    description: successful
+    headers:
+      Access-Control-Allow-Headers:
+        description: headers allowed
+        type: string
+      Access-Control-Allow-Methods:
+        description: methods allowed
+        type: string
+      Access-Control-Allow-Origin:
+        description: origins allowed
+        type: string
+      Access-Control-Max-Age:
+        description: length of time response can be cached
+        type: string
 swagger: '2.0'
 

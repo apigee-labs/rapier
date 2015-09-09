@@ -7,20 +7,15 @@ conventions:
 entities:
     Hub:
         well_known_URLs: /
-        query_paths: [repos, specs, repos/specs, specs/repo, specs/content]
+        query_paths: [repos, specs, repos/specs, specs/repo, specs/working, specs/committed]
     Repo:
         properties:
             name:
                 type: string
     Spec:
         properties:
-            name:
+            title:
                 type: string
-            content_type:
-                type: string
-            content_set:
-                type: boolean
-    Version: {}
     Content:
         content_type: text
         consumes: text/yaml
@@ -50,19 +45,17 @@ relationships:
             entity: Spec
             property: repo
             multiplicity: 0:1
-    spec-to-content:
+    spec-to-working:
         one_end:
             entity: Spec
-            property: content
+            property: working
             multiplicity: 0:1
         other_end:
             entity: Content
-    spec_to_versions:
+    spec-to-committed:
         one_end:
             entity: Spec
-            property: versions
-            multiplicity: 0:n
-        other_end:
-            entity: Version
-            property: version_of
+            property: committed
             multiplicity: 0:1
+        other_end:
+            entity: Content
