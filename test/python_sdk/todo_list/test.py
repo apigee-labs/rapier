@@ -38,7 +38,7 @@ def test_raw():
         raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
     new_item = r.json()
     etag = r.headers['ETag']
-    location = r.headers['Location']
+    new_item_url = r.headers['Location']
     r = requests.get('http://localhost:3001/to-dos/items', headers = {'Accept': 'application/json'})
     if r.status_code != 200:
         raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
@@ -52,10 +52,10 @@ def test_raw():
         'Content-Type': 'application/json',
         'If-Match': etag
         }
-    r = requests.patch(location, json = changes, headers = headers)    
+    r = requests.patch(new_item_url, json = changes, headers = headers)    
     if r.status_code != 200:
         raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
-    r = requests.delete(location, json = changes, headers = {'Accept': 'application/json'})    
+    r = requests.delete(new_item_url, json = changes, headers = {'Accept': 'application/json'})    
     if r.status_code != 200:
         raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
     
