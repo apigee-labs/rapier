@@ -28,12 +28,14 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Repo'
       specs:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Spec'
   Repo:
@@ -46,6 +48,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Spec'
   Spec:
@@ -55,6 +58,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: '1'
           type:
             $ref: '#/definitions/Content'
       kind: *id002
@@ -62,6 +66,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: '1'
           type:
             $ref: '#/definitions/Repo'
       title:
@@ -70,6 +75,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: '1'
           type:
             $ref: '#/definitions/Content'
 info:

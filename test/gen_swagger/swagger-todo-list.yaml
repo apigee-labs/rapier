@@ -37,6 +37,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Item'
       kind: *id002

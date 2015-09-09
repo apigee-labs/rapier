@@ -110,7 +110,8 @@ class SwaggerGenerator(object):
                 'type': {
                     'one_of': [{'$ref': '#/definitions/%s' % rel_prop_spec['target_entity']} for rel_prop_spec in rel_prop_specs if 'property_name' in rel_prop_spec]
                     } if len(rel_prop_specs) > 1 else
-                    {'$ref': '#/definitions/%s' % rel_prop_specs[0]['target_entity'] }
+                    {'$ref': '#/definitions/%s' % rel_prop_specs[0]['target_entity'] },
+                'multiplicity': get_multiplicity(rel_prop_specs[0])
                 }
             } 
     def get_relationship_property_specs(self, entity_name):

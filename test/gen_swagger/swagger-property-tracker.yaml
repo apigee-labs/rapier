@@ -13,6 +13,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: '1'
           type:
             one_of:
             - $ref: '#/definitions/Institution'
@@ -47,6 +48,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: '1'
           type:
             one_of:
             - $ref: '#/definitions/Institution'
@@ -62,6 +64,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             one_of:
             - $ref: '#/definitions/Dog'
@@ -83,6 +86,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             one_of:
             - $ref: '#/definitions/Dog'
@@ -94,18 +98,21 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Bicycle'
       dogs:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Dog'
       institutions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Institution'
       kind: *id002
@@ -113,6 +120,7 @@ definitions:
         format: URL
         type: string
         x-rapier-relationship:
+          multiplicity: n
           type:
             $ref: '#/definitions/Person'
 info:
