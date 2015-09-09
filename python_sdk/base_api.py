@@ -99,7 +99,9 @@ class BaseResource(object):
         if jso:
             for key, value in jso.iteritems():
                 setattr(self, key, value)
-            if '_self' in jso:
+            if '_location' in jso:
+                self._location = jso['_location']
+            elif '_self' in jso:
                 self._location = jso['_self']
             self._jso = jso
         if url:

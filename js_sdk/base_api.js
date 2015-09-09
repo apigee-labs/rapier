@@ -156,7 +156,9 @@ var base_api = function() {
             for (var key in jso) {
                 this[key] = jso[key]
             }
-            if ('_self' in jso) {
+            if ('_location' in jso) {
+                this._location = jso._location
+            } else if ('_self' in jso) {
                 this._location = jso._self
             }
             this._jso = jso
