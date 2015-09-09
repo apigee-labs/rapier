@@ -18,24 +18,24 @@ var exports = function() {
         return api
     }
 
-    function TodoList(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function TodoList(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     TodoList.prototype = Object.create(baseAPI.BaseEntity.prototype);
     TodoList.prototype.constructor = TodoList;
     TodoList.prototype._className = 'TodoList';
     TodoList.prototype.api = api_function;
 
-    function Item(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Item(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Item.prototype = Object.create(baseAPI.BaseEntity.prototype);
     Item.prototype.constructor = Item;
     Item.prototype._className = 'Item';
     Item.prototype.api = api_function;
 
-    function Collection(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Collection(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
     Collection.prototype.constructor = Collection;

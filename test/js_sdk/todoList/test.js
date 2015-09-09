@@ -7,6 +7,7 @@ var api = todoListAPI.api
 function test_objects() {
     api.retrieve('http://localhost:3001/to-dos', function(error, todoList) {
         todoList.retrieve('items', function(error, items) {
+            if (error) throw JSON.stringify(error);
             var new_item = new todoListAPI.Item();
             new_item.description = 'buy milk';
             items.create(new_item, function(error) {

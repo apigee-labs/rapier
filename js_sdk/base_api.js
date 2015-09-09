@@ -121,7 +121,7 @@ var base_api = function() {
             var kind = jso.kind; 
             if (entity) {
                 if (!('kind' in entity) || entity.kind == kind) {
-                    entity.updateProperties(jso, url, etag);
+                    entity.updateProperties(url, jso, etag);
                     return entity
                 } else {
                     throw {args: ['SDK cannot handle change of kind from' + entity.kind + ' to ' + kind]}
@@ -129,14 +129,14 @@ var base_api = function() {
             } else {        
                 var resourceClass = this.resourceClass(kind);
                 if (resourceClass) {
-                    return new resourceClass(jso, url, etag)
+                    return new resourceClass(url, jso, etag)
                 } else {
                     throw {args: ['no resourceClass for kind ' + kind]}
                 }
             }
         } else {
             if (!!entity && entity.kind) {
-                entity.updateProperties(jso, url, etag);
+                entity.updateProperties(url, jso, etag);
                 return entity
             } else {
                 throw {args: ['no kind property in json ' + jso]}
@@ -146,16 +146,12 @@ var base_api = function() {
 
     BaseAPI.prototype._className = 'BaseAPI' 
     
-    function BaseResource(jso, url, etag) {
-        if (url && (!jso || !etag)) {
-            throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
-Creating an Entity first and loading it implies guessing the type at the end of the URL']}
-        }
+    function BaseResource(url, jso, etag) {
         this.kind =  Object.getPrototypeOf(this)._className
-        this.updateProperties(jso, url, etag)
+        this.updateProperties(url, jso, etag)
     }
     
-    BaseResource.prototype.updateProperties = function(jso, url, etag) {
+    BaseResource.prototype.updateProperties = function(url, jso, etag) {
         if (jso) {
             for (var key in jso) {
                 this[key] = jso[key]
@@ -183,14 +179,10 @@ Creating an Entity first and loading it implies guessing the type at the end of 
 
     BaseResource.prototype._className = 'BaseResource' 
 
-    function BaseEntity(jso, url, etag) {
-        if (url && (!jso || !etag)) {
-            throw {args: ['To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
-Creating an Entity first and loading it implies guessing the type at the end of the URL']}
-        }
+    function BaseEntity(url, jso, etag) {
         this._related = {}
         this.kind =  Object.getPrototypeOf(this)._className
-        BaseResource.call(this, jso, url, etag)
+        BaseResource.call(this, url, jso, etag)
     }
     
     BaseEntity.prototype = Object.create(BaseResource.prototype);
@@ -246,15 +238,15 @@ Creating an Entity first and loading it implies guessing the type at the end of 
 
     BaseEntity.prototype._className = 'BaseEntity' 
       
-    function BaseCollection(jso, url, etag) {
-        BaseResource.call(this, jso, url, etag)
+    function BaseCollection(url, jso, etag) {
+        BaseResource.call(this, url, jso, etag)
     }
     
     BaseCollection.prototype = Object.create(BaseResource.prototype);
     BaseCollection.prototype.constructor = BaseCollection;
 
-    BaseCollection.prototype.updateProperties = function(jso, url, etag) {
-        BaseResource.prototype.updateProperties.call(this, jso, url, etag)
+    BaseCollection.prototype.updateProperties = function(url, jso, etag) {
+        BaseResource.prototype.updateProperties.call(this, url, jso, etag)
         if (jso && 'items' in jso) {
             var items = jso['items'];
             this.items = {}

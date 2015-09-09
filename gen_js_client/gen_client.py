@@ -36,8 +36,8 @@ var exports = function() {
     }''' % well_known_urls
     
         class_template = '''
-    function {0}(jso, url, etag) {{
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function {0}(url, jso, etag) {{
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }}
     {0}.prototype = Object.create(baseAPI.{1}.prototype);
     {0}.prototype.constructor = {0};

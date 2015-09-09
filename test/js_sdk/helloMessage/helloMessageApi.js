@@ -18,8 +18,8 @@ var exports = function() {
         return api
     }
 
-    function HelloMessage(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function HelloMessage(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     HelloMessage.prototype = Object.create(baseAPI.BaseEntity.prototype);
     HelloMessage.prototype.constructor = HelloMessage;

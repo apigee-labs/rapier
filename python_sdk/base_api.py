@@ -44,7 +44,7 @@ class BaseAPI(object):
         if urlunparse(url_parts) in self.well_known_URLs():
             return self.retrieve(url, entity, headers)
         else:
-            raise Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts)), self.api_class().well_known_URLs)
+            raise Exception('no such well-known resource %s. Valid urls are: %s' % (urlunparse(url_parts), self.well_known_URLs()))
             
     def process_resource_result(self, url, r, entity=None, location_header = 'Content-Location'):
         if r.status_code == 200 or r.status_code == 201:
@@ -80,7 +80,7 @@ class BaseAPI(object):
             else:
                 resource_class = self.resource_class(kind)
                 if resource_class:
-                    return resource_class(jso, url, etag)
+                    return resource_class(url, jso, etag)
                 else:
                     raise Exception('no resource_class for kind %s') % kind                        
         else:
@@ -92,10 +92,7 @@ class BaseAPI(object):
 
 class BaseResource(object):
     
-    def __init__(self, jso = None, url = None, etag = None):
-        if url and (not jso or not etag):
-            raise Exception('To load an entity, use api.receive(url). This ensures that the entity class will match the server data.\n\
-Creating an Entity first and loading it implies guessing the type at the end of the URL')
+    def __init__(self, url = None, jso = None, etag = None):
         self.update_attrs(jso, url, etag)
 
     def update_attrs(self, jso = None, url = None, etag = None):
@@ -123,13 +120,13 @@ class BaseEntity(BaseResource):
         self.kind = type(self).__name__
         super(BaseEntity, self).__init__(jso, url, etag)
         
-    def get_update_representation(self):
+    def changes(self):
         jso = self._jso if hasattr(self, '_jso') else None
         return {key: value for key, value in self.__dict__.iteritems() if not (key.startswith('_') or (jso and key in jso and jso[key] == value))}
 
     def update(self):
         # issue a PATCH or PUT to update this object from API
-        changes = self.get_update_representation()
+        changes = self.changes()
         if not (hasattr(self, '_location') and self._location):
             raise Exception('self _location not set')
         if not hasattr(self, '_etag') or self._etag == None:
@@ -173,7 +170,7 @@ class BaseCollection(BaseResource):
         if self._location:
             if hasattr(entity, '_self') and entity._self:
                 raise Exception('entity already exists in API %s' % entity)
-            rslt = self.api().create(self._location, entity.get_update_representation(), entity)
+            rslt = self.api().create(self._location, entity.changes(), entity)
             if hasattr(self, 'items'):
                 if entity._self in self.items:
                     raise Exception('Duplicate id')

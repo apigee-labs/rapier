@@ -1,48 +1,68 @@
 from rapier.test.python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
 
 def test_objects():
-    # retrieve the todo list at the well-known URL http://localhost:3001/to-dos
-    todo_list = api.retrieve_well_known_resource('http://localhost:3001/to-dos')
-    # retrieve he list of Items for the todo todo list. It will be an instance of Collection
-    items = todo_list.retrieve('items')
-    # Build a new Item to POST to the Collection
+    items = Collection('http://localhost:3001/to-dos/items')
     new_item = Item()
     new_item.description = 'buy milk'
-    # POST the new Item
     items.create(new_item)
-    # Modify the new Item
+    items.refresh()
+    assert(new_item._self in items.items)
     new_item.description = 'buy gallon of milk'
     new_item.due = 'tonight'
-    # Push the modifictions to the server. This uses a PATCH method with only the modified properties
     new_item.update()
-    # Delete the new item we just created
     new_item.delete()
     
 def test_api():
-    # retrieve the todo list at the well-known URL http://localhost:3001/to-dos
-    todo_list = api.retrieve('http://localhost:3001/to-dos')
-    # retrieve the items list at the well-known URL http://localhost:3001/to-dos/items
-    items = api.retrieve('http://localhost:3001/to-dos/items')
-    # construct a new Item
-    body = {
-        'kind': 'Item',
-        'description':'buy milk'
-        }
-    # add it to the Collection at the well-known URL http://localhost:3001/to-dos/items
+    body = {'kind': 'Item',
+            'description':'buy milk'
+           }
     new_item = api.create('http://localhost:3001/to-dos/items', body)
-    # construct a change object
-    changes = {
-        'description': 'buy gallon of milk',
-        'due': 'tonight'
-        }
-    # Update the object at new_item._location
-    new_item2 = api.update(new_item._location, new_item._etag, changes)
-    # delete the item
+    items = api.retrieve('http://localhost:3001/to-dos/items')
+    assert(new_item._self in items.items)
+    changes = {'description': 'buy gallon of milk',
+               'due': 'tonight'
+              }
+    api.update(new_item._location, new_item._etag, changes)
     api.delete(new_item._location)
+
+def test_raw():
+    import requests
+    body = {'kind': 'Item',
+            'description':'buy milk'
+           }
+    headers = {'Content-Type': 'application/json', 
+               'Accept': 'application/json'
+              }
+    r = requests.post('http://localhost:3001/to-dos/items', json = body, headers = headers)
+    if r.status_code != 201:
+        raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
+    new_item = r.json()
+    etag = r.headers['ETag']
+    location = r.headers['Location']
+    r = requests.get('http://localhost:3001/to-dos/items', headers = {'Accept': 'application/json'})
+    if r.status_code != 200:
+        raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, url, r.text))
+    items = r.json()
+    assert(new_item['_self'] in {item['_self'] for item in items['items']})
+    changes = {'description': 'buy gallon of milk',
+               'due': 'tonight'
+               }
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'If-Match': etag
+        }
+    r = requests.patch(location, json = changes, headers = headers)    
+    if r.status_code != 200:
+        raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
+    r = requests.delete(location, json = changes, headers = {'Accept': 'application/json'})    
+    if r.status_code != 200:
+        raise Exception('unexpected HTTP status_code code: %s url: %s text: %s' % (r.status_code, r.url, r.text))
     
 def main():
     test_objects()
     test_api()
+    test_raw()
 
 if __name__ == '__main__':
     main()

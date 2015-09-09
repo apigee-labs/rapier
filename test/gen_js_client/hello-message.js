@@ -18,16 +18,16 @@ var exports = function() {
         return api
     }
 
-    function HelloMessage(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function HelloMessage(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     HelloMessage.prototype = Object.create(baseAPI.BaseEntity.prototype);
     HelloMessage.prototype.constructor = HelloMessage;
     HelloMessage.prototype._className = 'HelloMessage';
     HelloMessage.prototype.api = api_function;
 
-    function Collection(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Collection(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
     Collection.prototype.constructor = Collection;

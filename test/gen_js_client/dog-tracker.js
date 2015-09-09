@@ -18,32 +18,32 @@ var exports = function() {
         return api
     }
 
-    function Person(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Person(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Person.prototype = Object.create(baseAPI.BaseEntity.prototype);
     Person.prototype.constructor = Person;
     Person.prototype._className = 'Person';
     Person.prototype.api = api_function;
 
-    function DogTracker(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function DogTracker(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     DogTracker.prototype = Object.create(baseAPI.BaseEntity.prototype);
     DogTracker.prototype.constructor = DogTracker;
     DogTracker.prototype._className = 'DogTracker';
     DogTracker.prototype.api = api_function;
 
-    function Dog(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Dog(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Dog.prototype = Object.create(baseAPI.BaseEntity.prototype);
     Dog.prototype.constructor = Dog;
     Dog.prototype._className = 'Dog';
     Dog.prototype.api = api_function;
 
-    function Collection(jso, url, etag) {
-        baseAPI.BaseEntity.call(this, jso, url, etag)
+    function Collection(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
     }
     Collection.prototype = Object.create(baseAPI.BaseCollection.prototype);
     Collection.prototype.constructor = Collection;
