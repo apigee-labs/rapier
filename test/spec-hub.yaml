@@ -16,6 +16,10 @@ entities:
         properties:
             title:
                 type: string
+    CommitRequest:
+        properties:
+            etag:
+                type: string
     Content:
         content_type: text
         consumes: text/yaml
@@ -59,3 +63,10 @@ relationships:
             multiplicity: 0:1
         other_end:
             entity: Content
+    spec-to-commitRequests:
+        one_end:
+            entity: Spec
+            property: commitRequests
+            multiplicity: 0:n
+        other_end:
+            entity: CommitRequest

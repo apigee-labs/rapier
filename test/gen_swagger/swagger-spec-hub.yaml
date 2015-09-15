@@ -13,6 +13,14 @@ definitions:
         type: array
       kind:
         type: string
+  CommitRequest:
+    properties:
+      _self: &id001
+        type: string
+      etag:
+        type: string
+      kind: &id002
+        type: string
   Content: {}
   ErrorResponse:
     properties:
@@ -20,10 +28,8 @@ definitions:
         type: string
   Hub:
     properties:
-      _self: &id001
-        type: string
-      kind: &id002
-        type: string
+      _self: *id001
+      kind: *id002
       repos:
         format: URL
         type: string
@@ -54,6 +60,13 @@ definitions:
   Spec:
     properties:
       _self: *id001
+      commitRequests:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: n
+          type:
+            $ref: '#/definitions/CommitRequest'
       committed:
         format: URL
         type: string
