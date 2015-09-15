@@ -247,7 +247,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /repos;{Repo_name}:
+  /repos;{Repo-name}:
     delete:
       description: Delete a Repo
       responses:
@@ -375,7 +375,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_name}:
+  /specs;{Spec-name}:
     delete:
       description: Delete a Spec
       responses:
@@ -476,7 +476,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_name}/committed:
+  /specs;{Spec-name}/committed:
     delete:
       description: Delete a Content
       responses:
@@ -587,7 +587,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_name}/repo:
+  /specs;{Spec-name}/repo:
     delete:
       description: Delete a Repo
       responses:
@@ -688,7 +688,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec_name}/working:
+  /specs;{Spec-name}/working:
     delete:
       description: Delete a Content
       responses:

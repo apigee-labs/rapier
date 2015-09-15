@@ -225,7 +225,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs;{Dog_name}:
+  /dog-tracker/dogs;{Dog-name}:
     delete:
       description: Delete a Dog
       responses:
@@ -326,7 +326,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs;{Dog_name}/owner:
+  /dog-tracker/dogs;{Dog-name}/owner:
     delete:
       description: Delete a Person
       responses:
@@ -454,7 +454,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people;{Person_name}:
+  /dog-tracker/people;{Person-name}:
     delete:
       description: Delete a Person
       responses:
@@ -556,7 +556,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people;{Person_name}/dogs:
+  /dog-tracker/people;{Person-name}/dogs:
     get: *id006
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
