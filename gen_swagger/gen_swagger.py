@@ -340,7 +340,8 @@ class SwaggerGenerator(object):
             if get_multiplicity(rel_property_spec) == 'n':
                 entity_name = rel_property_spec['target_entity']
                 selector = rel_property_spec['selector']
-                return '%s%s{%s-%s}' % (rel_name, ';' if self.selector_location == 'path-parameter' else '/', entity_name, selector)
+                separator = ';' if self.selector_location == 'path-parameter' else '/'
+                return '%s%s{%s-%s}' % (rel_name, separator, entity_name, selector)
             else:
                 return rel_name
         
