@@ -1,8 +1,9 @@
-from rapier.python_sdk.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
+
+from rapier.py.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
 
 class API(BaseAPI):
     def well_known_URLs(self):
-        return ['/message']
+        return ['/dog-tracker']
     def resource_class(self, type_name):
         return classToKindMap.get(type_name, BaseResource)
 
@@ -12,13 +13,21 @@ class APIClass(object):
     def api(self):
         return api
 
-class HelloMessage(BaseEntity, APIClass):            
+class Person(BaseEntity, APIClass):            
+    pass
+
+class DogTracker(BaseEntity, APIClass):            
+    pass
+
+class Dog(BaseEntity, APIClass):            
     pass
 
 class Collection(BaseCollection, APIClass):            
     pass
 
 classToKindMap = {
-    'HelloMessage': HelloMessage,
+    'Person': Person,
+    'DogTracker': DogTracker,
+    'Dog': Dog,
     'Collection': Collection
     }

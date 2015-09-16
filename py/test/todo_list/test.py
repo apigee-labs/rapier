@@ -1,4 +1,4 @@
-from rapier.test.python_sdk.todo_list.todo_list_api import api, Item, Collection, TodoList
+from rapier.py.test.todo_list.todo_list_api import api, Item, Collection, TodoList
 
 def test_objects():
     items = Collection('http://localhost:3001/to-dos/items')

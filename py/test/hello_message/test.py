@@ -1,4 +1,4 @@
-from rapier.test.python_sdk.hello_message.hello_world_api import api
+from rapier.py.test.hello_message.hello_message_api import api
 
 def main():
     rslt = api.retrieve_well_known_resource('http://localhost:3000/message')

@@ -16,7 +16,7 @@ class ClientGenerator(object):
         well_known_urls = [url for urls in well_known_urls for url in urls]
         
         print '''
-from rapier.python_sdk.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
+from rapier.py.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
 
 class API(BaseAPI):
     def well_known_URLs(self):

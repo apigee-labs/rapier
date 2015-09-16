@@ -1,4 +1,4 @@
-var baseAPI = require('./../../../js_sdk/base_api')
+var baseAPI = require('./../../../js/base_api')
 
 var exports = function() {
     

@@ -1,4 +1,5 @@
-from rapier.python_sdk.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
+
+from rapier.py.base_api import BaseAPI, BaseResource, BaseEntity, BaseCollection
 
 class API(BaseAPI):
     def well_known_URLs(self):
