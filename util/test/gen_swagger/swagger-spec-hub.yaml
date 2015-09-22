@@ -30,7 +30,7 @@ definitions:
         x-rapier-relationship:
           multiplicity: n
           type:
-            $ref: '#/definitions/Repo'
+            $ref: '#/definitions/Realm'
       specs:
         format: URL
         type: string
@@ -38,7 +38,7 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Spec'
-  Repo:
+  Realm:
     properties:
       _self: *id001
       kind: *id002
@@ -62,13 +62,13 @@ definitions:
           type:
             $ref: '#/definitions/Content'
       kind: *id002
-      repo:
+      realm:
         format: URL
         type: string
         x-rapier-relationship:
           multiplicity: '1'
           type:
-            $ref: '#/definitions/Repo'
+            $ref: '#/definitions/Realm'
       title:
         type: string
 info:
@@ -203,16 +203,16 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Repo
+      description: Create a new Realm
       responses:
         '201':
-          description: Created new Repo
+          description: Created new Realm
           headers:
             Location:
-              description: perma-link URL of newly-created Repo
+              description: perma-link URL of newly-created Realm
               type: string
           schema:
-            $ref: '#/definitions/Repo'
+            $ref: '#/definitions/Realm'
         '303':
           $ref: '#/responses/303'
         '400':
@@ -227,9 +227,9 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /repos;{Repo-name}:
+  /repos;{Realm-name}:
     delete:
-      description: Delete a Repo
+      description: Delete a Realm
       responses:
         '200': &id004
           description: successful
@@ -242,7 +242,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Repo'
+            $ref: '#/definitions/Realm'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -256,7 +256,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -272,7 +272,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -287,7 +287,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -303,13 +303,13 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Repo' entity from multi-valued relationship 'repos'
+    - description: Specifies which 'Realm' entity from multi-valued relationship 'repos'
       in: path
-      name: Repo-name
+      name: Realm-name
       required: true
       type: string
     patch:
-      description: Update a Repo entity
+      description: Update a Realm entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -567,9 +567,9 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec-name}/repo:
+  /specs;{Spec-name}/realm:
     delete:
-      description: Delete a Repo
+      description: Delete a Realm
       responses:
         '200': &id008
           description: successful
@@ -582,7 +582,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Repo'
+            $ref: '#/definitions/Realm'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -596,7 +596,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -612,7 +612,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -627,7 +627,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a Repo
+      description: Retrieve a Realm
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -649,7 +649,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Repo entity
+      description: Update a Realm entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:

@@ -7,8 +7,8 @@ conventions:
 entities:
     Hub:
         well_known_URLs: /
-        query_paths: [repos, specs, repos/specs, specs/repo, specs/content]
-    Repo:
+        query_paths: [repos, specs, repos/specs, specs/realm, specs/content]
+    Realm:
         properties:
             name:
                 type: string
@@ -20,14 +20,14 @@ entities:
         content_type: text
         consumes: text/yaml
 relationships:
-    hub-to-repo:
+    hub-to-realm:
         one_end:
             entity: Hub
             property: repos
             multiplicity: 0:n
             selector: name
         other_end:
-            entity: Repo
+            entity: Realm
     hub-to-spec:
         one_end:
             entity: Hub
@@ -36,14 +36,14 @@ relationships:
             selector: name
         other_end:
             entity: Spec
-    repo-to-spec:
+    realm-to-spec:
         one_end:
-            entity: Repo
+            entity: Realm
             property: specs
             multiplicity: 0:n
         other_end:
             entity: Spec
-            property: repo
+            property: realm
             multiplicity: 0:1
     spec-to-content:
         one_end:
