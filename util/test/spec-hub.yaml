@@ -7,7 +7,7 @@ conventions:
 entities:
     Hub:
         well_known_URLs: /
-        query_paths: [repos, specs, repos/specs, specs/repo, specs/working, specs/committed]
+        query_paths: [repos, specs, repos/specs, specs/repo, specs/content]
     Repo:
         properties:
             name:
