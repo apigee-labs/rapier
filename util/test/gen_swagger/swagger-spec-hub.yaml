@@ -18,19 +18,14 @@ definitions:
     properties:
       message:
         type: string
-  Hub:
+  Folder:
     properties:
       _self: &id001
         type: string
       kind: &id002
         type: string
-      repos:
-        format: URL
+      name:
         type: string
-        x-rapier-relationship:
-          multiplicity: n
-          type:
-            $ref: '#/definitions/Realm'
       specs:
         format: URL
         type: string
@@ -38,12 +33,17 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Spec'
-  Realm:
+  Hub:
     properties:
       _self: *id001
       kind: *id002
-      name:
+      repos:
+        format: URL
         type: string
+        x-rapier-relationship:
+          multiplicity: n
+          type:
+            $ref: '#/definitions/Folder'
       specs:
         format: URL
         type: string
@@ -61,14 +61,14 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Content'
-      kind: *id002
-      realm:
+      folder:
         format: URL
         type: string
         x-rapier-relationship:
           multiplicity: '1'
           type:
-            $ref: '#/definitions/Realm'
+            $ref: '#/definitions/Folder'
+      kind: *id002
       title:
         type: string
 info:
@@ -203,16 +203,16 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Realm
+      description: Create a new Folder
       responses:
         '201':
-          description: Created new Realm
+          description: Created new Folder
           headers:
             Location:
-              description: perma-link URL of newly-created Realm
+              description: perma-link URL of newly-created Folder
               type: string
           schema:
-            $ref: '#/definitions/Realm'
+            $ref: '#/definitions/Folder'
         '303':
           $ref: '#/responses/303'
         '400':
@@ -227,9 +227,9 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /repos;{Realm-name}:
+  /repos;{Folder-name}:
     delete:
-      description: Delete a Realm
+      description: Delete a Folder
       responses:
         '200': &id004
           description: successful
@@ -242,7 +242,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Realm'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -256,7 +256,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -272,7 +272,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -287,7 +287,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -303,13 +303,14 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Realm' entity from multi-valued relationship 'repos'
+    - description: Specifies which 'Folder' entity from multi-valued relationship
+        'repos'
       in: path
-      name: Realm-name
+      name: Folder-name
       required: true
       type: string
     patch:
-      description: Update a Realm entity
+      description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -567,9 +568,9 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /specs;{Spec-name}/realm:
+  /specs;{Spec-name}/folder:
     delete:
-      description: Delete a Realm
+      description: Delete a Folder
       responses:
         '200': &id008
           description: successful
@@ -582,7 +583,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Realm'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -596,7 +597,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -612,7 +613,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -627,7 +628,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a Realm
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -649,7 +650,7 @@ paths:
       required: true
       type: string
     patch:
-      description: Update a Realm entity
+      description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
