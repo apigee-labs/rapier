@@ -22,28 +22,30 @@ definitions:
     properties:
       _self: &id001
         type: string
-      kind: &id002
-        type: string
-      name:
-        type: string
-      specs:
+      contents:
         format: URL
         type: string
         x-rapier-relationship:
           multiplicity: n
           type:
-            $ref: '#/definitions/Spec'
+            one_of:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
+      kind: &id002
+        type: string
+      name:
+        type: string
   Hub:
     properties:
       _self: *id001
-      kind: *id002
-      repos:
+      folders:
         format: URL
         type: string
         x-rapier-relationship:
           multiplicity: n
           type:
             $ref: '#/definitions/Folder'
+      kind: *id002
       specs:
         format: URL
         type: string
@@ -179,7 +181,7 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /repos:
+  /folders:
     get: &id005
       responses:
         '200':
@@ -227,7 +229,7 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /repos;{Folder-name}:
+  /folders;{Folder-name}:
     delete:
       description: Delete a Folder
       responses:
@@ -304,7 +306,7 @@ paths:
           $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Folder' entity from multi-valued relationship
-        'repos'
+        'folders'
       in: path
       name: Folder-name
       required: true

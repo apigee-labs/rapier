@@ -7,7 +7,7 @@ conventions:
 entities:
     Hub:
         well_known_URLs: /
-        query_paths: [repos, specs, repos/specs, specs/folder, specs/content]
+        query_paths: [folders, specs, folders/contents, specs/folder, specs/content]
     Folder:
         properties:
             name:
@@ -23,7 +23,7 @@ relationships:
     hub-to-folder:
         one_end:
             entity: Hub
-            property: repos
+            property: folders
             multiplicity: 0:n
             selector: name
         other_end:
@@ -39,10 +39,19 @@ relationships:
     folder-to-spec:
         one_end:
             entity: Folder
-            property: specs
+            property: contents
             multiplicity: 0:n
         other_end:
             entity: Spec
+            property: folder
+            multiplicity: 0:1
+    folder-to-folder:
+        one_end:
+            entity: Folder
+            property: contents
+            multiplicity: 0:n
+        other_end:
+            entity: Folder
             property: folder
             multiplicity: 0:1
     spec-to-content:
