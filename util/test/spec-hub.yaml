@@ -14,7 +14,7 @@ entities:
                 type: string
     Spec:
         properties:
-            title:
+            name:
                 type: string
     Content:
         content_type: text

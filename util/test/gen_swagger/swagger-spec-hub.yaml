@@ -71,7 +71,7 @@ definitions:
           type:
             $ref: '#/definitions/Folder'
       kind: *id002
-      title:
+      name:
         type: string
 info:
   title: SpecHubAPI
