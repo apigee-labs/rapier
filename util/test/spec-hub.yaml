@@ -12,10 +12,28 @@ entities:
         properties:
             name:
                 type: string
+            permissions:
+                type: array
+                items: 
+                    properties:
+                        operator:
+                            format: URL
+                            type: string
+                        operation:
+                            type: string
     Spec:
         properties:
             name:
                 type: string
+            permissions:
+                type: array
+                items: 
+                    properties:
+                        operator:
+                            format: URL
+                            type: string
+                        operation:
+                            type: string
     Content:
         content_type: text
         consumes: text/yaml

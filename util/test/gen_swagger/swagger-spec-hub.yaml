@@ -35,6 +35,15 @@ definitions:
         type: string
       name:
         type: string
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
   Hub:
     properties:
       _self: *id001
@@ -73,6 +82,15 @@ definitions:
       kind: *id002
       name:
         type: string
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
 info:
   title: SpecHubAPI
   version: '0.1'
