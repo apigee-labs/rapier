@@ -102,7 +102,7 @@ class SwaggerGenerator(object):
                         if 'implementation_path' in entity_spec:
                             implementation_path = entity_spec['implementation_path']
                             implementation_template = '/%s{implementation_key}' % implementation_path
-                            self.add_query_paths(implementation_template, query_paths, rel_property_spec_stack)
+                            self.add_query_paths(implementation_template, query_paths, impl_rel_property_specs + rel_property_spec_stack)
                     if len(query_paths) > 0:
                         for query_path in query_paths:
                             print 'query path not valid or listed more than once: %s' % query_path
@@ -158,7 +158,7 @@ class SwaggerGenerator(object):
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
                 self.add_query_paths(base_URL, query_paths, rel_property_spec_stack)
-        rel_path = '/'.join([rel_property_spec['property_name'] for rel_property_spec in rel_property_spec_stack])
+        rel_path = '/'.join([rel_property_spec['property_name'] for rel_property_spec in rel_property_spec_stack if 'implementation_path' not in rel_property_spec])
         if rel_path in query_paths:
             self.emit_query_path(base_URL, rel_property_spec_stack)
             query_paths.remove(rel_path)
@@ -174,7 +174,7 @@ class SwaggerGenerator(object):
             path_spec = self.build_relationship_interface(rel_property_spec_stack)
             self.paths[abs_path] = path_spec
         if not multivalued or 'selector' in rel_property_spec:
-            path = '/'.join([self.path_segment(rel_property_spec) for rel_property_spec in rel_property_spec_stack])
+            path = '/'.join([self.path_segment(rel_property_spec) for rel_property_spec in rel_property_spec_stack if 'implementation_path' not in rel_property_spec])
             sep = '' if base_URL.endswith('/') else '/'
             abs_path = sep.join((base_URL, path))
             path_spec = self.build_entity_interface(rel_property_spec_stack)
@@ -369,7 +369,7 @@ class SwaggerGenerator(object):
                     'in': 'path',
                     'type': 'string',
                     'description':
-                        "An internal implementation key. This path is not part of the API and cannot be constructed by the client - the URL must be found in a hyperlink" if implementation_path else 
+                        "An internal implementation key. This portion of the path is not part of the API and cannot be constructed by the client - the URL must be found in a hyperlink" if implementation_path else 
                         "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name),
                     'required': True
                     } )

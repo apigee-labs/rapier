@@ -24,7 +24,7 @@ entities:
                             type: string
     Spec:
         implementation_path: spec/ 
-        #query_paths: [content]
+        query_paths: [content]
         properties:
             name:
                 type: string

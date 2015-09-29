@@ -279,8 +279,9 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: An internal implementation key. This path is not part of the API
-        and cannot be constructed by the client - the URL must be found in a hyperlink
+    - description: An internal implementation key. This portion of the path is not
+        part of the API and cannot be constructed by the client - the URL must be
+        found in a hyperlink
       in: path
       name: implementation_key
       required: true
@@ -456,8 +457,9 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: An internal implementation key. This path is not part of the API
-        and cannot be constructed by the client - the URL must be found in a hyperlink
+    - description: An internal implementation key. This portion of the path is not
+        part of the API and cannot be constructed by the client - the URL must be
+        found in a hyperlink
       in: path
       name: implementation_key
       required: true
@@ -468,6 +470,119 @@ paths:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id006
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /spec/{implementation_key}/content:
+    delete:
+      description: Delete a Content
+      responses:
+        '200': &id007
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id007
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/head_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: An internal implementation key. This portion of the path is not
+        part of the API and cannot be constructed by the client - the URL must be
+        found in a hyperlink
+      in: path
+      name: implementation_key
+      required: true
+      type: string
+    put:
+      consumes:
+      - text/yaml
+      description: Create or Update a Content entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id007
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
         '400':
           $ref: '#/responses/400'
         '401':
