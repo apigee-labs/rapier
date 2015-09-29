@@ -57,7 +57,6 @@ class SwaggerGenerator(object):
                     if 'properties' in spec:
                         print 'error: unstructured entities must not have properties'
                         return None
-                
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     paths = self.swagger.setdefault('paths', self.paths)
@@ -96,11 +95,15 @@ class SwaggerGenerator(object):
                             return None
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
+                        rel_property_spec_stack = [rel_property_spec]
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
-                            rel_property_spec_stack = [rel_property_spec]
                             for well_known_URL in well_known_URLs:
                                 self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
+                        if 'implementation_path' in entity_spec:
+                            implementation_path = entity_spec['implementation_path']
+                            implementation_template = '/%s{implementation_key}' % implementation_path
+                            self.add_query_paths(implementation_template, query_paths, rel_property_spec_stack)
                     if len(query_paths) > 0:
                         for query_path in query_paths:
                             print 'query path not valid or listed more than once: %s' % query_path
