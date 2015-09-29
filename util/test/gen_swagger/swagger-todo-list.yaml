@@ -161,7 +161,7 @@ paths:
           schema:
             $ref: '#/definitions/Collection'
         '303':
-          $ref: '#/responses/403'
+          $ref: '#/responses/303'
         '401':
           $ref: '#/responses/401'
         '403':

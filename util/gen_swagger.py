@@ -465,7 +465,7 @@ class SwaggerGenerator(object):
                             }
                         }
                     }, 
-                '303': self.global_response_ref('403'),
+                '303': self.global_response_ref('303'),
                 '401': self.global_response_ref('401'), 
                 '403': self.global_response_ref('403'), 
                 '404': self.global_response_ref('404'), 
