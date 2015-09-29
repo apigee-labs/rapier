@@ -83,7 +83,7 @@ class SwaggerGenerator(object):
                 if 'implementation_path' in entity_spec:
                     implementation_path = entity_spec['implementation_path']
                     implementation_template = '/%s{implementation_key}' % implementation_path
-                    rel_property_spec = {'property_name': implementation_path, 'target_entity': entity_name, 'multiplicity': '0:n'}
+                    rel_property_spec = {'target_entity': entity_name, 'multiplicity': '0:n', 'implementation_path': implementation_path}
                     entity_interface =  self.get_entity_interface([rel_property_spec])
                     self.paths[implementation_template] = self.get_entity_interface([rel_property_spec])
                 if 'query_paths' in entity_spec:
@@ -290,7 +290,7 @@ class SwaggerGenerator(object):
                     'default': self.global_response_ref('default')
                     }
                 }
-        if 'property_name' in rel_property_spec:
+        if 'property_name' in rel_property_spec or 'implementation_path' in rel_property_spec:
             parameters = self.build_parameters(rel_property_spec_stack)
             if parameters:
                 path_spec['parameters'] = parameters
@@ -361,13 +361,15 @@ class SwaggerGenerator(object):
             entity_name = rel_property_spec.get('target_entity')
             selector = rel_property_spec.get('selector')
             multivalued = get_multiplicity(rel_property_spec) == 'n'
+            implementation_path = rel_property_spec.get('implementation_path')
             if multivalued:
                 result.append( {
                     'name': '%s-%s' % (entity_name, selector),
                     'in': 'path',
                     'type': 'string',
-                    'description': "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name) if rel_name else 
-                                   "Specifies which '%s' entity" % entity_name,
+                    'description':
+                        "An internal implementation key. This path is not part of the API and cannot be constructed by the client - the URL must be found in a hyperlink" if implementation_path else 
+                        "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name),
                     'required': True
                     } )
         return result

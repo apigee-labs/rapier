@@ -279,8 +279,8 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Folder' entity from multi-valued relationship
-        'MTIz'
+    - description: An internal implementation key. This path is not part of the API
+        and cannot be constructed by the client - the URL must be found in a hyperlink
       in: path
       name: Folder-None
       required: true
@@ -381,7 +381,8 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Spec' entity from multi-valued relationship 'c3Av'
+    - description: An internal implementation key. This path is not part of the API
+        and cannot be constructed by the client - the URL must be found in a hyperlink
       in: path
       name: Spec-None
       required: true
