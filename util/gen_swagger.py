@@ -86,8 +86,6 @@ class SwaggerGenerator(object):
                     rel_property_spec = {'property_name': implementation_path, 'target_entity': entity_name, 'multiplicity': '0:n'}
                     entity_interface =  self.get_entity_interface([rel_property_spec])
                     self.paths[implementation_template] = self.get_entity_interface([rel_property_spec])
-#                            rel_property_spec_stack = [rel_property_spec]
-#                            self.add_query_paths(implementation_path, query_paths, rel_property_spec_stack)
                 if 'query_paths' in entity_spec:
                     if 'implementation_path' not in entity_spec:
                         if 'well_known_URLs' not in entity_spec:
