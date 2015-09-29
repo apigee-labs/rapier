@@ -84,8 +84,9 @@ class SwaggerGenerator(object):
                     implementation_path = entity_spec['implementation_path']
                     implementation_template = '/%s{implementation_key}' % implementation_path
                     rel_property_spec = {'target_entity': entity_name, 'multiplicity': '0:n', 'implementation_path': implementation_path}
-                    entity_interface =  self.get_entity_interface([rel_property_spec])
-                    self.paths[implementation_template] = self.get_entity_interface([rel_property_spec])
+                    impl_rel_property_specs = [rel_property_spec]
+                    entity_interface =  self.get_entity_interface(impl_rel_property_specs)
+                    self.paths[implementation_template] = entity_interface
                 if 'query_paths' in entity_spec:
                     if 'implementation_path' not in entity_spec:
                         if 'well_known_URLs' not in entity_spec:
@@ -147,7 +148,7 @@ class SwaggerGenerator(object):
                     add_type(rel_name, relationship['other_end'], relationship['one_end'])
         return result
         
-    def add_query_paths(self, well_known_URL, query_paths, rel_property_spec_stack):
+    def add_query_paths(self, base_URL, query_paths, rel_property_spec_stack):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity = rel_property_spec['target_entity']
@@ -156,26 +157,26 @@ class SwaggerGenerator(object):
         for rel_spec in rel_property_specs:
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
-                self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
+                self.add_query_paths(base_URL, query_paths, rel_property_spec_stack)
         rel_path = '/'.join([rel_property_spec['property_name'] for rel_property_spec in rel_property_spec_stack])
         if rel_path in query_paths:
-            self.emit_query_path(well_known_URL, rel_property_spec_stack)
+            self.emit_query_path(base_URL, rel_property_spec_stack)
             query_paths.remove(rel_path)
         rel_property_spec_stack.pop()
                 
-    def emit_query_path(self, well_known_URL, rel_property_spec_stack):
+    def emit_query_path(self, base_URL, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = get_multiplicity(rel_property_spec) == 'n'
         if multivalued:
             path = '/'.join([self.path_segment(rel_property_spec, inx==len(rel_property_spec_stack)-1) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
-            sep = '' if well_known_URL.endswith('/') else '/'
-            abs_path = sep.join((well_known_URL, path))
+            sep = '' if base_URL.endswith('/') else '/'
+            abs_path = sep.join((base_URL, path))
             path_spec = self.build_relationship_interface(rel_property_spec_stack)
             self.paths[abs_path] = path_spec
         if not multivalued or 'selector' in rel_property_spec:
             path = '/'.join([self.path_segment(rel_property_spec) for rel_property_spec in rel_property_spec_stack])
-            sep = '' if well_known_URL.endswith('/') else '/'
-            abs_path = sep.join((well_known_URL, path))
+            sep = '' if base_URL.endswith('/') else '/'
+            abs_path = sep.join((base_URL, path))
             path_spec = self.build_entity_interface(rel_property_spec_stack)
             self.paths[abs_path] = path_spec
             
@@ -364,7 +365,7 @@ class SwaggerGenerator(object):
             implementation_path = rel_property_spec.get('implementation_path')
             if multivalued:
                 result.append( {
-                    'name': '%s-%s' % (entity_name, selector),
+                    'name': 'implementation_key' if implementation_path else '%s-%s' % (entity_name, selector),
                     'in': 'path',
                     'type': 'string',
                     'description':

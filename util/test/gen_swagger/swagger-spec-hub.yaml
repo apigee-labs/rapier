@@ -282,7 +282,7 @@ paths:
     - description: An internal implementation key. This path is not part of the API
         and cannot be constructed by the client - the URL must be found in a hyperlink
       in: path
-      name: Folder-None
+      name: implementation_key
       required: true
       type: string
     patch:
@@ -384,7 +384,7 @@ paths:
     - description: An internal implementation key. This path is not part of the API
         and cannot be constructed by the client - the URL must be found in a hyperlink
       in: path
-      name: Spec-None
+      name: implementation_key
       required: true
       type: string
     patch:
