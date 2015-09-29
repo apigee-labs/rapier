@@ -63,10 +63,6 @@ class SwaggerGenerator(object):
                     paths = self.swagger.setdefault('paths', self.paths)
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         paths[well_known_URL] = self.get_entity_interface([{'target_entity': entity_name}])
-                else:
-                    if 'query_paths' in entity_spec:
-                        print 'error: query_path may only be set if well_known_URL is also set'
-                        return None
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
@@ -85,12 +81,24 @@ class SwaggerGenerator(object):
                             print 'error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name)
                             return None
                         properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
+                if 'implementation_path' in entity_spec:
+                    implementation_path = entity_spec['implementation_path']
+                    implementation_template = '/%s{implementation_key}' % implementation_path
+                    rel_property_spec = {'property_name': implementation_path, 'target_entity': entity_name, 'multiplicity': '0:n'}
+                    entity_interface =  self.get_entity_interface([rel_property_spec])
+                    self.paths[implementation_template] = self.get_entity_interface([rel_property_spec])
+#                            rel_property_spec_stack = [rel_property_spec]
+#                            self.add_query_paths(implementation_path, query_paths, rel_property_spec_stack)
                 if 'query_paths' in entity_spec:
+                    if 'implementation_path' not in entity_spec:
+                        if 'well_known_URLs' not in entity_spec:
+                            print 'error: query_path may only be set if well_known_URL is also set'
+                            return None
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
                         if 'well_known_URLs' in entity_spec:
-                            rel_property_spec_stack = [rel_property_spec]
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
+                            rel_property_spec_stack = [rel_property_spec]
                             for well_known_URL in well_known_URLs:
                                 self.add_query_paths(well_known_URL, query_paths, rel_property_spec_stack)
                     if len(query_paths) > 0:
@@ -153,7 +161,7 @@ class SwaggerGenerator(object):
             self.emit_query_path(well_known_URL, rel_property_spec_stack)
             query_paths.remove(rel_path)
         rel_property_spec_stack.pop()
-        
+                
     def emit_query_path(self, well_known_URL, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = get_multiplicity(rel_property_spec) == 'n'
@@ -348,15 +356,17 @@ class SwaggerGenerator(object):
     def build_parameters(self, rel_property_spec_stack):
         result = []
         for rel_property_spec in rel_property_spec_stack:
-            rel_name = rel_property_spec['property_name']
-            entity_name = rel_property_spec['target_entity']
+            rel_name = rel_property_spec.get('property_name')
+            entity_name = rel_property_spec.get('target_entity')
+            selector = rel_property_spec.get('selector')
             multivalued = get_multiplicity(rel_property_spec) == 'n'
             if multivalued:
                 result.append( {
-                    'name': '%s-%s' % (entity_name, rel_property_spec['selector']),
+                    'name': '%s-%s' % (entity_name, selector),
                     'in': 'path',
                     'type': 'string',
-                    'description': "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name),
+                    'description': "Specifies which '%s' entity from multi-valued relationship '%s'" % (entity_name, rel_name) if rel_name else 
+                                   "Specifies which '%s' entity" % entity_name,
                     'required': True
                     } )
         return result

@@ -9,6 +9,7 @@ entities:
         well_known_URLs: /
         query_paths: [myHub, sharedWithMe]
     Folder:
+        implementation_path: MTIz 
         properties:
             name:
                 type: string
@@ -22,6 +23,8 @@ entities:
                         operation:
                             type: string
     Spec:
+        implementation_path: c3Av 
+        #query_paths: [content]
         properties:
             name:
                 type: string
