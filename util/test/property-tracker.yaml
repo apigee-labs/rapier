@@ -81,7 +81,6 @@ relationships:
             entity: Person
             property: possessions
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Dog
             property: owner
@@ -91,7 +90,6 @@ relationships:
             entity: Institution
             property: assets
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Dog
             property: owner

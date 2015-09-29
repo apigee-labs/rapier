@@ -157,13 +157,13 @@ class SwaggerGenerator(object):
     def emit_query_path(self, well_known_URL, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = get_multiplicity(rel_property_spec) == 'n'
-        if multivalued and 'selector' in rel_property_spec:
+        if multivalued:
             path = '/'.join([self.path_segment(rel_property_spec, inx==len(rel_property_spec_stack)-1) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
             sep = '' if well_known_URL.endswith('/') else '/'
             abs_path = sep.join((well_known_URL, path))
             path_spec = self.build_relationship_interface(rel_property_spec_stack)
             self.paths[abs_path] = path_spec
-        if not multivalued or len(rel_property_spec_stack) == 1:
+        if not multivalued or 'selector' in rel_property_spec:
             path = '/'.join([self.path_segment(rel_property_spec) for rel_property_spec in rel_property_spec_stack])
             sep = '' if well_known_URL.endswith('/') else '/'
             abs_path = sep.join((well_known_URL, path))

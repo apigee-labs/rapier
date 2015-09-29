@@ -7,7 +7,7 @@ conventions:
 entities:
     Hub:
         well_known_URLs: /
-        query_paths: [folders, specs, folders/contents, specs/folder, specs/content]
+        query_paths: [myHub, sharedWithMe]
     Folder:
         properties:
             name:
@@ -38,20 +38,32 @@ entities:
         content_type: text
         consumes: text/yaml
 relationships:
-    hub-to-folder:
+    hub-to-my-folder:
         one_end:
             entity: Hub
-            property: folders
+            property: myHub
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Folder
-    hub-to-spec:
+    hub-to-my-spec:
         one_end:
             entity: Hub
-            property: specs
+            property: myHub
             multiplicity: 0:n
-            selector: name
+        other_end:
+            entity: Spec
+    hub-to-shared-folder:
+        one_end:
+            entity: Hub
+            property: sharedWithMe
+            multiplicity: 0:n
+        other_end:
+            entity: Folder
+    hub-to-shared-spec:
+        one_end:
+            entity: Hub
+            property: sharedWithMe
+            multiplicity: 0:n
         other_end:
             entity: Spec
     folder-to-spec:
