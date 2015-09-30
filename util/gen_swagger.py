@@ -137,6 +137,7 @@ class SwaggerGenerator(object):
                     }
                 if 'multiplicity' in one_end: p_spec['multiplicity'] = one_end['multiplicity'] 
                 if 'selector' in one_end: p_spec['selector'] = one_end['selector']
+                if 'readonly' in one_end: p_spec['readonly'] = one_end['readonly']
                 result.append(p_spec)
            
         if 'relationships' in spec:
@@ -301,9 +302,10 @@ class SwaggerGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1]
         relationship_name = rel_property_spec['property_name']
         entity_name = rel_property_spec['target_entity']
-        path_spec = {
-            'get': self.global_collection_get(),
-            'post': {
+        path_spec = dict()
+        path_spec['get'] = self.global_collection_get()
+        if not rel_property_spec.get('readonly', False):
+            path_spec['post'] = {
                 'description': 'Create a new %s' % entity_name,
                 'responses': {
                     '201': {
@@ -325,7 +327,6 @@ class SwaggerGenerator(object):
                     'default': self.global_response_ref('default')
                     }                
                 }
-            }
         parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:
             path_spec['parameters'] = parameters

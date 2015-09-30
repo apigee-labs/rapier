@@ -356,31 +356,6 @@ paths:
           $ref: '#/responses/default'
   /sharedWithMe:
     get: *id005
-    post:
-      description: Create a new Spec
-      responses:
-        '201':
-          description: Created new Spec
-          headers:
-            Location:
-              description: perma-link URL of newly-created Spec
-              type: string
-          schema:
-            $ref: '#/definitions/Spec'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
   /spec/{implementation_key}:
     delete:
       description: Delete a Spec
