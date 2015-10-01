@@ -14,6 +14,8 @@ class SwaggerGenerator(object):
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.entity_specs = {}
+        self.response_sets = self.build_standard_response_sets()
+        self.methods = self.build_standard_methods()
 
     def set_rapier_spec_from_filename(self, filename):
         with open(filename) as f:
@@ -123,7 +125,7 @@ class SwaggerGenerator(object):
                     {'$ref': '#/definitions/%s' % rel_prop_specs[0]['target_entity'] },
                 'multiplicity': get_multiplicity(rel_prop_specs[0])
                 }
-            } 
+            }
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
         result = []
@@ -198,57 +200,26 @@ class SwaggerGenerator(object):
             consumes = None                      
         structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
         response_200 = {
-            'description': 'successful',
-            'schema': self.global_definition_ref(entity_name),
-            'headers': {
-                'Content-Location': {
-                    'type': 'string',
-                    'description': 'perma-link URL of resource'
-                    },
-                'ETag': {
-                    'description': 'this value must be echoed in the If-Match header of every PATCH',
-                    'type': 'string'
-                    }
-                }
+            '<<':  self.responses.get('standard_200'),
+            'schema': self.global_definition_ref(entity_name)
             }
         path_spec = {
             'get': {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
+                    '<<': self.response_sets['entity_get_responses'],
                     '200': response_200, 
-                    '401': self.global_response_ref('401'), 
-                    '403': self.global_response_ref('403'), 
-                    '404': self.global_response_ref('404'), 
-                    '406': self.global_response_ref('406'), 
-                    'default': self.global_response_ref('default')
                     }
                 },
             'head': {
-                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
-                'parameters': [{'$ref': '#/parameters/Accept'}],
-                'responses': {
-                    '200': self.global_response_ref('head_200'), 
-                    '401': self.global_response_ref('401'), 
-                    '403': self.global_response_ref('403'), 
-                    '404': self.global_response_ref('404'), 
-                    'default': self.global_response_ref('default')
-                    }
+                '<<': self.methods['head'],
+                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name)
                 },
             'options': {
+                '<<': self.methods['options'],
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
-                'parameters': [ 
-                    {'$ref': '#/parameters/Access-Control-Request-Method'}, 
-                    {'$ref': '#/parameters/Access-Control-Request-Headers'} 
-                    ],
-                'responses': {
-                    '200': self.global_response_ref('options_200'), 
-                    '401': self.global_response_ref('401'), 
-                    '403': self.global_response_ref('403'), 
-                    '404': self.global_response_ref('404'), 
-                    'default': self.global_response_ref('default')
-                    }
-                }
+               }
             }
         update_verb = 'patch' if structured else 'put'
         path_spec[update_verb] = {
@@ -256,13 +227,7 @@ class SwaggerGenerator(object):
             'parameters': [{'$ref': '#/parameters/If-Match'}],
             'responses': { 
                 '200': response_200, 
-                '400': self.global_response_ref('400'),
-                '401': self.global_response_ref('401'), 
-                '403': self.global_response_ref('403'), 
-                '404': self.global_response_ref('404'), 
-                '406': self.global_response_ref('406'), 
-                '409': self.global_response_ref('409'),
-                'default': self.global_response_ref('default')
+                '<<': self.response_sets['put_patch_responses']
                 }
             }
         if not structured:
@@ -283,13 +248,8 @@ class SwaggerGenerator(object):
             path_spec['delete'] = {
                 'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
-                    '200': response_200, 
-                    '400': self.global_response_ref('400'),
-                    '401': self.global_response_ref('401'), 
-                    '403': self.global_response_ref('403'), 
-                    '404': self.global_response_ref('404'), 
-                    '406': self.global_response_ref('406'), 
-                    'default': self.global_response_ref('default')
+                    '200': response_200,                 
+                    '<<': self.response_sets['delete_responses']
                     }
                 }
         if 'property_name' in rel_property_spec or 'implementation_path' in rel_property_spec:
@@ -318,19 +278,79 @@ class SwaggerGenerator(object):
                                 }
                             }
                         }, 
-                    '303': self.global_response_ref('303'),
-                    '400': self.global_response_ref('400'),
-                    '401': self.global_response_ref('401'), 
-                    '403': self.global_response_ref('403'), 
-                    '404': self.global_response_ref('404'), 
-                    '406': self.global_response_ref('406'), 
-                    'default': self.global_response_ref('default')
+                    '<<': self.response_sets['post_responses']
                     }                
                 }
         parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:
             path_spec['parameters'] = parameters
         return path_spec
+        
+    def build_standard_response_sets(self):
+        result = dict()
+        result['entity_get_responses'] = {
+            '401': self.global_response_ref('401'), 
+            '403': self.global_response_ref('403'), 
+            '404': self.global_response_ref('404'), 
+            '406': self.global_response_ref('406'), 
+            'default': self.global_response_ref('default')
+            }
+        result['put_patch_responses'] = {
+            '400': self.global_response_ref('400'),
+            '401': self.global_response_ref('401'), 
+            '403': self.global_response_ref('403'), 
+            '404': self.global_response_ref('404'), 
+            '406': self.global_response_ref('406'), 
+            '409': self.global_response_ref('409'),
+            'default': self.global_response_ref('default')
+            }  
+        result['delete_responses'] = {
+            '400': self.global_response_ref('400'),
+            '401': self.global_response_ref('401'), 
+            '403': self.global_response_ref('403'), 
+            '404': self.global_response_ref('404'), 
+            '406': self.global_response_ref('406'), 
+            'default': self.global_response_ref('default')
+            }
+        result['post_responses'] = {        
+            '303': self.global_response_ref('303'),
+            '400': self.global_response_ref('400'),
+            '401': self.global_response_ref('401'), 
+            '403': self.global_response_ref('403'), 
+            '404': self.global_response_ref('404'), 
+            '406': self.global_response_ref('406'), 
+            'default': self.global_response_ref('default')
+            }
+        return result
+
+    def build_standard_methods(self):
+        result = dict()
+        result['head'] = {
+            'parameters': [{'$ref': '#/parameters/Accept'}],
+            'responses': {
+                '200': self.global_response_ref('standard_200'), 
+                '401': self.global_response_ref('401'), 
+                '403': self.global_response_ref('403'), 
+                '404': self.global_response_ref('404'), 
+                'default': self.global_response_ref('default')
+                }
+            }
+        result['options'] = {
+            'parameters': [ 
+                {'$ref': '#/parameters/Access-Control-Request-Method'}, 
+                {'$ref': '#/parameters/Access-Control-Request-Headers'} 
+                ],
+            'responses': {
+                '200': self.global_response_ref('options_200'), 
+                '401': self.global_response_ref('401'), 
+                '403': self.global_response_ref('403'), 
+                '404': self.global_response_ref('404'), 
+                'default': self.global_response_ref('default')
+                }
+            }
+
+            
+        return result
 
     def global_collection_get(self):
         if not hasattr(self, 'collection_get'):
@@ -378,7 +398,7 @@ class SwaggerGenerator(object):
           
     def build_standard_responses(self):
         return {
-            'head_200': {
+            'standard_200': {
                 'description': 'successful',
                 'headers': {
                     'Content-Location': {
@@ -577,7 +597,7 @@ def get_multiplicity(rel_property_spec):
 def main(args):
     generator = SwaggerGenerator()
     generator.set_rapier_spec_from_filename(*args[1:])
-    print yaml.dump(generator.swagger_from_rapier(), default_flow_style=False)
+    print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False), "'<<':", '<<:')
         
 if __name__ == "__main__":
     main(sys.argv)

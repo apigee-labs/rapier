@@ -77,78 +77,83 @@ paths:
       - $ref: '#/parameters/Accept'
       responses:
         '200': &id003
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
+          <<: &id004
+            description: successful
+            headers:
+              Content-Location:
+                description: perma-link URL of resource
+                type: string
+              ETag:
+                description: this value must be echoed in the If-Match header of every
+                  PATCH
+                type: string
           schema:
             $ref: '#/definitions/TodoList'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
+        <<: &id006
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          '406':
+            $ref: '#/responses/406'
+          default:
+            $ref: '#/responses/default'
     head:
+      <<: &id007
+        parameters:
+        - $ref: '#/parameters/Accept'
+        responses:
+          '200':
+            $ref: '#/responses/standard_200'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          default:
+            $ref: '#/responses/default'
       description: Retrieve a TodoList
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/head_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     options:
+      <<: &id008
+        parameters:
+        - $ref: '#/parameters/Access-Control-Request-Method'
+        - $ref: '#/parameters/Access-Control-Request-Headers'
+        responses:
+          '200':
+            $ref: '#/responses/options_200'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          default:
+            $ref: '#/responses/default'
       description: Retrieve a TodoList
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     patch:
       description: Update a TodoList entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id003
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
+        <<: &id009
+          '400':
+            $ref: '#/responses/400'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          '406':
+            $ref: '#/responses/406'
+          '409':
+            $ref: '#/responses/409'
+          default:
+            $ref: '#/responses/default'
   /to-dos/items:
     get:
       responses:
@@ -183,95 +188,55 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Item'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
+        <<:
+          '303':
+            $ref: '#/responses/303'
+          '400':
+            $ref: '#/responses/400'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          '406':
+            $ref: '#/responses/406'
+          default:
+            $ref: '#/responses/default'
   /to-dos/items/{Item-id}:
     delete:
       description: Delete an Item
       responses:
-        '200': &id004
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
+        '200': &id005
+          <<: *id004
           schema:
             $ref: '#/definitions/Item'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
+        <<:
+          '400':
+            $ref: '#/responses/400'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          '406':
+            $ref: '#/responses/406'
+          default:
+            $ref: '#/responses/default'
     get:
       description: Retrieve an Item
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id004
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
+        '200': *id005
+        <<: *id006
     head:
+      <<: *id007
       description: Retrieve an Item
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/head_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     options:
+      <<: *id008
       description: Retrieve an Item
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     parameters:
     - description: Specifies which 'Item' entity from multi-valued relationship 'items'
       in: path
@@ -283,21 +248,8 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id004
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
+        '200': *id005
+        <<: *id009
 produces:
 - application/json
 responses:
@@ -337,15 +289,6 @@ responses:
     description: 5xx errors and other stuff
     schema:
       $ref: '#/definitions/ErrorResponse'
-  head_200:
-    description: successful
-    headers:
-      Content-Location:
-        description: perma-link URL of resource
-        type: string
-      ETag:
-        description: this value must be echoed in the If-Match header of every PATCH
-        type: string
   options_200:
     description: successful
     headers:
@@ -361,5 +304,6 @@ responses:
       Access-Control-Max-Age:
         description: length of time response can be cached
         type: string
+  standard_200: *id004
 swagger: '2.0'
 
