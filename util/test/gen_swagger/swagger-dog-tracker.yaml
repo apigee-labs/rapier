@@ -183,7 +183,7 @@ paths:
           default:
             $ref: '#/responses/default'
   /dog-tracker/dogs:
-    get: &id012
+    get: &id010
       responses:
         '200':
           description: description
@@ -216,7 +216,7 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        <<: &id013
+        <<: &id011
           '303':
             $ref: '#/responses/303'
           '400':
@@ -231,15 +231,15 @@ paths:
             $ref: '#/responses/406'
           default:
             $ref: '#/responses/default'
-  /dog-tracker/dogs;{Dog-name}:
+  /dog-tracker/dogs;{Dog-name}/owner:
     delete:
-      description: Delete a Dog
+      description: Delete a Person
       responses:
         '200': &id005
           <<: *id004
           schema:
-            $ref: '#/definitions/Dog'
-        <<: &id010
+            $ref: '#/definitions/Person'
+        <<:
           '400':
             $ref: '#/responses/400'
           '401':
@@ -253,46 +253,11 @@ paths:
           default:
             $ref: '#/responses/default'
     get:
-      description: Retrieve a Dog
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id005
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Dog
-    options:
-      <<: *id008
-      description: Retrieve a Dog
-    parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
-      required: true
-      type: string
-    patch:
-      description: Update a Dog entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id005
-        <<: *id009
-  /dog-tracker/dogs;{Dog-name}/owner:
-    delete:
-      description: Delete a Person
-      responses:
-        '200': &id011
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Person'
-        <<: *id010
-    get:
       description: Retrieve a Person
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id011
+        '200': *id005
         <<: *id006
     head:
       <<: *id007
@@ -311,10 +276,10 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id011
+        '200': *id005
         <<: *id009
   /dog-tracker/people:
-    get: *id012
+    get: *id010
     post:
       description: Create a new Person
       responses:
@@ -326,45 +291,9 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Person'
-        <<: *id013
-  /dog-tracker/people;{Person-name}:
-    delete:
-      description: Delete a Person
-      responses:
-        '200': &id014
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Person'
-        <<: *id010
-    get:
-      description: Retrieve a Person
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id014
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Person
-    options:
-      <<: *id008
-      description: Retrieve a Person
-    parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
-      required: true
-      type: string
-    patch:
-      description: Update a Person entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id014
-        <<: *id009
+        <<: *id011
   /dog-tracker/people;{Person-name}/dogs:
-    get: *id012
+    get: *id010
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -383,7 +312,7 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        <<: *id013
+        <<: *id011
 produces:
 - application/json
 responses:

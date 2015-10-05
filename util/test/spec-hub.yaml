@@ -9,7 +9,6 @@ entities:
         well_known_URLs: /
         query_paths: [myHub, sharedWithMe]
     Folder:
-        implementation_path: fldr/ 
         properties:
             name:
                 type: string
@@ -23,8 +22,6 @@ entities:
                         operation:
                             type: string
     Spec:
-        implementation_path: spec/ 
-        query_paths: [content]
         properties:
             name:
                 type: string

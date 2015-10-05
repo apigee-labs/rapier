@@ -131,7 +131,7 @@ paths:
       - $ref: '#/parameters/Accept'
       responses:
         '200': &id003
-          <<: &id004
+          <<: &id005
             description: successful
             headers:
               Content-Location:
@@ -143,7 +143,7 @@ paths:
                 type: string
           schema:
             $ref: '#/definitions/Hub'
-        <<: &id006
+        <<:
           '401':
             $ref: '#/responses/401'
           '403':
@@ -155,7 +155,7 @@ paths:
           default:
             $ref: '#/responses/default'
     head:
-      <<: &id007
+      <<:
         parameters:
         - $ref: '#/parameters/Accept'
         responses:
@@ -171,7 +171,7 @@ paths:
             $ref: '#/responses/default'
       description: Retrieve a Hub
     options:
-      <<: &id008
+      <<:
         parameters:
         - $ref: '#/parameters/Access-Control-Request-Method'
         - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -193,7 +193,7 @@ paths:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id003
-        <<: &id009
+        <<:
           '400':
             $ref: '#/responses/400'
           '401':
@@ -208,57 +208,8 @@ paths:
             $ref: '#/responses/409'
           default:
             $ref: '#/responses/default'
-  /fldr/{implementation_key}:
-    delete:
-      description: Delete a Folder
-      responses:
-        '200': &id005
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Folder'
-        <<: &id011
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
-    get:
-      description: Retrieve a Folder
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id005
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Folder
-    options:
-      <<: *id008
-      description: Retrieve a Folder
-    parameters:
-    - description: An internal implementation key. This portion of the path is not
-        part of the API and cannot be constructed by the client - the URL must be
-        found in a hyperlink
-      in: path
-      name: implementation_key
-      required: true
-      type: string
-    patch:
-      description: Update a Folder entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id005
-        <<: *id009
   /myHub:
-    get: &id010
+    get: &id004
       responses:
         '200':
           description: description
@@ -307,91 +258,7 @@ paths:
           default:
             $ref: '#/responses/default'
   /sharedWithMe:
-    get: *id010
-  /spec/{implementation_key}:
-    delete:
-      description: Delete a Spec
-      responses:
-        '200': &id012
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Spec'
-        <<: *id011
-    get:
-      description: Retrieve a Spec
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id012
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Spec
-    options:
-      <<: *id008
-      description: Retrieve a Spec
-    parameters:
-    - description: An internal implementation key. This portion of the path is not
-        part of the API and cannot be constructed by the client - the URL must be
-        found in a hyperlink
-      in: path
-      name: implementation_key
-      required: true
-      type: string
-    patch:
-      description: Update a Spec entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id012
-        <<: *id009
-  /spec/{implementation_key}/content:
-    delete:
-      description: Delete a Content
-      responses:
-        '200': &id013
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Content'
-        <<: *id011
-    get:
-      description: Retrieve a Content
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id013
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Content
-    options:
-      <<: *id008
-      description: Retrieve a Content
-    parameters:
-    - description: An internal implementation key. This portion of the path is not
-        part of the API and cannot be constructed by the client - the URL must be
-        found in a hyperlink
-      in: path
-      name: implementation_key
-      required: true
-      type: string
-    put:
-      consumes:
-      - text/yaml
-      description: Create or Update a Content entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id013
-        '201':
-          description: Created new Content
-          headers:
-            Location:
-              description: perma-link URL of newly-created Content
-              type: string
-          schema:
-            $ref: '#/definitions/Content'
-        <<: *id009
+    get: *id004
 produces:
 - application/yaml
 - text/yaml
@@ -449,6 +316,6 @@ responses:
       Access-Control-Max-Age:
         description: length of time response can be cached
         type: string
-  standard_200: *id004
+  standard_200: *id005
 swagger: '2.0'
 

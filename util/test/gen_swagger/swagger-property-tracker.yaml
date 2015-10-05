@@ -237,7 +237,7 @@ paths:
           default:
             $ref: '#/responses/default'
   /bicycles:
-    get: &id012
+    get: &id010
       responses:
         '200':
           description: description
@@ -270,7 +270,7 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Bicycle'
-        <<: &id013
+        <<: &id011
           '303':
             $ref: '#/responses/303'
           '400':
@@ -285,15 +285,15 @@ paths:
             $ref: '#/responses/406'
           default:
             $ref: '#/responses/default'
-  /bicycles/{Bicycle-name}:
+  /bicycles;{Bicycle-name}/owner:
     delete:
-      description: Delete a Bicycle
+      description: Delete an Institution
       responses:
         '200': &id005
           <<: *id004
           schema:
-            $ref: '#/definitions/Bicycle'
-        <<: &id010
+            $ref: '#/definitions/Institution'
+        <<: &id012
           '400':
             $ref: '#/responses/400'
           '401':
@@ -307,47 +307,11 @@ paths:
           default:
             $ref: '#/responses/default'
     get:
-      description: Retrieve a Bicycle
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id005
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Bicycle
-    options:
-      <<: *id008
-      description: Retrieve a Bicycle
-    parameters:
-    - description: Specifies which 'Bicycle' entity from multi-valued relationship
-        'bicycles'
-      in: path
-      name: Bicycle-name
-      required: true
-      type: string
-    patch:
-      description: Update a Bicycle entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id005
-        <<: *id009
-  /bicycles/{Bicycle-name}/owner:
-    delete:
-      description: Delete an Institution
-      responses:
-        '200': &id011
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Institution'
-        <<: *id010
-    get:
       description: Retrieve an Institution
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id011
+        '200': *id005
         <<: *id006
     head:
       <<: *id007
@@ -367,10 +331,10 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id011
+        '200': *id005
         <<: *id009
   /dogs:
-    get: *id012
+    get: *id010
     post:
       description: Create a new Dog
       responses:
@@ -382,57 +346,22 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        <<: *id013
-  /dogs/{Dog-name}:
-    delete:
-      description: Delete a Dog
-      responses:
-        '200': &id014
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Dog'
-        <<: *id010
-    get:
-      description: Retrieve a Dog
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id014
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Dog
-    options:
-      <<: *id008
-      description: Retrieve a Dog
-    parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
-      required: true
-      type: string
-    patch:
-      description: Update a Dog entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id014
-        <<: *id009
-  /dogs/{Dog-name}/owner:
+        <<: *id011
+  /dogs;{Dog-name}/owner:
     delete:
       description: Delete an Institution
       responses:
-        '200': &id015
+        '200': &id013
           <<: *id004
           schema:
             $ref: '#/definitions/Institution'
-        <<: *id010
+        <<: *id012
     get:
       description: Retrieve an Institution
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id015
+        '200': *id013
         <<: *id006
     head:
       <<: *id007
@@ -451,10 +380,10 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id015
+        '200': *id013
         <<: *id009
   /institutions:
-    get: *id012
+    get: *id010
     post:
       description: Create a new Institution
       responses:
@@ -466,45 +395,9 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Institution'
-        <<: *id013
-  /institutions/{Institution-name}:
-    delete:
-      description: Delete an Institution
-      responses:
-        '200': &id016
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Institution'
-        <<: *id010
-    get:
-      description: Retrieve an Institution
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id016
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve an Institution
-    options:
-      <<: *id008
-      description: Retrieve an Institution
-    parameters:
-    - description: Specifies which 'Institution' entity from multi-valued relationship
-        'institutions'
-      in: path
-      name: Institution-name
-      required: true
-      type: string
-    patch:
-      description: Update an Institution entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id016
-        <<: *id009
-  /institutions/{Institution-name}/assets:
-    get: *id012
+        <<: *id011
+  /institutions;{Institution-name}/assets:
+    get: *id010
     parameters:
     - description: Specifies which 'Institution' entity from multi-valued relationship
         'institutions'
@@ -523,9 +416,9 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        <<: *id013
+        <<: *id011
   /people:
-    get: *id012
+    get: *id010
     post:
       description: Create a new Person
       responses:
@@ -537,45 +430,9 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Person'
-        <<: *id013
-  /people/{Person-name}:
-    delete:
-      description: Delete a Person
-      responses:
-        '200': &id017
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Person'
-        <<: *id010
-    get:
-      description: Retrieve a Person
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id017
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve a Person
-    options:
-      <<: *id008
-      description: Retrieve a Person
-    parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
-      required: true
-      type: string
-    patch:
-      description: Update a Person entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id017
-        <<: *id009
-  /people/{Person-name}/possessions:
-    get: *id012
+        <<: *id011
+  /people;{Person-name}/possessions:
+    get: *id010
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -594,7 +451,7 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        <<: *id013
+        <<: *id011
 produces:
 - application/json
 responses:

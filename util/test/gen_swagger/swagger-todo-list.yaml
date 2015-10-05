@@ -89,7 +89,7 @@ paths:
                 type: string
           schema:
             $ref: '#/definitions/TodoList'
-        <<: &id006
+        <<:
           '401':
             $ref: '#/responses/401'
           '403':
@@ -101,7 +101,7 @@ paths:
           default:
             $ref: '#/responses/default'
     head:
-      <<: &id007
+      <<:
         parameters:
         - $ref: '#/parameters/Accept'
         responses:
@@ -117,7 +117,7 @@ paths:
             $ref: '#/responses/default'
       description: Retrieve a TodoList
     options:
-      <<: &id008
+      <<:
         parameters:
         - $ref: '#/parameters/Access-Control-Request-Method'
         - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -139,7 +139,7 @@ paths:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id003
-        <<: &id009
+        <<:
           '400':
             $ref: '#/responses/400'
           '401':
@@ -203,53 +203,6 @@ paths:
             $ref: '#/responses/406'
           default:
             $ref: '#/responses/default'
-  /to-dos/items/{Item-id}:
-    delete:
-      description: Delete an Item
-      responses:
-        '200': &id005
-          <<: *id004
-          schema:
-            $ref: '#/definitions/Item'
-        <<:
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
-    get:
-      description: Retrieve an Item
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200': *id005
-        <<: *id006
-    head:
-      <<: *id007
-      description: Retrieve an Item
-    options:
-      <<: *id008
-      description: Retrieve an Item
-    parameters:
-    - description: Specifies which 'Item' entity from multi-valued relationship 'items'
-      in: path
-      name: Item-id
-      required: true
-      type: string
-    patch:
-      description: Update an Item entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200': *id005
-        <<: *id009
 produces:
 - application/json
 responses:
