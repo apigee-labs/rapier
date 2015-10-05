@@ -65,7 +65,7 @@ class SwaggerGenerator(object):
                 if 'well_known_URLs' in entity_spec:
                     paths = self.swagger.setdefault('paths', self.paths)
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        paths[well_known_URL] = self.get_entity_interface([Base_URL_spec(well_known_URL, entity_name)])
+                        paths[well_known_URL] = self.get_entity_interface([Well_known_URL_Spec(well_known_URL, entity_name)])
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
@@ -92,21 +92,17 @@ class SwaggerGenerator(object):
                     entity_interface =  self.get_entity_interface(impl_rel_property_specs)
                     self.paths[implementation_template] = entity_interface
                 if 'query_paths' in entity_spec:
-                    if 'implementation_path' not in entity_spec:
-                        if 'well_known_URLs' not in entity_spec:
-                            sys.exit('error: query_path may only be set if well_known_URL is also set')
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             for well_known_URL in well_known_URLs:
-                                baseURL_spec = Base_URL_spec(well_known_URL, entity_name)
+                                baseURL_spec = Well_known_URL_Spec(well_known_URL, entity_name)
                                 self.add_query_paths(query_paths, [baseURL_spec] + rel_property_spec_stack)
-                        if 'implementation_path' in entity_spec:
-                            implementation_path = entity_spec['implementation_path']
-                            implementation_template = '/%s{implementation_key}' % implementation_path
-                            self.add_query_paths(implementation_template, query_paths, impl_rel_property_specs + rel_property_spec_stack)
+                        else:
+                            entity_url_property_spec = Entity_URL_spec(entity_name)
+                            self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack)
                     if len(query_paths) > 0:
                         for query_path in query_paths:
                             print 'query path not valid or listed more than once: %s' % query_path
@@ -141,7 +137,7 @@ class SwaggerGenerator(object):
                         rel_name, 
                         one_end.get('selector'),
                         one_end.get('readonly')) if get_multiplicity(one_end) == 'n' else \
-                    Rel_property_spec(
+                    Rel_sv_property_spec(
                         one_end['property'],
                         one_end['entity'],
                         other_end['entity'],
@@ -570,7 +566,23 @@ def get_multiplicity(rel_property_spec):
     multiplicity = rel_property_spec.get('multiplicity')
     return multiplicity.split(':')[-1] if multiplicity else 1
     
-class Rel_property_spec(object):
+class Path_spec(object):
+            
+    def build_param(self):
+        return None  
+        
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__():
+        return self.__dict__.hash()
+        
+class Rel_sv_property_spec(Path_spec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, readonly=False):
         self.property_name = property_name
@@ -587,22 +599,8 @@ class Rel_property_spec(object):
         
     def get_multiplicity(self):
         return '1'
-        
-    def build_param(self):
-        return None  
-        
-    def __eq__(self, other):
-        if type(other) is type(self):
-            return self.__dict__ == other.__dict__
-        return False
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__():
-        return self.__dict__.hash()
-        
-class Rel_mv_property_spec(object):
+                
+class Rel_mv_property_spec(Path_spec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, selector, readonly=False):
         self.property_name = property_name
@@ -645,7 +643,7 @@ class Rel_mv_property_spec(object):
     def __ne__(self, other):
         return not self.__eq__(other)
         
-class Base_URL_spec(object):
+class Well_known_URL_Spec(object):
     
     def __init__(self, base_URL, target_entity):
         self.base_URL = base_URL 
@@ -656,6 +654,25 @@ class Base_URL_spec(object):
 
     def build_param(self):
         return None        
+
+class Entity_URL_spec(object):
+    
+    def __init__(self, target_entity):
+        self.target_entity = target_entity
+
+    def path_segment(self, select_one_of_many = False):
+        return '/{%s-URL}' % self.target_entity
+
+    def build_param(self):
+        return {
+            'name': '%s-URL' % self.target_entity,
+            'in': 'path',
+            'type': 'string',
+            'description':
+                "Specifies the URL of the %s entity whose relationship is being accessed" % self.target_entity,
+            'required': True
+            }
+
 
 def main(args):
     generator = SwaggerGenerator()

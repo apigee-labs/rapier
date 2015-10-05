@@ -143,7 +143,7 @@ paths:
                 type: string
           schema:
             $ref: '#/definitions/Hub'
-        <<:
+        <<: &id007
           '401':
             $ref: '#/responses/401'
           '403':
@@ -155,7 +155,7 @@ paths:
           default:
             $ref: '#/responses/default'
     head:
-      <<:
+      <<: &id008
         parameters:
         - $ref: '#/parameters/Accept'
         responses:
@@ -171,7 +171,7 @@ paths:
             $ref: '#/responses/default'
       description: Retrieve a Hub
     options:
-      <<:
+      <<: &id009
         parameters:
         - $ref: '#/parameters/Access-Control-Request-Method'
         - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -193,7 +193,7 @@ paths:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id003
-        <<:
+        <<: &id010
           '400':
             $ref: '#/responses/400'
           '401':
@@ -259,6 +259,64 @@ paths:
             $ref: '#/responses/default'
   /sharedWithMe:
     get: *id004
+  /{Spec-URL}/content:
+    delete:
+      description: Delete a Content
+      responses:
+        '200': &id006
+          <<: *id005
+          schema:
+            $ref: '#/definitions/Content'
+        <<:
+          '400':
+            $ref: '#/responses/400'
+          '401':
+            $ref: '#/responses/401'
+          '403':
+            $ref: '#/responses/403'
+          '404':
+            $ref: '#/responses/404'
+          '406':
+            $ref: '#/responses/406'
+          default:
+            $ref: '#/responses/default'
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200': *id006
+        <<: *id007
+    head:
+      <<: *id008
+      description: Retrieve a Content
+    options:
+      <<: *id009
+      description: Retrieve a Content
+    parameters:
+    - description: Specifies the URL of the Spec entity whose relationship is being
+        accessed
+      in: path
+      name: Spec-URL
+      required: true
+      type: string
+    put:
+      consumes:
+      - text/yaml
+      description: Create or Update a Content entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200': *id006
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        <<: *id010
 produces:
 - application/yaml
 - text/yaml

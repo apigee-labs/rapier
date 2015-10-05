@@ -22,6 +22,7 @@ entities:
                         operation:
                             type: string
     Spec:
+        query_paths: [content]
         properties:
             name:
                 type: string
