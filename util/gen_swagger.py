@@ -1,4 +1,4 @@
-import yaml, sys
+import yaml, sys, getopt
 
 class SwaggerGenerator(object):
 
@@ -21,6 +21,9 @@ class SwaggerGenerator(object):
         with open(filename) as f:
             self.rapier_spec = yaml.load(f.read())
             
+    def set_opts(self, opts):
+        self.opts = opts
+
     def swagger_from_rapier(self, filename= None):
         if filename:
             self.set_rapier_spec_from_filename(filename)
@@ -596,7 +599,9 @@ def get_multiplicity(rel_property_spec):
             
 def main(args):
     generator = SwaggerGenerator()
-    generator.set_rapier_spec_from_filename(*args[1:])
+    opts, args = getopt.getopt(args[1:], 'iv', ['no-merge'])
+    generator.set_rapier_spec_from_filename(*args)
+    generator.set_opts(opts)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False), "'<<':", '<<:')
         
 if __name__ == "__main__":
