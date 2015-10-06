@@ -100,7 +100,8 @@ class SwaggerGenerator(object):
                         properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                 if self.include_impl and 'implementation_path' in entity_spec:
                     implementation_path_spec = Implementation_path_spec(self.conventions, entity_spec['implementation_path'], entity_name)
-                    entity_interface =  self.get_entity_interface([implementation_path_spec])
+                    implementation_path_specs = [Implementation_path_spec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
+                    entity_interface =  self.get_entity_interface([implementation_path_spec], implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
                 if 'query_paths' in entity_spec:
                     query_paths = as_list(entity_spec['query_paths'])[:]
@@ -192,14 +193,16 @@ class SwaggerGenerator(object):
                 path_spec = self.build_entity_interface(rel_property_spec_stack)
                 self.paths[path] = path_spec
             
-    def get_entity_interface(self, rel_property_spec_stack):
+    def get_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
         rel_property_spec = rel_property_spec_stack[-1]
         entity_name = rel_property_spec.target_entity
-        if entity_name not in self.entity_specs:
+        if len(rel_property_specs) > 0:
+            return self.build_entity_interface(rel_property_spec_stack, rel_property_specs)
+        elif entity_name not in self.entity_specs:
             self.entity_specs[entity_name] = self.build_entity_interface(rel_property_spec_stack)
         return self.entity_specs[entity_name]
         
-    def build_entity_interface(self, rel_property_spec_stack):
+    def build_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
         rel_property_spec = rel_property_spec_stack[-1]
         entity_name = rel_property_spec.target_entity
         entity_spec = self.rapier_spec['entities'][entity_name]
@@ -208,8 +211,10 @@ class SwaggerGenerator(object):
         else:
             consumes = None                      
         structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+        schema = {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]} if len(rel_property_specs) > 1 else \
+                 self.global_definition_ref(entity_name)
         response_200 = {
-            'schema': self.global_definition_ref(entity_name)
+            'schema': schema
             }
         if not self.yaml_merge:
             response_200.update(self.responses.get('standard_200'))
@@ -687,15 +692,14 @@ class Implementation_path_spec(Path_spec):
         
     def path_segment(self, select_one_of_many = False):
         separator = '/' if self.conventions.get('selector_location') == 'path-parameter' else ';'
-        return '%s%s{%s_implementation_key}' % (self.implementation_path, separator, self.target_entity)
+        return '%s%s{implementation_key}' % (self.implementation_path, separator)
 
     def build_param(self):
         return {
-            'name': '%s_implementaton_key' % self.target_entity,
+            'name': 'implementaton_key',
             'in': 'path',
             'type': 'string',
-            'description':
-                "This parameter is a private part of the implementation. It is not part of the API",
+            'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'required': True
             }
 
