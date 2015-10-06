@@ -61,6 +61,10 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
+  Entity:
+    properties:
+      kind:
+        type: string
   ErrorResponse:
     properties:
       message:
@@ -284,6 +288,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Bicycle
+      parameters:
+      - description: The representation of the new Bicycle being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Bicycle'
       responses:
         '201':
           description: Created new Bicycle
@@ -611,6 +621,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Dog
+      parameters:
+      - description: The representation of the new Dog being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog
@@ -936,6 +952,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Institution
+      parameters:
+      - description: The representation of the new Institution being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Institution'
       responses:
         '201':
           description: Created new Institution
@@ -1146,6 +1168,12 @@ paths:
       type: string
     post:
       description: Create a new Dog
+      parameters:
+      - description: The representation of the new (Dog | Bicycle) being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Entity'
       responses:
         '201':
           description: Created new (Dog | Bicycle)
@@ -1227,6 +1255,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Person
+      parameters:
+      - description: The representation of the new Person being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Person'
       responses:
         '201':
           description: Created new Person
@@ -1437,6 +1471,12 @@ paths:
       type: string
     post:
       description: Create a new Dog
+      parameters:
+      - description: The representation of the new (Dog | Bicycle) being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Entity'
       responses:
         '201':
           description: Created new (Dog | Bicycle)

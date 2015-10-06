@@ -7,6 +7,10 @@ consumes:
 produces:
 - application/json
 definitions:
+  Entity:
+    properties:
+      kind:
+        type: string
   ErrorResponse:
     properties:
       message:

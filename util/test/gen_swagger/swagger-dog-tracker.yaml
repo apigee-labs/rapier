@@ -58,6 +58,10 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
+  Entity:
+    properties:
+      kind:
+        type: string
   ErrorResponse:
     properties:
       message:
@@ -226,6 +230,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Dog
+      parameters:
+      - description: The representation of the new Dog being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog
@@ -551,6 +561,12 @@ paths:
           $ref: '#/responses/default'
     post:
       description: Create a new Person
+      parameters:
+      - description: The representation of the new Person being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Person'
       responses:
         '201':
           description: Created new Person
@@ -761,6 +777,12 @@ paths:
       type: string
     post:
       description: Create a new Dog
+      parameters:
+      - description: The representation of the new Dog being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog

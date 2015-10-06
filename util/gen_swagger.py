@@ -48,7 +48,7 @@ class SwaggerGenerator(object):
             self.swagger['produces'] = as_list(spec.get('produces'))
         else:
             self.swagger['produces'] = ['application/json']
-        self.definitions = self.build_error_definitions()
+        self.definitions = self.build_standard_definitions()
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
@@ -299,13 +299,22 @@ class SwaggerGenerator(object):
             schema = {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]}
             i201_description = 'Created new (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
             location_desciption =  'perma-link URL of newly-created (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
+            body_desciption =  'The representation of the new (%s) being created' % ' | '.join([spec.target_entity for spec in rel_property_specs])
         else:    
             schema = self.global_definition_ref(entity_name)
             i201_description = 'Created new %s' % entity_name
             location_desciption = 'perma-link URL of newly-created %s'  % entity_name
+            body_desciption =  'The representation of the new %s being created' % entity_name 
         if not rel_property_spec.readonly:
             path_spec['post'] = {
                 'description': 'Create a new %s' % entity_name,
+                'parameters': [
+                    {'name': 'body',
+                     'in': 'body',
+                     'description': body_desciption,
+                     'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
+                    }
+                    ],
                 'responses': {
                     '201': {
                         'description': i201_description,
@@ -527,9 +536,10 @@ class SwaggerGenerator(object):
                 }
             }
  
-    def build_error_definitions(self):
+    def build_standard_definitions(self):
         return {
-            'ErrorResponse': self.build_error_definition()
+            'ErrorResponse': self.build_error_definition(),
+            'Entity': self.build_entity_definition()
             }
             
     def build_standard_header_parameters(self):
@@ -575,6 +585,15 @@ class SwaggerGenerator(object):
         return {
             'properties': {
                 'message': {
+                    'type': 'string'
+                    }
+                }
+            }
+    
+    def build_entity_definition(self):
+        return {
+            'properties': {
+                'kind': {
                     'type': 'string'
                     }
                 }
