@@ -3,4 +3,4 @@ echo $DIR
 ROOT_DIR=$( cd "$( dirname "$DIR/../../../../../" )" && pwd)
 cd $ROOT_DIR
 echo $ROOT_DIR
-python rapier/util/gen_swagger.py --no-merge --no-alias rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub.yaml
+python rapier/util/gen_swagger.py rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub.yaml

@@ -24,7 +24,7 @@ class SwaggerGenerator(object):
     def set_opts(self, opts):
         self.opts = opts
         self.opts_keys = [k for k,v in opts]
-        self.no_merge = '--no-merge' in self.opts_keys
+        self.yaml_merge = '--yaml-merge' in self.opts_keys or '-m' in self.opts_keys
 
     def swagger_from_rapier(self, filename= None):
         if filename:
@@ -202,7 +202,7 @@ class SwaggerGenerator(object):
         response_200 = {
             'schema': self.global_definition_ref(entity_name)
             }
-        if self.no_merge:
+        if not self.yaml_merge:
             response_200.update(self.responses.get('standard_200'))
         else:
             response_200['<<'] = self.responses.get('standard_200')
@@ -214,21 +214,21 @@ class SwaggerGenerator(object):
                     '200': response_200, 
                     }
                 }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         path_spec['head'] = {
                 'description': 'retrieve HEAD'
                 }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec['head'].update(self.methods['head'])
         else:
             path_spec['head']['<<'] = self.methods['head']
         path_spec['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec['options'].update(self.methods['options'])
         else:
             path_spec['options']['<<'] = self.methods['options']
@@ -241,7 +241,7 @@ class SwaggerGenerator(object):
                 '200': response_200
                 }
             }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
         else:
             path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
@@ -266,7 +266,7 @@ class SwaggerGenerator(object):
                     '200': response_200
                     }
                 }
-            if self.no_merge:
+            if not self.yaml_merge:
                 path_spec['delete']['responses'].update(self.response_sets['delete_responses'])
             else:
                 path_spec['delete']['responses']['<<'] = self.response_sets['delete_responses']
@@ -297,21 +297,21 @@ class SwaggerGenerator(object):
                         }
                     }                
                 }
-            if self.no_merge:
+            if not self.yaml_merge:
                 path_spec['post']['responses'].update(self.response_sets['post_responses'])
             else:
                 path_spec['post']['responses']['<<'] = self.response_sets['post_responses']
         path_spec['head'] = {
                 'description': 'Retrieve HEAD'
                 }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec['head'].update(self.methods['head'])
         else:
             path_spec['head']['<<'] = self.methods['head']
         path_spec['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
-        if self.no_merge:
+        if not self.yaml_merge:
             path_spec['options'].update(self.methods['options'])
         else:
             path_spec['options']['<<'] = self.methods['options']
@@ -715,11 +715,16 @@ class Entity_URL_spec(object):
 
 def main(args):
     generator = SwaggerGenerator()
-    opts, args = getopt.getopt(args[1:], '', ['no-merge', 'no-alias'])
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], 'ma', ['yaml-merge', 'yaml-alias'])
+    except getopt.GetoptError as err:
+        usage = '\ngen_swagger [--yaml-merge] [--yaml-alias] filename'
+        sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
     Dumper = yaml.SafeDumper
-    if '--no-alias' in [k for k,v in opts]:
+    opts_keys = [k for k,v in opts]
+    if '--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
         
