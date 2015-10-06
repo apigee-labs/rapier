@@ -49,7 +49,7 @@ class SwaggerGenerator(object):
             self.swagger['consumes'] = ['application/json']
         self.standard_entity_properties = self.conventions['standard_entity_properties'] if 'standard_entity_properties' in self.conventions else standard_entity_properties
         self.standard_collection_properties = self.conventions['standard_collection_properties'] if 'standard_collection_properties' in self.conventions else standard_collection_properties
-            
+
         if 'entities' in spec:
             entities = spec['entities']
             self.swagger['definitions'] = self.definitions
@@ -219,14 +219,14 @@ class SwaggerGenerator(object):
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         path_spec['head'] = {
-                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name)
+                'description': 'retrieve HEAD'
                 }
         if self.no_merge:
             path_spec['head'].update(self.methods['head'])
         else:
             path_spec['head']['<<'] = self.methods['head']
         path_spec['options'] = {
-                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'description': 'Retrieve OPTIONS',
                }
         if self.no_merge:
             path_spec['options'].update(self.methods['options'])
@@ -301,6 +301,21 @@ class SwaggerGenerator(object):
                 path_spec['post']['responses'].update(self.response_sets['post_responses'])
             else:
                 path_spec['post']['responses']['<<'] = self.response_sets['post_responses']
+        path_spec['head'] = {
+                'description': 'Retrieve HEAD'
+                }
+        if self.no_merge:
+            path_spec['head'].update(self.methods['head'])
+        else:
+            path_spec['head']['<<'] = self.methods['head']
+        path_spec['options'] = {
+                'description': 'Retrieve OPTIONS',
+               }
+        if self.no_merge:
+            path_spec['options'].update(self.methods['options'])
+        else:
+            path_spec['options']['<<'] = self.methods['options']
+            
 
         parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:

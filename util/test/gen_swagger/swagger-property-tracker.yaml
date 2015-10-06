@@ -189,7 +189,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a PropertyTracker
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -204,7 +204,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a PropertyTracker
+      description: Retrieve OPTIONS
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -271,6 +271,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     post:
@@ -354,7 +385,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve an Institution
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -369,7 +400,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve an Institution
+      description: Retrieve OPTIONS
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -443,6 +474,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     post:
@@ -526,7 +588,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve an Institution
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -541,7 +603,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve an Institution
+      description: Retrieve OPTIONS
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
@@ -616,6 +678,37 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     post:
       description: Create a new Institution
       responses:
@@ -662,6 +755,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     parameters:
@@ -719,6 +843,37 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     post:
       description: Create a new Person
       responses:
@@ -765,6 +920,37 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
     parameters:

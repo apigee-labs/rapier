@@ -71,7 +71,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve a HelloMessage
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -86,7 +86,7 @@ paths:
         default:
           $ref: '#/responses/default'
     options:
-      description: Retrieve a HelloMessage
+      description: Retrieve OPTIONS
       parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
