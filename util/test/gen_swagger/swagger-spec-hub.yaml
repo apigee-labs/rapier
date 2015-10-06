@@ -131,83 +131,78 @@ paths:
       - $ref: '#/parameters/Accept'
       responses:
         '200': &id003
-          <<: &id005
-            description: successful
-            headers:
-              Content-Location:
-                description: perma-link URL of resource
-                type: string
-              ETag:
-                description: this value must be echoed in the If-Match header of every
-                  PATCH
-                type: string
+          description: successful
+          headers: &id005
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
           schema:
             $ref: '#/definitions/Hub'
-        <<: &id007
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '401': &id007
+          $ref: '#/responses/401'
+        '403': &id008
+          $ref: '#/responses/403'
+        '404': &id009
+          $ref: '#/responses/404'
+        '406': &id010
+          $ref: '#/responses/406'
+        default: &id011
+          $ref: '#/responses/default'
     head:
-      <<: &id008
-        parameters:
-        - $ref: '#/parameters/Accept'
-        responses:
-          '200':
-            $ref: '#/responses/standard_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a Hub
+      parameters: &id012
+      - $ref: '#/parameters/Accept'
+      responses: &id013
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     options:
-      <<: &id009
-        parameters:
-        - $ref: '#/parameters/Access-Control-Request-Method'
-        - $ref: '#/parameters/Access-Control-Request-Headers'
-        responses:
-          '200':
-            $ref: '#/responses/options_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a Hub
+      parameters: &id014
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses: &id015
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a Hub entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
         '200': *id003
-        <<: &id010
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          '409':
-            $ref: '#/responses/409'
-          default:
-            $ref: '#/responses/default'
+        '400': &id016
+          $ref: '#/responses/400'
+        '401': &id017
+          $ref: '#/responses/401'
+        '403': &id018
+          $ref: '#/responses/403'
+        '404': &id019
+          $ref: '#/responses/404'
+        '406': &id020
+          $ref: '#/responses/406'
+        '409': &id021
+          $ref: '#/responses/409'
+        default: &id022
+          $ref: '#/responses/default'
   /myHub:
     get: &id004
       responses:
@@ -242,21 +237,20 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Spec'
-        <<:
-          '303':
-            $ref: '#/responses/303'
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
   /sharedWithMe:
     get: *id004
   /{Spec-URL}/content:
@@ -264,35 +258,41 @@ paths:
       description: Delete a Content
       responses:
         '200': &id006
-          <<: *id005
+          description: successful
+          headers: *id005
           schema:
             $ref: '#/definitions/Content'
-        <<:
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     get:
       description: Retrieve a Content
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
         '200': *id006
-        <<: *id007
+        '401': *id007
+        '403': *id008
+        '404': *id009
+        '406': *id010
+        default: *id011
     head:
-      <<: *id008
       description: Retrieve a Content
+      parameters: *id012
+      responses: *id013
     options:
-      <<: *id009
       description: Retrieve a Content
+      parameters: *id014
+      responses: *id015
     parameters:
     - description: Specifies the URL of the Spec entity whose relationship is being
         accessed
@@ -316,7 +316,13 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Content'
-        <<: *id010
+        '400': *id016
+        '401': *id017
+        '403': *id018
+        '404': *id019
+        '406': *id020
+        '409': *id021
+        default: *id022
 produces:
 - application/yaml
 - text/yaml
@@ -374,6 +380,8 @@ responses:
       Access-Control-Max-Age:
         description: length of time response can be cached
         type: string
-  standard_200: *id005
+  standard_200:
+    description: successful
+    headers: *id005
 swagger: '2.0'
 

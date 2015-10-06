@@ -23,6 +23,8 @@ class SwaggerGenerator(object):
             
     def set_opts(self, opts):
         self.opts = opts
+        self.opts_keys = [k for k,v in opts]
+        self.no_merge = '--no-merge' in self.opts_keys
 
     def swagger_from_rapier(self, filename= None):
         if filename:
@@ -198,36 +200,51 @@ class SwaggerGenerator(object):
             consumes = None                      
         structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
         response_200 = {
-            '<<':  self.responses.get('standard_200'),
             'schema': self.global_definition_ref(entity_name)
             }
-        path_spec = {
-            'get': {
+        if self.no_merge:
+            response_200.update(self.responses.get('standard_200'))
+        else:
+            response_200['<<'] = self.responses.get('standard_200')
+        path_spec = {}
+        path_spec['get'] = {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
-                    '<<': self.response_sets['entity_get_responses'],
                     '200': response_200, 
                     }
-                },
-            'head': {
-                '<<': self.methods['head'],
+                }
+        if self.no_merge:
+            path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
+        else:
+            path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
+        path_spec['head'] = {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name)
-                },
-            'options': {
-                '<<': self.methods['options'],
+                }
+        if self.no_merge:
+            path_spec['head'].update(self.methods['head'])
+        else:
+            path_spec['head']['<<'] = self.methods['head']
+        path_spec['options'] = {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                }
-            }
+        if self.no_merge:
+            path_spec['options'].update(self.methods['options'])
+        else:
+            path_spec['options']['<<'] = self.methods['options']
+            
         update_verb = 'patch' if structured else 'put'
         path_spec[update_verb] = {
             'description': ('Update %s %s entity' if structured else 'Create or Update %s %s entity') % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
             'parameters': [{'$ref': '#/parameters/If-Match'}],
             'responses': { 
-                '200': response_200, 
-                '<<': self.response_sets['put_patch_responses']
+                '200': response_200
                 }
             }
+        if self.no_merge:
+            path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
+        else:
+            path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
         if not structured:
             path_spec['put']['responses']['201'] = {
                 'description': 'Created new %s' % entity_name,
@@ -246,10 +263,13 @@ class SwaggerGenerator(object):
             path_spec['delete'] = {
                 'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
-                    '200': response_200,                 
-                    '<<': self.response_sets['delete_responses']
+                    '200': response_200
                     }
                 }
+            if self.no_merge:
+                path_spec['delete']['responses'].update(self.response_sets['delete_responses'])
+            else:
+                path_spec['delete']['responses']['<<'] = self.response_sets['delete_responses']
         parameters = self.build_parameters(rel_property_spec_stack)
         if parameters:
             path_spec['parameters'] = parameters
@@ -274,10 +294,14 @@ class SwaggerGenerator(object):
                                 'description': 'perma-link URL of newly-created %s'  % entity_name
                                 }
                             }
-                        }, 
-                    '<<': self.response_sets['post_responses']
+                        }
                     }                
                 }
+            if self.no_merge:
+                path_spec['post']['responses'].update(self.response_sets['post_responses'])
+            else:
+                path_spec['post']['responses']['<<'] = self.response_sets['post_responses']
+
         parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:
             path_spec['parameters'] = parameters
@@ -676,7 +700,7 @@ class Entity_URL_spec(object):
 
 def main(args):
     generator = SwaggerGenerator()
-    opts, args = getopt.getopt(args[1:], 'iv', ['no-merge'])
+    opts, args = getopt.getopt(args[1:], '', ['no-merge', 'no-alias'])
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False), "'<<':", '<<:')
