@@ -21,7 +21,7 @@ definitions:
         x-rapier-relationship:
           multiplicity: '1'
           type:
-            one_of:
+            oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
       paint_color:
@@ -58,7 +58,7 @@ definitions:
         x-rapier-relationship:
           multiplicity: '1'
           type:
-            one_of:
+            oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
   ErrorResponse:
@@ -75,7 +75,7 @@ definitions:
         x-rapier-relationship:
           multiplicity: n
           type:
-            one_of:
+            oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
       birth-date:
@@ -100,7 +100,7 @@ definitions:
         x-rapier-relationship:
           multiplicity: n
           type:
-            one_of:
+            oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
   PropertyTracker:

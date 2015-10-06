@@ -95,8 +95,7 @@ class SwaggerGenerator(object):
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
                         if not structured:
                             rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
-                            print 'error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name)
-                            return None
+                            sys.exit('error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name))
                         properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                 if 'implementation_path' in entity_spec:
                     implementation_path = entity_spec['implementation_path']
@@ -118,9 +117,7 @@ class SwaggerGenerator(object):
                             entity_url_property_spec = Entity_URL_spec(entity_name)
                             self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack)
                     if len(query_paths) > 0:
-                        for query_path in query_paths:
-                            print 'query path not valid or listed more than once: %s' % query_path
-                        return 'Error'                                     
+                        sys.exit('query paths not valid or listed more than once: %s' % [query_paths])                                     
         return self.swagger
 
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
@@ -132,7 +129,7 @@ class SwaggerGenerator(object):
             'format': 'URL',
             'x-rapier-relationship': {
                 'type': {
-                    'one_of': [{'$ref': '#/definitions/%s' % rel_prop_spec.target_entity} for rel_prop_spec in rel_prop_specs]
+                    'oneOf': [{'$ref': '#/definitions/%s' % rel_prop_spec.target_entity} for rel_prop_spec in rel_prop_specs]
                     } if len(rel_prop_specs) > 1 else
                     {'$ref': '#/definitions/%s' % rel_prop_specs[0].target_entity },
                 'multiplicity': rel_prop_specs[0].get_multiplicity()
@@ -178,11 +175,11 @@ class SwaggerGenerator(object):
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
                 self.add_query_paths(query_paths, rel_property_spec_stack)
+                rel_property_spec_stack.pop()
         rel_path = '/'.join([rel_property_spec.path_segment() for rel_property_spec in rel_property_spec_stack[1:] if rel_property_spec.path_segment()])
         if rel_path in query_paths:
             self.emit_query_path(rel_property_spec_stack)
             query_paths.remove(rel_path)
-        rel_property_spec_stack.pop()
                 
     def emit_query_path(self, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
@@ -286,7 +283,7 @@ class SwaggerGenerator(object):
         if parameters:
             path_spec['parameters'] = parameters
         return path_spec
-    
+
     def build_relationship_interface(self, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
         relationship_name = rel_property_spec.property_name
