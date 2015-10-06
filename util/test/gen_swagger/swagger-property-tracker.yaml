@@ -783,7 +783,9 @@ paths:
               description: perma-link URL of newly-created Dog
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            x-oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
         '303':
           $ref: '#/responses/303'
         '400':
@@ -948,7 +950,9 @@ paths:
               description: perma-link URL of newly-created Dog
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            x-oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
         '303':
           $ref: '#/responses/303'
         '400':

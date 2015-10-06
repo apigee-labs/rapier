@@ -112,10 +112,10 @@ class SwaggerGenerator(object):
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             for well_known_URL in well_known_URLs:
                                 baseURL_spec = Well_known_URL_Spec(well_known_URL, entity_name)
-                                self.add_query_paths(query_paths, [baseURL_spec] + rel_property_spec_stack)
+                                self.add_query_paths(query_paths, [baseURL_spec] + rel_property_spec_stack, rel_property_specs)
                         else:
                             entity_url_property_spec = Entity_URL_spec(entity_name)
-                            self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack)
+                            self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_paths])                                     
         return self.swagger
@@ -165,7 +165,7 @@ class SwaggerGenerator(object):
                     add_type(rel_name, relationship['other_end'], relationship['one_end'])
         return result
         
-    def add_query_paths(self, query_paths, rel_property_spec_stack):
+    def add_query_paths(self, query_paths, rel_property_spec_stack, prev_rel_property_specs):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity = rel_property_spec.target_entity
@@ -174,23 +174,24 @@ class SwaggerGenerator(object):
         for rel_spec in rel_property_specs:
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
-                self.add_query_paths(query_paths, rel_property_spec_stack)
+                self.add_query_paths(query_paths, rel_property_spec_stack, rel_property_specs)
                 rel_property_spec_stack.pop()
         rel_path = '/'.join([rel_property_spec.path_segment() for rel_property_spec in rel_property_spec_stack[1:] if rel_property_spec.path_segment()])
         if rel_path in query_paths:
-            self.emit_query_path(rel_property_spec_stack)
+            self.emit_query_path(rel_property_spec_stack, prev_rel_property_specs)
             query_paths.remove(rel_path)
                 
-    def emit_query_path(self, rel_property_spec_stack):
+    def emit_query_path(self, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = rel_property_spec.is_multivalued()
         path = '/'.join([rel_property_spec.path_segment(inx != (len(rel_property_spec_stack)-1)) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
-        if multivalued:
-            path_spec = self.build_relationship_interface(rel_property_spec_stack)
-            self.paths[path] = path_spec
-        else:
-            path_spec = self.build_entity_interface(rel_property_spec_stack)
-            self.paths[path] = path_spec
+        if path not in self.paths:
+            if multivalued:
+                path_spec = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
+                self.paths[path] = path_spec
+            else:
+                path_spec = self.build_entity_interface(rel_property_spec_stack)
+                self.paths[path] = path_spec
             
     def get_entity_interface(self, rel_property_spec_stack):
         rel_property_spec = rel_property_spec_stack[-1]
@@ -284,19 +285,22 @@ class SwaggerGenerator(object):
             path_spec['parameters'] = parameters
         return path_spec
 
-    def build_relationship_interface(self, rel_property_spec_stack):
+    def build_relationship_interface(self, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1]
         relationship_name = rel_property_spec.property_name
         entity_name = rel_property_spec.target_entity
         path_spec = dict()
         path_spec['get'] = self.global_collection_get()
+        rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
+        schema = self.global_definition_ref(entity_name) if len(rel_property_specs) == 1 else \
+            {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]}
         if not rel_property_spec.readonly:
             path_spec['post'] = {
                 'description': 'Create a new %s' % entity_name,
                 'responses': {
                     '201': {
                         'description': 'Created new %s' % entity_name,
-                        'schema': self.global_definition_ref(entity_name),
+                        'schema': schema,
                         'headers': {
                             'Location': {
                                 'type': 'string',
@@ -627,8 +631,14 @@ class Path_spec(object):
     def __ne__(self, other):
         return not self.__eq__(other)
 
-    def __hash__():
+    def __hash__(self):
         return self.__dict__.hash()
+
+    def __str__(self):
+        return self.__dict__.str()
+
+    def __repr__(self):
+        return repr(self.__dict__)
         
 class Rel_sv_property_spec(Path_spec):
     
