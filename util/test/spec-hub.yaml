@@ -9,6 +9,7 @@ entities:
         well_known_URLs: /
         query_paths: [myHub, sharedWithMe]
     Folder:
+        implementation_path: /impl
         properties:
             name:
                 type: string
@@ -23,6 +24,7 @@ entities:
                             type: string
     Spec:
         query_paths: [content]
+        implementation_path: /impl
         properties:
             name:
                 type: string

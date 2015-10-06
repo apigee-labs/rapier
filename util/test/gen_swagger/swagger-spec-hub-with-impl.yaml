@@ -1,11 +1,14 @@
 swagger: '2.0'
 info:
-  title: DogTrackerAPI
+  title: SpecHubAPI
   version: '0.1'
 consumes:
 - application/json
+- text/yaml
 produces:
+- text/yaml
 - application/json
+- text/html
 definitions:
   Collection:
     properties:
@@ -19,70 +22,96 @@ definitions:
         type: array
       kind:
         type: string
-  Dog:
+  Content: {}
+  ErrorResponse:
+    properties:
+      message:
+        type: string
+  Folder:
     properties:
       _self:
         type: string
-      birth_date:
+      contents:
+        format: URL
         type: string
-      fur_color:
-        type: string
+        x-rapier-relationship:
+          multiplicity: n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
       kind:
         type: string
       name:
         type: string
-      owner:
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
+  Hub:
+    properties:
+      _self:
+        type: string
+      kind:
+        type: string
+      myHub:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
+      sharedWithMe:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
+  Spec:
+    properties:
+      _self:
+        type: string
+      content:
         format: URL
         type: string
         x-rapier-relationship:
           multiplicity: '1'
           type:
-            $ref: '#/definitions/Person'
-  DogTracker:
-    properties:
-      _self:
-        type: string
-      dogs:
+            $ref: '#/definitions/Content'
+      folder:
         format: URL
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: '1'
           type:
-            $ref: '#/definitions/Dog'
-      kind:
-        type: string
-      people:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          multiplicity: n
-          type:
-            $ref: '#/definitions/Person'
-  ErrorResponse:
-    properties:
-      message:
-        type: string
-  Person:
-    properties:
-      _self:
-        type: string
-      birth-date:
-        type: string
-      dogs:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          multiplicity: n
-          type:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Folder'
       kind:
         type: string
       name:
         type: string
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
 paths:
-  /dog-tracker:
+  /:
     get:
-      description: Retrieve a DogTracker
+      description: Retrieve a Hub
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -97,7 +126,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/Hub'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -140,7 +169,7 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a DogTracker entity
+      description: Update a Hub entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -155,7 +184,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/Hub'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -170,88 +199,9 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs:
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Dog
-      responses:
-        '201':
-          description: Created new Dog
-          headers:
-            Location:
-              description: perma-link URL of newly-created Dog
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-  /dog-tracker/dogs/{Dog-name}/owner:
+  /impl/{Folder_implementation_key}:
     delete:
-      description: Delete a Person
+      description: Delete a Folder
       responses:
         '200':
           description: successful
@@ -264,7 +214,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -278,7 +228,7 @@ paths:
         default:
           $ref: '#/responses/default'
     get:
-      description: Retrieve a Person
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -293,7 +243,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Folder'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -336,13 +286,14 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+    - description: This parameter is a private part of the implementation. It is not
+        part of the API
       in: path
-      name: Dog-name
+      name: Folder_implementaton_key
       required: true
       type: string
     patch:
-      description: Update a Person entity
+      description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
@@ -357,7 +308,7 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -372,73 +323,22 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people:
-    get:
+  /impl/{Spec_implementation_key}:
+    delete:
+      description: Delete a Spec
       responses:
         '200':
-          description: description
+          description: successful
           headers:
             Content-Location:
-              description: perma-link URL of collection
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
               type: string
           schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Person
-      responses:
-        '201':
-          description: Created new Person
-          headers:
-            Location:
-              description: perma-link URL of newly-created Person
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '303':
-          $ref: '#/responses/303'
+            $ref: '#/definitions/Spec'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -451,19 +351,23 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people/{Person-name}/dogs:
     get:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200':
-          description: description
+          description: successful
           headers:
             Content-Location:
-              description: perma-link URL of collection
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
               type: string
           schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
+            $ref: '#/definitions/Spec'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -475,7 +379,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve HEAD
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -506,23 +410,110 @@ paths:
         default:
           $ref: '#/responses/default'
     parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
+    - description: This parameter is a private part of the implementation. It is not
+        part of the API
       in: path
-      name: Person-name
+      name: Spec_implementaton_key
       required: true
       type: string
-    post:
-      description: Create a new Dog
+    patch:
+      description: Update a Spec entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
-        '201':
-          description: Created new Dog
+        '200':
+          description: successful
           headers:
-            Location:
-              description: perma-link URL of newly-created Dog
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+  /myHub:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Spec
+      responses:
+        '201':
+          description: Created new Spec
+          headers:
+            Location:
+              description: perma-link URL of newly-created Spec
+              type: string
+          schema:
+            x-oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
         '303':
           $ref: '#/responses/303'
         '400':
@@ -535,6 +526,194 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /sharedWithMe:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /{Spec-URL}/content:
+    delete:
+      description: Delete a Content
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies the URL of the Spec entity whose relationship is being
+        accessed
+      in: path
+      name: Spec-URL
+      required: true
+      type: string
+    put:
+      consumes:
+      - text/yaml
+      description: Create or Update a Content entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
 parameters:

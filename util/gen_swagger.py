@@ -24,6 +24,7 @@ class SwaggerGenerator(object):
         self.opts = opts
         self.opts_keys = [k for k,v in opts]
         self.yaml_merge = '--yaml-merge' in self.opts_keys or '-m' in self.opts_keys
+        self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
 
     def swagger_from_rapier(self, filename= None):
         if filename:
@@ -97,13 +98,10 @@ class SwaggerGenerator(object):
                             rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
                             sys.exit('error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name))
                         properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
-                if 'implementation_path' in entity_spec:
-                    implementation_path = entity_spec['implementation_path']
-                    implementation_template = '/%s{implementation_key}' % implementation_path
-                    rel_property_spec = {'target_entity': entity_name, 'multiplicity': '0:n', 'implementation_path': implementation_path}
-                    impl_rel_property_specs = [rel_property_spec]
-                    entity_interface =  self.get_entity_interface(impl_rel_property_specs)
-                    self.paths[implementation_template] = entity_interface
+                if self.include_impl and 'implementation_path' in entity_spec:
+                    implementation_path_spec = Implementation_path_spec(self.conventions, entity_spec['implementation_path'], entity_name)
+                    entity_interface =  self.get_entity_interface([implementation_path_spec])
+                    self.paths[implementation_path_spec.path_segment()] = entity_interface
                 if 'query_paths' in entity_spec:
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
@@ -142,6 +140,7 @@ class SwaggerGenerator(object):
             if 'property' in one_end:
                 p_spec = \
                     Rel_mv_property_spec(
+                        self.conventions,
                         one_end['property'],
                         one_end['entity'],
                         other_end['entity'],
@@ -582,42 +581,7 @@ class SwaggerGenerator(object):
         return {
             'properties': properties
             }
-   
-standard_entity_properties = {
-    '_self': {
-        'type': 'string'
-        }, 
-    'kind': {
-        'type': 'string'
-        }
-    }
-    
-standard_collection_properties = {
-    '_self': {
-        'type': 'string'
-        }, 
-    'kind': {
-        'type': 'string'
-        }
-    }
-    
-def as_list(value, separator = None):
-    if isinstance(value, basestring):
-        if separator:
-            result = [item.strip() for item in value.split(separator)]
-        else:
-            result = value.split()
-    else:
-        if isinstance(value, (list, tuple)):
-            result = value
-        else:
-            result = [value]
-    return result
-    
-def get_multiplicity(rel_property_spec):
-    multiplicity = rel_property_spec.get('multiplicity')
-    return multiplicity.split(':')[-1] if multiplicity else 1
-    
+
 class Path_spec(object):
             
     def build_param(self):
@@ -660,17 +624,18 @@ class Rel_sv_property_spec(Path_spec):
                 
 class Rel_mv_property_spec(Path_spec):
     
-    def __init__(self, property_name, source_entity, target_entity, rel_name, selector, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, selector, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
         self.rel_name = rel_name
         self.selector = selector 
         self.readonly = readonly 
+        self.conventions = conventions
 
     def path_segment(self, select_one_of_many = False):
         if select_one_of_many:
-            separator = ';' #if self.selector_location == 'path-parameter' else '/'
+            separator = '/' if self.conventions.get('selector_location') == 'path-parameter' else ';'
             return '%s%s{%s-%s}' % (self.property_name, separator, self.target_entity, self.selector)
         return self.property_name
         
@@ -701,7 +666,7 @@ class Rel_mv_property_spec(Path_spec):
     def __ne__(self, other):
         return not self.__eq__(other)
         
-class Well_known_URL_Spec(object):
+class Well_known_URL_Spec(Path_spec):
     
     def __init__(self, base_URL, target_entity):
         self.base_URL = base_URL 
@@ -712,6 +677,27 @@ class Well_known_URL_Spec(object):
 
     def build_param(self):
         return None        
+
+class Implementation_path_spec(Path_spec):
+
+    def __init__(self, conventions, implementation_path, target_entity):
+        self.implementation_path = implementation_path
+        self.target_entity = target_entity
+        self.conventions = conventions
+        
+    def path_segment(self, select_one_of_many = False):
+        separator = '/' if self.conventions.get('selector_location') == 'path-parameter' else ';'
+        return '%s%s{%s_implementation_key}' % (self.implementation_path, separator, self.target_entity)
+
+    def build_param(self):
+        return {
+            'name': '%s_implementaton_key' % self.target_entity,
+            'in': 'path',
+            'type': 'string',
+            'description':
+                "This parameter is a private part of the implementation. It is not part of the API",
+            'required': True
+            }
 
 class Entity_URL_spec(object):
     
@@ -730,14 +716,48 @@ class Entity_URL_spec(object):
                 "Specifies the URL of the %s entity whose relationship is being accessed" % self.target_entity,
             'required': True
             }
-
-
+   
+standard_entity_properties = {
+    '_self': {
+        'type': 'string'
+        }, 
+    'kind': {
+        'type': 'string'
+        }
+    }
+    
+standard_collection_properties = {
+    '_self': {
+        'type': 'string'
+        }, 
+    'kind': {
+        'type': 'string'
+        }
+    }
+    
+def as_list(value, separator = None):
+    if isinstance(value, basestring):
+        if separator:
+            result = [item.strip() for item in value.split(separator)]
+        else:
+            result = value.split()
+    else:
+        if isinstance(value, (list, tuple)):
+            result = value
+        else:
+            result = [value]
+    return result
+    
+def get_multiplicity(rel_property_spec):
+    multiplicity = rel_property_spec.get('multiplicity')
+    return multiplicity.split(':')[-1] if multiplicity else 1
+    
 def main(args):
     generator = SwaggerGenerator()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'ma', ['yaml-merge', 'yaml-alias'])
+        opts, args = getopt.getopt(sys.argv[1:], 'mai', ['yaml-merge', 'yaml-alias', 'include-impl'])
     except getopt.GetoptError as err:
-        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] filename'
+        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] filename'
         sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)

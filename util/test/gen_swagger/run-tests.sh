@@ -8,3 +8,4 @@ echo $ROOT_DIR
 ./rapier/util/gen_swagger.py rapier/util/test/dog-tracker.yaml > rapier/util/test/gen_swagger/swagger-dog-tracker.yaml
 ./rapier/util/gen_swagger.py rapier/util/test/property-tracker.yaml > rapier/util/test/gen_swagger/swagger-property-tracker.yaml
 ./rapier/util/gen_swagger.py rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub.yaml
+./rapier/util/gen_swagger.py -i rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml
