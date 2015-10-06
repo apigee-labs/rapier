@@ -19,7 +19,7 @@ definitions:
         type: string
   Item:
     properties:
-      _self: &id001
+      _self:
         type: string
       description:
         type: string
@@ -28,11 +28,12 @@ definitions:
         type: string
       id:
         type: string
-      kind: &id002
+      kind:
         type: string
   TodoList:
     properties:
-      _self: *id001
+      _self:
+        type: string
       items:
         format: URL
         type: string
@@ -40,7 +41,8 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Item'
-      kind: *id002
+      kind:
+        type: string
 info:
   title: TodoListAPI
   version: '0.1'
@@ -76,84 +78,90 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': &id003
-          <<: &id004
-            description: successful
-            headers:
-              Content-Location:
-                description: perma-link URL of resource
-                type: string
-              ETag:
-                description: this value must be echoed in the If-Match header of every
-                  PATCH
-                type: string
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
           schema:
             $ref: '#/definitions/TodoList'
-        <<:
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     head:
-      <<:
-        parameters:
-        - $ref: '#/parameters/Accept'
-        responses:
-          '200':
-            $ref: '#/responses/standard_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a TodoList
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     options:
-      <<:
-        parameters:
-        - $ref: '#/parameters/Access-Control-Request-Method'
-        - $ref: '#/parameters/Access-Control-Request-Headers'
-        responses:
-          '200':
-            $ref: '#/responses/options_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a TodoList
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a TodoList entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id003
-        <<:
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          '409':
-            $ref: '#/responses/409'
-          default:
-            $ref: '#/responses/default'
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/TodoList'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
   /to-dos/items:
     get:
       responses:
@@ -188,21 +196,20 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Item'
-        <<:
-          '303':
-            $ref: '#/responses/303'
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
 produces:
 - application/json
 responses:
@@ -257,6 +264,14 @@ responses:
       Access-Control-Max-Age:
         description: length of time response can be cached
         type: string
-  standard_200: *id004
+  standard_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+        type: string
 swagger: '2.0'
 

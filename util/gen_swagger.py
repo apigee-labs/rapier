@@ -703,7 +703,10 @@ def main(args):
     opts, args = getopt.getopt(args[1:], '', ['no-merge', 'no-alias'])
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
-    print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False), "'<<':", '<<:')
+    Dumper = yaml.SafeDumper
+    if '--no-alias' in [k for k,v in opts]:
+        Dumper.ignore_aliases = lambda self, data: True
+    print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
         
 if __name__ == "__main__":
     main(sys.argv)

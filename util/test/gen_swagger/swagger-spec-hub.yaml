@@ -20,7 +20,7 @@ definitions:
         type: string
   Folder:
     properties:
-      _self: &id001
+      _self:
         type: string
       contents:
         format: URL
@@ -31,7 +31,7 @@ definitions:
             one_of:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-      kind: &id002
+      kind:
         type: string
       name:
         type: string
@@ -46,8 +46,10 @@ definitions:
         type: array
   Hub:
     properties:
-      _self: *id001
-      kind: *id002
+      _self:
+        type: string
+      kind:
+        type: string
       myHub:
         format: URL
         type: string
@@ -68,7 +70,8 @@ definitions:
             - $ref: '#/definitions/Folder'
   Spec:
     properties:
-      _self: *id001
+      _self:
+        type: string
       content:
         format: URL
         type: string
@@ -83,7 +86,8 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-      kind: *id002
+      kind:
+        type: string
       name:
         type: string
       permissions:
@@ -130,9 +134,9 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': &id003
+        '200':
           description: successful
-          headers: &id005
+          headers:
             Content-Location:
               description: perma-link URL of resource
               type: string
@@ -142,21 +146,21 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Hub'
-        '401': &id007
+        '401':
           $ref: '#/responses/401'
-        '403': &id008
+        '403':
           $ref: '#/responses/403'
-        '404': &id009
+        '404':
           $ref: '#/responses/404'
-        '406': &id010
+        '406':
           $ref: '#/responses/406'
-        default: &id011
+        default:
           $ref: '#/responses/default'
     head:
       description: Retrieve a Hub
-      parameters: &id012
+      parameters:
       - $ref: '#/parameters/Accept'
-      responses: &id013
+      responses:
         '200':
           $ref: '#/responses/standard_200'
         '401':
@@ -169,10 +173,10 @@ paths:
           $ref: '#/responses/default'
     options:
       description: Retrieve a Hub
-      parameters: &id014
+      parameters:
       - $ref: '#/parameters/Access-Control-Request-Method'
       - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses: &id015
+      responses:
         '200':
           $ref: '#/responses/options_200'
         '401':
@@ -188,23 +192,34 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id003
-        '400': &id016
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Hub'
+        '400':
           $ref: '#/responses/400'
-        '401': &id017
+        '401':
           $ref: '#/responses/401'
-        '403': &id018
+        '403':
           $ref: '#/responses/403'
-        '404': &id019
+        '404':
           $ref: '#/responses/404'
-        '406': &id020
+        '406':
           $ref: '#/responses/406'
-        '409': &id021
+        '409':
           $ref: '#/responses/409'
-        default: &id022
+        default:
           $ref: '#/responses/default'
   /myHub:
-    get: &id004
+    get:
       responses:
         '200':
           description: description
@@ -252,14 +267,42 @@ paths:
         default:
           $ref: '#/responses/default'
   /sharedWithMe:
-    get: *id004
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
   /{Spec-URL}/content:
     delete:
       description: Delete a Content
       responses:
-        '200': &id006
+        '200':
           description: successful
-          headers: *id005
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
           schema:
             $ref: '#/definitions/Content'
         '400':
@@ -279,20 +322,59 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': *id006
-        '401': *id007
-        '403': *id008
-        '404': *id009
-        '406': *id010
-        default: *id011
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     head:
       description: Retrieve a Content
-      parameters: *id012
-      responses: *id013
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     options:
       description: Retrieve a Content
-      parameters: *id014
-      responses: *id015
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     parameters:
     - description: Specifies the URL of the Spec entity whose relationship is being
         accessed
@@ -307,7 +389,18 @@ paths:
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id006
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
         '201':
           description: Created new Content
           headers:
@@ -316,13 +409,20 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Content'
-        '400': *id016
-        '401': *id017
-        '403': *id018
-        '404': *id019
-        '406': *id020
-        '409': *id021
-        default: *id022
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
 produces:
 - application/yaml
 - text/yaml
@@ -382,6 +482,12 @@ responses:
         type: string
   standard_200:
     description: successful
-    headers: *id005
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+        type: string
 swagger: '2.0'
 

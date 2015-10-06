@@ -48,84 +48,90 @@ paths:
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
-        '200': &id001
-          <<: &id002
-            description: successful
-            headers:
-              Content-Location:
-                description: perma-link URL of resource
-                type: string
-              ETag:
-                description: this value must be echoed in the If-Match header of every
-                  PATCH
-                type: string
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
           schema:
             $ref: '#/definitions/HelloMessage'
-        <<:
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          default:
-            $ref: '#/responses/default'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     head:
-      <<:
-        parameters:
-        - $ref: '#/parameters/Accept'
-        responses:
-          '200':
-            $ref: '#/responses/standard_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a HelloMessage
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     options:
-      <<:
-        parameters:
-        - $ref: '#/parameters/Access-Control-Request-Method'
-        - $ref: '#/parameters/Access-Control-Request-Headers'
-        responses:
-          '200':
-            $ref: '#/responses/options_200'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          default:
-            $ref: '#/responses/default'
       description: Retrieve a HelloMessage
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a HelloMessage entity
       parameters:
       - $ref: '#/parameters/If-Match'
       responses:
-        '200': *id001
-        <<:
-          '400':
-            $ref: '#/responses/400'
-          '401':
-            $ref: '#/responses/401'
-          '403':
-            $ref: '#/responses/403'
-          '404':
-            $ref: '#/responses/404'
-          '406':
-            $ref: '#/responses/406'
-          '409':
-            $ref: '#/responses/409'
-          default:
-            $ref: '#/responses/default'
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/HelloMessage'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
 produces:
 - application/json
 responses:
@@ -180,6 +186,14 @@ responses:
       Access-Control-Max-Age:
         description: length of time response can be cached
         type: string
-  standard_200: *id002
+  standard_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+        type: string
 swagger: '2.0'
 
