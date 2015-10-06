@@ -249,6 +249,129 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+  /dog-tracker/dogs/{Dog-name}:
+    delete:
+      description: Delete a Dog
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
+      in: path
+      name: Dog-name
+      required: true
+      type: string
+    patch:
+      description: Update a Dog entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
   /dog-tracker/dogs/{Dog-name}/owner:
     delete:
       description: Delete a Person
@@ -449,6 +572,130 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+  /dog-tracker/people/{Person-name}:
+    delete:
+      description: Delete a Person
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    get:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person-name
+      required: true
+      type: string
+    patch:
+      description: Update a Person entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
   /dog-tracker/people/{Person-name}/dogs:

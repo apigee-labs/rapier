@@ -187,11 +187,10 @@ class SwaggerGenerator(object):
         path = '/'.join([rel_property_spec.path_segment(inx != (len(rel_property_spec_stack)-1)) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
         if path not in self.paths:
             if multivalued:
-                path_spec = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
-                self.paths[path] = path_spec
-            else:
-                path_spec = self.build_entity_interface(rel_property_spec_stack)
-                self.paths[path] = path_spec
+                self.paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
+            if not multivalued or rel_property_spec.selector:
+                path = '/'.join([rel_property_spec.path_segment(True) for rel_property_spec in rel_property_spec_stack])
+                self.paths[path] = self.build_entity_interface(rel_property_spec_stack)
             
     def get_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
         rel_property_spec = rel_property_spec_stack[-1]
@@ -696,7 +695,7 @@ class Implementation_path_spec(Path_spec):
 
     def build_param(self):
         return {
-            'name': 'implementaton_key',
+            'name': 'implementation_key',
             'in': 'path',
             'type': 'string',
             'description': 'This parameter is a private part of the implementation. It is not part of the API',

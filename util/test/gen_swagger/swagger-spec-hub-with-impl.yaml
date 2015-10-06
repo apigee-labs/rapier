@@ -293,7 +293,7 @@ paths:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
       in: path
-      name: implementaton_key
+      name: implementation_key
       required: true
       type: string
     patch:
