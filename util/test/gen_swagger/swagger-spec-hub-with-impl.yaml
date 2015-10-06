@@ -562,7 +562,7 @@ paths:
       - text/yaml
       description: Create or Update a Content entity
       parameters:
-      - $ref: '#/parameters/If-Match'
+      - $ref: '#/parameters/Sometimes-If-Match'
       responses:
         '200':
           description: successful
@@ -622,6 +622,12 @@ parameters:
     in: header
     name: If-Match
     required: true
+    type: string
+  Sometimes-If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: false
     type: string
 responses:
   '303':

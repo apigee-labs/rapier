@@ -249,7 +249,7 @@ class SwaggerGenerator(object):
         update_verb = 'patch' if structured else 'put'
         path_spec[update_verb] = {
             'description': ('Update %s %s entity' if structured else 'Create or Update %s %s entity') % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
-            'parameters': [{'$ref': '#/parameters/If-Match'}],
+            'parameters': [{'$ref': '#/parameters/%sIf-Match' % ('' if update_verb == 'patch' else 'Sometimes-')}],
             'responses': { 
                 '200': response_200
                 }
@@ -338,7 +338,6 @@ class SwaggerGenerator(object):
         else:
             path_spec['options']['<<'] = self.methods['options']
             
-
         parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
         if parameters:
             path_spec['parameters'] = parameters
@@ -541,6 +540,13 @@ class SwaggerGenerator(object):
                 'type': 'string',
                 'description': 'specifies the last known ETag value of the resource being modified',
                 'required': True
+                },
+            'Sometimes-If-Match': {
+                'name': 'If-Match',
+                'in': 'header',
+                'type': 'string',
+                'description': 'specifies the last known ETag value of the resource being modified',
+                'required': False
                 },
             'Accept': {
                 'name': 'Accept',
