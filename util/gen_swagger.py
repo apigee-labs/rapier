@@ -1,3 +1,5 @@
+#!/usr/bin/env python 
+
 import yaml, sys, getopt
 
 class SwaggerGenerator(object):
@@ -718,7 +720,7 @@ def main(args):
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'ma', ['yaml-merge', 'yaml-alias'])
     except getopt.GetoptError as err:
-        usage = '\ngen_swagger [--yaml-merge] [--yaml-alias] filename'
+        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] filename'
         sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
