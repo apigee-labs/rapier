@@ -1,4 +1,10 @@
+swagger: '2.0'
+info:
+  title: DogTrackerAPI
+  version: '0.1'
 consumes:
+- application/json
+produces:
 - application/json
 definitions:
   Collection:
@@ -73,34 +79,6 @@ definitions:
         type: string
       name:
         type: string
-info:
-  title: DogTrackerAPI
-  version: '0.1'
-parameters:
-  Accept:
-    description: specifies the requested media type - required
-    in: header
-    name: Accept
-    required: true
-    type: string
-  Access-Control-Request-Headers:
-    description: specifies the custom headers the client wishes to use
-    in: header
-    name: Access-Control-Request-Headers
-    required: true
-    type: string
-  Access-Control-Request-Method:
-    description: specifies the method the client wishes to use
-    in: header
-    name: Access-Control-Request-Method
-    required: true
-    type: string
-  If-Match:
-    description: specifies the last known ETag value of the resource being modified
-    in: header
-    name: If-Match
-    required: true
-    type: string
 paths:
   /dog-tracker:
     get:
@@ -559,8 +537,31 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-produces:
-- application/json
+parameters:
+  Accept:
+    description: specifies the requested media type - required
+    in: header
+    name: Accept
+    required: true
+    type: string
+  Access-Control-Request-Headers:
+    description: specifies the custom headers the client wishes to use
+    in: header
+    name: Access-Control-Request-Headers
+    required: true
+    type: string
+  Access-Control-Request-Method:
+    description: specifies the method the client wishes to use
+    in: header
+    name: Access-Control-Request-Method
+    required: true
+    type: string
+  If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: true
+    type: string
 responses:
   '303':
     description: See other. Server is redirecting client to a different resource
@@ -622,5 +623,4 @@ responses:
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH
         type: string
-swagger: '2.0'
 

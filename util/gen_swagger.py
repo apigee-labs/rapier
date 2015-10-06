@@ -1,23 +1,20 @@
 #!/usr/bin/env python 
 
 import yaml, sys, getopt
+from collections import OrderedDict
+
+class SwaggerList(list):
+    def sort(self, *args, **kwargs):
+        pass
+
+class SwaggerOrderedDict(OrderedDict):
+    def items(self, *args, **kwargs):
+        return SwaggerList(OrderedDict.items(self, *args, **kwargs))
 
 class SwaggerGenerator(object):
 
     def __init__(self):
-        self.swagger = {
-            'swagger': '2.0'
-            }
-        self.paths = dict()
-        self.definitions = self.build_error_definitions()
-        self.swagger['definitions'] = self.definitions
-        self.responses = self.build_standard_responses()
-        self.swagger['responses'] = self.responses
-        self.header_parameters = self.build_standard_header_parameters()
-        self.swagger['parameters'] = self.header_parameters
-        self.entity_specs = {}
-        self.response_sets = self.build_standard_response_sets()
-        self.methods = self.build_standard_methods()
+        pass
 
     def set_rapier_spec_from_filename(self, filename):
         with open(filename) as f:
@@ -38,17 +35,30 @@ class SwaggerGenerator(object):
             print 'error: invalid value for selector_location: %s' % self.selector_location
             return None
         patterns = spec.get('patterns')
-        self.swagger['info'] = {}
-        self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
-        self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-        if 'produces' in spec:
-            self.swagger['produces'] = as_list(spec.get('produces'))
-        else:
-            self.swagger['produces'] = ['application/json']
+        self.swagger = SwaggerOrderedDict()
+        self.swagger['swagger'] = '2.0'
+        self.swagger['info'] = dict()
+        self.paths = dict()
         if 'consumes' in spec:
             self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
             self.swagger['consumes'] = ['application/json']
+        if 'produces' in spec:
+            self.swagger['produces'] = as_list(spec.get('produces'))
+        else:
+            self.swagger['produces'] = ['application/json']
+        self.definitions = self.build_error_definitions()
+        self.swagger['definitions'] = self.definitions
+        self.responses = self.build_standard_responses()
+        self.swagger['paths'] = self.paths
+        self.header_parameters = self.build_standard_header_parameters()
+        self.swagger['parameters'] = self.header_parameters
+        self.swagger['responses'] = self.responses
+        self.entity_specs = {}
+        self.response_sets = self.build_standard_response_sets()
+        self.methods = self.build_standard_methods()
+        self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
+        self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
         self.standard_entity_properties = self.conventions['standard_entity_properties'] if 'standard_entity_properties' in self.conventions else standard_entity_properties
         self.standard_collection_properties = self.conventions['standard_collection_properties'] if 'standard_collection_properties' in self.conventions else standard_collection_properties
 
@@ -67,7 +77,7 @@ class SwaggerGenerator(object):
                         sys.exit('error: unstructured entities must not have properties')
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
-                    paths = self.swagger.setdefault('paths', self.paths)
+                    paths = self.swagger['paths']
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         paths[well_known_URL] = self.get_entity_interface([Well_known_URL_Spec(well_known_URL, entity_name)])
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
@@ -728,6 +738,7 @@ def main(args):
     opts_keys = [k for k,v in opts]
     if '--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
+    Dumper.add_representer(SwaggerOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
         
 if __name__ == "__main__":

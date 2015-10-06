@@ -1,7 +1,7 @@
 title: SpecHubAPI
 version: "0.1"
-consumes: application/json
-produces: application/yaml text/yaml application/json text/html
+consumes: application/json text/yaml 
+produces: text/yaml application/json text/html
 conventions:
     selector_location: path-parameter
 entities:
