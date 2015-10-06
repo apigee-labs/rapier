@@ -295,19 +295,25 @@ class SwaggerGenerator(object):
         path_spec = dict()
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
-        schema = self.global_definition_ref(entity_name) if len(rel_property_specs) == 1 else \
-            {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]}
+        if len(rel_property_specs) > 1:
+            schema = {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]}
+            i201_description = 'Created new (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
+            location_desciption =  'perma-link URL of newly-created (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
+        else:    
+            schema = self.global_definition_ref(entity_name)
+            i201_description = 'Created new %s' % entity_name
+            location_desciption = 'perma-link URL of newly-created %s'  % entity_name
         if not rel_property_spec.readonly:
             path_spec['post'] = {
                 'description': 'Create a new %s' % entity_name,
                 'responses': {
                     '201': {
-                        'description': 'Created new %s' % entity_name,
+                        'description': i201_description,
                         'schema': schema,
                         'headers': {
                             'Location': {
                                 'type': 'string',
-                                'description': 'perma-link URL of newly-created %s'  % entity_name
+                                'description': location_desciption
                                 }
                             }
                         }

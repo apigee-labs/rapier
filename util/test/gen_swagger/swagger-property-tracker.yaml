@@ -1148,10 +1148,10 @@ paths:
       description: Create a new Dog
       responses:
         '201':
-          description: Created new Dog
+          description: Created new (Dog | Bicycle)
           headers:
             Location:
-              description: perma-link URL of newly-created Dog
+              description: perma-link URL of newly-created (Dog | Bicycle)
               type: string
           schema:
             x-oneOf:
@@ -1439,10 +1439,10 @@ paths:
       description: Create a new Dog
       responses:
         '201':
-          description: Created new Dog
+          description: Created new (Dog | Bicycle)
           headers:
             Location:
-              description: perma-link URL of newly-created Dog
+              description: perma-link URL of newly-created (Dog | Bicycle)
               type: string
           schema:
             x-oneOf:

@@ -257,10 +257,10 @@ paths:
       description: Create a new Spec
       responses:
         '201':
-          description: Created new Spec
+          description: Created new (Spec | Folder)
           headers:
             Location:
-              description: perma-link URL of newly-created Spec
+              description: perma-link URL of newly-created (Spec | Folder)
               type: string
           schema:
             x-oneOf:
