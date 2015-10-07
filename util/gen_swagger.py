@@ -3,13 +3,13 @@
 import yaml, sys, getopt
 from collections import OrderedDict
 
-class SwaggerList(list):
+class PresortedList(list):
     def sort(self, *args, **kwargs):
         pass
 
-class SwaggerOrderedDict(OrderedDict):
+class PresortedOrderedDict(OrderedDict):
     def items(self, *args, **kwargs):
-        return SwaggerList(OrderedDict.items(self, *args, **kwargs))
+        return PresortedList(OrderedDict.items(self, *args, **kwargs))
 
 class SwaggerGenerator(object):
 
@@ -36,7 +36,7 @@ class SwaggerGenerator(object):
             print 'error: invalid value for selector_location: %s' % self.selector_location
             return None
         patterns = spec.get('patterns')
-        self.swagger = SwaggerOrderedDict()
+        self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
         self.swagger['info'] = dict()
         self.paths = dict()
@@ -813,7 +813,7 @@ def main(args):
     opts_keys = [k for k,v in opts]
     if '--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
-    Dumper.add_representer(SwaggerOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
+    Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
         
 if __name__ == "__main__":
