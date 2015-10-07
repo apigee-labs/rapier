@@ -377,12 +377,6 @@ parameters:
     name: If-Match
     required: true
     type: string
-  Sometimes-If-Match:
-    description: specifies the last known ETag value of the resource being modified
-    in: header
-    name: If-Match
-    required: false
-    type: string
 responses:
   '303':
     description: See other. Server is redirecting client to a different resource

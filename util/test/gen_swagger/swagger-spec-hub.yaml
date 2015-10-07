@@ -273,6 +273,7 @@ paths:
               description: perma-link URL of newly-created (Spec | Folder)
               type: string
           schema:
+            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
@@ -442,7 +443,7 @@ paths:
       - text/yaml
       description: Create or Update a Content entity
       parameters:
-      - $ref: '#/parameters/Sometimes-If-Match'
+      - $ref: '#/parameters/Put-If-Match'
       responses:
         '200':
           description: successful
@@ -503,7 +504,7 @@ parameters:
     name: If-Match
     required: true
     type: string
-  Sometimes-If-Match:
+  Put-If-Match:
     description: specifies the last known ETag value of the resource being modified
     in: header
     name: If-Match

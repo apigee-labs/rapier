@@ -1182,6 +1182,7 @@ paths:
               description: perma-link URL of newly-created (Dog | Bicycle)
               type: string
           schema:
+            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
@@ -1485,6 +1486,7 @@ paths:
               description: perma-link URL of newly-created (Dog | Bicycle)
               type: string
           schema:
+            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
@@ -1526,12 +1528,6 @@ parameters:
     in: header
     name: If-Match
     required: true
-    type: string
-  Sometimes-If-Match:
-    description: specifies the last known ETag value of the resource being modified
-    in: header
-    name: If-Match
-    required: false
     type: string
 responses:
   '303':

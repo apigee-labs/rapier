@@ -210,11 +210,11 @@ class SwaggerGenerator(object):
         else:
             consumes = None                      
         structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
-        schema = {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]} if len(rel_property_specs) > 1 else \
-                 self.global_definition_ref(entity_name)
         response_200 = {
-            'schema': schema
+            'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
             }
+        if len(rel_property_specs) > 1:
+            response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
         if not self.yaml_merge:
             response_200.update(self.responses.get('standard_200'))
         else:
@@ -245,11 +245,21 @@ class SwaggerGenerator(object):
             path_spec['options'].update(self.methods['options'])
         else:
             path_spec['options']['<<'] = self.methods['options']
-            
-        update_verb = 'patch' if structured else 'put'
+        
+        article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
+        if structured:
+            update_verb = 'patch'
+            description = 'Update %s %s entity'
+            parameter_ref = '#/parameters/If-Match'
+        else:
+            update_verb = 'put'
+            description = 'Create or Update %s %s entity'
+            self.define_put_if_match_header()
+            parameter_ref = '#/parameters/Put-If-Match'
+        description = description % (article, entity_name)
         path_spec[update_verb] = {
-            'description': ('Update %s %s entity' if structured else 'Create or Update %s %s entity') % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
-            'parameters': [{'$ref': '#/parameters/%sIf-Match' % ('' if update_verb == 'patch' else 'Sometimes-')}],
+            'description': description,
+            'parameters': [{'$ref': parameter_ref}],
             'responses': { 
                 '200': response_200
                 }
@@ -296,7 +306,8 @@ class SwaggerGenerator(object):
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         if len(rel_property_specs) > 1:
-            schema = {'x-oneOf': [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]}
+            schema = self.global_definition_ref('Entity')
+            schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
             i201_description = 'Created new (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
             location_desciption =  'perma-link URL of newly-created (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
             body_desciption =  'The representation of the new (%s) being created' % ' | '.join([spec.target_entity for spec in rel_property_specs])
@@ -542,6 +553,16 @@ class SwaggerGenerator(object):
             'Entity': self.build_entity_definition()
             }
             
+    def define_put_if_match_header(self):
+        if not 'Put-If-Match' in self.header_parameters:
+            self.header_parameters['Put-If-Match'] = {
+                'name': 'If-Match',
+                'in': 'header',
+                'type': 'string',
+                'description': 'specifies the last known ETag value of the resource being modified',
+                'required': False
+                }
+    
     def build_standard_header_parameters(self):
         return {
             'If-Match': {
@@ -550,13 +571,6 @@ class SwaggerGenerator(object):
                 'type': 'string',
                 'description': 'specifies the last known ETag value of the resource being modified',
                 'required': True
-                },
-            'Sometimes-If-Match': {
-                'name': 'If-Match',
-                'in': 'header',
-                'type': 'string',
-                'description': 'specifies the last known ETag value of the resource being modified',
-                'required': False
                 },
             'Accept': {
                 'name': 'Accept',
