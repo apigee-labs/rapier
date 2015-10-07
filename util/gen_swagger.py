@@ -69,13 +69,14 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 definition = {}
                 self.definitions[entity_name] = definition
-                structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+                structured = 'type' not in entity_spec
                 if structured:
                     definition['properties'] = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
                     definition['properties'].update(self.standard_entity_properties)
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')
+                    definition['type'] = entity_spec['type']
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     paths = self.swagger['paths']
@@ -85,7 +86,7 @@ class SwaggerGenerator(object):
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
                     properties = definition.setdefault('properties',dict())
-                    structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+                    structured = 'type' not in entity_spec
                     rel_prop_spec_dict = {}
                     for rel_property_spec in rel_property_specs:
                         rel_prop_name = rel_property_spec.property_name
@@ -95,8 +96,8 @@ class SwaggerGenerator(object):
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
                         if not structured:
-                            rel_name = {rel_property_spec['rel_name'] for rel_property_spec in rel_property_specs if rel_property_spec['property_name'] == rel_prop_name}.pop()
-                            sys.exit('error: unstructured entity cannot have property named %s in relationship %s' % (rel_prop_name, rel_name))
+                            rel_name = {rel_property_spec.property_name for rel_property_spec in rel_property_specs if rel_property_spec.property_name == rel_prop_name}.pop()
+                            sys.exit('error: unstructured entity cannot have property named %s in relationship %s: %s' % (rel_prop_name, rel_name, str(entity_spec)))
                         properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                 if self.include_impl and 'implementation_path' in entity_spec:
                     implementation_path_spec = Implementation_path_spec(self.conventions, entity_spec['implementation_path'], entity_name)
@@ -209,7 +210,7 @@ class SwaggerGenerator(object):
             consumes = as_list(entity_spec['consumes'])
         else:
             consumes = None                      
-        structured = 'content_type' not in entity_spec or entity_spec['content_type'] == 'structured'
+        structured = 'type' not in entity_spec
         response_200 = {
             'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
             }

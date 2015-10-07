@@ -22,7 +22,8 @@ definitions:
         type: array
       kind:
         type: string
-  Content: {}
+  Content:
+    type: string
   Entity:
     properties:
       kind:

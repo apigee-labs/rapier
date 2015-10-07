@@ -38,7 +38,7 @@ entities:
                         operation:
                             type: string
     Content:
-        content_type: text
+        type: string
         consumes: text/yaml
 relationships:
     hub-to-my-folder:
