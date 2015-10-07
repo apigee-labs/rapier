@@ -170,37 +170,6 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     patch:
       description: Update a PropertyTracker entity
       parameters:
@@ -232,31 +201,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /bicycles:
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
-      description: Retrieve HEAD
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -284,6 +230,29 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /bicycles:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     post:
@@ -317,63 +286,8 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle-name}:
-    delete:
-      description: Delete a Bicycle
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Bicycle'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve a Bicycle
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Bicycle'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
-      description: retrieve HEAD
+      description: Retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -403,6 +317,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /bicycles;{Bicycle-name}:
     parameters:
     - description: Specifies which 'Bicycle' entity from multi-valued relationship
         'bicycles'
@@ -410,6 +325,33 @@ paths:
       name: Bicycle-name
       required: true
       type: string
+    get:
+      description: Retrieve a Bicycle
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Bicycle'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a Bicycle entity
       parameters:
@@ -441,9 +383,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle-name}/owner:
     delete:
-      description: Delete an Institution
+      description: Delete a Bicycle
       responses:
         '200':
           description: successful
@@ -456,36 +397,9 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Bicycle'
         '400':
           $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve an Institution
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Institution'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -527,6 +441,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /bicycles;{Bicycle-name}/owner:
     parameters:
     - description: Specifies which 'Bicycle' entity from multi-valued relationship
         'bicycles'
@@ -534,6 +449,33 @@ paths:
       name: Bicycle-name
       required: true
       type: string
+    get:
+      description: Retrieve an Institution
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update an Institution entity
       parameters:
@@ -565,19 +507,23 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dogs:
-    get:
+    delete:
+      description: Delete an Institution
       responses:
         '200':
-          description: description
+          description: successful
           headers:
             Content-Location:
-              description: perma-link URL of collection
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
               type: string
           schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
+            $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -589,7 +535,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve HEAD
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -617,6 +563,29 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /dogs:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     post:
@@ -650,63 +619,8 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}:
-    delete:
-      description: Delete a Dog
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve a Dog
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
-      description: retrieve HEAD
+      description: Retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -736,12 +650,40 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /dogs;{Dog-name}:
     parameters:
     - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
       in: path
       name: Dog-name
       required: true
       type: string
+    get:
+      description: Retrieve a Dog
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a Dog entity
       parameters:
@@ -773,9 +715,8 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}/owner:
     delete:
-      description: Delete an Institution
+      description: Delete a Dog
       responses:
         '200':
           description: successful
@@ -788,36 +729,9 @@ paths:
                 PATCH
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Dog'
         '400':
           $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve an Institution
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Institution'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -859,12 +773,40 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /dogs;{Dog-name}/owner:
     parameters:
     - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
       in: path
       name: Dog-name
       required: true
       type: string
+    get:
+      description: Retrieve an Institution
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update an Institution entity
       parameters:
@@ -896,19 +838,23 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /institutions:
-    get:
+    delete:
+      description: Delete an Institution
       responses:
         '200':
-          description: description
+          description: successful
           headers:
             Content-Location:
-              description: perma-link URL of collection
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
               type: string
           schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
+            $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -920,7 +866,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve HEAD
+      description: retrieve HEAD
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -948,6 +894,29 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /institutions:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     post:
@@ -981,9 +950,76 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   /institutions;{Institution-name}:
-    delete:
-      description: Delete an Institution
+    parameters:
+    - description: Specifies which 'Institution' entity from multi-valued relationship
+        'institutions'
+      in: path
+      name: Institution-name
+      required: true
+      type: string
+    get:
+      description: Retrieve an Institution
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update an Institution entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200':
           description: successful
@@ -1007,12 +1043,12 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-    get:
-      description: Retrieve an Institution
-      parameters:
-      - $ref: '#/parameters/Accept'
+    delete:
+      description: Delete an Institution
       responses:
         '200':
           description: successful
@@ -1026,6 +1062,8 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1067,6 +1105,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /institutions;{Institution-name}/assets:
     parameters:
     - description: Specifies which 'Institution' entity from multi-valued relationship
         'institutions'
@@ -1074,38 +1113,6 @@ paths:
       name: Institution-name
       required: true
       type: string
-    patch:
-      description: Update an Institution entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Institution'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-  /institutions;{Institution-name}/assets:
     get:
       responses:
         '200':
@@ -1128,44 +1135,6 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    parameters:
-    - description: Specifies which 'Institution' entity from multi-valued relationship
-        'institutions'
-      in: path
-      name: Institution-name
-      required: true
-      type: string
     post:
       description: Create a new Dog
       parameters:
@@ -1200,29 +1169,6 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-  /people:
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
       parameters:
@@ -1252,6 +1198,29 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /people:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     post:
@@ -1285,9 +1254,76 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   /people;{Person-name}:
-    delete:
-      description: Delete a Person
+    parameters:
+    - description: Specifies which 'Person' entity from multi-valued relationship
+        'people'
+      in: path
+      name: Person-name
+      required: true
+      type: string
+    get:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update a Person entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
       responses:
         '200':
           description: successful
@@ -1311,12 +1347,12 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-    get:
-      description: Retrieve a Person
-      parameters:
-      - $ref: '#/parameters/Accept'
+    delete:
+      description: Delete a Person
       responses:
         '200':
           description: successful
@@ -1330,6 +1366,8 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1371,6 +1409,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /people;{Person-name}/possessions:
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -1378,38 +1417,6 @@ paths:
       name: Person-name
       required: true
       type: string
-    patch:
-      description: Update a Person entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-  /people;{Person-name}/possessions:
     get:
       responses:
         '200':
@@ -1422,6 +1429,40 @@ paths:
             $ref: '#/definitions/Collection'
         '303':
           $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Dog
+      parameters:
+      - description: The representation of the new (Dog | Bicycle) being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Entity'
+      responses:
+        '201':
+          description: Created new (Dog | Bicycle)
+          headers:
+            Location:
+              description: perma-link URL of newly-created (Dog | Bicycle)
+              type: string
+          schema:
+            $ref: '#/definitions/Entity'
+            x-oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1461,47 +1502,6 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
-      required: true
-      type: string
-    post:
-      description: Create a new Dog
-      parameters:
-      - description: The representation of the new (Dog | Bicycle) being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Entity'
-      responses:
-        '201':
-          description: Created new (Dog | Bicycle)
-          headers:
-            Location:
-              description: perma-link URL of newly-created (Dog | Bicycle)
-              type: string
-          schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
 parameters:

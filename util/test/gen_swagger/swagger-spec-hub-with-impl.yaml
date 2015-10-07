@@ -141,37 +141,6 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
     patch:
       description: Update a Hub entity
       parameters:
@@ -203,67 +172,6 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
-  /impl/{implementation_key}:
-    delete:
-      description: Delete a Spec
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    get:
-      description: Retrieve a Spec
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
       description: retrieve HEAD
       parameters:
@@ -295,6 +203,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /impl/{implementation_key}:
+    x-description: This path is NOT part of the API. It is used in the implementaton
+      and may be important to implementation-aware software, such as proxies or specification-driven
+      implementations.
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -302,6 +214,36 @@ paths:
       name: implementation_key
       required: true
       type: string
+    get:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Entity'
+            x-oneOf:
+            - $ref: '#/definitions/Folder'
+            - $ref: '#/definitions/Spec'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
     patch:
       description: Update a Spec entity
       parameters:
@@ -336,6 +278,67 @@ paths:
           $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
+    delete:
+      description: Delete a Spec
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Entity'
+            x-oneOf:
+            - $ref: '#/definitions/Folder'
+            - $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   /myHub:
     get:
       responses:
@@ -349,6 +352,40 @@ paths:
             $ref: '#/definitions/Collection'
         '303':
           $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Spec
+      parameters:
+      - description: The representation of the new (Spec | Folder) being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Entity'
+      responses:
+        '201':
+          description: Created new (Spec | Folder)
+          headers:
+            Location:
+              description: perma-link URL of newly-created (Spec | Folder)
+              type: string
+          schema:
+            $ref: '#/definitions/Entity'
+            x-oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
+        '303':
+          $ref: '#/responses/303'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -388,40 +425,6 @@ paths:
           $ref: '#/responses/403'
         '404':
           $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Spec
-      parameters:
-      - description: The representation of the new (Spec | Folder) being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Entity'
-      responses:
-        '201':
-          description: Created new (Spec | Folder)
-          headers:
-            Location:
-              description: perma-link URL of newly-created (Spec | Folder)
-              type: string
-          schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
-        '303':
-          $ref: '#/responses/303'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
   /sharedWithMe:
@@ -479,33 +482,13 @@ paths:
         default:
           $ref: '#/responses/default'
   /{Spec-URL}/content:
-    delete:
-      description: Delete a Content
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH
-              type: string
-          schema:
-            $ref: '#/definitions/Content'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
+    parameters:
+    - description: Specifies the URL of the Spec entity whose relationship is being
+        accessed
+      in: path
+      name: Spec-URL
+      required: true
+      type: string
     get:
       description: Retrieve a Content
       parameters:
@@ -533,44 +516,6 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    parameters:
-    - description: Specifies the URL of the Spec entity whose relationship is being
-        accessed
-      in: path
-      name: Spec-URL
-      required: true
-      type: string
     put:
       consumes:
       - text/yaml
@@ -610,6 +555,64 @@ paths:
           $ref: '#/responses/406'
         '409':
           $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Content
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
 parameters:

@@ -219,7 +219,14 @@ class SwaggerGenerator(object):
             response_200.update(self.responses.get('standard_200'))
         else:
             response_200['<<'] = self.responses.get('standard_200')
-        path_spec = {}
+        path_spec = PresortedOrderedDict()
+        root_property_spec = rel_property_spec_stack[0]
+        x_description = root_property_spec.x_description()
+        if x_description:
+            path_spec['x-description'] = x_description
+        parameters = self.build_parameters(rel_property_spec_stack)
+        if parameters:
+            path_spec['parameters'] = parameters
         path_spec['get'] = {
                 'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
@@ -231,21 +238,6 @@ class SwaggerGenerator(object):
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
-        path_spec['head'] = {
-                'description': 'retrieve HEAD'
-                }
-        if not self.yaml_merge:
-            path_spec['head'].update(self.methods['head'])
-        else:
-            path_spec['head']['<<'] = self.methods['head']
-        path_spec['options'] = {
-                'description': 'Retrieve OPTIONS',
-               }
-        if not self.yaml_merge:
-            path_spec['options'].update(self.methods['options'])
-        else:
-            path_spec['options']['<<'] = self.methods['options']
-        
         article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
         if structured:
             update_verb = 'patch'
@@ -293,16 +285,30 @@ class SwaggerGenerator(object):
                 path_spec['delete']['responses'].update(self.response_sets['delete_responses'])
             else:
                 path_spec['delete']['responses']['<<'] = self.response_sets['delete_responses']
-        parameters = self.build_parameters(rel_property_spec_stack)
-        if parameters:
-            path_spec['parameters'] = parameters
+        path_spec['head'] = {
+                'description': 'retrieve HEAD'
+                }
+        if not self.yaml_merge:
+            path_spec['head'].update(self.methods['head'])
+        else:
+            path_spec['head']['<<'] = self.methods['head']
+        path_spec['options'] = {
+                'description': 'Retrieve OPTIONS',
+               }
+        if not self.yaml_merge:
+            path_spec['options'].update(self.methods['options'])
+        else:
+            path_spec['options']['<<'] = self.methods['options']        
         return path_spec
 
     def build_relationship_interface(self, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1]
         relationship_name = rel_property_spec.property_name
         entity_name = rel_property_spec.target_entity
-        path_spec = dict()
+        path_spec = PresortedOrderedDict()
+        parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
+        if parameters:
+            path_spec['parameters'] = parameters
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         if len(rel_property_specs) > 1:
@@ -356,11 +362,7 @@ class SwaggerGenerator(object):
         if not self.yaml_merge:
             path_spec['options'].update(self.methods['options'])
         else:
-            path_spec['options']['<<'] = self.methods['options']
-            
-        parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
-        if parameters:
-            path_spec['parameters'] = parameters
+            path_spec['options']['<<'] = self.methods['options']            
         return path_spec
         
     def build_standard_response_sets(self):
@@ -653,6 +655,9 @@ class Path_spec(object):
     def __repr__(self):
         return repr(self.__dict__)
         
+    def x_description(self):
+        return None
+        
 class Rel_sv_property_spec(Path_spec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, readonly=False):
@@ -746,8 +751,12 @@ class Implementation_path_spec(Path_spec):
             'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'required': True
             }
+            
+    def x_description(self):
+        return 'This path is NOT part of the API. It is used in the implementaton and may be ' \
+            'important to implementation-aware software, such as proxies or specification-driven implementations.'
 
-class Entity_URL_spec(object):
+class Entity_URL_spec(Path_spec):
     
     def __init__(self, target_entity):
         self.target_entity = target_entity
