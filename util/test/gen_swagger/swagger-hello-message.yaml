@@ -38,7 +38,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/HelloMessage'
@@ -65,7 +65,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/HelloMessage'
@@ -199,5 +199,6 @@ responses:
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
         type: string
 

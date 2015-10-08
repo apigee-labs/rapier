@@ -68,7 +68,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/TodoList'
@@ -95,7 +95,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/TodoList'
@@ -252,7 +252,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -279,7 +279,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -308,7 +308,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -440,5 +440,6 @@ responses:
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
         type: string
 

@@ -128,7 +128,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Hub'
@@ -155,7 +155,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Hub'
@@ -370,7 +370,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -399,7 +399,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -436,7 +436,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -574,5 +574,6 @@ responses:
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
         type: string
 

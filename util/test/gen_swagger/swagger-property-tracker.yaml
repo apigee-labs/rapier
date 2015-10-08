@@ -156,7 +156,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/PropertyTracker'
@@ -183,7 +183,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/PropertyTracker'
@@ -341,7 +341,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Bicycle'
@@ -368,7 +368,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Bicycle'
@@ -397,7 +397,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Bicycle'
@@ -465,7 +465,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -492,7 +492,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -521,7 +521,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -676,7 +676,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Dog'
@@ -703,7 +703,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Dog'
@@ -732,7 +732,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Dog'
@@ -799,7 +799,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -826,7 +826,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -855,7 +855,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -1011,7 +1011,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -1038,7 +1038,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -1067,7 +1067,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Institution'
@@ -1321,7 +1321,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Person'
@@ -1348,7 +1348,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Person'
@@ -1377,7 +1377,7 @@ paths:
               type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
-                PATCH
+                PATCH or PUT
               type: string
           schema:
             $ref: '#/definitions/Person'
@@ -1607,5 +1607,6 @@ responses:
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
         type: string
 

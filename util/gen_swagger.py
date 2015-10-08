@@ -465,7 +465,7 @@ class SwaggerGenerator(object):
                         'description': 'perma-link URL of resource'
                         },
                     'ETag': {
-                        'description': 'this value must be echoed in the If-Match header of every PATCH',
+                        'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
                         'type': 'string'
                         }
                     }
