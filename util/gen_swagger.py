@@ -341,6 +341,10 @@ class SwaggerGenerator(object):
                             'Location': {
                                 'type': 'string',
                                 'description': location_desciption
+                                },
+                            'ETag': {
+                                'type': 'string',
+                                'description': 'Value of ETag required for subsequent updates'
                                 }
                             }
                         }

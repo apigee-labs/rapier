@@ -179,6 +179,9 @@ paths:
         '201':
           description: Created new Item
           headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
             Location:
               description: perma-link URL of newly-created Item
               type: string

@@ -209,6 +209,9 @@ paths:
         '201':
           description: Created new Dog
           headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
             Location:
               description: perma-link URL of newly-created Dog
               type: string
@@ -540,6 +543,9 @@ paths:
         '201':
           description: Created new Person
           headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
             Location:
               description: perma-link URL of newly-created Person
               type: string
@@ -756,6 +762,9 @@ paths:
         '201':
           description: Created new Dog
           headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
             Location:
               description: perma-link URL of newly-created Dog
               type: string
