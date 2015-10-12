@@ -410,7 +410,6 @@ class SwaggerGenerator(object):
     def build_standard_methods(self):
         result = dict()
         result['head'] = {
-            'parameters': [{'$ref': '#/parameters/Accept'}],
             'responses': {
                 '200': self.global_response_ref('standard_200'), 
                 '401': self.global_response_ref('401'), 

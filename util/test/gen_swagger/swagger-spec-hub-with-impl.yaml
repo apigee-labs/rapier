@@ -175,8 +175,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -311,8 +309,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -402,8 +398,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -456,8 +450,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -590,8 +582,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: retrieve HEAD
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
           $ref: '#/responses/standard_200'
