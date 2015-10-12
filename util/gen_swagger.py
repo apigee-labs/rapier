@@ -444,6 +444,9 @@ class SwaggerGenerator(object):
         return {'$ref': '#/responses/%s' % key}
     
     def global_definition_ref(self, key):
+        if key == 'Entity':
+            if not 'Entity' in self.definitions:
+                self.definitions['Entity'] = self.build_entity_definition()
         return {'$ref': '#/definitions/%s' % key}
         
     def build_parameters(self, rel_property_spec_stack):
@@ -555,8 +558,7 @@ class SwaggerGenerator(object):
  
     def build_standard_definitions(self):
         return {
-            'ErrorResponse': self.build_error_definition(),
-            'Entity': self.build_entity_definition()
+            'ErrorResponse': self.build_error_definition()
             }
             
     def define_put_if_match_header(self):

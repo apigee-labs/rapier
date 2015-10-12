@@ -19,10 +19,6 @@ definitions:
         type: array
       kind:
         type: string
-  Entity:
-    properties:
-      kind:
-        type: string
   ErrorResponse:
     properties:
       message:

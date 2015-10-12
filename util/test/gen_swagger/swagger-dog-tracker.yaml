@@ -58,10 +58,6 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
-  Entity:
-    properties:
-      kind:
-        type: string
   ErrorResponse:
     properties:
       message:
