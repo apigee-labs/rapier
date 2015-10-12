@@ -88,3 +88,4 @@ node_modules
 
 #Visual Studio Code settings
 .settings
+.vscode/
