@@ -6,6 +6,7 @@ entities:
     DogTracker:
         well_known_URLs: /
         query_paths: [dogs, people, dogs/owner, people/dogs]
+        immutable: true
     Dog:
         properties:
             name:

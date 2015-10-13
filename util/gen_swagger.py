@@ -253,50 +253,51 @@ class SwaggerGenerator(object):
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
-        article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
-        if structured:
-            update_verb = 'patch'
-            description = 'Update %s %s entity'
-            parameter_ref = '#/parameters/If-Match'
-            body_desciption =  'The subset of properties of the %s being updated' % entity_name
-        else:
-            update_verb = 'put'
-            description = 'Create or Update %s %s entity'
-            self.define_put_if_match_header()
-            parameter_ref = '#/parameters/Put-If-Match'
-            body_desciption =  'The representation of the %s being replaced' % entity_name
-        description = description % (article, entity_name)
-        path_spec[update_verb] = {
-            'description': description,
-            'parameters': [
-                {'$ref': parameter_ref}, 
-                {'name': 'body',
-                 'in': 'body',
-                 'description': body_desciption,
-                 'schema': self.mutable_definition_ref(entity_name)
-                }
-                ],
-            'responses': { 
-                '200': response_200
-                }
-            }
-        if not self.yaml_merge:
-            path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
-        else:
-            path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
-        if not structured:
-            path_spec['put']['responses']['201'] = {
-                'description': 'Created new %s' % entity_name,
-                'schema': self.global_definition_ref(entity_name),
-                'headers': {
-                    'Location': {
-                        'type': 'string',
-                        'description': 'perma-link URL of newly-created %s'  % entity_name
-                        }
+        if not 'immutable' in entity_spec or entity_spec['immutable'] == False:
+            article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
+            if structured:
+                update_verb = 'patch'
+                description = 'Update %s %s entity'
+                parameter_ref = '#/parameters/If-Match'
+                body_desciption =  'The subset of properties of the %s being updated' % entity_name
+            else:
+                update_verb = 'put'
+                description = 'Create or Update %s %s entity'
+                self.define_put_if_match_header()
+                parameter_ref = '#/parameters/Put-If-Match'
+                body_desciption =  'The representation of the %s being replaced' % entity_name
+            description = description % (article, entity_name)
+            path_spec[update_verb] = {
+                'description': description,
+                'parameters': [
+                    {'$ref': parameter_ref}, 
+                    {'name': 'body',
+                    'in': 'body',
+                    'description': body_desciption,
+                    'schema': self.mutable_definition_ref(entity_name)
+                    }
+                    ],
+                'responses': { 
+                    '200': response_200
                     }
                 }
-        if consumes:
-            path_spec[update_verb]['consumes'] = consumes
+            if not self.yaml_merge:
+                path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
+            else:
+                path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
+            if not structured:
+                path_spec['put']['responses']['201'] = {
+                    'description': 'Created new %s' % entity_name,
+                    'schema': self.global_definition_ref(entity_name),
+                    'headers': {
+                        'Location': {
+                            'type': 'string',
+                            'description': 'perma-link URL of newly-created %s'  % entity_name
+                            }
+                        }
+                    }
+            if consumes:
+                path_spec[update_verb]['consumes'] = consumes
         well_known = entity_spec.get('well_known_URLs')
         if not well_known:        
             path_spec['delete'] = {

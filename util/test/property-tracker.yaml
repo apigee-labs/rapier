@@ -15,6 +15,7 @@ entities:
     PropertyTracker:
         well_known_URLs: /
         query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner, institutions/assets, people/possessions]
+        immutable: true
     Dog:
         properties:
             name:

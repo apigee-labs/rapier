@@ -105,10 +105,6 @@ definitions:
               format: URL
               type: string
         type: array
-  MutableHub:
-    properties:
-      kind:
-        type: string
   MutableSpec:
     properties:
       content:
@@ -196,42 +192,6 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      description: Update a Hub entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Hub being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/MutableHub'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Hub'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
     head:

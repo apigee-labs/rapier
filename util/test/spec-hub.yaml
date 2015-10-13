@@ -8,6 +8,7 @@ entities:
     Hub:
         well_known_URLs: /
         query_paths: [myHub, sharedWithMe]
+        immutable: true
     Folder:
         implementation_path: /impl
         properties:
