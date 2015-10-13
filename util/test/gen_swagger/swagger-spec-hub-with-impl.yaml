@@ -26,6 +26,8 @@ definitions:
     type: string
   Entity:
     properties:
+      _self:
+        type: string
       kind:
         type: string
   ErrorResponse:
@@ -82,6 +84,60 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
+  MutableContent:
+    type: string
+  MutableEntity:
+    properties:
+      kind:
+        type: string
+  MutableFolder:
+    properties:
+      kind:
+        type: string
+      name:
+        type: string
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
+  MutableHub:
+    properties:
+      kind:
+        type: string
+  MutableSpec:
+    properties:
+      content:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            $ref: '#/definitions/Content'
+      folder:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            $ref: '#/definitions/Folder'
+      kind:
+        type: string
+      name:
+        type: string
+      permissions:
+        items:
+          properties:
+            operation:
+              type: string
+            operator:
+              format: URL
+              type: string
+        type: array
   Spec:
     properties:
       _self:
@@ -146,6 +202,11 @@ paths:
       description: Update a Hub entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Hub being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableHub'
       responses:
         '200':
           description: successful
@@ -247,6 +308,11 @@ paths:
       description: Update a Spec entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Spec being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableSpec'
       responses:
         '200':
           description: successful
@@ -366,7 +432,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Entity'
+          $ref: '#/definitions/MutableEntity'
       responses:
         '201':
           description: Created new (Spec | Folder)
@@ -518,6 +584,11 @@ paths:
       description: Create or Update a Content entity
       parameters:
       - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Content being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableContent'
       responses:
         '200':
           description: successful

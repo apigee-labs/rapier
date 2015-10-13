@@ -19,6 +19,12 @@ definitions:
         type: string
       text:
         type: string
+  MutableHelloMessage:
+    properties:
+      kind:
+        type: string
+      text:
+        type: string
 paths:
   /message:
     get:
@@ -52,6 +58,11 @@ paths:
       description: Update a HelloMessage entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the HelloMessage being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableHelloMessage'
       responses:
         '200':
           description: successful

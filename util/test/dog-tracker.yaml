@@ -4,7 +4,7 @@ conventions:
     selector_location: path-parameter
 entities:
     DogTracker:
-        well_known_URLs: /dog-tracker
+        well_known_URLs: /
         query_paths: [dogs, people, dogs/owner, people/dogs]
     Dog:
         properties:

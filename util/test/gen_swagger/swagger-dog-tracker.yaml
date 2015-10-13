@@ -62,6 +62,35 @@ definitions:
     properties:
       message:
         type: string
+  MutableDog:
+    properties:
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
+      owner:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            $ref: '#/definitions/Person'
+  MutableDogTracker:
+    properties:
+      kind:
+        type: string
+  MutablePerson:
+    properties:
+      birth-date:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
   Person:
     properties:
       _self:
@@ -80,7 +109,7 @@ definitions:
       name:
         type: string
 paths:
-  /dog-tracker:
+  /:
     get:
       description: Retrieve a DogTracker
       parameters:
@@ -112,6 +141,11 @@ paths:
       description: Update a DogTracker entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DogTracker being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableDogTracker'
       responses:
         '200':
           description: successful
@@ -168,7 +202,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs:
+  /dogs:
     get:
       responses:
         '200':
@@ -198,7 +232,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Dog'
+          $ref: '#/definitions/MutableDog'
       responses:
         '201':
           description: Created new Dog
@@ -254,7 +288,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs/{Dog-name}:
+  /dogs/{Dog-name}:
     parameters:
     - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
       in: path
@@ -292,6 +326,11 @@ paths:
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Dog being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableDog'
       responses:
         '200':
           description: successful
@@ -375,7 +414,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/dogs/{Dog-name}/owner:
+  /dogs/{Dog-name}/owner:
     parameters:
     - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
       in: path
@@ -413,6 +452,11 @@ paths:
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Person being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutablePerson'
       responses:
         '200':
           description: successful
@@ -496,7 +540,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people:
+  /people:
     get:
       responses:
         '200':
@@ -526,7 +570,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Person'
+          $ref: '#/definitions/MutablePerson'
       responses:
         '201':
           description: Created new Person
@@ -582,7 +626,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people/{Person-name}:
+  /people/{Person-name}:
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -621,6 +665,11 @@ paths:
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Person being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutablePerson'
       responses:
         '200':
           description: successful
@@ -704,7 +753,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dog-tracker/people/{Person-name}/dogs:
+  /people/{Person-name}/dogs:
     parameters:
     - description: Specifies which 'Person' entity from multi-valued relationship
         'people'
@@ -741,7 +790,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Dog'
+          $ref: '#/definitions/MutableDog'
       responses:
         '201':
           description: Created new Dog

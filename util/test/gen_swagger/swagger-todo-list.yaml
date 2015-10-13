@@ -36,6 +36,21 @@ definitions:
         type: string
       kind:
         type: string
+  MutableItem:
+    properties:
+      description:
+        type: string
+      due:
+        format: date-time
+        type: string
+      id:
+        type: string
+      kind:
+        type: string
+  MutableTodoList:
+    properties:
+      kind:
+        type: string
   TodoList:
     properties:
       _self:
@@ -82,6 +97,11 @@ paths:
       description: Update a TodoList entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the TodoList being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableTodoList'
       responses:
         '200':
           description: successful
@@ -168,7 +188,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Item'
+          $ref: '#/definitions/MutableItem'
       responses:
         '201':
           description: Created new Item
@@ -262,6 +282,11 @@ paths:
       description: Update an Item entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Item being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableItem'
       responses:
         '200':
           description: successful

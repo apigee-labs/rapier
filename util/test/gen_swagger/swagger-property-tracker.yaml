@@ -63,6 +63,8 @@ definitions:
             - $ref: '#/definitions/Person'
   Entity:
     properties:
+      _self:
+        type: string
       kind:
         type: string
   ErrorResponse:
@@ -87,6 +89,68 @@ definitions:
       kind:
         type: string
       name:
+        type: string
+  MutableBicycle:
+    properties:
+      kind:
+        type: string
+      name:
+        type: string
+      owner:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            oneOf:
+            - $ref: '#/definitions/Institution'
+            - $ref: '#/definitions/Person'
+      paint_color:
+        type: string
+      purchase_date:
+        type: string
+  MutableDog:
+    properties:
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
+      owner:
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            oneOf:
+            - $ref: '#/definitions/Institution'
+            - $ref: '#/definitions/Person'
+  MutableEntity:
+    properties:
+      kind:
+        type: string
+  MutableInstitution:
+    properties:
+      birth-date:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
+  MutablePerson:
+    properties:
+      birth-date:
+        type: string
+      kind:
+        type: string
+      name:
+        type: string
+  MutablePropertyTracker:
+    properties:
+      kind:
         type: string
   Person:
     properties:
@@ -174,6 +238,11 @@ paths:
       description: Update a PropertyTracker entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the PropertyTracker being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutablePropertyTracker'
       responses:
         '200':
           description: successful
@@ -260,7 +329,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Bicycle'
+          $ref: '#/definitions/MutableBicycle'
       responses:
         '201':
           description: Created new Bicycle
@@ -355,6 +424,11 @@ paths:
       description: Update a Bicycle entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Bicycle being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableBicycle'
       responses:
         '200':
           description: successful
@@ -477,6 +551,11 @@ paths:
       description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Institution being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableInstitution'
       responses:
         '200':
           description: successful
@@ -590,7 +669,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Dog'
+          $ref: '#/definitions/MutableDog'
       responses:
         '201':
           description: Created new Dog
@@ -684,6 +763,11 @@ paths:
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Dog being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableDog'
       responses:
         '200':
           description: successful
@@ -805,6 +889,11 @@ paths:
       description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Institution being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableInstitution'
       responses:
         '200':
           description: successful
@@ -918,7 +1007,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Institution'
+          $ref: '#/definitions/MutableInstitution'
       responses:
         '201':
           description: Created new Institution
@@ -1013,6 +1102,11 @@ paths:
       description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Institution being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutableInstitution'
       responses:
         '200':
           description: successful
@@ -1133,7 +1227,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Entity'
+          $ref: '#/definitions/MutableEntity'
       responses:
         '201':
           description: Created new (Dog | Bicycle)
@@ -1222,7 +1316,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Person'
+          $ref: '#/definitions/MutablePerson'
       responses:
         '201':
           description: Created new Person
@@ -1317,6 +1411,11 @@ paths:
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Person being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/MutablePerson'
       responses:
         '200':
           description: successful
@@ -1437,7 +1536,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Entity'
+          $ref: '#/definitions/MutableEntity'
       responses:
         '201':
           description: Created new (Dog | Bicycle)
