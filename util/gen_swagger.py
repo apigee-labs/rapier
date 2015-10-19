@@ -71,25 +71,25 @@ class SwaggerGenerator(object):
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 mutable_definition = dict()
-                self.mutable_definitions[entity_name] = mutable_definition
                 structured = 'type' not in entity_spec
                 if structured:
-                    properties = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
-                    definition = {
-                        'allOf': [
-                            self.mutable_definition_ref(entity_name),
-                            self.mutable_definition_ref('Entity'),
-                            self.server_entity_properties_ref()
-                        ]}
-                    self.definitions[entity_name] = definition
-                    mutable_definition['properties'] = properties
+                    properties = entity_spec['properties'] if 'properties' in entity_spec else {}
+                    def_refs = [self.mutable_definition_ref(entity_name)] if len(properties) > 0 else list()
+                    if len(properties) > 0:
+                        mutable_definition['properties'] = properties.copy()
+                        self.mutable_definitions[entity_name] = mutable_definition
+                        def_refs = [self.mutable_definition_ref(entity_name)]
+                    else:
+                        def_refs = list()
+                    def_refs = def_refs + [self.mutable_definition_ref('Entity'), self.server_entity_properties_ref()]
+                    definition = {'allOf': def_refs}
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')
                     definition = dict()
-                    self.definitions[entity_name] = definition
                     definition['type'] = entity_spec['type']
-                    mutable_definition['type'] = entity_spec['type']
+                    self.mutable_definitions[entity_name] = mutable_definition
+                self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     paths = self.swagger['paths']
@@ -99,8 +99,6 @@ class SwaggerGenerator(object):
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
                     structured = 'type' not in entity_spec
-                    if structured:
-                        mutable_definition =self.mutable_definitions[entity_name]
                     rel_prop_spec_dict = {}
                     for rel_property_spec in rel_property_specs:
                         rel_prop_name = rel_property_spec.property_name
@@ -494,10 +492,13 @@ class SwaggerGenerator(object):
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):
-        mod_key = '%sProperties' % key
-        if mod_key not in self.definitions:
-            self.definitions[mod_key] = self.mutable_definitions[key]
-        return self. global_definition_ref(mod_key)
+        if key not in self.mutable_definitions:
+            return self.mutable_definition_ref('Entity')
+        else:
+            mod_key = '%sProperties' % key
+            if mod_key not in self.definitions:
+                self.definitions[mod_key] = self.mutable_definitions[key]
+            return self.global_definition_ref(mod_key)
         
     def build_parameters(self, rel_property_spec_stack):
         result = []
@@ -846,7 +847,7 @@ server_entity_properties = {
     }
     
 collection_properties = {
-    '_self': {
+    'self': {
         'type': 'string'
         }, 
     'kind': {

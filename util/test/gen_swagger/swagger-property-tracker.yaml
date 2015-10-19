@@ -31,8 +31,6 @@ definitions:
         type: string
   Collection:
     properties:
-      _self:
-        type: string
       item_type:
         type: string
       items:
@@ -40,6 +38,8 @@ definitions:
           type: object
         type: array
       kind:
+        type: string
+      self:
         type: string
   Dog:
     allOf:
@@ -121,7 +121,6 @@ definitions:
         type: string
   PropertyTracker:
     allOf:
-    - $ref: '#/definitions/PropertyTrackerProperties'
     - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
@@ -153,8 +152,6 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
-  PropertyTrackerProperties:
-    properties: {}
   ServerEntityProperties:
     properties:
       _creationDateTime:

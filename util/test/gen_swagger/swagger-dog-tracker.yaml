@@ -9,8 +9,6 @@ produces:
 definitions:
   Collection:
     properties:
-      _self:
-        type: string
       item_type:
         type: string
       items:
@@ -18,6 +16,8 @@ definitions:
           type: object
         type: array
       kind:
+        type: string
+      self:
         type: string
   Dog:
     allOf:
@@ -41,7 +41,6 @@ definitions:
             $ref: '#/definitions/Person'
   DogTracker:
     allOf:
-    - $ref: '#/definitions/DogTrackerProperties'
     - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
@@ -59,8 +58,6 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
-  DogTrackerProperties:
-    properties: {}
   EntityProperties:
     properties:
       kind:

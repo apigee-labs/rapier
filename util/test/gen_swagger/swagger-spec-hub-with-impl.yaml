@@ -12,8 +12,6 @@ produces:
 definitions:
   Collection:
     properties:
-      _self:
-        type: string
       item_type:
         type: string
       items:
@@ -22,10 +20,11 @@ definitions:
         type: array
       kind:
         type: string
+      self:
+        type: string
   Content:
     type: string
-  ContentProperties:
-    type: string
+  ContentProperties: {}
   Entity:
     allOf:
     - $ref: '#/definitions/EntityProperties'
@@ -70,7 +69,6 @@ definitions:
         type: array
   Hub:
     allOf:
-    - $ref: '#/definitions/HubProperties'
     - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
@@ -92,8 +90,6 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  HubProperties:
-    properties: {}
   ServerEntityProperties:
     properties:
       _creationDateTime:
