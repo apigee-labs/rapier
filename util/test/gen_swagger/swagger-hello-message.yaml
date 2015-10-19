@@ -7,22 +7,22 @@ consumes:
 produces:
 - application/json
 definitions:
-  ErrorResponse:
-    properties:
-      message:
-        type: string
-  HelloMessage:
+  EntityProperties:
     properties:
       _self:
         type: string
       kind:
         type: string
-      text:
-        type: string
-  MutableHelloMessage:
+  ErrorResponse:
     properties:
-      kind:
+      message:
         type: string
+  HelloMessage:
+    allOf:
+    - $ref: '#/definitions/HelloMessageProperties'
+    - $ref: '#/definitions/EntityProperties'
+  HelloMessageProperties:
+    properties:
       text:
         type: string
 paths:
@@ -62,7 +62,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableHelloMessage'
+          $ref: '#/definitions/HelloMessageProperties'
       responses:
         '200':
           description: successful

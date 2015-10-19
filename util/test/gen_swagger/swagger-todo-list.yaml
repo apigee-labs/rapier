@@ -19,24 +19,21 @@ definitions:
         type: array
       kind:
         type: string
+  EntityProperties:
+    properties:
+      _self:
+        type: string
+      kind:
+        type: string
   ErrorResponse:
     properties:
       message:
         type: string
   Item:
-    properties:
-      _self:
-        type: string
-      description:
-        type: string
-      due:
-        format: date-time
-        type: string
-      id:
-        type: string
-      kind:
-        type: string
-  MutableItem:
+    allOf:
+    - $ref: '#/definitions/ItemProperties'
+    - $ref: '#/definitions/EntityProperties'
+  ItemProperties:
     properties:
       description:
         type: string
@@ -44,17 +41,12 @@ definitions:
         format: date-time
         type: string
       id:
-        type: string
-      kind:
-        type: string
-  MutableTodoList:
-    properties:
-      kind:
         type: string
   TodoList:
+    allOf:
+    - $ref: '#/definitions/TodoListProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
       items:
         format: URL
         type: string
@@ -62,8 +54,8 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Item'
-      kind:
-        type: string
+  TodoListProperties:
+    properties: {}
 paths:
   /to-dos:
     get:
@@ -101,7 +93,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableTodoList'
+          $ref: '#/definitions/TodoListProperties'
       responses:
         '200':
           description: successful
@@ -188,7 +180,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableItem'
+          allOf:
+          - $ref: '#/definitions/ItemProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Item
@@ -286,7 +280,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableItem'
+          $ref: '#/definitions/ItemProperties'
       responses:
         '200':
           description: successful

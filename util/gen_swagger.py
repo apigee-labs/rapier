@@ -51,7 +51,7 @@ class SwaggerGenerator(object):
         self.definitions = self.build_standard_definitions()
         self.swagger['definitions'] = self.definitions
         self.mutable_definitions = dict()
-        self.mutable_definitions['Entity'] = {'properties': standard_mutable_entity_properties}
+        self.mutable_definitions['Entity'] = {'properties': standard_mutable_entity_properties.copy()}
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
         self.header_parameters = self.build_standard_header_parameters()
@@ -62,27 +62,30 @@ class SwaggerGenerator(object):
         self.methods = self.build_standard_methods()
         self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-        self.standard_entity_properties = self.conventions['standard_entity_properties'] if 'standard_entity_properties' in self.conventions else standard_entity_properties
+        self.standard_mutable_entity_properties = self.conventions['standard_mutable_entity_properties'] if 'standard_mutable_entity_properties' in self.conventions else standard_mutable_entity_properties
         self.standard_collection_properties = self.conventions['standard_collection_properties'] if 'standard_collection_properties' in self.conventions else standard_collection_properties
 
         if 'entities' in spec:
             entities = spec['entities']
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
-                definition = dict()
                 mutable_definition = dict()
-                self.definitions[entity_name] = definition
                 self.mutable_definitions[entity_name] = mutable_definition
                 structured = 'type' not in entity_spec
                 if structured:
                     properties = entity_spec['properties'].copy() if 'properties' in entity_spec else {}
-                    properties.update(standard_mutable_entity_properties)
-                    definition['properties'] = properties
-                    mutable_definition['properties'] = properties.copy()
-                    definition['properties'].update(self.standard_entity_properties)
+                    definition = {
+                        'allOf': [
+                            self.mutable_definition_ref(entity_name),
+                            self.mutable_definition_ref('Entity')
+                        ]}
+                    self.definitions[entity_name] = definition
+                    mutable_definition['properties'] = properties
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')
+                    definition = dict()
+                    self.definitions[entity_name] = definition
                     definition['type'] = entity_spec['type']
                     mutable_definition['type'] = entity_spec['type']
             for entity_name, entity_spec in entities.iteritems():
@@ -105,11 +108,12 @@ class SwaggerGenerator(object):
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
                         if structured:   
-                            properties = self.definitions[entity_name]['properties']                     
-                            properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
-                            if not rel_prop_specs[0].is_multivalued():
-                                mutable_properties = self.mutable_definitions[entity_name]['properties']
-                                mutable_properties[rel_prop_name] = properties[rel_prop_name]
+                            if rel_prop_specs[0].is_multivalued():
+                                properties = self.definitions[entity_name].setdefault('properties', dict())
+                                properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
+                            else:
+                                mutable_properties = self.mutable_definitions[entity_name].setdefault('properties', dict())
+                                mutable_properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                         else:
                             rel_name = {rel_property_spec.property_name for rel_property_spec in rel_property_specs if rel_property_spec.property_name == rel_prop_name}.pop()
                             sys.exit('error: unstructured entity cannot have property named %s in relationship %s: %s' % (rel_prop_name, rel_name, str(entity_spec)))
@@ -348,13 +352,20 @@ class SwaggerGenerator(object):
             location_desciption = 'perma-link URL of newly-created %s'  % entity_name
             body_desciption =  'The representation of the new %s being created' % entity_name 
         if not rel_property_spec.readonly:
+            if len(rel_property_specs) > 1:
+                post_schema = self.mutable_definition_ref('Entity')
+            else:
+                post_schema = {'allOf': [
+                    self.mutable_definition_ref(entity_name),
+                    self.mutable_definition_ref('Entity')
+                ]}
             path_spec['post'] = {
                 'description': 'Create a new %s' % entity_name,
                 'parameters': [
                     {'name': 'body',
                      'in': 'body',
                      'description': body_desciption,
-                     'schema': self.mutable_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
+                     'schema': post_schema
                     }
                     ],
                 'responses': {
@@ -468,13 +479,10 @@ class SwaggerGenerator(object):
         return {'$ref': '#/responses/%s' % key}
     
     def global_definition_ref(self, key):
-        if key == 'Entity':
-            if not 'Entity' in self.definitions:
-                self.definitions['Entity'] = {'properties': standard_entity_properties}
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):
-        mod_key = 'Mutable%s' % key
+        mod_key = '%sProperties' % key
         if mod_key not in self.definitions:
             self.definitions[mod_key] = self.mutable_definitions[key]
         return self. global_definition_ref(mod_key)
@@ -800,17 +808,11 @@ class Entity_URL_spec(Path_spec):
                 "Specifies the URL of the %s entity whose relationship is being accessed" % self.target_entity,
             'required': True
             }
-   
-standard_entity_properties = {
+ 
+standard_mutable_entity_properties = {
     '_self': {
         'type': 'string'
-        }, 
-    'kind': {
-        'type': 'string'
-        }
-    }
-    
-standard_mutable_entity_properties = {
+        },
     'kind': {
         'type': 'string'
         }

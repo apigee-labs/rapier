@@ -20,14 +20,14 @@ definitions:
       kind:
         type: string
   Dog:
+    allOf:
+    - $ref: '#/definitions/DogProperties'
+    - $ref: '#/definitions/EntityProperties'
+  DogProperties:
     properties:
-      _self:
-        type: string
       birth_date:
         type: string
       fur_color:
-        type: string
-      kind:
         type: string
       name:
         type: string
@@ -39,9 +39,10 @@ definitions:
           type:
             $ref: '#/definitions/Person'
   DogTracker:
+    allOf:
+    - $ref: '#/definitions/DogTrackerProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
       dogs:
         format: URL
         type: string
@@ -49,8 +50,6 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Dog'
-      kind:
-        type: string
       people:
         format: URL
         type: string
@@ -58,41 +57,23 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
+  DogTrackerProperties:
+    properties: {}
+  EntityProperties:
+    properties:
+      _self:
+        type: string
+      kind:
+        type: string
   ErrorResponse:
     properties:
       message:
         type: string
-  MutableDog:
-    properties:
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
-      owner:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          multiplicity: '1'
-          type:
-            $ref: '#/definitions/Person'
-  MutablePerson:
-    properties:
-      birth-date:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
   Person:
+    allOf:
+    - $ref: '#/definitions/PersonProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
-      birth-date:
-        type: string
       dogs:
         format: URL
         type: string
@@ -100,7 +81,9 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Dog'
-      kind:
+  PersonProperties:
+    properties:
+      birth-date:
         type: string
       name:
         type: string
@@ -192,7 +175,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableDog'
+          allOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Dog
@@ -290,7 +275,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableDog'
+          $ref: '#/definitions/DogProperties'
       responses:
         '200':
           description: successful
@@ -416,7 +401,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutablePerson'
+          $ref: '#/definitions/PersonProperties'
       responses:
         '200':
           description: successful
@@ -530,7 +515,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutablePerson'
+          allOf:
+          - $ref: '#/definitions/PersonProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Person
@@ -629,7 +616,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutablePerson'
+          $ref: '#/definitions/PersonProperties'
       responses:
         '200':
           description: successful
@@ -750,7 +737,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableDog'
+          allOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Dog

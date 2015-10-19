@@ -8,11 +8,11 @@ produces:
 - application/json
 definitions:
   Bicycle:
+    allOf:
+    - $ref: '#/definitions/BicycleProperties'
+    - $ref: '#/definitions/EntityProperties'
+  BicycleProperties:
     properties:
-      _self:
-        type: string
-      kind:
-        type: string
       name:
         type: string
       owner:
@@ -41,14 +41,14 @@ definitions:
       kind:
         type: string
   Dog:
+    allOf:
+    - $ref: '#/definitions/DogProperties'
+    - $ref: '#/definitions/EntityProperties'
+  DogProperties:
     properties:
-      _self:
-        type: string
       birth_date:
         type: string
       fur_color:
-        type: string
-      kind:
         type: string
       name:
         type: string
@@ -61,7 +61,7 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
-  Entity:
+  EntityProperties:
     properties:
       _self:
         type: string
@@ -72,9 +72,10 @@ definitions:
       message:
         type: string
   Institution:
+    allOf:
+    - $ref: '#/definitions/InstitutionProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
       assets:
         format: URL
         type: string
@@ -84,80 +85,17 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-      birth-date:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
-  MutableBicycle:
-    properties:
-      kind:
-        type: string
-      name:
-        type: string
-      owner:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          multiplicity: '1'
-          type:
-            oneOf:
-            - $ref: '#/definitions/Institution'
-            - $ref: '#/definitions/Person'
-      paint_color:
-        type: string
-      purchase_date:
-        type: string
-  MutableDog:
-    properties:
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
-      owner:
-        format: URL
-        type: string
-        x-rapier-relationship:
-          multiplicity: '1'
-          type:
-            oneOf:
-            - $ref: '#/definitions/Institution'
-            - $ref: '#/definitions/Person'
-  MutableEntity:
-    properties:
-      kind:
-        type: string
-  MutableInstitution:
+  InstitutionProperties:
     properties:
       birth-date:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
-  MutablePerson:
-    properties:
-      birth-date:
-        type: string
-      kind:
         type: string
       name:
         type: string
   Person:
+    allOf:
+    - $ref: '#/definitions/PersonProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
-      birth-date:
-        type: string
-      kind:
-        type: string
-      name:
-        type: string
       possessions:
         format: URL
         type: string
@@ -167,10 +105,17 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-  PropertyTracker:
+  PersonProperties:
     properties:
-      _self:
+      birth-date:
         type: string
+      name:
+        type: string
+  PropertyTracker:
+    allOf:
+    - $ref: '#/definitions/PropertyTrackerProperties'
+    - $ref: '#/definitions/EntityProperties'
+    properties:
       bicycles:
         format: URL
         type: string
@@ -192,8 +137,6 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Institution'
-      kind:
-        type: string
       people:
         format: URL
         type: string
@@ -201,6 +144,8 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
+  PropertyTrackerProperties:
+    properties: {}
 paths:
   /:
     get:
@@ -289,7 +234,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableBicycle'
+          allOf:
+          - $ref: '#/definitions/BicycleProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Bicycle
@@ -388,7 +335,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableBicycle'
+          $ref: '#/definitions/BicycleProperties'
       responses:
         '200':
           description: successful
@@ -515,7 +462,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableInstitution'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -629,7 +576,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableDog'
+          allOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Dog
@@ -727,7 +676,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableDog'
+          $ref: '#/definitions/DogProperties'
       responses:
         '200':
           description: successful
@@ -853,7 +802,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableInstitution'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -967,7 +916,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableInstitution'
+          allOf:
+          - $ref: '#/definitions/InstitutionProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Institution
@@ -1066,7 +1017,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableInstitution'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -1187,7 +1138,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableEntity'
+          $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new (Dog | Bicycle)
@@ -1276,7 +1227,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutablePerson'
+          allOf:
+          - $ref: '#/definitions/PersonProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new Person
@@ -1375,7 +1328,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutablePerson'
+          $ref: '#/definitions/PersonProperties'
       responses:
         '200':
           description: successful
@@ -1496,7 +1449,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableEntity'
+          $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new (Dog | Bicycle)

@@ -24,7 +24,9 @@ definitions:
         type: string
   Content:
     type: string
-  Entity:
+  ContentProperties:
+    type: string
+  EntityProperties:
     properties:
       _self:
         type: string
@@ -35,9 +37,10 @@ definitions:
       message:
         type: string
   Folder:
+    allOf:
+    - $ref: '#/definitions/FolderProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
       contents:
         format: URL
         type: string
@@ -47,8 +50,8 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-      kind:
-        type: string
+  FolderProperties:
+    properties:
       name:
         type: string
       permissions:
@@ -61,11 +64,10 @@ definitions:
               type: string
         type: array
   Hub:
+    allOf:
+    - $ref: '#/definitions/HubProperties'
+    - $ref: '#/definitions/EntityProperties'
     properties:
-      _self:
-        type: string
-      kind:
-        type: string
       myHub:
         format: URL
         type: string
@@ -84,16 +86,14 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  MutableContent:
-    type: string
-  MutableEntity:
-    properties:
-      kind:
-        type: string
+  HubProperties:
+    properties: {}
   Spec:
+    allOf:
+    - $ref: '#/definitions/SpecProperties'
+    - $ref: '#/definitions/EntityProperties'
+  SpecProperties:
     properties:
-      _self:
-        type: string
       content:
         format: URL
         type: string
@@ -108,8 +108,6 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-      kind:
-        type: string
       name:
         type: string
       permissions:
@@ -209,7 +207,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableEntity'
+          $ref: '#/definitions/EntityProperties'
       responses:
         '201':
           description: Created new (Spec | Folder)
@@ -365,7 +363,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/MutableContent'
+          $ref: '#/definitions/ContentProperties'
       responses:
         '200':
           description: successful
