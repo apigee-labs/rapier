@@ -21,9 +21,9 @@ definitions:
         type: string
   EntityProperties:
     properties:
-      _self:
-        type: string
       kind:
+        type: string
+      self:
         type: string
   ErrorResponse:
     properties:
@@ -33,6 +33,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/ItemProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
   ItemProperties:
     properties:
       description:
@@ -42,10 +43,22 @@ definitions:
         type: string
       id:
         type: string
+  ServerEntityProperties:
+    properties:
+      _creationDateTime:
+        format: dateTime
+        type: string
+      _creator:
+        format: URL
+        type: string
+      _lastModificationDateTime:
+        format: dateTime
+        type: string
   TodoList:
     allOf:
     - $ref: '#/definitions/TodoListProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       items:
         format: URL

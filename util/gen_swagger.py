@@ -35,6 +35,9 @@ class SwaggerGenerator(object):
         if not self.selector_location in ['path-segment', 'path-parameter']:
             print 'error: invalid value for selector_location: %s' % self.selector_location
             return None
+        self.entity_properties = self.conventions['entity_properties'] if 'entity_properties' in self.conventions else entity_properties
+        self.server_entity_properties = self.conventions['server_entity_properties'] if 'server_entity_properties' in self.conventions else server_entity_properties
+        self.collection_properties = self.conventions['collection_properties'] if 'collection_properties' in self.conventions else collection_properties
         patterns = spec.get('patterns')
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
@@ -51,7 +54,7 @@ class SwaggerGenerator(object):
         self.definitions = self.build_standard_definitions()
         self.swagger['definitions'] = self.definitions
         self.mutable_definitions = dict()
-        self.mutable_definitions['Entity'] = {'properties': standard_mutable_entity_properties.copy()}
+        self.mutable_definitions['Entity'] = {'properties': self.entity_properties.copy()}
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
         self.header_parameters = self.build_standard_header_parameters()
@@ -62,8 +65,6 @@ class SwaggerGenerator(object):
         self.methods = self.build_standard_methods()
         self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-        self.standard_mutable_entity_properties = self.conventions['standard_mutable_entity_properties'] if 'standard_mutable_entity_properties' in self.conventions else standard_mutable_entity_properties
-        self.standard_collection_properties = self.conventions['standard_collection_properties'] if 'standard_collection_properties' in self.conventions else standard_collection_properties
 
         if 'entities' in spec:
             entities = spec['entities']
@@ -77,7 +78,8 @@ class SwaggerGenerator(object):
                     definition = {
                         'allOf': [
                             self.mutable_definition_ref(entity_name),
-                            self.mutable_definition_ref('Entity')
+                            self.mutable_definition_ref('Entity'),
+                            self.server_entity_properties_ref()
                         ]}
                     self.definitions[entity_name] = definition
                     mutable_definition['properties'] = properties
@@ -477,8 +479,18 @@ class SwaggerGenerator(object):
         
     def global_response_ref(self, key):
         return {'$ref': '#/responses/%s' % key}
+
+    def server_entity_properties_ref(self):
+        if 'ServerEntityProperties' not in self.definitions:
+            self.definitions['ServerEntityProperties'] = {'properties': self.server_entity_properties}
+        return {'$ref': '#/definitions/ServerEntityProperties'}
     
     def global_definition_ref(self, key):
+        if key == 'Entity' and 'Entity' not in self.definitions:
+            self.definitions['Entity'] = {'allOf': [
+                self.mutable_definition_ref('Entity'),
+                self.server_entity_properties_ref()
+                ]}
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):
@@ -663,7 +675,7 @@ class SwaggerGenerator(object):
                     } 
                 }
             }
-        properties.update(self.standard_collection_properties)
+        properties.update(self.collection_properties)
         return {
             'properties': properties
             }
@@ -809,8 +821,8 @@ class Entity_URL_spec(Path_spec):
             'required': True
             }
  
-standard_mutable_entity_properties = {
-    '_self': {
+entity_properties = {
+    'self': {
         'type': 'string'
         },
     'kind': {
@@ -818,7 +830,22 @@ standard_mutable_entity_properties = {
         }
     }
     
-standard_collection_properties = {
+server_entity_properties = {
+    '_creationDateTime': {
+        'type': 'string',
+        'format': 'dateTime'
+        },
+    '_creator': {
+        'type': 'string',
+        'format': 'URL'
+        },
+    '_lastModificationDateTime': {
+        'type': 'string',
+        'format': 'dateTime'
+        }
+    }
+    
+collection_properties = {
     '_self': {
         'type': 'string'
         }, 

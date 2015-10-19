@@ -23,6 +23,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/DogProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
   DogProperties:
     properties:
       birth_date:
@@ -42,6 +43,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/DogTrackerProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       dogs:
         format: URL
@@ -61,9 +63,9 @@ definitions:
     properties: {}
   EntityProperties:
     properties:
-      _self:
-        type: string
       kind:
+        type: string
+      self:
         type: string
   ErrorResponse:
     properties:
@@ -73,6 +75,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersonProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       dogs:
         format: URL
@@ -86,6 +89,17 @@ definitions:
       birth-date:
         type: string
       name:
+        type: string
+  ServerEntityProperties:
+    properties:
+      _creationDateTime:
+        format: dateTime
+        type: string
+      _creator:
+        format: URL
+        type: string
+      _lastModificationDateTime:
+        format: dateTime
         type: string
 paths:
   /:

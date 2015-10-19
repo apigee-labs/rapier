@@ -9,9 +9,9 @@ produces:
 definitions:
   EntityProperties:
     properties:
-      _self:
-        type: string
       kind:
+        type: string
+      self:
         type: string
   ErrorResponse:
     properties:
@@ -21,9 +21,21 @@ definitions:
     allOf:
     - $ref: '#/definitions/HelloMessageProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
   HelloMessageProperties:
     properties:
       text:
+        type: string
+  ServerEntityProperties:
+    properties:
+      _creationDateTime:
+        format: dateTime
+        type: string
+      _creator:
+        format: URL
+        type: string
+      _lastModificationDateTime:
+        format: dateTime
         type: string
 paths:
   /message:

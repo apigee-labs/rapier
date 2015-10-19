@@ -26,11 +26,15 @@ definitions:
     type: string
   ContentProperties:
     type: string
+  Entity:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
   EntityProperties:
     properties:
-      _self:
-        type: string
       kind:
+        type: string
+      self:
         type: string
   ErrorResponse:
     properties:
@@ -40,6 +44,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/FolderProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       contents:
         format: URL
@@ -67,6 +72,7 @@ definitions:
     allOf:
     - $ref: '#/definitions/HubProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       myHub:
         format: URL
@@ -88,10 +94,22 @@ definitions:
             - $ref: '#/definitions/Folder'
   HubProperties:
     properties: {}
+  ServerEntityProperties:
+    properties:
+      _creationDateTime:
+        format: dateTime
+        type: string
+      _creator:
+        format: URL
+        type: string
+      _lastModificationDateTime:
+        format: dateTime
+        type: string
   Spec:
     allOf:
     - $ref: '#/definitions/SpecProperties'
     - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/ServerEntityProperties'
   SpecProperties:
     properties:
       content:
