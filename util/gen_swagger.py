@@ -59,7 +59,7 @@ class SwaggerGenerator(object):
         self.swagger['paths'] = self.paths
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
-        self.swagger['responses'] = self.responses
+        self.swagger['responses'] = dict()
         self.entity_specs = {}
         self.response_sets = self.build_standard_response_sets()
         self.methods = self.build_standard_methods()
@@ -432,7 +432,6 @@ class SwaggerGenerator(object):
             'default': self.global_response_ref('default')
             }
         result['post_responses'] = {        
-            '303': self.global_response_ref('303'),
             '400': self.global_response_ref('400'),
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
@@ -476,6 +475,8 @@ class SwaggerGenerator(object):
         return self.collection_get
         
     def global_response_ref(self, key):
+        if key not in self.swagger['responses']:
+             self.swagger['responses'][key] = self.responses[key]
         return {'$ref': '#/responses/%s' % key}
 
     def server_entity_properties_ref(self):

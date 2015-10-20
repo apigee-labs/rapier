@@ -376,8 +376,6 @@ paths:
             x-oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':

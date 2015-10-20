@@ -266,8 +266,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Bicycle'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -608,8 +606,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Dog'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -948,8 +944,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Institution'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1171,8 +1165,6 @@ paths:
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1259,8 +1251,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Person'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1482,8 +1472,6 @@ paths:
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':

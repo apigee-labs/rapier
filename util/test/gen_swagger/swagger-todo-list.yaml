@@ -205,8 +205,6 @@ paths:
               type: string
           schema:
             $ref: '#/definitions/Item'
-        '303':
-          $ref: '#/responses/303'
         '400':
           $ref: '#/responses/400'
         '401':

@@ -157,12 +157,6 @@ parameters:
     required: true
     type: string
 responses:
-  '303':
-    description: See other. Server is redirecting client to a different resource
-    headers:
-      Location:
-        description: URL of other resource
-        type: string
   '400':
     description: Bad Request. Client request in error
     schema:
