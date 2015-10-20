@@ -579,7 +579,7 @@ class SwaggerGenerator(object):
                 'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '406': {
-                'description': 'Not Acceptable. Requested media type not availalble',
+                'description': 'Not Acceptable. Requested media type not available',
                 'schema': self.global_definition_ref('ErrorResponse')
                 }, 
             '409': {
@@ -841,7 +841,7 @@ entity_properties = {
     }
     
 server_entity_properties = {
-    '_creationDateTime': {
+    '_creationTime': {
         'type': 'string',
         'format': 'dateTime'
         },
@@ -849,7 +849,7 @@ server_entity_properties = {
         'type': 'string',
         'format': 'URL'
         },
-    '_lastModificationDateTime': {
+    '_lastModificationTime': {
         'type': 'string',
         'format': 'dateTime'
         }

@@ -154,13 +154,13 @@ definitions:
             $ref: '#/definitions/Person'
   ServerEntityProperties:
     properties:
-      _creationDateTime:
+      _creationTime:
         format: dateTime
         type: string
       _creator:
         format: URL
         type: string
-      _lastModificationDateTime:
+      _lastModificationTime:
         format: dateTime
         type: string
 paths:
