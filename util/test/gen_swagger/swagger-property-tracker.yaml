@@ -350,7 +350,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleProperties'
+          allOf:
+          - $ref: '#/definitions/BicycleProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -477,7 +479,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          allOf:
+          - $ref: '#/definitions/InstitutionProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -689,7 +693,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogProperties'
+          allOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -815,7 +821,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          allOf:
+          - $ref: '#/definitions/InstitutionProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -1028,7 +1036,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          allOf:
+          - $ref: '#/definitions/InstitutionProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -1335,7 +1345,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonProperties'
+          allOf:
+          - $ref: '#/definitions/PersonProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful

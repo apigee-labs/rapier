@@ -4,6 +4,7 @@ entities:
     TodoList:
         well_known_URLs: /to-dos
         query_paths: [items]
+        immutable: true
     Item:
         properties:
             id:

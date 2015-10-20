@@ -264,12 +264,20 @@ class SwaggerGenerator(object):
                 description = 'Update %s %s entity'
                 parameter_ref = '#/parameters/If-Match'
                 body_desciption =  'The subset of properties of the %s being updated' % entity_name
+                if entity_name in self.mutable_definitions:
+                    schema = {'allOf': [
+                        self.mutable_definition_ref(entity_name),
+                        self.mutable_definition_ref('Entity')
+                        ]}
+                else: # no modifiable properties
+                    schema = self.mutable_definition_ref('Entity')                 
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
                 body_desciption =  'The representation of the %s being replaced' % entity_name
+                schema = self.global_definition_ref(entity_name)
             description = description % (article, entity_name)
             path_spec[update_verb] = {
                 'description': description,
@@ -278,7 +286,7 @@ class SwaggerGenerator(object):
                     {'name': 'body',
                     'in': 'body',
                     'description': body_desciption,
-                    'schema': self.mutable_definition_ref(entity_name)
+                    'schema': schema
                     }
                     ],
                 'responses': { 

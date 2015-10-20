@@ -24,7 +24,6 @@ definitions:
         type: string
   Content:
     type: string
-  ContentProperties: {}
   Entity:
     allOf:
     - $ref: '#/definitions/EntityProperties'
@@ -240,7 +239,9 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecProperties'
+          allOf:
+          - $ref: '#/definitions/SpecProperties'
+          - $ref: '#/definitions/EntityProperties'
       responses:
         '200':
           description: successful
@@ -514,7 +515,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ContentProperties'
+          $ref: '#/definitions/Content'
       responses:
         '200':
           description: successful
