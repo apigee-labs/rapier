@@ -5,10 +5,12 @@ info:
 consumes:
 - application/json
 - text/yaml
+- text/plain
 produces:
 - text/yaml
 - application/json
 - text/html
+- text/plain
 definitions:
   Collection:
     properties:
