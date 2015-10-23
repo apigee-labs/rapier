@@ -18,10 +18,10 @@ entities:
                 type: array
                 items: 
                     properties:
-                        operator:
+                        actor:
                             format: URL
                             type: string
-                        operation:
+                        action:
                             type: string
     Spec:
         query_paths: [content]
@@ -33,10 +33,10 @@ entities:
                 type: array
                 items: 
                     properties:
-                        operator:
+                        actor:
                             format: URL
                             type: string
-                        operation:
+                        action:
                             type: string
     Content:
         type: string

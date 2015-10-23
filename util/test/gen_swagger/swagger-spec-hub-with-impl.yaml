@@ -60,9 +60,9 @@ definitions:
       permissions:
         items:
           properties:
-            operation:
+            action:
               type: string
-            operator:
+            actor:
               format: URL
               type: string
         type: array
@@ -126,9 +126,9 @@ definitions:
       permissions:
         items:
           properties:
-            operation:
+            action:
               type: string
-            operator:
+            actor:
               format: URL
               type: string
         type: array
@@ -663,7 +663,7 @@ responses:
     schema:
       $ref: '#/definitions/ErrorResponse'
   '406':
-    description: Not Acceptable. Requested media type not availalble
+    description: Not Acceptable. Requested media type not available
     schema:
       $ref: '#/definitions/ErrorResponse'
   '409':
