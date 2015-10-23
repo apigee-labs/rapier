@@ -17,6 +17,7 @@ definitions:
       name:
         type: string
       owner:
+        description: URL of a (Institution | Person)
         format: URL
         type: string
         x-rapier-relationship:
@@ -55,6 +56,7 @@ definitions:
       name:
         type: string
       owner:
+        description: URL of a (Institution | Person)
         format: URL
         type: string
         x-rapier-relationship:
@@ -84,6 +86,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       assets:
+        description: URL of a Collection of (Dog | Bicycle)s
         format: URL
         type: string
         x-rapier-relationship:
@@ -105,6 +108,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       possessions:
+        description: URL of a Collection of (Dog | Bicycle)s
         format: URL
         type: string
         x-rapier-relationship:
@@ -125,6 +129,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       bicycles:
+        description: URL of a Collection of Bicycles
         format: URL
         type: string
         x-rapier-relationship:
@@ -132,6 +137,7 @@ definitions:
           type:
             $ref: '#/definitions/Bicycle'
       dogs:
+        description: URL of a Collection of Dogs
         format: URL
         type: string
         x-rapier-relationship:
@@ -139,6 +145,7 @@ definitions:
           type:
             $ref: '#/definitions/Dog'
       institutions:
+        description: URL of a Collection of Institutions
         format: URL
         type: string
         x-rapier-relationship:
@@ -146,6 +153,7 @@ definitions:
           type:
             $ref: '#/definitions/Institution'
       people:
+        description: URL of a Collection of Persons
         format: URL
         type: string
         x-rapier-relationship:

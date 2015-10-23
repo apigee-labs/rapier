@@ -143,6 +143,12 @@ class SwaggerGenerator(object):
             print 'error: all multiplicities for relationship property %s must be the same' % rel_prop_name
             return None
         return {
+            'description': 
+                    'URL of a Collection of %ss' % 
+                        ('(%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else  rel_prop_specs[0].target_entity) 
+                if rel_prop_specs[0].is_multivalued() else 
+                    'URL of %s' % ('a (%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
+                ,
             'type': 'string',
             'format': 'URL',
             'x-rapier-relationship': {
@@ -261,7 +267,7 @@ class SwaggerGenerator(object):
             article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
             if structured:
                 update_verb = 'patch'
-                description = 'Update %s %s entity'
+                description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
                 body_desciption =  'The subset of properties of the %s being updated' % entity_name
                 if entity_name in self.mutable_definitions:
@@ -273,12 +279,12 @@ class SwaggerGenerator(object):
                     schema = self.mutable_definition_ref('Entity')                 
             else:
                 update_verb = 'put'
-                description = 'Create or Update %s %s entity'
+                description = 'Create or Update %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
                 body_desciption =  'The representation of the %s being replaced' % entity_name
                 schema = self.global_definition_ref(entity_name)
-            description = description % (article, entity_name)
+            description = description % articled(entity_name)
             path_spec[update_verb] = {
                 'description': description,
                 'parameters': [
@@ -819,7 +825,7 @@ class Entity_URL_spec(Path_spec):
         self.target_entity = target_entity
 
     def path_segment(self, select_one_of_many = False):
-        return '/{%s-URL}' % self.target_entity
+        return '/{%s_URL}' % self.target_entity
 
     def build_param(self):
         return {
@@ -896,6 +902,9 @@ def main(args):
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
+    
+def articled(name):
+    return '%s %s' % ('an' if name[0].lower() in 'aeiou' else 'a', name)
         
 if __name__ == "__main__":
     main(sys.argv)

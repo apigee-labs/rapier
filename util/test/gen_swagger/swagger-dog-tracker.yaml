@@ -33,6 +33,7 @@ definitions:
       name:
         type: string
       owner:
+        description: URL of a Person
         format: URL
         type: string
         x-rapier-relationship:
@@ -45,6 +46,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       dogs:
+        description: URL of a Collection of Dogs
         format: URL
         type: string
         x-rapier-relationship:
@@ -52,6 +54,7 @@ definitions:
           type:
             $ref: '#/definitions/Dog'
       people:
+        description: URL of a Collection of Persons
         format: URL
         type: string
         x-rapier-relationship:
@@ -75,6 +78,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       dogs:
+        description: URL of a Collection of Dogs
         format: URL
         type: string
         x-rapier-relationship:

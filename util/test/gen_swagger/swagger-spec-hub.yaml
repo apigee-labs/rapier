@@ -47,6 +47,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       contents:
+        description: URL of a Collection of (Spec | Folder)s
         format: URL
         type: string
         x-rapier-relationship:
@@ -74,6 +75,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       myHub:
+        description: URL of a Collection of (Spec | Folder)s
         format: URL
         type: string
         x-rapier-relationship:
@@ -83,6 +85,7 @@ definitions:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
       sharedWithMe:
+        description: URL of a Collection of (Spec | Folder)s
         format: URL
         type: string
         x-rapier-relationship:
@@ -110,6 +113,7 @@ definitions:
   SpecProperties:
     properties:
       content:
+        description: URL of a Content
         format: URL
         type: string
         x-rapier-relationship:
@@ -117,6 +121,7 @@ definitions:
           type:
             $ref: '#/definitions/Content'
       folder:
+        description: URL of a Folder
         format: URL
         type: string
         x-rapier-relationship:
@@ -331,7 +336,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /{Spec-URL}/content:
+  /{Spec_URL}/content:
     parameters:
     - description: Specifies the URL of the Spec entity whose relationship is being
         accessed

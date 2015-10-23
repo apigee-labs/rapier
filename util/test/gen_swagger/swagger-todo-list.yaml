@@ -60,6 +60,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       items:
+        description: URL of a Collection of Items
         format: URL
         type: string
         x-rapier-relationship:
