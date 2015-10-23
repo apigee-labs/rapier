@@ -823,7 +823,7 @@ class Entity_URL_spec(Path_spec):
 
     def build_param(self):
         return {
-            'name': '%s-URL' % self.target_entity,
+            'name': '%s_URL' % self.target_entity,
             'in': 'path',
             'type': 'string',
             'description':

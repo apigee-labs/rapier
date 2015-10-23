@@ -336,7 +336,7 @@ paths:
     - description: Specifies the URL of the Spec entity whose relationship is being
         accessed
       in: path
-      name: Spec-URL
+      name: Spec_URL
       required: true
       type: string
     get:
