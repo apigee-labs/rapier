@@ -230,10 +230,8 @@ class SwaggerGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1]
         entity_name = rel_property_spec.target_entity
         entity_spec = self.rapier_spec['entities'][entity_name]
-        if 'consumes' in entity_spec:
-            consumes = as_list(entity_spec['consumes'])
-        else:
-            consumes = None                      
+        consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
+        produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         structured = 'type' not in entity_spec
         response_200 = {
             'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
@@ -316,6 +314,8 @@ class SwaggerGenerator(object):
                     }
             if consumes:
                 path_spec[update_verb]['consumes'] = consumes
+            if produces:
+                path_spec['get']['produces'] = produces
         well_known = entity_spec.get('well_known_URLs')
         if not well_known:        
             path_spec['delete'] = {
