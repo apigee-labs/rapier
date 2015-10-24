@@ -45,13 +45,16 @@ definitions:
         type: string
   ServerEntityProperties:
     properties:
-      _creationTime:
+      _created:
         format: dateTime
         type: string
       _creator:
         format: URL
         type: string
-      _lastModificationTime:
+      _modified:
+        format: dateTime
+        type: string
+      _modifier:
         format: dateTime
         type: string
   TodoList:

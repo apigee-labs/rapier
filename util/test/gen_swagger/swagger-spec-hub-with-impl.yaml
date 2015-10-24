@@ -4,11 +4,14 @@ info:
   version: '0.1'
 consumes:
 - application/json
+- application/x-yaml
 - text/yaml
+- text/html
 - text/plain
 produces:
-- text/yaml
 - application/json
+- application/x-yaml
+- text/yaml
 - text/html
 - text/plain
 definitions:
@@ -96,13 +99,16 @@ definitions:
             - $ref: '#/definitions/Folder'
   ServerEntityProperties:
     properties:
-      _creationTime:
+      _created:
         format: dateTime
         type: string
       _creator:
         format: URL
         type: string
-      _lastModificationTime:
+      _modified:
+        format: dateTime
+        type: string
+      _modifier:
         format: dateTime
         type: string
   Spec:

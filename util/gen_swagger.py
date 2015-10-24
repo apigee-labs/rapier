@@ -847,7 +847,7 @@ entity_properties = {
     }
     
 server_entity_properties = {
-    '_creationTime': {
+    '_created': {
         'type': 'string',
         'format': 'dateTime'
         },
@@ -855,10 +855,14 @@ server_entity_properties = {
         'type': 'string',
         'format': 'URL'
         },
-    '_lastModificationTime': {
+    '_modified': {
         'type': 'string',
         'format': 'dateTime'
-        }
+        },
+    '_modifier': {
+        'type': 'string',
+        'format': 'dateTime'
+        }        
     }
     
 collection_properties = {
