@@ -4,6 +4,24 @@ consumes: application/json
 produces: application/json text/html
 conventions:
     selector_location: path-parameter
+    entity_properties:
+        self:
+            type: string
+        kind:
+            type: string
+    server_entity_properties:
+        created:
+            type: string
+            format: dateTime
+        creator:
+            type: string
+            format: URL
+        modified:
+            type: string
+            format: dateTime
+        modifier:
+            type: string
+            format: dateTime
 entities:
     Hub:
         well_known_URLs: /

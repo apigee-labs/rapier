@@ -37,7 +37,7 @@ class SwaggerGenerator(object):
             return None
         self.entity_properties = self.conventions['entity_properties'] if 'entity_properties' in self.conventions else entity_properties
         self.server_entity_properties = self.conventions['server_entity_properties'] if 'server_entity_properties' in self.conventions else server_entity_properties
-        self.collection_properties = self.conventions['collection_properties'] if 'collection_properties' in self.conventions else collection_properties
+        self.collection_properties = self.conventions['collection_properties'] if 'collection_properties' in self.conventions else self.entity_properties
         patterns = spec.get('patterns')
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
