@@ -54,6 +54,14 @@ definitions:
             - $ref: '#/definitions/Folder'
   FolderProperties:
     properties:
+      folder:
+        description: URL of a Folder
+        format: URL
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            $ref: '#/definitions/Folder'
       name:
         type: string
       permissions:

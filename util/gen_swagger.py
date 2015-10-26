@@ -186,7 +186,7 @@ class SwaggerGenerator(object):
             for rel_name, relationship in relationships.iteritems():
                 if relationship['one_end']['entity'] == entity_name:
                     add_type(rel_name, relationship['one_end'], relationship['other_end'])
-                elif relationship['other_end']['entity'] == entity_name:
+                if relationship['other_end']['entity'] == entity_name:
                     add_type(rel_name, relationship['other_end'], relationship['one_end'])
         return result
         
@@ -480,7 +480,6 @@ class SwaggerGenerator(object):
                 }
             }
 
-            
         return result
 
     def global_collection_get(self):
