@@ -846,19 +846,19 @@ entity_properties = {
     }
     
 server_entity_properties = {
-    '_created': {
+    'created': {
         'type': 'string',
         'format': 'dateTime'
         },
-    '_creator': {
+    'creator': {
         'type': 'string',
         'format': 'URL'
         },
-    '_modified': {
+    'modified': {
         'type': 'string',
         'format': 'dateTime'
         },
-    '_modifier': {
+    'modifier': {
         'type': 'string',
         'format': 'dateTime'
         }        

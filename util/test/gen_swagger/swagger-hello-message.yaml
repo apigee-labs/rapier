@@ -28,16 +28,16 @@ definitions:
         type: string
   ServerEntityProperties:
     properties:
-      _created:
+      created:
         format: dateTime
         type: string
-      _creator:
+      creator:
         format: URL
         type: string
-      _modified:
+      modified:
         format: dateTime
         type: string
-      _modifier:
+      modifier:
         format: dateTime
         type: string
 paths:
