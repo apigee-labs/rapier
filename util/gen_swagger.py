@@ -251,7 +251,7 @@ class SwaggerGenerator(object):
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = {
-                'description': 'Retrieve %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'description': 'Retrieve %s' % articled(entity_name),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
                     '200': response_200, 
