@@ -121,6 +121,9 @@ class SwaggerGenerator(object):
                     implementation_path_specs = [Implementation_path_spec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
                     entity_interface =  self.get_entity_interface([implementation_path_spec], implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
+                elif False: #not self.include_impl:
+                    entity_url_property_spec = Entity_URL_spec(entity_name)
+                    self.swagger['paths'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
                 if 'query_paths' in entity_spec:
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
@@ -135,9 +138,6 @@ class SwaggerGenerator(object):
                             self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_paths])  
-                if False: #not self.include_impl:
-                    entity_url_property_spec = Entity_URL_spec(entity_name)
-                    self.swagger['paths'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
         return self.swagger
 
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
