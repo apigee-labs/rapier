@@ -1159,6 +1159,9 @@ paths:
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
+          x-oneOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/BicycleProperties'
       responses:
         '201':
           description: Created new Dog or Bicycle
@@ -1464,6 +1467,9 @@ paths:
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
+          x-oneOf:
+          - $ref: '#/definitions/DogProperties'
+          - $ref: '#/definitions/BicycleProperties'
       responses:
         '201':
           description: Created new Dog or Bicycle

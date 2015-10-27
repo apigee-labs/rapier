@@ -368,8 +368,8 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(rel_property_specs) > 1:
                 post_schema = self.mutable_definition_ref('Entity')
-                if False: # should validate but does not?
-                    post_schema['x-oneOf'] = [self.mutable_definition_ref(spec.target_entity) for spec in rel_property_specs]
+                #if False: # should validate but does not?
+                post_schema['x-oneOf'] = [self.mutable_definition_ref(spec.target_entity) for spec in rel_property_specs]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = self.mutable_definition_ref(entity_name)

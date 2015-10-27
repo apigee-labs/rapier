@@ -237,6 +237,9 @@ paths:
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
+          x-oneOf:
+          - $ref: '#/definitions/SpecProperties'
+          - $ref: '#/definitions/FolderProperties'
       responses:
         '201':
           description: Created new Spec or Folder
