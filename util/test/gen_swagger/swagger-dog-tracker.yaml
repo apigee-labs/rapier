@@ -34,7 +34,7 @@ definitions:
         type: string
       owner:
         description: URL of a Person
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: '1'
@@ -47,7 +47,7 @@ definitions:
     properties:
       dogs:
         description: URL of a Collection of Dogs
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -55,7 +55,7 @@ definitions:
             $ref: '#/definitions/Dog'
       people:
         description: URL of a Collection of Persons
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -79,7 +79,7 @@ definitions:
     properties:
       dogs:
         description: URL of a Collection of Dogs
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -97,7 +97,7 @@ definitions:
         format: dateTime
         type: string
       creator:
-        format: URL
+        format: uri
         type: string
       modified:
         format: dateTime

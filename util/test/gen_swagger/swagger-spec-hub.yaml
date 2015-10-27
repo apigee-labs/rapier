@@ -44,7 +44,7 @@ definitions:
     properties:
       contents:
         description: URL of a Collection of (Spec | Folder)s
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -56,7 +56,7 @@ definitions:
     properties:
       folder:
         description: URL of a Folder
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: '1'
@@ -80,7 +80,7 @@ definitions:
     properties:
       myHub:
         description: URL of a Collection of (Spec | Folder)s
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -90,7 +90,7 @@ definitions:
             - $ref: '#/definitions/Folder'
       sharedWithMe:
         description: URL of a Collection of (Spec | Folder)s
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: n
@@ -101,16 +101,16 @@ definitions:
   ServerEntityProperties:
     properties:
       created:
-        format: dateTime
+        format: date-time
         type: string
       creator:
         format: URL
         type: string
       modified:
-        format: dateTime
+        format: date-time
         type: string
       modifier:
-        format: dateTime
+        format: date-time
         type: string
   Spec:
     allOf:
@@ -121,7 +121,7 @@ definitions:
     properties:
       content:
         description: URL of a Content
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: '1'
@@ -129,7 +129,7 @@ definitions:
             $ref: '#/definitions/Content'
       folder:
         description: URL of a Folder
-        format: URL
+        format: uri
         type: string
         x-rapier-relationship:
           multiplicity: '1'

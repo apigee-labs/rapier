@@ -12,16 +12,16 @@ conventions:
     server_entity_properties:
         created:
             type: string
-            format: dateTime
+            format: date-time
         creator:
             type: string
             format: URL
         modified:
             type: string
-            format: dateTime
+            format: date-time
         modifier:
             type: string
-            format: dateTime
+            format: date-time
 entities:
     Hub:
         well_known_URLs: /

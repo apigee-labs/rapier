@@ -32,7 +32,7 @@ definitions:
         format: dateTime
         type: string
       creator:
-        format: URL
+        format: uri
         type: string
       modified:
         format: dateTime

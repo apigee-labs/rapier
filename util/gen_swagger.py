@@ -150,7 +150,7 @@ class SwaggerGenerator(object):
                     'URL of %s' % ('a (%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
                 ,
             'type': 'string',
-            'format': 'URL',
+            'format': 'uri',
             'x-rapier-relationship': {
                 'type': {
                     'oneOf': [{'$ref': '#/definitions/%s' % rel_prop_spec.target_entity} for rel_prop_spec in rel_prop_specs]
@@ -852,7 +852,7 @@ server_entity_properties = {
         },
     'creator': {
         'type': 'string',
-        'format': 'URL'
+        'format': 'uri'
         },
     'modified': {
         'type': 'string',
