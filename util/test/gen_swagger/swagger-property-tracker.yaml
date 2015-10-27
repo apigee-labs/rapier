@@ -1164,7 +1164,7 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Dog
+      description: Create a new (Dog | Bicycle)
       parameters:
       - description: The representation of the new (Dog | Bicycle) being created
         in: body
@@ -1473,7 +1473,7 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Dog
+      description: Create a new (Dog | Bicycle)
       parameters:
       - description: The representation of the new (Dog | Bicycle) being created
         in: body

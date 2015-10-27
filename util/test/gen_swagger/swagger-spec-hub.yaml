@@ -228,7 +228,7 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Spec
+      description: Create a new (Spec | Folder)
       parameters:
       - description: The representation of the new (Spec | Folder) being created
         in: body

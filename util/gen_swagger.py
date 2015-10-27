@@ -368,13 +368,15 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(rel_property_specs) > 1:
                 post_schema = self.mutable_definition_ref('Entity')
+                description = 'Create a new (%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = {'allOf': [
                     self.mutable_definition_ref(entity_name),
                     self.mutable_definition_ref('Entity')
                 ]}
+                description = 'Create a new %s' % entity_name
             path_spec['post'] = {
-                'description': 'Create a new %s' % entity_name,
+                'description': description,
                 'parameters': [
                     {'name': 'body',
                      'in': 'body',
