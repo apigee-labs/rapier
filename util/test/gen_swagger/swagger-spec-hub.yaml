@@ -39,7 +39,6 @@ definitions:
   Folder:
     allOf:
     - $ref: '#/definitions/FolderProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       contents:
@@ -53,6 +52,8 @@ definitions:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
   FolderProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       folder:
         description: URL of a Folder
@@ -115,9 +116,10 @@ definitions:
   Spec:
     allOf:
     - $ref: '#/definitions/SpecProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
   SpecProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       content:
         description: URL of a Content

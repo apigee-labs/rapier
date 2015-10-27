@@ -70,7 +70,7 @@ class SwaggerGenerator(object):
             entities = spec['entities']
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
-                mutable_definition = dict()
+                mutable_definition = {'allOf': [self.mutable_definition_ref('Entity')]}
                 structured = 'type' not in entity_spec
                 if structured:
                     properties = entity_spec['properties'] if 'properties' in entity_spec else {}
@@ -80,8 +80,8 @@ class SwaggerGenerator(object):
                         self.mutable_definitions[entity_name] = mutable_definition
                         def_refs = [self.mutable_definition_ref(entity_name)]
                     else:
-                        def_refs = list()
-                    def_refs = def_refs + [self.mutable_definition_ref('Entity'), self.server_entity_properties_ref()]
+                        def_refs = [self.mutable_definition_ref('Entity')]
+                    def_refs.append(self.server_entity_properties_ref())
                     definition = {'allOf': def_refs}
                 else:
                     if 'properties' in spec:
@@ -267,13 +267,7 @@ class SwaggerGenerator(object):
                 description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
                 body_desciption =  'The subset of properties of the %s being updated' % entity_name
-                if entity_name in self.mutable_definitions:
-                    schema = {'allOf': [
-                        self.mutable_definition_ref(entity_name),
-                        self.mutable_definition_ref('Entity')
-                        ]}
-                else: # no modifiable properties
-                    schema = self.mutable_definition_ref('Entity')                 
+                schema = self.mutable_definition_ref(entity_name)                 
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s entity'
@@ -369,10 +363,7 @@ class SwaggerGenerator(object):
                 post_schema = self.mutable_definition_ref('Entity')
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
-                post_schema = {'allOf': [
-                    self.mutable_definition_ref(entity_name),
-                    self.mutable_definition_ref('Entity')
-                ]}
+                post_schema = self.mutable_definition_ref(entity_name)
                 description = 'Create a new %s' % entity_name
             path_spec['post'] = {
                 'description': description,

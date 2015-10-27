@@ -20,9 +20,10 @@ definitions:
   HelloMessage:
     allOf:
     - $ref: '#/definitions/HelloMessageProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
   HelloMessageProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       text:
         type: string
@@ -77,9 +78,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/HelloMessageProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/HelloMessageProperties'
       responses:
         '200':
           description: successful

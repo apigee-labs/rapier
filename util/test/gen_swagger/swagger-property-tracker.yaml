@@ -10,9 +10,10 @@ definitions:
   Bicycle:
     allOf:
     - $ref: '#/definitions/BicycleProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
   BicycleProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       name:
         type: string
@@ -45,9 +46,10 @@ definitions:
   Dog:
     allOf:
     - $ref: '#/definitions/DogProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
   DogProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       birth_date:
         type: string
@@ -82,7 +84,6 @@ definitions:
   Institution:
     allOf:
     - $ref: '#/definitions/InstitutionProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       assets:
@@ -96,6 +97,8 @@ definitions:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
   InstitutionProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       birth-date:
         type: string
@@ -104,7 +107,6 @@ definitions:
   Person:
     allOf:
     - $ref: '#/definitions/PersonProperties'
-    - $ref: '#/definitions/EntityProperties'
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       possessions:
@@ -118,6 +120,8 @@ definitions:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
   PersonProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       birth-date:
         type: string
@@ -262,9 +266,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/BicycleProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/BicycleProperties'
       responses:
         '201':
           description: Created new Bicycle
@@ -361,9 +363,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/BicycleProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/BicycleProperties'
       responses:
         '200':
           description: successful
@@ -490,9 +490,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/InstitutionProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -606,9 +604,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/DogProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/DogProperties'
       responses:
         '201':
           description: Created new Dog
@@ -704,9 +700,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/DogProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/DogProperties'
       responses:
         '200':
           description: successful
@@ -832,9 +826,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/InstitutionProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -948,9 +940,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/InstitutionProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '201':
           description: Created new Institution
@@ -1047,9 +1037,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/InstitutionProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/InstitutionProperties'
       responses:
         '200':
           description: successful
@@ -1257,9 +1245,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/PersonProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/PersonProperties'
       responses:
         '201':
           description: Created new Person
@@ -1356,9 +1342,7 @@ paths:
         in: body
         name: body
         schema:
-          allOf:
-          - $ref: '#/definitions/PersonProperties'
-          - $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/PersonProperties'
       responses:
         '200':
           description: successful
