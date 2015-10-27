@@ -43,6 +43,7 @@ class SwaggerGenerator(object):
         self.swagger['swagger'] = '2.0'
         self.swagger['info'] = dict()
         self.paths = dict()
+        self.uris = dict()
         if 'consumes' in spec:
             self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
@@ -57,6 +58,7 @@ class SwaggerGenerator(object):
         self.mutable_definitions['Entity'] = {'properties': self.entity_properties.copy()}
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
+        self.swagger['x-uris'] = self.uris
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.swagger['responses'] = dict()
@@ -121,9 +123,9 @@ class SwaggerGenerator(object):
                     implementation_path_specs = [Implementation_path_spec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
                     entity_interface =  self.get_entity_interface([implementation_path_spec], implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
-                elif False: #not self.include_impl:
+                else: #not self.include_impl:
                     entity_url_property_spec = Entity_URL_spec(entity_name)
-                    self.swagger['paths'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
+                    self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
                 if 'query_paths' in entity_spec:
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
@@ -138,6 +140,8 @@ class SwaggerGenerator(object):
                             self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_paths])  
+        if not self.uris:
+            del self.swagger['x-uris']
         return self.swagger
 
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
@@ -212,12 +216,13 @@ class SwaggerGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = rel_property_spec.is_multivalued()
         path = '/'.join([rel_property_spec.path_segment(inx != (len(rel_property_spec_stack)-1)) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
-        if path not in self.paths:
+        paths = self.uris if rel_property_spec_stack[0].is_uri_spec() else self.paths 
+        if path not in paths:
             if multivalued:
-                self.paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
+                paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
             if not multivalued or rel_property_spec.selector:
                 path = '/'.join([rel_property_spec.path_segment(True) for rel_property_spec in rel_property_spec_stack])
-                self.paths[path] = self.build_entity_interface(rel_property_spec_stack)
+                paths[path] = self.build_entity_interface(rel_property_spec_stack)
             
     def get_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
         rel_property_spec = rel_property_spec_stack[-1]
@@ -691,7 +696,7 @@ class SwaggerGenerator(object):
             'properties': properties
             }
 
-class Path_spec(object):
+class Segement_spec(object):
             
     def build_param(self):
         return None  
@@ -716,7 +721,10 @@ class Path_spec(object):
     def x_description(self):
         return None
         
-class Rel_sv_property_spec(Path_spec):
+    def is_uri_spec(self):
+        return False
+        
+class Rel_sv_property_spec(Segement_spec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, readonly=False):
         self.property_name = property_name
@@ -734,7 +742,7 @@ class Rel_sv_property_spec(Path_spec):
     def get_multiplicity(self):
         return '1'
                 
-class Rel_mv_property_spec(Path_spec):
+class Rel_mv_property_spec(Segement_spec):
     
     def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, selector, readonly=False):
         self.property_name = property_name
@@ -778,7 +786,7 @@ class Rel_mv_property_spec(Path_spec):
     def __ne__(self, other):
         return not self.__eq__(other)
         
-class Well_known_URL_Spec(Path_spec):
+class Well_known_URL_Spec(Segement_spec):
     
     def __init__(self, base_URL, target_entity):
         self.base_URL = base_URL 
@@ -790,7 +798,7 @@ class Well_known_URL_Spec(Path_spec):
     def build_param(self):
         return None        
 
-class Implementation_path_spec(Path_spec):
+class Implementation_path_spec(Segement_spec):
 
     def __init__(self, conventions, implementation_path, target_entity):
         self.implementation_path = implementation_path
@@ -814,13 +822,13 @@ class Implementation_path_spec(Path_spec):
         return 'This path is NOT part of the API. It is used in the implementaton and may be ' \
             'important to implementation-aware software, such as proxies or specification-driven implementations.'
 
-class Entity_URL_spec(Path_spec):
+class Entity_URL_spec(Segement_spec):
     
     def __init__(self, target_entity):
         self.target_entity = target_entity
 
     def path_segment(self, select_one_of_many = False):
-        return '/{%s_URL}' % self.target_entity
+        return '{%s_URL}' % self.target_entity
 
     def build_param(self):
         return {
@@ -828,9 +836,12 @@ class Entity_URL_spec(Path_spec):
             'in': 'path',
             'type': 'string',
             'description':
-                "Specifies the URL of the %s entity whose relationship is being accessed" % self.target_entity,
+                "Specifies the URL of %s entity" % articled(self.target_entity),
             'required': True
             }
+            
+    def is_uri_spec(self):
+        return True
  
 entity_properties = {
     'self': {
