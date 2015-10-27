@@ -864,15 +864,6 @@ server_entity_properties = {
         }        
     }
     
-collection_properties = {
-    'self': {
-        'type': 'string'
-        }, 
-    'kind': {
-        'type': 'string'
-        }
-    }
-    
 def as_list(value, separator = None):
     if isinstance(value, basestring):
         if separator:
