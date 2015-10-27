@@ -262,7 +262,6 @@ class SwaggerGenerator(object):
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         if not 'immutable' in entity_spec or entity_spec['immutable'] == False:
-            article = 'an' if entity_name[0].lower() in 'aeiou' else 'a'
             if structured:
                 update_verb = 'patch'
                 description = 'Update %s entity'
