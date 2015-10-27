@@ -144,10 +144,10 @@ class SwaggerGenerator(object):
             return None
         return {
             'description': 
-                    'URL of a Collection of %ss' % 
-                        ('(%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else  rel_prop_specs[0].target_entity) 
+                    'URL of a Collection of %s' % 
+                        (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity) 
                 if rel_prop_specs[0].is_multivalued() else 
-                    'URL of %s' % ('a (%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
+                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
                 ,
             'type': 'string',
             'format': 'uri',
@@ -357,9 +357,9 @@ class SwaggerGenerator(object):
         if len(rel_property_specs) > 1:
             schema = self.global_definition_ref('Entity')
             schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
-            i201_description = 'Created new (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
-            location_desciption =  'perma-link URL of newly-created (%s)' % ' | '.join([spec.target_entity for spec in rel_property_specs])
-            body_desciption =  'The representation of the new (%s) being created' % ' | '.join([spec.target_entity for spec in rel_property_specs])
+            i201_description = 'Created new %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
+            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
+            body_desciption =  'The representation of the new %s being created' % ' or '.join([spec.target_entity for spec in rel_property_specs])
         else:    
             schema = self.global_definition_ref(entity_name)
             i201_description = 'Created new %s' % entity_name
@@ -368,7 +368,7 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(rel_property_specs) > 1:
                 post_schema = self.mutable_definition_ref('Entity')
-                description = 'Create a new (%s)' % ' | '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
+                description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = {'allOf': [
                     self.mutable_definition_ref(entity_name),
@@ -899,8 +899,11 @@ def main(args):
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
     print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
     
+def article(name):
+    return 'an' if name[0].lower() in 'aeiou' else 'a'
+        
 def articled(name):
-    return '%s %s' % ('an' if name[0].lower() in 'aeiou' else 'a', name)
+    return '%s %s' % (article(name), name)
         
 if __name__ == "__main__":
     main(sys.argv)

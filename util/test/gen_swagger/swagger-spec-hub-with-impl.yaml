@@ -43,7 +43,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       contents:
-        description: URL of a Collection of (Spec | Folder)s
+        description: URL of a Collection of Specs and Folders
         format: uri
         type: string
         x-rapier-relationship:
@@ -79,7 +79,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       myHub:
-        description: URL of a Collection of (Spec | Folder)s
+        description: URL of a Collection of Specs and Folders
         format: uri
         type: string
         x-rapier-relationship:
@@ -89,7 +89,7 @@ definitions:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
       sharedWithMe:
-        description: URL of a Collection of (Spec | Folder)s
+        description: URL of a Collection of Specs and Folders
         format: uri
         type: string
         x-rapier-relationship:
@@ -369,22 +369,22 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new (Spec | Folder)
+      description: Create a new Spec or Folder
       parameters:
-      - description: The representation of the new (Spec | Folder) being created
+      - description: The representation of the new Spec or Folder being created
         in: body
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
       responses:
         '201':
-          description: Created new (Spec | Folder)
+          description: Created new Spec or Folder
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created (Spec | Folder)
+              description: perma-link URL of newly-created Spec or Folder
               type: string
           schema:
             $ref: '#/definitions/Entity'

@@ -17,7 +17,7 @@ definitions:
       name:
         type: string
       owner:
-        description: URL of a (Institution | Person)
+        description: URL of an Institution or Person
         format: uri
         type: string
         x-rapier-relationship:
@@ -56,7 +56,7 @@ definitions:
       name:
         type: string
       owner:
-        description: URL of a (Institution | Person)
+        description: URL of an Institution or Person
         format: uri
         type: string
         x-rapier-relationship:
@@ -86,7 +86,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       assets:
-        description: URL of a Collection of (Dog | Bicycle)s
+        description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
         x-rapier-relationship:
@@ -108,7 +108,7 @@ definitions:
     - $ref: '#/definitions/ServerEntityProperties'
     properties:
       possessions:
-        description: URL of a Collection of (Dog | Bicycle)s
+        description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
         x-rapier-relationship:
@@ -1164,22 +1164,22 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new (Dog | Bicycle)
+      description: Create a new Dog or Bicycle
       parameters:
-      - description: The representation of the new (Dog | Bicycle) being created
+      - description: The representation of the new Dog or Bicycle being created
         in: body
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
       responses:
         '201':
-          description: Created new (Dog | Bicycle)
+          description: Created new Dog or Bicycle
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created (Dog | Bicycle)
+              description: perma-link URL of newly-created Dog or Bicycle
               type: string
           schema:
             $ref: '#/definitions/Entity'
@@ -1473,22 +1473,22 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new (Dog | Bicycle)
+      description: Create a new Dog or Bicycle
       parameters:
-      - description: The representation of the new (Dog | Bicycle) being created
+      - description: The representation of the new Dog or Bicycle being created
         in: body
         name: body
         schema:
           $ref: '#/definitions/EntityProperties'
       responses:
         '201':
-          description: Created new (Dog | Bicycle)
+          description: Created new Dog or Bicycle
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created (Dog | Bicycle)
+              description: perma-link URL of newly-created Dog or Bicycle
               type: string
           schema:
             $ref: '#/definitions/Entity'
