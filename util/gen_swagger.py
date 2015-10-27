@@ -92,9 +92,8 @@ class SwaggerGenerator(object):
                 self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
-                    paths = self.swagger['paths']
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        paths[well_known_URL] = self.get_entity_interface([Well_known_URL_Spec(well_known_URL, entity_name)])
+                        self.swagger['paths'][well_known_URL] = self.get_entity_interface([Well_known_URL_Spec(well_known_URL, entity_name)])
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
@@ -135,7 +134,10 @@ class SwaggerGenerator(object):
                             entity_url_property_spec = Entity_URL_spec(entity_name)
                             self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
-                        sys.exit('query paths not valid or listed more than once: %s' % [query_paths])                                     
+                        sys.exit('query paths not valid or listed more than once: %s' % [query_paths])  
+                if False: #not self.include_impl:
+                    entity_url_property_spec = Entity_URL_spec(entity_name)
+                    self.swagger['paths'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
         return self.swagger
 
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
@@ -361,6 +363,8 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(rel_property_specs) > 1:
                 post_schema = self.mutable_definition_ref('Entity')
+                if False: # should validate but does not?
+                    post_schema['x-oneOf'] = [self.mutable_definition_ref(spec.target_entity) for spec in rel_property_specs]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = self.mutable_definition_ref(entity_name)
@@ -707,7 +711,7 @@ class Path_spec(object):
         return self.__dict__.str()
 
     def __repr__(self):
-        return repr(self.__dict__)
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
         
     def x_description(self):
         return None
