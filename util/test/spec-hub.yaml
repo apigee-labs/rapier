@@ -4,31 +4,51 @@ consumes: application/json
 produces: application/json text/html
 conventions:
     selector_location: path-parameter
-    entity_properties:
-        self:
-            type: string
-        kind:
-            type: string
-    server_entity_properties:
-        created:
-            type: string
-            format: date-time
-        creator:
-            type: string
-            format: URL
-        modified:
-            type: string
-            format: date-time
-        modifier:
-            type: string
-            format: date-time
 entities:
+    ServerEntity:
+        abstract: true
+        properties:
+            created:
+                type: string
+                format: date-time
+            creator:
+                type: string
+                format: URL
+            modified:
+                type: string
+                format: date-time
+            modifier:
+                type: string
+                format: date-time
+    Entity:
+        allOf:
+        - $ref: '#/entities/ServerEntity'
+        abstract: true
+        properties:
+            self:
+                type: string
+            kind:
+                type: string            
+    Collection:
+        allOf:
+        - $ref: '#/entities/Entity'
+        properties:
+            item_type: 
+                type: string
+            items:
+                type: array
+                items: 
+                    type: object
     Hub:
+        allOf:
+        - $ref: '#/entities/Entity'
         well_known_URLs: /
         query_paths: [myHub, sharedWithMe]
         immutable: true
     Folder:
-        implementation_path: /impl
+        allOf:
+        - $ref: '#/entities/Entity'
+        implementation_path: /folders
         properties:
             name:
                 type: string
@@ -42,8 +62,10 @@ entities:
                         action:
                             type: string
     Spec:
+        allOf:
+        - $ref: '#/entities/Entity'
         query_paths: [content]
-        implementation_path: /impl
+        implementation_path: /specs
         properties:
             name:
                 type: string

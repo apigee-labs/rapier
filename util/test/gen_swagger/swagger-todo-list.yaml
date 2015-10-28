@@ -8,6 +8,12 @@ produces:
 - application/json
 definitions:
   Collection:
+    allOf:
+    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/CollectionProperties'
+  CollectionProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       item_type:
         type: string
@@ -15,11 +21,13 @@ definitions:
         items:
           type: object
         type: array
-      kind:
-        type: string
-      self:
-        type: string
+  Entity:
+    allOf:
+    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/EntityProperties'
   EntityProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       kind:
         type: string
@@ -31,11 +39,11 @@ definitions:
         type: string
   Item:
     allOf:
+    - $ref: '#definitions/Entity'
     - $ref: '#/definitions/ItemProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
   ItemProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#definitions/EntityProperties'
     properties:
       description:
         type: string
@@ -44,24 +52,27 @@ definitions:
         type: string
       id:
         type: string
+  ServerEntity:
+    allOf:
+    - $ref: '#/definitions/ServerEntityProperties'
   ServerEntityProperties:
     properties:
       created:
-        format: dateTime
+        format: date-time
         type: string
       creator:
-        format: uri
+        format: URL
         type: string
       modified:
-        format: dateTime
+        format: date-time
         type: string
       modifier:
-        format: dateTime
+        format: date-time
         type: string
   TodoList:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#definitions/Entity'
+    - $ref: '#/definitions/TodoListProperties'
     properties:
       items:
         description: URL of a Collection of Items
@@ -71,6 +82,9 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Item'
+  TodoListProperties:
+    allOf:
+    - $ref: '#definitions/EntityProperties'
 paths:
   /to-dos:
     get:
@@ -340,9 +354,135 @@ paths:
         default:
           $ref: '#/responses/default'
 x-uris:
+  '{Collection_URL}':
+    parameters:
+    - description: The URL of a Collection entity
+      in: path
+      name: Collection_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Collection
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update a Collection entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Collection being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/CollectionProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Collection
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   '{Item_URL}':
     parameters:
-    - description: Specifies the URL of an Item entity
+    - description: The URL of an Item entity
       in: path
       name: Item_URL
       required: true
@@ -468,7 +608,7 @@ x-uris:
           $ref: '#/responses/default'
   '{TodoList_URL}':
     parameters:
-    - description: Specifies the URL of a TodoList entity
+    - description: The URL of a TodoList entity
       in: path
       name: TodoList_URL
       required: true

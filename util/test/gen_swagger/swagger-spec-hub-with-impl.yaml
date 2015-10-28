@@ -9,6 +9,12 @@ produces:
 - text/html
 definitions:
   Collection:
+    allOf:
+    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/CollectionProperties'
+  CollectionProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
     properties:
       item_type:
         type: string
@@ -16,17 +22,15 @@ definitions:
         items:
           type: object
         type: array
-      kind:
-        type: string
-      self:
-        type: string
   Content:
     type: string
   Entity:
     allOf:
+    - $ref: '#/definitions/ServerEntity'
     - $ref: '#/definitions/EntityProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
   EntityProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       kind:
         type: string
@@ -38,8 +42,8 @@ definitions:
         type: string
   Folder:
     allOf:
+    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/FolderProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
     properties:
       contents:
         description: URL of a Collection of Specs and Folders
@@ -51,10 +55,6 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  FolderProperties:
-    allOf:
-    - $ref: '#/definitions/EntityProperties'
-    properties:
       folder:
         description: URL of a Folder
         format: uri
@@ -63,6 +63,10 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
+  FolderProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
+    properties:
       name:
         type: string
       permissions:
@@ -76,8 +80,8 @@ definitions:
         type: array
   Hub:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/HubProperties'
     properties:
       myHub:
         description: URL of a Collection of Specs and Folders
@@ -99,6 +103,12 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
+  HubProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
+  ServerEntity:
+    allOf:
+    - $ref: '#/definitions/ServerEntityProperties'
   ServerEntityProperties:
     properties:
       created:
@@ -115,11 +125,8 @@ definitions:
         type: string
   Spec:
     allOf:
+    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/SpecProperties'
-    - $ref: '#/definitions/ServerEntityProperties'
-  SpecProperties:
-    allOf:
-    - $ref: '#/definitions/EntityProperties'
     properties:
       content:
         description: URL of a Content
@@ -137,6 +144,10 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
+  SpecProperties:
+    allOf:
+    - $ref: '#/definitions/EntityProperties'
+    properties:
       name:
         type: string
       permissions:
@@ -206,7 +217,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /impl/{implementation_key}:
+  /folders/{implementation_key}:
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
       implementations.
@@ -218,7 +229,7 @@ paths:
       required: true
       type: string
     get:
-      description: Retrieve a Spec
+      description: Retrieve a Folder
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -233,10 +244,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Folder'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -248,14 +256,14 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
-      description: Update a Spec entity
+      description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Spec being updated
+      - description: The subset of properties of the Folder being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecProperties'
+          $ref: '#/definitions/FolderProperties'
       responses:
         '200':
           description: successful
@@ -268,10 +276,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -287,7 +292,7 @@ paths:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Spec
+      description: Delete a Folder
       responses:
         '200':
           description: successful
@@ -300,10 +305,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Entity'
-            x-oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -487,10 +489,266 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /specs/{implementation_key}:
+    x-description: This path is NOT part of the API. It is used in the implementaton
+      and may be important to implementation-aware software, such as proxies or specification-driven
+      implementations.
+    parameters:
+    - description: This parameter is a private part of the implementation. It is not
+        part of the API
+      in: path
+      name: implementation_key
+      required: true
+      type: string
+    get:
+      description: Retrieve a Spec
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update a Spec entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Spec being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/SpecProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Spec
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
 x-uris:
+  '{Collection_URL}':
+    parameters:
+    - description: The URL of a Collection entity
+      in: path
+      name: Collection_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Collection
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      description: Update a Collection entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Collection being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/CollectionProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Collection
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   '{Content_URL}':
     parameters:
-    - description: Specifies the URL of a Content entity
+    - description: The URL of a Content entity
       in: path
       name: Content_URL
       required: true
@@ -634,7 +892,7 @@ x-uris:
           $ref: '#/responses/default'
   '{Hub_URL}':
     parameters:
-    - description: Specifies the URL of a Hub entity
+    - description: The URL of a Hub entity
       in: path
       name: Hub_URL
       required: true
@@ -697,7 +955,7 @@ x-uris:
           $ref: '#/responses/default'
   '{Spec_URL}/content':
     parameters:
-    - description: Specifies the URL of a Spec entity
+    - description: The URL of a Spec entity
       in: path
       name: Spec_URL
       required: true
