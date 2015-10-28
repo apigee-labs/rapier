@@ -108,20 +108,25 @@ definitions:
   ServerEntity:
     allOf:
     - $ref: '#/definitions/ServerEntityProperties'
-  ServerEntityProperties:
     properties:
       created:
         format: date-time
+        readOnly: true
         type: string
       creator:
         format: URL
+        readOnly: true
         type: string
       modified:
         format: date-time
+        readOnly: true
         type: string
       modifier:
         format: date-time
+        readOnly: true
         type: string
+  ServerEntityProperties:
+    properties: {}
 paths:
   /:
     get:

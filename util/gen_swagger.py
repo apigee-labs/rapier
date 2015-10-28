@@ -69,23 +69,22 @@ class SwaggerGenerator(object):
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 mutable_definition = dict()
+                definition = dict()
                 if 'allOf' in entity_spec:
                     mutable_definition['allOf'] = [{key: '%sProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
+                    definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 structured = 'type' not in entity_spec
-                if structured:
-                    definition = dict()
-                    if 'allOf' in entity_spec:
-                        definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
-                    else:
-                        definition['allOf'] = list()                      
-                    definition['allOf'].append(self.mutable_definition_ref(entity_name))
+                if structured:                     
+                    definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
-                        mutable_definition['properties'] = entity_spec['properties'].copy()
+                        mutable_definition['properties'] = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' not in prop or not prop['readOnly']}
+                        immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
+                        if immutable_properties:
+                            definition['properties'] = immutable_properties
                     self.definitions['%sProperties' % entity_name] = mutable_definition
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')
-                    definition = dict()
                     definition['type'] = entity_spec['type']
                 self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():

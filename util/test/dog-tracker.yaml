@@ -9,15 +9,19 @@ entities:
             created:
                 type: string
                 format: date-time
+                readOnly: true
             creator:
                 type: string
                 format: URL
+                readOnly: true
             modified:
                 type: string
                 format: date-time
+                readOnly: true
             modifier:
                 type: string
                 format: date-time
+                readOnly: true
     Entity:
         allOf:
         - $ref: '#/entities/ServerEntity'
