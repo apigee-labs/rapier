@@ -253,6 +253,8 @@ class SwaggerGenerator(object):
             response_200['<<'] = self.responses.get('standard_200')
         path_spec = PresortedOrderedDict()
         root_property_spec = rel_property_spec_stack[0]
+        if root_property_spec.is_private():
+            path_spec['x-private'] = True            
         x_description = root_property_spec.x_description()
         if x_description:
             path_spec['x-description'] = x_description
@@ -697,6 +699,9 @@ class Segement_spec(object):
     def x_description(self):
         return None
         
+    def is_private(self):
+        return False
+        
     def is_uri_spec(self):
         return False
         
@@ -797,6 +802,9 @@ class Implementation_path_spec(Segement_spec):
     def x_description(self):
         return 'This path is NOT part of the API. It is used in the implementaton and may be ' \
             'important to implementation-aware software, such as proxies or specification-driven implementations.'
+            
+    def is_private(self):
+        return True
 
 class Entity_URL_spec(Segement_spec):
     
