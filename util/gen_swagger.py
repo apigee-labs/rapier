@@ -125,16 +125,22 @@ class SwaggerGenerator(object):
                     query_paths = as_list(entity_spec['query_paths'])[:]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
+                        if self.include_impl and 'implementation_path' in entity_spec:
+                            implementation_path_spec = Implementation_path_spec(self.conventions, entity_spec['implementation_path'], entity_name)
+                            self.add_query_paths(query_paths[:], [implementation_path_spec] + rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
+                            leftover_query_paths = query_paths
                             for well_known_URL in well_known_URLs:
+                                leftover_query_paths = query_paths[:]
                                 baseURL_spec = Well_known_URL_Spec(well_known_URL, entity_name)
-                                self.add_query_paths(query_paths, [baseURL_spec] + rel_property_spec_stack, rel_property_specs)
+                                self.add_query_paths(leftover_query_paths, [baseURL_spec] + rel_property_spec_stack, rel_property_specs)
+                            query_paths = leftover_query_paths
                         else:
                             entity_url_property_spec = Entity_URL_spec(entity_name)
                             self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
-                        sys.exit('query paths not valid or listed more than once: %s' % [query_paths])  
+                        sys.exit('query paths not valid or listed more than once: %s' % query_paths)  
         if not self.uris:
             del self.swagger['x-uris']
         return self.swagger

@@ -624,6 +624,154 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  /specs/{implementation_key}/content:
+    x-description: This path is NOT part of the API. It is used in the implementaton
+      and may be important to implementation-aware software, such as proxies or specification-driven
+      implementations.
+    parameters:
+    - description: This parameter is a private part of the implementation. It is not
+        part of the API
+      in: path
+      name: implementation_key
+      required: true
+      type: string
+    get:
+      description: Retrieve a Content
+      parameters:
+      - $ref: '#/parameters/Accept'
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      consumes:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
+      description: Create or Update a Content entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Content being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Content'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Content
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
 x-uris:
   '{Collection_URL}':
     parameters:
