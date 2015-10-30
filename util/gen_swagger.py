@@ -71,7 +71,7 @@ class SwaggerGenerator(object):
                 mutable_definition = dict()
                 definition = dict()
                 if 'allOf' in entity_spec:
-                    mutable_definition['allOf'] = [{key: '%sProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
+                    mutable_definition['allOf'] = [{key: '%sMutableProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 structured = 'type' not in entity_spec
                 if structured:                     
@@ -81,7 +81,7 @@ class SwaggerGenerator(object):
                         immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
                         if immutable_properties:
                             definition['properties'] = immutable_properties
-                    self.definitions['%sProperties' % entity_name] = mutable_definition
+                    self.definitions['%sMutableProperties' % entity_name] = mutable_definition
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')
@@ -508,7 +508,7 @@ class SwaggerGenerator(object):
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):
-        mod_key = '%sProperties' % key
+        mod_key = '%sMutableProperties' % key
         return self.global_definition_ref(mod_key)
         
     def build_parameters(self, rel_property_spec_stack):

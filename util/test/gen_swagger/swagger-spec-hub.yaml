@@ -11,10 +11,10 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/CollectionProperties'
-  CollectionProperties:
+    - $ref: '#/definitions/CollectionMutableProperties'
+  CollectionMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       item_type:
         type: string
@@ -27,10 +27,10 @@ definitions:
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntityProperties'
-  EntityProperties:
+    - $ref: '#/definitions/EntityMutableProperties'
+  EntityMutableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       kind:
         type: string
@@ -43,7 +43,7 @@ definitions:
   Folder:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/FolderProperties'
+    - $ref: '#/definitions/FolderMutableProperties'
     properties:
       contents:
         description: URL of a Collection of Specs and Folders
@@ -63,9 +63,9 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-  FolderProperties:
+  FolderMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       name:
         type: string
@@ -81,7 +81,7 @@ definitions:
   Hub:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/HubProperties'
+    - $ref: '#/definitions/HubMutableProperties'
     properties:
       myHub:
         description: URL of a Collection of Specs and Folders
@@ -103,12 +103,12 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  HubProperties:
+  HubMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
   ServerEntity:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       created:
         format: date-time
@@ -126,12 +126,12 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntityProperties:
+  ServerEntityMutableProperties:
     properties: {}
   Spec:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/SpecProperties'
+    - $ref: '#/definitions/SpecMutableProperties'
     properties:
       content:
         description: URL of a Content
@@ -149,9 +149,9 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-  SpecProperties:
+  SpecMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       name:
         type: string
@@ -252,10 +252,10 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/EntityMutableProperties'
           x-oneOf:
-          - $ref: '#/definitions/SpecProperties'
-          - $ref: '#/definitions/FolderProperties'
+          - $ref: '#/definitions/SpecMutableProperties'
+          - $ref: '#/definitions/FolderMutableProperties'
       responses:
         '201':
           description: Created new Spec or Folder
@@ -407,7 +407,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionProperties'
+          $ref: '#/definitions/CollectionMutableProperties'
       responses:
         '200':
           description: successful
@@ -677,7 +677,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderProperties'
+          $ref: '#/definitions/FolderMutableProperties'
       responses:
         '200':
           description: successful
@@ -866,7 +866,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecProperties'
+          $ref: '#/definitions/SpecMutableProperties'
       responses:
         '200':
           description: successful

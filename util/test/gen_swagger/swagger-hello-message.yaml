@@ -10,10 +10,10 @@ definitions:
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntityProperties'
-  EntityProperties:
+    - $ref: '#/definitions/EntityMutableProperties'
+  EntityMutableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       kind:
         type: string
@@ -26,16 +26,16 @@ definitions:
   HelloMessage:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/HelloMessageProperties'
-  HelloMessageProperties:
+    - $ref: '#/definitions/HelloMessageMutableProperties'
+  HelloMessageMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       text:
         type: string
   ServerEntity:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       created:
         format: date-time
@@ -53,7 +53,7 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntityProperties:
+  ServerEntityMutableProperties:
     properties: {}
 paths:
   /message:
@@ -92,7 +92,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessageProperties'
+          $ref: '#/definitions/HelloMessageMutableProperties'
       responses:
         '200':
           description: successful
@@ -192,7 +192,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessageProperties'
+          $ref: '#/definitions/HelloMessageMutableProperties'
       responses:
         '200':
           description: successful

@@ -10,7 +10,7 @@ definitions:
   Bicycle:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/BicycleProperties'
+    - $ref: '#/definitions/BicycleMutableProperties'
     properties:
       owner:
         description: URL of an Institution or Person
@@ -22,9 +22,9 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
-  BicycleProperties:
+  BicycleMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       name:
         type: string
@@ -35,10 +35,10 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/CollectionProperties'
-  CollectionProperties:
+    - $ref: '#/definitions/CollectionMutableProperties'
+  CollectionMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       item_type:
         type: string
@@ -49,7 +49,7 @@ definitions:
   Dog:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogProperties'
+    - $ref: '#/definitions/DogMutableProperties'
     properties:
       owner:
         description: URL of an Institution or Person
@@ -61,9 +61,9 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Institution'
             - $ref: '#/definitions/Person'
-  DogProperties:
+  DogMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       birth_date:
         type: string
@@ -74,10 +74,10 @@ definitions:
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntityProperties'
-  EntityProperties:
+    - $ref: '#/definitions/EntityMutableProperties'
+  EntityMutableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       kind:
         type: string
@@ -90,7 +90,7 @@ definitions:
   Institution:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/InstitutionProperties'
+    - $ref: '#/definitions/InstitutionMutableProperties'
     properties:
       assets:
         description: URL of a Collection of Dogs and Bicycles
@@ -102,9 +102,9 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-  InstitutionProperties:
+  InstitutionMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       birth-date:
         type: string
@@ -113,7 +113,7 @@ definitions:
   Person:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PersonProperties'
+    - $ref: '#/definitions/PersonMutableProperties'
     properties:
       possessions:
         description: URL of a Collection of Dogs and Bicycles
@@ -125,9 +125,9 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-  PersonProperties:
+  PersonMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       birth-date:
         type: string
@@ -136,7 +136,7 @@ definitions:
   PropertyTracker:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PropertyTrackerProperties'
+    - $ref: '#/definitions/PropertyTrackerMutableProperties'
     properties:
       bicycles:
         description: URL of a Collection of Bicycles
@@ -170,12 +170,12 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Person'
-  PropertyTrackerProperties:
+  PropertyTrackerMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityProperties'
+    - $ref: '#/definitions/EntityMutableProperties'
   ServerEntity:
     allOf:
-    - $ref: '#/definitions/ServerEntityProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       created:
         format: date-time
@@ -193,7 +193,7 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntityProperties:
+  ServerEntityMutableProperties:
     properties: {}
 paths:
   /:
@@ -283,7 +283,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleProperties'
+          $ref: '#/definitions/BicycleMutableProperties'
       responses:
         '201':
           description: Created new Bicycle
@@ -380,7 +380,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleProperties'
+          $ref: '#/definitions/BicycleMutableProperties'
       responses:
         '200':
           description: successful
@@ -507,7 +507,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          $ref: '#/definitions/InstitutionMutableProperties'
       responses:
         '200':
           description: successful
@@ -621,7 +621,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogProperties'
+          $ref: '#/definitions/DogMutableProperties'
       responses:
         '201':
           description: Created new Dog
@@ -717,7 +717,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogProperties'
+          $ref: '#/definitions/DogMutableProperties'
       responses:
         '200':
           description: successful
@@ -843,7 +843,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          $ref: '#/definitions/InstitutionMutableProperties'
       responses:
         '200':
           description: successful
@@ -957,7 +957,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          $ref: '#/definitions/InstitutionMutableProperties'
       responses:
         '201':
           description: Created new Institution
@@ -1054,7 +1054,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          $ref: '#/definitions/InstitutionMutableProperties'
       responses:
         '200':
           description: successful
@@ -1175,10 +1175,10 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/EntityMutableProperties'
           x-oneOf:
-          - $ref: '#/definitions/DogProperties'
-          - $ref: '#/definitions/BicycleProperties'
+          - $ref: '#/definitions/DogMutableProperties'
+          - $ref: '#/definitions/BicycleMutableProperties'
       responses:
         '201':
           description: Created new Dog or Bicycle
@@ -1265,7 +1265,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonProperties'
+          $ref: '#/definitions/PersonMutableProperties'
       responses:
         '201':
           description: Created new Person
@@ -1362,7 +1362,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonProperties'
+          $ref: '#/definitions/PersonMutableProperties'
       responses:
         '200':
           description: successful
@@ -1483,10 +1483,10 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EntityProperties'
+          $ref: '#/definitions/EntityMutableProperties'
           x-oneOf:
-          - $ref: '#/definitions/DogProperties'
-          - $ref: '#/definitions/BicycleProperties'
+          - $ref: '#/definitions/DogMutableProperties'
+          - $ref: '#/definitions/BicycleMutableProperties'
       responses:
         '201':
           description: Created new Dog or Bicycle
@@ -1586,7 +1586,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleProperties'
+          $ref: '#/definitions/BicycleMutableProperties'
       responses:
         '200':
           description: successful
@@ -1712,7 +1712,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionProperties'
+          $ref: '#/definitions/CollectionMutableProperties'
       responses:
         '200':
           description: successful
@@ -1838,7 +1838,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogProperties'
+          $ref: '#/definitions/DogMutableProperties'
       responses:
         '200':
           description: successful
@@ -1964,7 +1964,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionProperties'
+          $ref: '#/definitions/InstitutionMutableProperties'
       responses:
         '200':
           description: successful
@@ -2090,7 +2090,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonProperties'
+          $ref: '#/definitions/PersonMutableProperties'
       responses:
         '200':
           description: successful
