@@ -118,7 +118,7 @@ class SwaggerGenerator(object):
                     implementation_path_specs = [Implementation_path_spec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
                     entity_interface =  self.get_entity_interface([implementation_path_spec], implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
-                elif 'abstract' not in entity_spec or not entity_spec['abstract']: 
+                elif not self.include_impl and ('abstract' not in entity_spec or not entity_spec['abstract']): 
                     entity_url_property_spec = Entity_URL_spec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
                 if 'query_paths' in entity_spec:
@@ -217,13 +217,14 @@ class SwaggerGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = rel_property_spec.is_multivalued()
         path = '/'.join([rel_property_spec.path_segment(inx != (len(rel_property_spec_stack)-1)) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
-        paths = self.uris if rel_property_spec_stack[0].is_uri_spec() else self.paths 
-        if path not in paths:
-            if multivalued:
-                paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
-            if not multivalued or rel_property_spec.selector:
-                path = '/'.join([rel_property_spec.path_segment(True) for rel_property_spec in rel_property_spec_stack])
-                paths[path] = self.build_entity_interface(rel_property_spec_stack)
+        if not (self.include_impl and rel_property_spec_stack[0].is_uri_spec()):
+            paths = self.uris if rel_property_spec_stack[0].is_uri_spec() else self.paths 
+            if path not in paths:
+                if multivalued:
+                    paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
+                if not multivalued or rel_property_spec.selector:
+                    path = '/'.join([rel_property_spec.path_segment(True) for rel_property_spec in rel_property_spec_stack])
+                    paths[path] = self.build_entity_interface(rel_property_spec_stack)
             
     def get_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
         rel_property_spec = rel_property_spec_stack[-1]
