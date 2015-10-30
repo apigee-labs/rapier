@@ -1,4 +1,4 @@
-title: SpecHubAPI
+title: Spec Hub API
 version: "0.1"
 consumes: application/json
 produces: application/json text/html

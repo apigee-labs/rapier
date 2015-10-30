@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: SpecHubAPI
+  title: Spec Hub API
   version: '0.1'
 consumes:
 - application/json
