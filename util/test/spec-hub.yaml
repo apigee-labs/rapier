@@ -4,6 +4,7 @@ consumes: application/json
 produces: application/json text/html
 conventions:
     selector_location: path-parameter
+    multi_valued_entity_name: Collection
 entities:
     ServerEntity:
         abstract: true

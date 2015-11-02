@@ -1,13 +1,7 @@
 title: PropertyTrackerAPI
 version: "0.1"
-patterns:
-    link_style: simple-property
-    path_selector_style: path-parameter
-    collection_style: simple-object
-    versioning_strategy: no-versioning
-    security_method: 
-        oauth2-bearer-token:
-            header: Authorization
+conventions:
+    multi_valued_entity_name: Collection
 entities:
     ServerEntity:
         abstract: true

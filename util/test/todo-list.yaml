@@ -1,5 +1,7 @@
 title: TodoListAPI
 version: "0.1"
+conventions:
+    multi_valued_entity_name: Collection
 entities:
     Collection:
         properties:
@@ -15,6 +17,9 @@ entities:
         immutable: true
     Item:
         properties:
+            self:
+                type: string
+                format: uri
             id:
                 type: string
             description:

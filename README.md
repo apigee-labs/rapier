@@ -80,6 +80,9 @@ entities:
         immutable: true
     Item:
         properties:
+            self:
+                type: string
+                format: uri
             id:
                 type: string
             description:
@@ -106,12 +109,16 @@ resource that contains information on each item of the `To_do_list`. In JSON, th
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
     {"items": [{
+         "self": "http://example.org/yyyyy",
+         "id": "10293847",
          "description": "Get milk on the way home",
-         "due": "1439228983"
+         "due": "2016-10-30T09:30:10Z"
          }
       ]
     }
 ``` 
+
+
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
@@ -119,7 +126,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but the API does not require it and clients should not count on it.
+and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but REST does not require this and clients should not count on it.
 The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the `Item` property called `id`. This indicates
 that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`.
 A Rapier option allows the selector value to be in a path parameter instead of a path segment - see the 'Property Tracker' example.
@@ -128,67 +135,113 @@ You can POST items to `http://example.org/to-dos/items` to create new items, you
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
  
     {
-     "_self": "http://example.org/yyyyy",
+     "self": "http://example.org/yyyyy",
      "id": "10293847",
-     "kind": "Item"
      "description": "Get milk on the way home",
-     "due": "1439228983"
+     "due": "2016-10-30T09:30:10Z"
     }
  
-If you want to see the generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-to-do-list.yaml)
+If you want to see the generated Swagger document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list.yaml)
  
 ### Dog Tracker
  
 Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
- 
-    info:
-        title: Dog-tracker API
-        version: "0.1"
-    conventions:
-        selector_location: path-parameter
-    entities:
-        Dog_tracker:
-            well_known_URLs: /dog-tracker
-            query_paths: [dogs, people, dogs/owner, people/dogs]
-        Dog:
-            properties:
-                name:
-                    type: string
-                birth_date:
-                    type: string
-                fur_color:
-                    type: string
-        Person:
-            properties:
-                name:
-                    type: string
-                birth-date:
-                    type: string
-    relationships:
-        tracker-to-dogs:
-            one_end:
-                entity: Dog_tracker
-                property: dogs
-                multiplicity: 0:n
-            other_end:
-                entity: Dog
-        tracker-to-people:
-            one_end:
-                entity: Dog_tracker
-                property: people
-                multiplicity: 0:n
-            other_end:
-                entity: Person
-        dogs-to-people:
-            one_end:
-                entity: Person
-                property: dogs
-                multiplicity: 0:n
-            other_end:
-                entity: Dog
-                property: owner
-                multiplicity: 0:1
-                
+```yaml 
+title: DogTrackerAPI
+version: "0.1"
+conventions:
+    selector_location: path-parameter
+    multi_valued_entity_name: Collection
+entities:
+    ServerEntity:
+        abstract: true
+        properties:
+            created:
+                type: string
+                format: date-time
+                readOnly: true
+            creator:
+                type: string
+                format: URL
+                readOnly: true
+            modified:
+                type: string
+                format: date-time
+                readOnly: true
+            modifier:
+                type: string
+                format: date-time
+                readOnly: true
+    Entity:
+        allOf:
+        - $ref: '#/entities/ServerEntity'
+        abstract: true
+        properties:
+            self:
+                type: string
+            kind:
+                type: string            
+    Collection:
+        allOf:
+        - $ref: '#/entities/Entity'
+        properties:
+            item_type: 
+                type: string
+            items:
+                type: array
+                items: 
+                    type: object
+    DogTracker:
+        allOf:
+        - $ref: '#/entities/Entity'
+        well_known_URLs: /
+        query_paths: [dogs, people, dogs/owner, people/dogs]
+        immutable: true
+    Dog:
+        allOf:
+        - $ref: '#/entities/Entity'
+        properties:
+            name:
+                type: string
+            birth_date:
+                type: string
+            fur_color:
+                type: string
+    Person:
+        allOf:
+        - $ref: '#/entities/Entity'
+        properties:
+            name:
+                type: string
+            birth-date:
+                type: string
+relationships:
+    tracker-to-dogs:
+        one_end:
+            entity: DogTracker
+            property: dogs
+            multiplicity: 0:n
+            selector: name
+        other_end:
+            entity: Dog
+    tracker-to-people:
+        one_end:
+            entity: DogTracker
+            property: people
+            multiplicity: 0:n
+            selector: name
+        other_end:
+            entity: Person
+    dogs-to-people:
+        one_end:
+            entity: Person
+            property: dogs
+            multiplicity: 0:n
+        other_end:
+            entity: Dog
+            property: owner
+            multiplicity: 0:1
+```                
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
 resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
@@ -208,19 +261,21 @@ From the `well_known_URLs` and `query_paths` properties, you can infer that the 
     /dog-tracker/people;{Person_id}
     /dog-tracker/people;{Person_id}/dogs
 
-Since you know the pattern, you already know what all these mean, but if you want to see a generated Swagger document for this API specification, [it is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-dog-tracker.yaml)
+Since you know the pattern, you already know what all these mean, but if you want to see a generated Swagger document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-dog-tracker.yaml)
 
 ### Property Tracker
 
 The next example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
-The [source for this example is here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/property-tracker.yaml). 
-This example strains the expressive power of Swagger - you can see a generated [Swagger document here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-property-tracker.yaml).
+The [source for this example is here](https://github.com/apigee/rapier/blob/master/util/test/property-tracker.yaml). 
+This example strains the expressive power of Swagger - you can see a generated [Swagger document here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-property-tracker.yaml).
 
 ### Spec Repo
 
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
-Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/spec-hub.yaml) 
-shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-spec-hub.yaml).
+Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee/rapier/blob/master/util/test/spec-hub.yaml) 
+shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub.yaml).
+The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier Swagger generator supports a -i command-line option that allows the implementation
+view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-impl.yaml).
 
 
 \[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
