@@ -9,11 +9,8 @@ produces:
 definitions:
   Collection:
     allOf:
-    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/CollectionMutableProperties'
   CollectionMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       item_type:
         type: string
@@ -21,29 +18,14 @@ definitions:
         items:
           type: object
         type: array
-  Entity:
-    allOf:
-    - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntityMutableProperties'
-  EntityMutableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
   ErrorResponse:
     properties:
       message:
         type: string
   Item:
     allOf:
-    - $ref: '#definitions/Entity'
     - $ref: '#/definitions/ItemMutableProperties'
   ItemMutableProperties:
-    allOf:
-    - $ref: '#definitions/EntityMutableProperties'
     properties:
       description:
         type: string
@@ -52,31 +34,8 @@ definitions:
         type: string
       id:
         type: string
-  ServerEntity:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    properties:
-      created:
-        format: date-time
-        readOnly: true
-        type: string
-      creator:
-        format: URL
-        readOnly: true
-        type: string
-      modified:
-        format: date-time
-        readOnly: true
-        type: string
-      modifier:
-        format: date-time
-        readOnly: true
-        type: string
-  ServerEntityMutableProperties:
-    properties: {}
   TodoList:
     allOf:
-    - $ref: '#definitions/Entity'
     - $ref: '#/definitions/TodoListMutableProperties'
     properties:
       items:
@@ -87,9 +46,7 @@ definitions:
           multiplicity: n
           type:
             $ref: '#/definitions/Item'
-  TodoListMutableProperties:
-    allOf:
-    - $ref: '#definitions/EntityMutableProperties'
+  TodoListMutableProperties: {}
 paths:
   /to-dos:
     get:

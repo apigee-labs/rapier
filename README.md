@@ -57,9 +57,7 @@ The `Hello-message` at `/message` will look like this:
 
     {"message": "Hello, world"}
  
-The Swagger document generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
-It contains around 120 lines, which illustrates the efficiency of Rapier. 
-The Swagger document is also more complex - it contains both JSON Refs and YAML anchors and aliases to try to avoid repetition, otherwise the Swagger would be even longer.
+The Swagger document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
 
 ### To-do List
 
