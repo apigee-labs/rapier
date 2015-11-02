@@ -65,6 +65,8 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
 ```yaml
 title: TodoListAPI
 version: "0.1"
+conventions:
+    multi_valued_entity_name: Collection
 entities:
     Collection:
         properties:
@@ -127,7 +129,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
 and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but REST does not require this and clients should not count on it.
-The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the `Item` property called `id`. This indicates
+The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the property called `id` of the `Item` entity. This indicates
 that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`.
 A Rapier option allows the selector value to be in a path parameter instead of a path segment - see the 'Property Tracker' example.
   
@@ -275,7 +277,7 @@ Not every resource has structured content that can be expressed as JSON. Even fo
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee/rapier/blob/master/util/test/spec-hub.yaml) 
 shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub.yaml).
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier Swagger generator supports a -i command-line option that allows the implementation
-view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-impl.yaml).
+view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml).
 
 
 \[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
