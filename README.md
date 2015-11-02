@@ -38,7 +38,7 @@ Rapier is very easy to understand and learn. The easiest way is by example.
 ### Hello World
 
 Here is a 'Hello-world' example in Rapier:
-
+```yaml
     info:
         title: Hello World API
         version: "0.1"
@@ -48,69 +48,70 @@ Here is a 'Hello-world' example in Rapier:
             properties:
                 text:
                     type: string
-                    
+```                    
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our extensions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
-
+```json
     {"message": "Hello, world"}
- 
+``` 
 The Swagger document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
 
 ### To-do List
 
 Traditionally, the next example after 'Hello world' is 'To-do List':
-
-    info:
-        title: To-do List API
-        version: "0.1"
-    entities:
-        To_do_list:
-            well_known_URLs: /to-dos
-            query_paths: [items]
-        Item:
-            properties:
-                description:
-                    type: string
-                due_date:
-                    type: date
-    relationships:
-        list-to-items:
-            one_end:
-                entity: To_do_list
-                property: items
-                multiplicity: 0:n
-            other_end:
-                entity: Item
-                
+```yaml
+title: TodoListAPI
+version: "0.1"
+entities:
+    Collection:
+        properties:
+            item_type: 
+                type: string
+            items:
+                type: array
+                items: 
+                    type: object
+    TodoList:
+        well_known_URLs: /to-dos
+        query_paths: [items]
+        immutable: true
+    Item:
+        properties:
+            id:
+                type: string
+            description:
+                type: string
+            due:
+                type: string
+                format: date-time
+relationships:
+    list-to-items:
+        one_end:
+            entity: TodoList
+            property: items
+            multiplicity: 0:n
+            selector: id
+        other_end:
+            entity: Item
+```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
 resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
-
-    {"_self": "http://example.org/to-dos",
-     "id": "987655443",
-     "kind": "To_do_list",
-     "items": "http://example.org/xxxxx"
-    }
-    
+```json
+    {"items": "http://example.org/xxxxx"}
+```
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
-
-    {"_self": "http://example.org/xxxxx",
-     "kind": "Collection",
-     "id": "5647382",
-     "contents_type": "Item",
-     "contents": [{
-         "_self": "http://example.org/yyyyy",
-         "id": "10293847",
-         "kind": "Item"
+```json
+    {"items": [{
          "description": "Get milk on the way home",
          "due": "1439228983"
          }
       ]
     }
- 
+``` 
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
@@ -118,12 +119,10 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are the same resource, and although there is no requirement on the server to use the same URL, most will do so.
-Since `items` is from a multi-valued relationship to the `Items` entity,
-Rapier conventions say that we can tack on `Item_id` on to the end of `todos/items/` to resolve to a single `Item`. From this we know that
-`http://example.org/yyyyy` is equivalant to `http://example.org/items/10293847`, and that will be the URL used by most servers. 
-Rapier calls `{Item_id}` a selector. A Rapier option allows the selector value to be in a path parameter instead of 
-a path segment - see the 'Property Tracker' example.
+and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but the API does not require it and clients should not count on it.
+The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the `Item` property called `id`. This indicates
+that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`.
+A Rapier option allows the selector value to be in a path parameter instead of a path segment - see the 'Property Tracker' example.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
