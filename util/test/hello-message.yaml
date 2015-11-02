@@ -1,37 +1,7 @@
 title: HelloWorldAPI
 version: "0.1"
 entities:
-    ServerEntity:
-        abstract: true
-        properties:
-            created:
-                type: string
-                format: date-time
-                readOnly: true
-            creator:
-                type: string
-                format: URL
-                readOnly: true
-            modified:
-                type: string
-                format: date-time
-                readOnly: true
-            modifier:
-                type: string
-                format: date-time
-                readOnly: true
-    Entity:
-        allOf:
-        - $ref: '#/entities/ServerEntity'
-        abstract: true
-        properties:
-            self:
-                type: string
-            kind:
-                type: string            
     HelloMessage:
-        allOf:
-        - $ref: '#/entities/Entity'
         well_known_URLs: /message
         properties:
             text:

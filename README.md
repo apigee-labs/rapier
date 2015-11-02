@@ -6,8 +6,8 @@ The goals of Rapier are to allow REST APIs to be specified with one tenth the ef
 produce specifications that describe higher quality APIs. \[1\]
 
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
-a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If your model of a web API
-consists of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
+a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
+as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
 fit with your mental model.
 
 You specify an API with Rapier by specifying, in a YAML file, the entities and relationships that describe the resources of the API. The details of the API's 
@@ -26,11 +26,10 @@ You can stop generating the Swagger
 documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
 people who know Swagger but not Rapier. 
 
-Swagger will likely remain important to you for
-documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
+Swagger will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
+or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
 
-In the future we intend to work on test tools,
-SDK generators and server implementation frameworks.  
+Rapier also includes SDK genenrators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
 
 ## Examples
 
@@ -54,14 +53,9 @@ The API defined by this Rapier specification exposes a single resource whose typ
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our extensions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
-In Rapier APIs, the server will add
-a few standard properties to the `Hello-message` entity — the `Hello-message` at `/message` will actually look like this:
+The `Hello-message` at `/message` will look like this:
 
-    {"_self": "http://example.org/message",
-     "id": "1234567",
-     "kind": "Hello_message",
-     "message": "Hello, world"
-    }
+    {"message": "Hello, world"}
  
 The Swagger document generated for the 9-line Rapier sample above can be [found here](https://revision.aeip.apigee.net/mnally/rapier/raw/master/test/swagger-hello-message.yaml). 
 It contains around 120 lines, which illustrates the efficiency of Rapier. 

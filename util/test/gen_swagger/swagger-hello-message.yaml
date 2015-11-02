@@ -7,54 +7,17 @@ consumes:
 produces:
 - application/json
 definitions:
-  Entity:
-    allOf:
-    - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntityMutableProperties'
-  EntityMutableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
   ErrorResponse:
     properties:
       message:
         type: string
   HelloMessage:
     allOf:
-    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/HelloMessageMutableProperties'
   HelloMessageMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       text:
         type: string
-  ServerEntity:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    properties:
-      created:
-        format: date-time
-        readOnly: true
-        type: string
-      creator:
-        format: URL
-        readOnly: true
-        type: string
-      modified:
-        format: date-time
-        readOnly: true
-        type: string
-      modifier:
-        format: date-time
-        readOnly: true
-        type: string
-  ServerEntityMutableProperties:
-    properties: {}
 paths:
   /message:
     get:
