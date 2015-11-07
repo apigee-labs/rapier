@@ -66,7 +66,7 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
 title: TodoListAPI
 version: "0.1"
 conventions:
-    multi_valued_entity_name: Collection
+    multi_valued_relationships: Collection
 entities:
     Collection:
         properties:
@@ -153,7 +153,7 @@ title: DogTrackerAPI
 version: "0.1"
 conventions:
     selector_location: path-parameter
-    multi_valued_entity_name: Collection
+    multi_valued_relationships: Collection
 entities:
     ServerEntity:
         abstract: true
