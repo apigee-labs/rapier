@@ -126,7 +126,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     /to-dos/items
     /to-dos/items/{Item_id}
     
-The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `'/todos'`
+The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
 and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but REST does not require this and clients should not count on it.
 The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the property called `id` of the `Item` entity. This indicates
