@@ -32,8 +32,8 @@ class SwaggerGenerator(object):
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
         self.selector_location = self.conventions['selector_location'] if 'selector_location' in self.conventions else 'path-segment'
-        if 'multi_valued_entity_name' in self.conventions:
-            self.collection_entity_name = self.conventions['multi_valued_entity_name']
+        if 'multi_valued_relationships' in self.conventions:
+            self.collection_entity_name = self.conventions['multi_valued_relationships']
         if not self.selector_location in ['path-segment', 'path-parameter']:
             print 'error: invalid value for selector_location: %s' % self.selector_location
             return None
@@ -598,7 +598,7 @@ class SwaggerGenerator(object):
         
     def build_collection_get(self):
         if not hasattr(self, 'collection_entity_name') or self.collection_entity_name not in self.definitions:
-            sys.exit('error: must define entity for ' % (self.collection_entity_name if hasattr(self, 'collection_entity_name') else 'multi-valued relationships'))
+            sys.exit('error: must define entity for %s' % (self.collection_entity_name if hasattr(self, 'collection_entity_name') else 'multi-valued relationships'))
         return {
             'responses': {
                 '200': {
