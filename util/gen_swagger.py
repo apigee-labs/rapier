@@ -31,12 +31,10 @@ class SwaggerGenerator(object):
             self.set_rapier_spec_from_filename(filename)
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
-        self.selector_location = self.conventions['selector_location'] if 'selector_location' in self.conventions else 'path-segment'
         if 'multi_valued_relationships' in self.conventions:
             self.collection_entity_name = self.conventions['multi_valued_relationships']
-        if not self.selector_location in ['path-segment', 'path-parameter']:
-            print 'error: invalid value for selector_location: %s' % self.selector_location
-            return None
+        if 'selector_location' in self.conventions and self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
+            sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
         patterns = spec.get('patterns')
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
@@ -149,8 +147,7 @@ class SwaggerGenerator(object):
 
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
         if len({rel_prop_spec.is_multivalued() for rel_prop_spec in rel_prop_specs}) > 1:
-            print 'error: all multiplicities for relationship property %s must be the same' % rel_prop_name
-            return None
+            sys.exit('error: all multiplicities for relationship property %s must be the same' % rel_prop_name)
         return {
             'description': 
                     'URL of a Collection of %s' % 
