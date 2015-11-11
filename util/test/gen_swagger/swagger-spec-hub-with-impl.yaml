@@ -222,7 +222,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /folders/{implementation_key}:
+  /folders;{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -495,7 +495,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /specs/{implementation_key}:
+  /specs;{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -626,7 +626,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /specs/{implementation_key}/content:
+  /specs;{implementation_key}/content:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven

@@ -3,7 +3,6 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-    selector_location: path-parameter
     multi_valued_relationships: Collection
 entities:
     ServerEntity:

@@ -735,7 +735,7 @@ class Rel_mv_property_spec(Segement_spec):
 
     def path_segment(self, select_one_of_many = False):
         if select_one_of_many:
-            separator = '/' if self.conventions.get('selector_location') == 'path-parameter' else ';'
+            separator = '/' if self.conventions.get('selector_location') == 'path-segment' else ';'
             return '%s%s{%s-%s}' % (self.property_name, separator, self.target_entity, self.selector)
         return self.property_name
         
@@ -786,7 +786,7 @@ class Implementation_path_spec(Segement_spec):
         self.conventions = conventions
         
     def path_segment(self, select_one_of_many = False):
-        separator = '/' if self.conventions.get('selector_location') == 'path-parameter' else ';'
+        separator = '/' if self.conventions.get('selector_location') == 'path-segment' else ';'
         return '%s%s{implementation_key}' % (self.implementation_path, separator)
 
     def build_param(self):
