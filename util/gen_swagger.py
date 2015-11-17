@@ -82,6 +82,8 @@ class SwaggerGenerator(object):
                         if immutable_properties:
                             definition['properties'] = immutable_properties
                     self.definitions['%sMutableProperties' % entity_name] = mutable_definition
+                    if 'required' in entity_spec:
+                        mutable_definition['required'] = entity_spec['required']
                 else:
                     if 'properties' in spec:
                         sys.exit('error: unstructured entities must not have properties')

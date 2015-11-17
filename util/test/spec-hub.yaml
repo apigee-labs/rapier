@@ -32,7 +32,9 @@ entities:
             self:
                 type: string
             kind:
-                type: string            
+                type: string
+        required:
+            - kind
     Collection:
         allOf:
         - $ref: '#/entities/Entity'
