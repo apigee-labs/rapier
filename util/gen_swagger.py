@@ -679,7 +679,7 @@ class SwaggerGenerator(object):
                 }
             }
 
-class Segement_spec(object):
+class Segment_spec(object):
             
     def build_param(self):
         return None  
@@ -710,7 +710,7 @@ class Segement_spec(object):
     def is_uri_spec(self):
         return False
         
-class Rel_sv_property_spec(Segement_spec):
+class Rel_sv_property_spec(Segment_spec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
         self.property_name = property_name
@@ -729,7 +729,7 @@ class Rel_sv_property_spec(Segement_spec):
     def get_multiplicity(self):
         return self.multiplicity
                 
-class Rel_mv_property_spec(Segement_spec):
+class Rel_mv_property_spec(Segment_spec):
     
     def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, selector, readonly=False):
         self.property_name = property_name
@@ -774,7 +774,7 @@ class Rel_mv_property_spec(Segement_spec):
     def __ne__(self, other):
         return not self.__eq__(other)
         
-class Well_known_URL_Spec(Segement_spec):
+class Well_known_URL_Spec(Segment_spec):
     
     def __init__(self, base_URL, target_entity):
         self.base_URL = base_URL 
@@ -786,7 +786,7 @@ class Well_known_URL_Spec(Segement_spec):
     def build_param(self):
         return None        
 
-class Implementation_path_spec(Segement_spec):
+class Implementation_path_spec(Segment_spec):
 
     def __init__(self, conventions, implementation_path, target_entity):
         self.implementation_path = implementation_path
@@ -813,7 +813,7 @@ class Implementation_path_spec(Segement_spec):
     def is_private(self):
         return True
 
-class Entity_URL_spec(Segement_spec):
+class Entity_URL_spec(Segment_spec):
     
     def __init__(self, target_entity):
         self.target_entity = target_entity
