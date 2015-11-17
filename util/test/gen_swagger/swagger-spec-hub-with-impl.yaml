@@ -52,7 +52,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             oneOf:
             - $ref: '#/definitions/Spec'
@@ -66,7 +66,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: '1'
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Folder'
       name:
@@ -90,7 +90,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             oneOf:
             - $ref: '#/definitions/Spec'
@@ -100,7 +100,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             oneOf:
             - $ref: '#/definitions/Spec'
@@ -143,7 +143,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: '1'
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Content'
       folder:
@@ -151,7 +151,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: '1'
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Folder'
       name:

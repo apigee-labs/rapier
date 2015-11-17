@@ -178,6 +178,7 @@ class SwaggerGenerator(object):
                         one_end['entity'],
                         other_end['entity'],
                         rel_name, 
+                        one_end.get('multiplicity'),
                         one_end.get('selector'),
                         one_end.get('readonly')) if get_multiplicity(one_end) == 'n' else \
                     Rel_sv_property_spec(
@@ -185,6 +186,7 @@ class SwaggerGenerator(object):
                         one_end['entity'],
                         other_end['entity'],
                         rel_name,
+                        one_end.get('multiplicity'),
                         one_end.get('readonly'))
                 result.append(p_spec)
            
@@ -710,11 +712,12 @@ class Segement_spec(object):
         
 class Rel_sv_property_spec(Segement_spec):
     
-    def __init__(self, property_name, source_entity, target_entity, rel_name, readonly=False):
+    def __init__(self, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
         self.rel_name = rel_name
+        self.multiplicity = multiplicity
         self.readonly = readonly 
         
     def path_segment(self, select_one_of_many = False):
@@ -724,16 +727,17 @@ class Rel_sv_property_spec(Segement_spec):
         False
         
     def get_multiplicity(self):
-        return '1'
+        return self.multiplicity
                 
 class Rel_mv_property_spec(Segement_spec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, selector, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, selector, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
         self.rel_name = rel_name
         self.selector = selector 
+        self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
 
@@ -747,7 +751,7 @@ class Rel_mv_property_spec(Segement_spec):
         return True
             
     def get_multiplicity(self):
-        return 'n'
+        return self.multiplicity
 
     def build_param(self):
         return {

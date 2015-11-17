@@ -46,7 +46,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Item'
   TodoListMutableProperties: {}

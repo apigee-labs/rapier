@@ -40,7 +40,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: '1'
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Person'
   DogTracker:
@@ -53,7 +53,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Dog'
       people:
@@ -61,7 +61,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Person'
   DogTrackerMutableProperties:
@@ -93,7 +93,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Dog'
   PersonMutableProperties:
