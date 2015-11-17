@@ -51,7 +51,6 @@ class SwaggerGenerator(object):
             self.swagger['produces'] = ['application/json']
         self.definitions = self.build_standard_definitions()
         self.swagger['definitions'] = self.definitions
-        self.mutable_definitions = dict()
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
         self.swagger['x-uris'] = self.uris
@@ -110,7 +109,7 @@ class SwaggerGenerator(object):
                                 properties = self.definitions[entity_name].setdefault('properties', dict())
                                 properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                             else:
-                                mutable_properties = self.definitions[entity_name].setdefault('properties', dict())
+                                mutable_properties = self.mutable_definitions(entity_name).setdefault('properties', dict())
                                 mutable_properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                         else:
                             rel_name = {rel_property_spec.property_name for rel_property_spec in rel_property_specs if rel_property_spec.property_name == rel_prop_name}.pop()
@@ -511,6 +510,9 @@ class SwaggerGenerator(object):
     def mutable_definition_ref(self, key):
         mod_key = '%sMutableProperties' % key
         return self.global_definition_ref(mod_key)
+        
+    def mutable_definitions(self, entity_name):
+        return self.definitions['%sMutableProperties' % entity_name]
         
     def build_parameters(self, rel_property_spec_stack):
         result = []

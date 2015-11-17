@@ -25,15 +25,6 @@ definitions:
     allOf:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/DogMutableProperties'
-    properties:
-      owner:
-        description: URL of a Person
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: '1'
-          type:
-            $ref: '#/definitions/Person'
   DogMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
@@ -44,6 +35,14 @@ definitions:
         type: string
       name:
         type: string
+      owner:
+        description: URL of a Person
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1'
+          type:
+            $ref: '#/definitions/Person'
   DogTracker:
     allOf:
     - $ref: '#/definitions/Entity'

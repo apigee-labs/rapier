@@ -57,6 +57,10 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
+  FolderMutableProperties:
+    allOf:
+    - $ref: '#/definitions/EntityMutableProperties'
+    properties:
       folder:
         description: URL of a Folder
         format: uri
@@ -65,10 +69,6 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-  FolderMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
-    properties:
       name:
         type: string
       permissions:
@@ -134,6 +134,9 @@ definitions:
     allOf:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/SpecMutableProperties'
+  SpecMutableProperties:
+    allOf:
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       content:
         description: URL of a Content
@@ -151,10 +154,6 @@ definitions:
           multiplicity: '1'
           type:
             $ref: '#/definitions/Folder'
-  SpecMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
-    properties:
       name:
         type: string
       permissions:
