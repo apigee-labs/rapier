@@ -31,6 +31,7 @@ entities:
         properties:
             self:
                 type: string
+                readOnly: true
             kind:
                 type: string
     Collection:

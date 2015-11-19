@@ -28,13 +28,15 @@ definitions:
     allOf:
     - $ref: '#/definitions/ServerEntity'
     - $ref: '#/definitions/EntityMutableProperties'
+    properties:
+      self:
+        readOnly: true
+        type: string
   EntityMutableProperties:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       kind:
-        type: string
-      self:
         type: string
   ErrorResponse:
     properties:
