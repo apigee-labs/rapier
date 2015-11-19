@@ -49,12 +49,6 @@ definitions:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
   FolderMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
@@ -63,10 +57,6 @@ definitions:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Folder'
       name:
         type: string
       permissions:
@@ -87,22 +77,10 @@ definitions:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
       sharedWithMe:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
   HubMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
@@ -140,18 +118,10 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Folder'
       name:
         type: string
       permissions:

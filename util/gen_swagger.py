@@ -25,6 +25,7 @@ class SwaggerGenerator(object):
         self.opts_keys = [k for k,v in opts]
         self.yaml_merge = '--yaml-merge' in self.opts_keys or '-m' in self.opts_keys
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
+        self.suppress_annotations = '--suppress-annotations' in self.opts_keys or '-s' in self.opts_keys
 
     def swagger_from_rapier(self, filename= None):
         if filename:
@@ -149,7 +150,7 @@ class SwaggerGenerator(object):
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
         if len({rel_prop_spec.is_multivalued() for rel_prop_spec in rel_prop_specs}) > 1:
             sys.exit('error: all multiplicities for relationship property %s must be the same' % rel_prop_name)
-        return {
+        result = {
             'description': 
                     'URL of a Collection of %s' % 
                         (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity) 
@@ -158,14 +159,16 @@ class SwaggerGenerator(object):
                 ,
             'type': 'string',
             'format': 'uri',
-            'x-rapier-relationship': {
+            }
+        if not self.suppress_annotations:
+            result['x-rapier-relationship'] = {
                 'type': {
                     'oneOf': [{'$ref': '#/definitions/%s' % rel_prop_spec.target_entity} for rel_prop_spec in rel_prop_specs]
                     } if len(rel_prop_specs) > 1 else
                     {'$ref': '#/definitions/%s' % rel_prop_specs[0].target_entity },
                 'multiplicity': rel_prop_specs[0].get_multiplicity()
                 }
-            }
+        return result
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
         result = []
@@ -859,9 +862,9 @@ def get_multiplicity(rel_property_spec):
 def main(args):
     generator = SwaggerGenerator()
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'mai', ['yaml-merge', 'yaml-alias', 'include-impl'])
+        opts, args = getopt.getopt(sys.argv[1:], 'maivs', ['yaml-merge', 'yaml-alias', 'include-impl', 'suppress-annotations'])
     except getopt.GetoptError as err:
-        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] filename'
+        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
         sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
