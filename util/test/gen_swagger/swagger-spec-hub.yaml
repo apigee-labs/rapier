@@ -543,6 +543,11 @@ x-uris:
         name: body
         schema:
           $ref: '#/definitions/Content'
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
       responses:
         '200':
           description: successful
@@ -580,6 +585,11 @@ x-uris:
           $ref: '#/responses/default'
     delete:
       description: Delete a Content
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
       responses:
         '200':
           description: successful
@@ -1002,6 +1012,11 @@ x-uris:
         name: body
         schema:
           $ref: '#/definitions/Content'
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
       responses:
         '200':
           description: successful
@@ -1039,6 +1054,11 @@ x-uris:
           $ref: '#/responses/default'
     delete:
       description: Delete a Content
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
       responses:
         '200':
           description: successful

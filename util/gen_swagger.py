@@ -270,6 +270,8 @@ class SwaggerGenerator(object):
                     '200': response_200, 
                     }
                 }
+        if produces:
+            path_spec['get']['produces'] = produces
         if not self.yaml_merge:
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
@@ -321,7 +323,7 @@ class SwaggerGenerator(object):
             if consumes:
                 path_spec[update_verb]['consumes'] = consumes
             if produces:
-                path_spec['get']['produces'] = produces
+                path_spec[update_verb]['produces'] = produces
         well_known = entity_spec.get('well_known_URLs')
         if not well_known:        
             path_spec['delete'] = {
@@ -330,6 +332,8 @@ class SwaggerGenerator(object):
                     '200': response_200
                     }
                 }
+            if produces:
+                path_spec['delete']['produces'] = produces
             if not self.yaml_merge:
                 path_spec['delete']['responses'].update(self.response_sets['delete_responses'])
             else:
