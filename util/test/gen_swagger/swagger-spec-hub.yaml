@@ -36,8 +36,6 @@ definitions:
         type: string
       self:
         type: string
-    required:
-    - kind
   ErrorResponse:
     properties:
       message:
