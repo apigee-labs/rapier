@@ -40,10 +40,12 @@ entities:
         properties:
             item_type: 
                 type: string
+                readOnly: true
             items:
                 type: array
                 items: 
                     type: object
+                readOnly: true
     Hub:
         allOf:
         - $ref: '#/entities/Entity'

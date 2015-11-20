@@ -12,16 +12,19 @@ definitions:
     allOf:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/CollectionMutableProperties'
-  CollectionMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       item_type:
+        readOnly: true
         type: string
       items:
         items:
           type: object
+        readOnly: true
         type: array
+  CollectionMutableProperties:
+    allOf:
+    - $ref: '#/definitions/EntityMutableProperties'
+    properties: {}
   Content:
     type: string
   Entity:

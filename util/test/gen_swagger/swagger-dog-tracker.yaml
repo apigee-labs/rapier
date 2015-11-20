@@ -268,11 +268,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}:
+  /dogs;{name}:
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -394,11 +393,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}/owner:
+  /dogs;{name}/owner:
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -604,12 +602,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{Person-name}:
+  /people;{name}:
     parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -731,12 +727,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{Person-name}/dogs:
+  /people;{name}/dogs:
     parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
+    - in: path
+      name: name
       required: true
       type: string
     get:

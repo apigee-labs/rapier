@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import yaml, sys, getopt
+import yaml, sys, getopt, itertools
 from collections import OrderedDict
 
 class PresortedList(list):
@@ -58,7 +58,6 @@ class SwaggerGenerator(object):
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.swagger['responses'] = dict()
-        self.entity_specs = {}
         self.response_sets = self.build_standard_response_sets()
         self.methods = self.build_standard_methods()
         self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
@@ -92,7 +91,7 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        self.swagger['paths'][well_known_URL] = self.get_entity_interface([WellKnownURLSpec(well_known_URL, entity_name)])
+                        self.swagger['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, entity_name))
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
@@ -118,29 +117,29 @@ class SwaggerGenerator(object):
                 if self.include_impl and 'implementation_path' in entity_spec:
                     implementation_path_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_path'], entity_name)
                     implementation_path_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
-                    entity_interface =  self.get_entity_interface([implementation_path_spec], implementation_path_specs)
+                    entity_interface =  self.build_entity_interface(implementation_path_spec, None, None, implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
                 elif not self.include_impl and ('abstract' not in entity_spec or not entity_spec['abstract']): 
                     entity_url_property_spec = EntityURLSpec(entity_name)
-                    self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface([entity_url_property_spec])
+                    self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
-                    query_paths = as_list(entity_spec['query_paths'])[:]
+                    query_paths = [QueryPath(query_path_string) for query_path_string in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
                         if self.include_impl and 'implementation_path' in entity_spec:
                             implementation_path_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_path'], entity_name)
-                            self.add_query_paths(query_paths[:], [implementation_path_spec] + rel_property_spec_stack, rel_property_specs)
+                            self.add_query_paths(query_paths[:], implementation_path_spec, rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             leftover_query_paths = query_paths
                             for well_known_URL in well_known_URLs:
                                 leftover_query_paths = query_paths[:]
                                 baseURL_spec = WellKnownURLSpec(well_known_URL, entity_name)
-                                self.add_query_paths(leftover_query_paths, [baseURL_spec] + rel_property_spec_stack, rel_property_specs)
+                                self.add_query_paths(leftover_query_paths, baseURL_spec, rel_property_spec_stack, rel_property_specs)
                             query_paths = leftover_query_paths
                         else:
                             entity_url_property_spec = EntityURLSpec(entity_name)
-                            self.add_query_paths(query_paths, [entity_url_property_spec] + rel_property_spec_stack, rel_property_specs)
+                            self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % query_paths)  
         if not self.uris:
@@ -202,7 +201,7 @@ class SwaggerGenerator(object):
                     add_type(rel_name, relationship['other_end'], relationship['one_end'])
         return result
         
-    def add_query_paths(self, query_paths, rel_property_spec_stack, prev_rel_property_specs):
+    def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity = rel_property_spec.target_entity
@@ -211,38 +210,27 @@ class SwaggerGenerator(object):
         for rel_spec in rel_property_specs:
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
-                self.add_query_paths(query_paths, rel_property_spec_stack, rel_property_specs)
+                self.add_query_paths(query_paths, prefix, rel_property_spec_stack, rel_property_specs)
                 rel_property_spec_stack.pop()
-        rel_path = '/'.join([rel_property_spec.path_segment() for rel_property_spec in rel_property_spec_stack[1:] if rel_property_spec.path_segment()])
-        if rel_path in query_paths:
-            self.emit_query_path(rel_property_spec_stack, prev_rel_property_specs)
-            query_paths.remove(rel_path)
+        for query_path in query_paths[:]:
+            if query_path.matches(rel_property_spec_stack):
+                self.emit_query_path(prefix, query_path, rel_property_spec_stack, prev_rel_property_specs)
+                query_paths.remove(query_path)
                 
-    def emit_query_path(self, rel_property_spec_stack, rel_property_specs):
+    def emit_query_path(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1]
-        multivalued = rel_property_spec.is_multivalued()
-        path = '/'.join([rel_property_spec.path_segment(inx != (len(rel_property_spec_stack)-1)) for inx, rel_property_spec in enumerate(rel_property_spec_stack)])
+        multivalued = rel_property_spec.is_multivalued() and not query_path.query_segments[-1].param
+        path = '/'.join([prefix.path_segment(), query_path.query_path_string])
         if not (self.include_impl and rel_property_spec_stack[0].is_uri_spec()):
-            paths = self.uris if rel_property_spec_stack[0].is_uri_spec() else self.paths 
+            paths = self.uris if prefix.is_uri_spec() else self.paths 
             if path not in paths:
                 if multivalued:
-                    paths[path] = self.build_relationship_interface(rel_property_spec_stack, rel_property_specs)
-                if not multivalued or rel_property_spec.selector:
-                    path = '/'.join([rel_property_spec.path_segment(True) for rel_property_spec in rel_property_spec_stack])
-                    paths[path] = self.build_entity_interface(rel_property_spec_stack)
-            
-    def get_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
-        rel_property_spec = rel_property_spec_stack[-1]
-        entity_name = rel_property_spec.target_entity
-        if len(rel_property_specs) > 0:
-            return self.build_entity_interface(rel_property_spec_stack, rel_property_specs)
-        elif entity_name not in self.entity_specs:
-            self.entity_specs[entity_name] = self.build_entity_interface(rel_property_spec_stack)
-        return self.entity_specs[entity_name]
-        
-    def build_entity_interface(self, rel_property_spec_stack, rel_property_specs=[]):
-        rel_property_spec = rel_property_spec_stack[-1]
-        entity_name = rel_property_spec.target_entity
+                    paths[path] = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                else:
+                    paths[path] = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
+                    
+    def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
+        entity_name = rel_property_spec_stack[-1].target_entity if rel_property_spec_stack else prefix.target_entity
         entity_spec = self.rapier_spec['entities'][entity_name]
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
@@ -257,13 +245,12 @@ class SwaggerGenerator(object):
         else:
             response_200['<<'] = self.responses.get('standard_200')
         path_spec = PresortedOrderedDict()
-        root_property_spec = rel_property_spec_stack[0]
-        if root_property_spec.is_private():
+        if prefix.is_private():
             path_spec['x-private'] = True            
-        x_description = root_property_spec.x_description()
+        x_description = prefix.x_description()
         if x_description:
             path_spec['x-description'] = x_description
-        parameters = self.build_parameters(rel_property_spec_stack)
+        parameters = self.build_parameters(prefix, query_path)
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = {
@@ -357,12 +344,12 @@ class SwaggerGenerator(object):
             path_spec['options']['<<'] = self.methods['options']        
         return path_spec
 
-    def build_relationship_interface(self, rel_property_spec_stack, rel_property_specs):
-        rel_property_spec = rel_property_spec_stack[-1]
+    def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
+        rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
         relationship_name = rel_property_spec.property_name
         entity_name = rel_property_spec.target_entity
         path_spec = PresortedOrderedDict()
-        parameters = self.build_parameters(rel_property_spec_stack[:-1]) 
+        parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = self.global_collection_get()
@@ -523,12 +510,16 @@ class SwaggerGenerator(object):
     def mutable_definitions(self, entity_name):
         return self.definitions['%sMutableProperties' % entity_name]
         
-    def build_parameters(self, rel_property_spec_stack):
+    def build_parameters(self, prefix, query_path):
         result = []
-        for rel_property_spec in rel_property_spec_stack:
-            param = rel_property_spec.build_param()
-            if param:
-                result.append(param)
+        param = prefix.build_param()
+        if param:
+            result.append(param)
+        if query_path:
+            for query_segment in query_path.query_segments:
+                param = query_segment.build_param()
+                if param:
+                    result.append(param)
         return result
           
     def build_standard_responses(self):
@@ -793,6 +784,66 @@ class WellKnownURLSpec(SegmentSpec):
     def build_param(self):
         return None        
 
+class QueryPath(object):
+
+    def __init__(self, query_path_string):
+        self.query_path_string = query_path_string
+        self.query_segments = [QuerySegment(segment_string) for segment_string in query_path_string.split('/')]
+            
+    def matches(self, rel_stack):
+        if len(self.query_segments) == len(rel_stack):
+            for segment, rel_spec in itertools.izip(self.query_segments, rel_stack):
+                if segment.property_name != rel_spec.property_name:
+                    return False
+            return True
+        else:
+            return False
+            
+    def __str__(self):
+        return self.query_path_string
+
+    def __repr__(self):
+        return 'QueryPath(%s)' % self.query_path_string
+        
+class QuerySegment(object):
+
+    def __init__(self, segment_string):
+        self.segment_string = segment_string 
+        parts = segment_string.split(';')
+        if len(parts) > 2:
+            sys.exit('query path segment contains more than 1 ; - %s' % segment_string)
+        elif len(parts) == 2:
+            path_params = parts[1]
+            if '{' in path_params:
+                open_brace_offset = path_params.index('{')
+                if '}' in path_params:
+                    close_brace_offset = path_params.index('}')
+                    if open_brace_offset < close_brace_offset:
+                        self.param = path_params[open_brace_offset+1 : close_brace_offset]
+                    else:
+                        sys.exit('empty path parameter ({}) - %s' % segment_string)
+                else:
+                    sys.exit('no closing { for path paramter - %s' % segment_string)
+            else:
+                sys.exit('missing path paramter ({xxx}) - %s' % segment_string)
+        else:
+            self.param = None
+        self.property_name = parts[0]    
+
+    def build_param(self):
+        return {
+            'name': self.param,
+            'in': 'path',
+            'type': 'string',
+            'required': True
+            } if self.param else None
+
+    def __str__(self):
+        return self.segment_string
+
+    def __repr__(self):
+        return 'QuerySegment(%s)' % self.segment_string
+        
 class ImplementationPathSpec(SegmentSpec):
 
     def __init__(self, conventions, implementation_path, target_entity):
