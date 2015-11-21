@@ -121,23 +121,26 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
 
-`http://example.org/xxxxx` and `http://example.org/yyyyy` are 'perma-link' URLs - their format is part of the private implementation of the server and clients should treat them as opaque.
-The format of these URLs is not part of the API.
+`http://example.org/xxxxx` and `http://example.org/yyyyy` are 'perma-link' URLs. The format of the perma-link URLs is part of the private implementation of the server — it is not part of the API — 
+and clients should treat them as opaque. Navigating between resources using perma-link URLs is the primary navigation mechnism for clients using the API.
  
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
     /to-dos/items/{id}
     
-These are examples of 'query URLs'. They are URLs whose format is published by the server as part of the API, and clients are expected to understand and compose them. The provision of
+These are examples of 'query URLs'. They are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 Query URLs allow clients to navigate along the paths defined by the relationships of the Rapier model for the API without retrieving intermediate resources. 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are URLs for the same resource. Many implementations will use a single URL for both the perma-link and the query URL, but the API does not require this and clients should not count on it.
+and `http://example.org/todos/items` are URLs for the same resource. Since the `id` value is probably immutable, many implementations will use a 
+single URL for both the perma-link and the query URL for this case, but the API does not require this and clients should not count on it. If the
+query URL were based on a mutable property like `name` rather than `id`, the permalink and the query URL would need to be different.
 The second URL template indicates
 that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. We know from this and the example above that
-`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` are URLs for the same resource. Again, many implementations will use a single URL for both, but clients should not count on this.
+`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` are URLs for the same resource. Again, many implementations will use a 
+single URL for both if the `id` property is immutable, but clients should not count on this.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
