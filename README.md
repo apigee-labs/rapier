@@ -129,7 +129,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     /to-dos/items
     /to-dos/items/{id}
     
-These are examples of 'query URLs'. They are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
+These are examples of 'query URLs'. Query URLs are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 Query URLs allow clients to navigate along the paths defined by the relationships of the Rapier model for the API without retrieving intermediate resources. 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
