@@ -139,11 +139,10 @@ and following the `items` relationship declared in the relationships section. Fr
 and `http://example.org/todos/items` must be URLs for the same resource. Since the `id` value is immutable, many implementations will use the 
 same URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it. If the
 query URL were based on a mutable property like `name` rather than `id`, the perma-link and the query URL would need to be different.
-The second URL template indicates
-that we can form a query URL by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. 
-We know from this and the example above that
-`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Again, many implementations will use a 
-single URL for both since the `id` property is immutable, but clients should not count on this.
+The second URL template indicates that we can form a query URL by tacking the value of the `id` property of an `Item` on to the end 
+of `todos/items/` to form a URL that will identify a single `Item`. We know from this and the example above that
+`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Again, many implementations 
+will use a single URL for both in this case since the `id` property is immutable, but clients should not count on this.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
