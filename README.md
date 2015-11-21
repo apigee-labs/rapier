@@ -122,7 +122,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
 
 `http://example.org/xxxxx` and `http://example.org/yyyyy` are 'perma-link' URLs - their format is part of the private implementation of the server and clients should treat them as opaque.
-the format of these URLs is not part of the API.
+The format of these URLs is not part of the API.
  
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
@@ -134,7 +134,7 @@ hyperlinks in the resources themselves reduces the need for query URLs compared 
 Query URLs allow clients to navigate along the paths defined by the relationships of the Rapier model for the API without retrieving intermediate resources. 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are URLs for the same resource. Many implementations will use a single URL, but REST does not require this and clients should not count on it.
+and `http://example.org/todos/items` are URLs for the same resource. Many implementations will use a single URL for both the perma-link and the query URL, but the API does not require this and clients should not count on it.
 The second URL template indicates
 that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. We know from this and the example above that
 `http://example.org/yyyyy` and `http://example.org/todos/items/10293847` are URLs for the same resource. Again, many implementations will use a single URL for both, but clients should not count on this.
@@ -254,7 +254,7 @@ properties of `Dog-tracker` we know that these Collections can also be accessed 
 
 The API also defines a relationship between Dogs and Persons, which is called `owner` on one side and `dogs` on the other. The `owner` property is settable on each Dog - this is in fact
 the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set by the client. If a Dog is POSTed to the `dogs` Collection of a specific
-Person, the server will set the `owner` property appropriately.
+Person, the server would presumably set the `owner` property appropriately.
 
 From the `well_known_URLs` and `query_paths` properties, you can infer that the following URLs and URL templates are part of the API:
 
