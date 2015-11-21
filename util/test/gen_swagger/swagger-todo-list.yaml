@@ -25,17 +25,20 @@ definitions:
   Item:
     allOf:
     - $ref: '#/definitions/ItemMutableProperties'
+    properties:
+      id:
+        readOnly: true
+        type: string
+      self:
+        format: uri
+        readOnly: true
+        type: string
   ItemMutableProperties:
     properties:
       description:
         type: string
       due:
         format: date-time
-        type: string
-      id:
-        type: string
-      self:
-        format: uri
         type: string
   TodoList:
     allOf:

@@ -20,8 +20,10 @@ entities:
             self:
                 type: string
                 format: uri
+                readOnly: true
             id:
                 type: string
+                readOnly: true
             description:
                 type: string
             due:
