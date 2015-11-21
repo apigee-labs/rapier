@@ -173,22 +173,8 @@ class SwaggerGenerator(object):
         result = []
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
-                p_spec = \
-                    RelMVPropertySpec(
-                        self.conventions,
-                        one_end['property'],
-                        one_end['entity'],
-                        other_end['entity'],
-                        rel_name, 
-                        one_end.get('multiplicity'),
-                        one_end.get('readonly')) if get_multiplicity(one_end) == 'n' else \
-                    RelSVPropertySpec(
-                        one_end['property'],
-                        one_end['entity'],
-                        other_end['entity'],
-                        rel_name,
-                        one_end.get('multiplicity'),
-                        one_end.get('readonly'))
+                p_spec = (RelMVPropertySpec if get_multiplicity(one_end) == 'n' else RelSVPropertySpec)(
+                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('readonly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
@@ -730,7 +716,7 @@ class PathPrefix(object):
       
 class RelSVPropertySpec(SegmentSpec):
     
-    def __init__(self, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
