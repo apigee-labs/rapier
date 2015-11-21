@@ -29,7 +29,7 @@ people who know Swagger but not Rapier.
 Swagger will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
 
-Rapier also includes SDK genenrators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
+Rapier also includes SDK generators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
 
 ## Examples
 
@@ -78,7 +78,7 @@ entities:
                     type: object
     TodoList:
         well_known_URLs: /to-dos
-        query_paths: [items]
+        query_paths: [items, "items;{id}"]
         immutable: true
     Item:
         properties:
@@ -98,7 +98,6 @@ relationships:
             entity: TodoList
             property: items
             multiplicity: 0:n
-            selector: id
         other_end:
             entity: Item
 ```                
@@ -120,18 +119,19 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-
+The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used as an example.
+ 
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{Item_id}
+    /to-dos/items/{id}
     
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are the same resource. Many implementations will use the same URL, but REST does not require this and clients should not count on it.
-The Rapier specification of the multi-valued relationship `items` includes a `selector` property that references the property called `id` of the `Item` entity. This indicates
-that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`.
-A Rapier option allows the selector value to be in a path parameter instead of a path segment - see the 'Property Tracker' example.
+and `http://example.org/todos/items` are URLs for the same resource. Many implementations will use a single URL, but REST does not require this and clients should not count on it.
+The URL template indicates
+that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. We know from this and the example above that
+`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` are URLs for the same resource. Again, many implementations will use a single URL for both, but clients should not count on it.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
@@ -152,7 +152,6 @@ Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lk
 title: DogTrackerAPI
 version: "0.1"
 conventions:
-    selector_location: path-parameter
     multi_valued_relationships: Collection
 entities:
     ServerEntity:
@@ -197,7 +196,7 @@ entities:
         allOf:
         - $ref: '#/entities/Entity'
         well_known_URLs: /
-        query_paths: [dogs, people, dogs/owner, people/dogs]
+        query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
         immutable: true
     Dog:
         allOf:
@@ -223,7 +222,6 @@ relationships:
             entity: DogTracker
             property: dogs
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Dog
     tracker-to-people:
@@ -231,7 +229,6 @@ relationships:
             entity: DogTracker
             property: people
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Person
     dogs-to-people:
@@ -257,11 +254,11 @@ From the `well_known_URLs` and `query_paths` properties, you can infer that the 
 
     /dog-tracker
     /dog-tracker/dogs
-    /dog-tracker/dogs;{Dog_id}
-    /dog-tracker/dogs;{Dog_id}/owner
+    /dog-tracker/dogs;{name}
+    /dog-tracker/dogs;{name}/owner
     /dog-tracker/people
-    /dog-tracker/people;{Person_id}
-    /dog-tracker/people;{Person_id}/dogs
+    /dog-tracker/people;{name}
+    /dog-tracker/people;{name}/dogs
 
 Since you know the pattern, you already know what all these mean, but if you want to see a generated Swagger document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-dog-tracker.yaml)
 

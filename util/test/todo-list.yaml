@@ -33,6 +33,5 @@ relationships:
             entity: TodoList
             property: items
             multiplicity: 0:n
-            selector: id
         other_end:
             entity: Item
