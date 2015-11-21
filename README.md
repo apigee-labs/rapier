@@ -140,7 +140,7 @@ and `http://example.org/todos/items` must be URLs for the same resource. Since t
 same URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it. If the
 query URL were based on a mutable property like `name` rather than `id`, the perma-link and the query URL would need to be different.
 The second URL template indicates
-that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. 
+that we can form a query URL by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. 
 We know from this and the example above that
 `http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Again, many implementations will use a 
 single URL for both since the `id` property is immutable, but clients should not count on this.
