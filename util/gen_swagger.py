@@ -181,7 +181,6 @@ class SwaggerGenerator(object):
                         other_end['entity'],
                         rel_name, 
                         one_end.get('multiplicity'),
-                        one_end.get('selector'),
                         one_end.get('readonly')) if get_multiplicity(one_end) == 'n' else \
                     RelSVPropertySpec(
                         one_end['property'],
@@ -679,6 +678,25 @@ class SwaggerGenerator(object):
 
 class SegmentSpec(object):
             
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return self.__dict__.hash()
+
+    def __str__(self):
+        return self.__dict__.str()
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
+        
+class PathPrefix(object):
+            
     def build_param(self):
         return None  
         
@@ -707,7 +725,7 @@ class SegmentSpec(object):
         
     def is_uri_spec(self):
         return False
-        
+      
 class RelSVPropertySpec(SegmentSpec):
     
     def __init__(self, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
@@ -718,9 +736,6 @@ class RelSVPropertySpec(SegmentSpec):
         self.multiplicity = multiplicity
         self.readonly = readonly 
         
-    def path_segment(self, select_one_of_many = False):
-        return self.property_name
-        
     def is_multivalued(self):
         False
         
@@ -729,37 +744,20 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, selector, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
         self.rel_name = rel_name
-        self.selector = selector 
         self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
 
-    def path_segment(self, select_one_of_many = False):
-        if select_one_of_many:
-            separator = '/' if self.conventions.get('selector_location') == 'path-segment' else ';'
-            return '%s%s{%s-%s}' % (self.property_name, separator, self.target_entity, self.selector)
-        return self.property_name
-        
     def is_multivalued(self):
         return True
             
     def get_multiplicity(self):
         return self.multiplicity
-
-    def build_param(self):
-        return {
-            'name': '%s-%s' % (self.target_entity, self.selector),
-            'in': 'path',
-            'type': 'string',
-            'description':
-                "Specifies which '%s' entity from multi-valued relationship '%s'" % (self.target_entity, self.property_name),
-            'required': True
-            }
 
     def __eq__(self, other):
         if type(other) is type(self):
@@ -772,7 +770,7 @@ class RelMVPropertySpec(SegmentSpec):
     def __ne__(self, other):
         return not self.__eq__(other)
         
-class WellKnownURLSpec(SegmentSpec):
+class WellKnownURLSpec(PathPrefix):
     
     def __init__(self, base_URL, target_entity):
         self.base_URL = base_URL 
@@ -844,7 +842,7 @@ class QuerySegment(object):
     def __repr__(self):
         return 'QuerySegment(%s)' % self.segment_string
         
-class ImplementationPathSpec(SegmentSpec):
+class ImplementationPathSpec(PathPrefix):
 
     def __init__(self, conventions, implementation_path, target_entity):
         self.implementation_path = implementation_path
@@ -871,7 +869,7 @@ class ImplementationPathSpec(SegmentSpec):
     def is_private(self):
         return True
 
-class EntityURLSpec(SegmentSpec):
+class EntityURLSpec(PathPrefix):
     
     def __init__(self, target_entity):
         self.target_entity = target_entity
