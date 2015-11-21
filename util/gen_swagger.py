@@ -217,10 +217,13 @@ class SwaggerGenerator(object):
                 query_paths.remove(query_path)
                 
     def emit_query_path(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
+        for inx, spec in enumerate(rel_property_spec_stack):
+            if spec.is_multivalued() and not query_path.query_segments[inx].param and not inx == len(rel_property_spec_stack) - 1:
+                sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
         rel_property_spec = rel_property_spec_stack[-1]
         multivalued = rel_property_spec.is_multivalued() and not query_path.query_segments[-1].param
         path = '/'.join([prefix.path_segment(), query_path.query_path_string])
-        if not (self.include_impl and rel_property_spec_stack[0].is_uri_spec()):
+        if not (self.include_impl and prefix.is_uri_spec()):
             paths = self.uris if prefix.is_uri_spec() else self.paths 
             if path not in paths:
                 if multivalued:

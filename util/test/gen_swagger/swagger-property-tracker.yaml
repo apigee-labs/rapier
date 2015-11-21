@@ -335,12 +335,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle-name}:
+  /bicycles;{name}:
     parameters:
-    - description: Specifies which 'Bicycle' entity from multi-valued relationship
-        'bicycles'
-      in: path
-      name: Bicycle-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -462,12 +460,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /bicycles;{Bicycle-name}/owner:
+  /bicycles;{name}/owner:
     parameters:
-    - description: Specifies which 'Bicycle' entity from multi-valued relationship
-        'bicycles'
-      in: path
-      name: Bicycle-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -673,11 +669,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}:
+  /dogs;{name}:
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -799,11 +794,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{Dog-name}/owner:
+  /dogs;{name}/owner:
     parameters:
-    - description: Specifies which 'Dog' entity from multi-valued relationship 'dogs'
-      in: path
-      name: Dog-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -1009,12 +1003,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /institutions;{Institution-name}:
+  /institutions;{name}:
     parameters:
-    - description: Specifies which 'Institution' entity from multi-valued relationship
-        'institutions'
-      in: path
-      name: Institution-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -1136,12 +1128,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /institutions;{Institution-name}/assets:
+  /institutions;{name}/assets:
     parameters:
-    - description: Specifies which 'Institution' entity from multi-valued relationship
-        'institutions'
-      in: path
-      name: Institution-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -1317,12 +1307,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{Person-name}:
+  /people;{name}:
     parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
+    - in: path
+      name: name
       required: true
       type: string
     get:
@@ -1444,12 +1432,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{Person-name}/possessions:
+  /people;{name}/possessions:
     parameters:
-    - description: Specifies which 'Person' entity from multi-valued relationship
-        'people'
-      in: path
-      name: Person-name
+    - in: path
+      name: name
       required: true
       type: string
     get:

@@ -45,7 +45,19 @@ entities:
         allOf:
         - $ref: '#/entities/Entity'
         well_known_URLs: /
-        query_paths: [dogs, bicycles, people, institutions, dogs/owner, bicycles/owner, institutions/assets, people/possessions]
+        query_paths: 
+        - dogs
+        - "dogs;{name}"
+        - bicycles
+        - "bicycles;{name}"
+        - people
+        - "people;{name}"
+        - institutions
+        - "institutions;{name}"
+        - "dogs;{name}/owner"
+        - "bicycles;{name}/owner"
+        - "institutions;{name}/assets"
+        - "people;{name}/possessions"
         immutable: true
     Dog:
         allOf:
@@ -89,7 +101,6 @@ relationships:
             entity: PropertyTracker
             property: dogs
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Dog
     tracker-to-people:
@@ -105,7 +116,6 @@ relationships:
             entity: PropertyTracker
             property: bicycles
             multiplicity: 0:n
-            selector: name
         other_end:
             entity: Bicycle
     tracker-to-institutions:
