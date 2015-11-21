@@ -220,8 +220,7 @@ class SwaggerGenerator(object):
         for inx, spec in enumerate(rel_property_spec_stack):
             if spec.is_multivalued() and not query_path.query_segments[inx].param and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
-        rel_property_spec = rel_property_spec_stack[-1]
-        multivalued = rel_property_spec.is_multivalued() and not query_path.query_segments[-1].param
+        multivalued = rel_property_spec_stack[-1].is_multivalued() and not query_path.query_segments[-1].param
         path = '/'.join([prefix.path_segment(), query_path.query_path_string])
         if not (self.include_impl and prefix.is_uri_spec()):
             paths = self.uris if prefix.is_uri_spec() else self.paths 
