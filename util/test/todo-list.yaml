@@ -13,7 +13,7 @@ entities:
                     type: object
     TodoList:
         well_known_URLs: /to-dos
-        query_paths: [items]
+        query_paths: [items, "items;{id}"]
         immutable: true
     Item:
         properties:

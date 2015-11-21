@@ -192,11 +192,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /to-dos/items;{Item-id}:
+  /to-dos/items;{id}:
     parameters:
-    - description: Specifies which 'Item' entity from multi-valued relationship 'items'
-      in: path
-      name: Item-id
+    - in: path
+      name: id
       required: true
       type: string
     get:
