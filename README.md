@@ -134,12 +134,13 @@ hyperlinks in the resources themselves reduces the need for query URLs compared 
 Query URLs allow clients to navigate along the paths defined by the relationships of the Rapier model for the API without retrieving intermediate resources. 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` are URLs for the same resource. Since the `id` value is probably immutable, many implementations will use a 
-single URL for both the perma-link and the query URL for this case, but the API does not require this and clients should not count on it. If the
-query URL were based on a mutable property like `name` rather than `id`, the permalink and the query URL would need to be different.
+and `http://example.org/todos/items` must be URLs for the same resource. Since the `id` value is probably immutable, many implementations will use a 
+single URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it. If the
+query URL were based on a mutable property like `name` rather than `id`, the perma-link and the query URL would need to be different.
 The second URL template indicates
-that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. We know from this and the example above that
-`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` are URLs for the same resource. Again, many implementations will use a 
+that we can form a 'query URL' by tacking the value of the `id` property of an `Item` on to the end of `todos/items/` to resolve to a single `Item`. 
+We know from this and the example above that
+`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Again, many implementations will use a 
 single URL for both if the `id` property is immutable, but clients should not count on this.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
