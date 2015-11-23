@@ -143,8 +143,6 @@ of `todos/items/` to form a URL that will identify a single `Item`. We know from
 `http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Since the `id` value is immutable, an implementation may use the 
 same URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it. If the
 query URL were based on a mutable property like `name` rather than `id`, the perma-link and the query URL would need to be different.
-Again, many implementations 
-will use a single URL for both in this case since the `id` property is immutable, but clients should not count on this.
   
 You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
 and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
