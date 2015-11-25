@@ -9,6 +9,7 @@ conventions:
 entities:
     ServerEntity:
         abstract: true
+        type: object
         properties:
             created:
                 type: string

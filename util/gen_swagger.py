@@ -78,8 +78,11 @@ class SwaggerGenerator(object):
                 if 'allOf' in entity_spec:
                     mutable_definition['allOf'] = [{key: '%sMutableProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
-                structured = 'type' not in entity_spec
-                if structured:                     
+                if  'type' in entity_spec and entity_spec['type'] != 'object': # TODO: maybe need to climb allOf tree to check this more fully
+                    if 'properties' in spec:
+                        sys.exit('error: unstructured entities must not have properties')
+                    definition['type'] = entity_spec['type']
+                else:
                     definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
                         mutable_definition['properties'] = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' not in prop or not prop['readOnly']}
@@ -89,10 +92,8 @@ class SwaggerGenerator(object):
                     self.definitions['%sMutableProperties' % entity_name] = mutable_definition
                     if 'required' in entity_spec:
                         mutable_definition['required'] = entity_spec['required']
-                else:
-                    if 'properties' in spec:
-                        sys.exit('error: unstructured entities must not have properties')
-                    definition['type'] = entity_spec['type']
+                    if 'type' in entity_spec:
+                        mutable_definition['type'] = entity_spec['type']
                 self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
@@ -101,7 +102,6 @@ class SwaggerGenerator(object):
                 rel_property_specs = self.get_relationship_property_specs(entity_name)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
-                    structured = 'type' not in entity_spec
                     rel_prop_spec_dict = {}
                     for rel_property_spec in rel_property_specs:
                         rel_prop_name = rel_property_spec.property_name
@@ -110,16 +110,13 @@ class SwaggerGenerator(object):
                         else:
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if structured:   
-                            if rel_prop_specs[0].is_collection_resource():
-                                properties = self.definitions[entity_name].setdefault('properties', dict())
-                                properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
-                            else:
-                                mutable_properties = self.mutable_definitions(entity_name).setdefault('properties', dict())
-                                mutable_properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
+                        if rel_prop_specs[0].is_collection_resource():
+                            definition = self.definitions[entity_name]
                         else:
-                            rel_name = {rel_property_spec.property_name for rel_property_spec in rel_property_specs if rel_property_spec.property_name == rel_prop_name}.pop()
-                            sys.exit('error: unstructured entity cannot have property named %s in relationship %s: %s' % (rel_prop_name, rel_name, str(entity_spec)))
+                            definition = self.mutable_definitions(entity_name)
+                        definition.setdefault('properties', dict())[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
+                        if 'type' in entity_spec:
+                            definition['type'] = entity_spec['type']
                 if self.include_impl and 'implementation_path' in entity_spec:
                     implementation_path_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_path'], entity_name)
                     implementation_path_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]

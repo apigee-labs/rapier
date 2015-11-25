@@ -133,6 +133,7 @@ definitions:
         type: string
   ServerEntityMutableProperties:
     properties: {}
+    type: object
   Spec:
     allOf:
     - $ref: '#/definitions/Entity'
