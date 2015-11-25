@@ -43,8 +43,11 @@ definitions:
         type: string
   ErrorResponse:
     properties:
+      code:
+        type: integer
       message:
         type: string
+    type: object
   Folder:
     allOf:
     - $ref: '#/definitions/Entity'

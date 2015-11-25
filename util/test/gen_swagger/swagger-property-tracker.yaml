@@ -81,10 +81,6 @@ definitions:
         type: string
       self:
         type: string
-  ErrorResponse:
-    properties:
-      message:
-        type: string
   Institution:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -2255,34 +2251,27 @@ responses:
         type: string
   '400':
     description: Bad Request. Client request in error
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   '401':
     description: Unauthorized. Client authentication token missing from request
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   '403':
     description: Forbidden. Client authentication token does not permit this method
       on this resource
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   '404':
     description: Not Found. Resource not found
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   '406':
     description: Not Acceptable. Requested media type not available
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   '409':
     description: Conflict. Value provided in If-Match header does not match current
       ETag value of resource
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   default:
     description: 5xx errors and other stuff
-    schema:
-      $ref: '#/definitions/ErrorResponse'
+    schema: {}
   options_200:
     description: successful
     headers:

@@ -50,7 +50,12 @@ class SwaggerGenerator(object):
             self.swagger['produces'] = as_list(spec.get('produces'))
         else:
             self.swagger['produces'] = ['application/json']
-        self.definitions = self.build_standard_definitions()
+        self.definitions = {}
+        if 'error_response' in self.conventions:
+            self.definitions['ErrorResponse'] = self.conventions['error_response']
+            self.error_response = self.global_definition_ref('ErrorResponse')
+        else:
+            self.error_response = {}
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
@@ -556,31 +561,31 @@ class SwaggerGenerator(object):
                 },
             '400': {
                 'description': 'Bad Request. Client request in error',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 },
             '401': {
                 'description': 'Unauthorized. Client authentication token missing from request',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }, 
             '403': {
                 'description': 'Forbidden. Client authentication token does not permit this method on this resource',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }, 
             '404': {
                 'description': 'Not Found. Resource not found',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }, 
             '406': {
                 'description': 'Not Acceptable. Requested media type not available',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }, 
             '409': {
                 'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }, 
             'default': {
                 'description': '5xx errors and other stuff',
-                'schema': self.global_definition_ref('ErrorResponse')
+                'schema': self.error_response
                 }
             }
         
@@ -608,11 +613,6 @@ class SwaggerGenerator(object):
                 }
             }
  
-    def build_standard_definitions(self):
-        return {
-            'ErrorResponse': self.build_error_definition()
-            }
-            
     def define_put_if_match_header(self):
         if not 'Put-If-Match' in self.header_parameters:
             self.header_parameters['Put-If-Match'] = {

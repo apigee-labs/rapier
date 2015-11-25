@@ -4,6 +4,13 @@ consumes: application/json
 produces: application/json text/html
 conventions:
     multi_valued_relationships: Collection
+    error_response:
+        type: object
+        properties:
+            code:
+                type: integer
+            message:
+                type: string
 entities:
     ServerEntity:
         abstract: true
