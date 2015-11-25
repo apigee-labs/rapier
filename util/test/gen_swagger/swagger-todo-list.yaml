@@ -225,6 +225,9 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update an Item entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -352,6 +355,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Collection entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -478,6 +484,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update an Item entity
       parameters:
       - $ref: '#/parameters/If-Match'

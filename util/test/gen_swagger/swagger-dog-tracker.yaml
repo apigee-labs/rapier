@@ -298,6 +298,9 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -423,6 +426,9 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -632,6 +638,9 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -848,6 +857,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Collection entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1037,6 +1049,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1163,6 +1178,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'

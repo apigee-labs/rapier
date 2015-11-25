@@ -56,6 +56,7 @@ class SwaggerGenerator(object):
             self.error_response = self.global_definition_ref('ErrorResponse')
         else:
             self.error_response = {}
+        self.patch_consumes = self.conventions['patch_consumes'] if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
@@ -291,7 +292,9 @@ class SwaggerGenerator(object):
                 path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
             else:
                 path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
-            if not structured:
+            if structured:
+                path_spec['patch']['consumes'] = self.patch_consumes
+            else:
                 path_spec['put']['responses']['201'] = {
                     'description': 'Created new %s' % entity_name,
                     'schema': self.global_definition_ref(entity_name),
@@ -302,8 +305,9 @@ class SwaggerGenerator(object):
                             }
                         }
                     }
-            if consumes:
-                path_spec[update_verb]['consumes'] = consumes
+                if consumes:
+                    path_spec[update_verb]['consumes'] = consumes
+
             if produces:
                 path_spec[update_verb]['produces'] = produces
         well_known = entity_spec.get('well_known_URLs')

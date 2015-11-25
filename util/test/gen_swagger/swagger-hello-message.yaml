@@ -44,6 +44,9 @@ paths:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a HelloMessage entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -144,6 +147,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a HelloMessage entity
       parameters:
       - $ref: '#/parameters/If-Match'

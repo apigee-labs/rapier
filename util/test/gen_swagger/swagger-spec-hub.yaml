@@ -42,12 +42,7 @@ definitions:
       kind:
         type: string
   ErrorResponse:
-    properties:
-      code:
-        type: integer
-      message:
-        type: string
-    type: object
+    type: string
   Folder:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -407,6 +402,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Collection entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -687,6 +685,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -876,6 +877,9 @@ x-uris:
         default:
           $ref: '#/responses/default'
     patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
       description: Update a Spec entity
       parameters:
       - $ref: '#/parameters/If-Match'
