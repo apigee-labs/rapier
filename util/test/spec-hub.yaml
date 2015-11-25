@@ -129,8 +129,9 @@ relationships:
             multiplicity: 0:n
         other_end:
             entity: Spec
-            property: folder
-            multiplicity: 0:1
+            property: folders
+            multiplicity: 0:n
+            collection_resource: false
     folder-to-folder:
         one_end:
             entity: Folder
@@ -138,8 +139,9 @@ relationships:
             multiplicity: 0:n
         other_end:
             entity: Folder
-            property: folder
-            multiplicity: 0:1
+            property: folders
+            multiplicity: 0:n
+            collection_resource: false
     spec-to-content:
         one_end:
             entity: Spec

@@ -111,7 +111,7 @@ class SwaggerGenerator(object):
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
                         if structured:   
-                            if rel_prop_specs[0].is_multivalued():
+                            if rel_prop_specs[0].is_collection_resource():
                                 properties = self.definitions[entity_name].setdefault('properties', dict())
                                 properties[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                             else:
@@ -155,16 +155,35 @@ class SwaggerGenerator(object):
     def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
         if len({rel_prop_spec.is_multivalued() for rel_prop_spec in rel_prop_specs}) > 1:
             sys.exit('error: all multiplicities for relationship property %s must be the same' % rel_prop_name)
-        result = {
-            'description': 
-                    'URL of a Collection of %s' % 
-                        (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity) 
-                if rel_prop_specs[0].is_multivalued() else 
-                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
-                ,
-            'type': 'string',
-            'format': 'uri',
-            }
+        if rel_prop_specs[0].is_collection_resource():
+            result = {
+                'description': 
+                        'URL of a Collection of %s' % 
+                            (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity) 
+                    if rel_prop_specs[0].is_multivalued() else 
+                        'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
+                    ,
+                'type': 'string',
+                'format': 'uri',
+                }
+        elif rel_prop_specs[0].is_multivalued():
+            result = {
+                'description': 
+                    'Array of URLs of %s' % 
+                        (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity),
+                'type': 'array',
+                'items': {
+                    'type': 'string',
+                    'format': 'uri'
+                    }
+                }
+        else:
+            result = {
+                'description': 
+                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity)),
+                'type': 'string',
+                'format': 'uri',
+                }
         if not self.suppress_annotations:
             result['x-rapier-relationship'] = {
                 'type': {
@@ -174,13 +193,14 @@ class SwaggerGenerator(object):
                 'multiplicity': rel_prop_specs[0].get_multiplicity()
                 }
         return result
+        
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
         result = []
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
                 p_spec = (RelMVPropertySpec if get_multiplicity(one_end) == 'n' else RelSVPropertySpec)(
-                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('readonly'))
+                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), one_end.get('readonly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
@@ -212,12 +232,12 @@ class SwaggerGenerator(object):
         for inx, spec in enumerate(rel_property_spec_stack):
             if spec.is_multivalued() and not query_path.query_segments[inx].param and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
-        multivalued = rel_property_spec_stack[-1].is_multivalued() and not query_path.query_segments[-1].param
+        is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].param
         path = '/'.join([prefix.path_segment(), query_path.query_path_string])
         if not (self.include_impl and prefix.is_uri_spec()):
             paths = self.uris if prefix.is_uri_spec() else self.paths 
             if path not in paths:
-                if multivalued:
+                if is_collection_resource:
                     paths[path] = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
                 else:
                     paths[path] = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
@@ -720,7 +740,7 @@ class PathPrefix(object):
       
 class RelSVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, collection_resource=None, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -731,12 +751,15 @@ class RelSVPropertySpec(SegmentSpec):
     def is_multivalued(self):
         False
         
+    def is_collection_resource(self):
+        False
+        
     def get_multiplicity(self):
         return self.multiplicity
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource=None, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -744,9 +767,13 @@ class RelMVPropertySpec(SegmentSpec):
         self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
+        self.collection_resource = True if collection_resource == None else collection_resource
 
     def is_multivalued(self):
         return True
+        
+    def is_collection_resource(self):
+        return self.collection_resource
             
     def get_multiplicity(self):
         return self.multiplicity

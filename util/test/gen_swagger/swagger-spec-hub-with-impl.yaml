@@ -56,10 +56,12 @@ definitions:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
     properties:
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
+      folders:
+        description: Array of URLs of Folders
+        items:
+          format: uri
+          type: string
+        type: array
       name:
         type: string
       permissions:
@@ -121,10 +123,12 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
+      folders:
+        description: Array of URLs of Folders
+        items:
+          format: uri
+          type: string
+        type: array
       name:
         type: string
       permissions:

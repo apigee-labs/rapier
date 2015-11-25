@@ -62,12 +62,14 @@ definitions:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
     properties:
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
+      folders:
+        description: Array of URLs of Folders
+        items:
+          format: uri
+          type: string
+        type: array
         x-rapier-relationship:
-          multiplicity: 0:1
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Folder'
       name:
@@ -147,12 +149,14 @@ definitions:
           multiplicity: 0:1
           type:
             $ref: '#/definitions/Content'
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
+      folders:
+        description: Array of URLs of Folders
+        items:
+          format: uri
+          type: string
+        type: array
         x-rapier-relationship:
-          multiplicity: 0:1
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Folder'
       name:
