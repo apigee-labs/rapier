@@ -264,7 +264,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Folder entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -613,7 +612,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Spec entity
       parameters:
       - $ref: '#/parameters/If-Match'

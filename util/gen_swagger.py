@@ -56,7 +56,7 @@ class SwaggerGenerator(object):
             self.error_response = self.global_definition_ref('ErrorResponse')
         else:
             self.error_response = {}
-        self.patch_consumes = self.conventions['patch_consumes'] if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
+        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
