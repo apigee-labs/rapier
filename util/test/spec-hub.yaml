@@ -58,7 +58,7 @@ entities:
           type: string
         - name: direction
           type: string
-        readOnly: true
+        immutable: true
     Page:
         allOf:
         - $ref: '#/entities/Entity'
@@ -79,7 +79,7 @@ entities:
           type: string
         - name: limit
           type: integer
-        readOnly: true
+        immutable: true
         implementation_path: /pages
     Hub:
         allOf:

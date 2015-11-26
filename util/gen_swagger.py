@@ -279,7 +279,8 @@ class SwaggerGenerator(object):
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
-        if not 'immutable' in entity_spec or entity_spec['immutable'] == False:
+        immutable = entity_spec.get('immutable', False)
+        if not immutable:
             if structured:
                 update_verb = 'patch'
                 description = 'Update %s entity'
@@ -331,7 +332,7 @@ class SwaggerGenerator(object):
             if produces:
                 path_spec[update_verb]['produces'] = produces
         well_known = entity_spec.get('well_known_URLs')
-        if not well_known:        
+        if not well_known and not immutable:        
             path_spec['delete'] = {
                 'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
                 'responses': {
