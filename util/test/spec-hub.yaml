@@ -58,6 +58,29 @@ entities:
           type: string
         - name: direction
           type: string
+        readOnly: true
+    Page:
+        allOf:
+        - $ref: '#/entities/Entity'
+        properties:
+            item_type: 
+                type: string
+                readOnly: true
+            items:
+                type: array
+                items: 
+                    type: object
+                readOnly: true
+            collection:
+                type: string
+                format: uri
+        query_parameters:
+        - name: properties
+          type: string
+        - name: limit
+          type: integer
+        readOnly: true
+        implementation_path: /pages
     Hub:
         allOf:
         - $ref: '#/entities/Entity'
@@ -159,3 +182,17 @@ relationships:
             multiplicity: 0:1
         other_end:
             entity: Content
+    page-to-next-page:
+        one_end:
+            entity: Page
+            property: next_page
+            multiplicity: 0:1
+        other_end:
+            entity: Page
+    page-to-previous-page:
+        one_end:
+            entity: Page
+            property: previous_page
+            multiplicity: 0:1
+        other_end:
+            entity: Page
