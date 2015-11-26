@@ -144,7 +144,7 @@ relationships:
             entity: Hub
             property: sharedWithMe
             multiplicity: 0:n
-            readonly: true
+            readOnly: true
         other_end:
             entity: Folder
     hub-to-shared-spec:
@@ -152,7 +152,7 @@ relationships:
             entity: Hub
             property: sharedWithMe
             multiplicity: 0:n
-            readonly: true
+            readOnly: true
         other_end:
             entity: Spec
     folder-to-spec:

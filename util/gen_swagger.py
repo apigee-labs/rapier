@@ -197,7 +197,7 @@ class SwaggerGenerator(object):
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
                 p_spec = (RelMVPropertySpec if get_multiplicity(one_end) == 'n' else RelSVPropertySpec)(
-                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), one_end.get('readonly'))
+                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), one_end.get('readOnly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
