@@ -85,8 +85,12 @@ class SwaggerGenerator(object):
                 else:
                     definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
-                        mutable_definition['properties'] = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' not in prop or not prop['readOnly']}
-                        immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
+                        immutable = entity_spec.get('immutable', False)
+                        if immutable:
+                            immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems()}
+                        else:    
+                            mutable_definition['properties'] = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' not in prop or not prop['readOnly']}
+                            immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
                         if immutable_properties:
                             definition['properties'] = immutable_properties
                     self.definitions['%sMutableProperties' % entity_name] = mutable_definition

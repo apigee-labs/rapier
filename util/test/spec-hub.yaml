@@ -43,12 +43,10 @@ entities:
         properties:
             item_type: 
                 type: string
-                readOnly: true
             items:
                 type: array
                 items: 
                     type: object
-                readOnly: true
         query_parameters:
         - name: properties
           type: string
@@ -65,12 +63,10 @@ entities:
         properties:
             item_type: 
                 type: string
-                readOnly: true
             items:
                 type: array
                 items: 
                     type: object
-                readOnly: true
             collection:
                 type: string
                 format: uri

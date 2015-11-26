@@ -14,17 +14,14 @@ definitions:
     - $ref: '#/definitions/CollectionMutableProperties'
     properties:
       item_type:
-        readOnly: true
         type: string
       items:
         items:
           type: object
-        readOnly: true
         type: array
   CollectionMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
-    properties: {}
   Content:
     type: string
   Entity:
@@ -116,21 +113,19 @@ definitions:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/PageMutableProperties'
     properties:
+      collection:
+        format: uri
+        type: string
       item_type:
-        readOnly: true
         type: string
       items:
         items:
           type: object
-        readOnly: true
         type: array
   PageMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
     properties:
-      collection:
-        format: uri
-        type: string
       next_page:
         description: URL of a Page
         format: uri
