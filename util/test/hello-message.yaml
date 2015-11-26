@@ -1,8 +1,8 @@
 title: HelloWorldAPI
 version: "0.1"
 entities:
-    HelloMessage:
-        well_known_URLs: /message
-        properties:
-            text:
-                type: string
+  HelloMessage:
+    well_known_URLs: /message
+    properties:
+      text:
+        type: string

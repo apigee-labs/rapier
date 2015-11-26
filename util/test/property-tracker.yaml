@@ -1,162 +1,162 @@
 title: PropertyTrackerAPI
 version: "0.1"
 conventions:
-    multi_valued_relationships: Collection
+  multi_valued_relationships: Collection
 entities:
-    ServerEntity:
-        abstract: true
-        properties:
-            created:
-                type: string
-                format: date-time
-                readOnly: true
-            creator:
-                type: string
-                format: URL
-                readOnly: true
-            modified:
-                type: string
-                format: date-time
-                readOnly: true
-            modifier:
-                type: string
-                format: date-time
-                readOnly: true
-    Entity:
-        allOf:
-        - $ref: '#/entities/ServerEntity'
-        abstract: true
-        properties:
-            self:
-                type: string
-            kind:
-                type: string            
-    Collection:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-    PropertyTracker:
-        allOf:
-        - $ref: '#/entities/Entity'
-        well_known_URLs: /
-        query_paths: 
-        - dogs
-        - "dogs;{name}"
-        - bicycles
-        - "bicycles;{name}"
-        - people
-        - "people;{name}"
-        - institutions
-        - "institutions;{name}"
-        - "dogs;{name}/owner"
-        - "bicycles;{name}/owner"
-        - "institutions;{name}/assets"
-        - "people;{name}/possessions"
-        immutable: true
-    Dog:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            birth_date:
-                type: string
-            fur_color:
-                type: string
-    Bicycle:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            purchase_date:
-                type: string
-            paint_color: 
-                type: string
-    Person:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            birth-date:
-                type: string
-    Institution:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            birth-date:
-                type: string
+  ServerEntity:
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Entity:
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    abstract: true
+    properties:
+      self:
+        type: string
+      kind:
+        type: string      
+  Collection:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+  PropertyTracker:
+    allOf:
+    - $ref: '#/entities/Entity'
+    well_known_URLs: /
+    query_paths: 
+    - dogs
+    - "dogs;{name}"
+    - bicycles
+    - "bicycles;{name}"
+    - people
+    - "people;{name}"
+    - institutions
+    - "institutions;{name}"
+    - "dogs;{name}/owner"
+    - "bicycles;{name}/owner"
+    - "institutions;{name}/assets"
+    - "people;{name}/possessions"
+    immutable: true
+  Dog:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+  Bicycle:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      purchase_date:
+        type: string
+      paint_color: 
+        type: string
+  Person:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      birth-date:
+        type: string
+  Institution:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      birth-date:
+        type: string
 relationships:
-    tracker-to-dogs:
-        one_end:
-            entity: PropertyTracker
-            property: dogs
-            multiplicity: 0:n
-        other_end:
-            entity: Dog
-    tracker-to-people:
-        one_end:
-            entity: PropertyTracker
-            property: people
-            multiplicity: 0:n
-        other_end:
-            entity: Person
-    tracker-to-bicycles:
-        one_end:
-            entity: PropertyTracker
-            property: bicycles
-            multiplicity: 0:n
-        other_end:
-            entity: Bicycle
-    tracker-to-institutions:
-        one_end:
-            entity: PropertyTracker
-            property: institutions
-            multiplicity: 0:n
-        other_end:
-            entity: Institution
-    dogs-to-people:
-        one_end:
-            entity: Person
-            property: possessions
-            multiplicity: 0:n
-        other_end:
-            entity: Dog
-            property: owner
-            multiplicity: 0:1
-    dogs-to-institutions:
-        one_end:
-            entity: Institution
-            property: assets
-            multiplicity: 0:n
-        other_end:
-            entity: Dog
-            property: owner
-            multiplicity: 0:1
-    bicycles-to-people:
-        one_end:
-            entity: Person
-            property: possessions
-            multiplicity: 0:n
-        other_end:
-            entity: Bicycle
-            property: owner
-            multiplicity: 0:1
-    bicycles-to-institutions:
-        one_end:
-            entity: Institution
-            property: assets
-            multiplicity: 0:n
-        other_end:
-            entity: Bicycle
-            property: owner
-            multiplicity: 0:1
+  tracker-to-dogs:
+    one_end:
+      entity: PropertyTracker
+      property: dogs
+      multiplicity: 0:n
+    other_end:
+      entity: Dog
+  tracker-to-people:
+    one_end:
+      entity: PropertyTracker
+      property: people
+      multiplicity: 0:n
+    other_end:
+      entity: Person
+  tracker-to-bicycles:
+    one_end:
+      entity: PropertyTracker
+      property: bicycles
+      multiplicity: 0:n
+    other_end:
+      entity: Bicycle
+  tracker-to-institutions:
+    one_end:
+      entity: PropertyTracker
+      property: institutions
+      multiplicity: 0:n
+    other_end:
+      entity: Institution
+  dogs-to-people:
+    one_end:
+      entity: Person
+      property: possessions
+      multiplicity: 0:n
+    other_end:
+      entity: Dog
+      property: owner
+      multiplicity: 0:1
+  dogs-to-institutions:
+    one_end:
+      entity: Institution
+      property: assets
+      multiplicity: 0:n
+    other_end:
+      entity: Dog
+      property: owner
+      multiplicity: 0:1
+  bicycles-to-people:
+    one_end:
+      entity: Person
+      property: possessions
+      multiplicity: 0:n
+    other_end:
+      entity: Bicycle
+      property: owner
+      multiplicity: 0:1
+  bicycles-to-institutions:
+    one_end:
+      entity: Institution
+      property: assets
+      multiplicity: 0:n
+    other_end:
+      entity: Bicycle
+      property: owner
+      multiplicity: 0:1

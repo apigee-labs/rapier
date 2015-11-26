@@ -1,39 +1,39 @@
 title: TodoListAPI
 version: "0.1"
 conventions:
-    multi_valued_relationships: Collection
+  multi_valued_relationships: Collection
 entities:
-    Collection:
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-    TodoList:
-        well_known_URLs: /to-dos
-        query_paths: [items, "items;{id}"]
-        immutable: true
-    Item:
-        properties:
-            self:
-                type: string
-                format: uri
-                readOnly: true
-            id:
-                type: string
-                readOnly: true
-            description:
-                type: string
-            due:
-                type: string
-                format: date-time
+  Collection:
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+  TodoList:
+    well_known_URLs: /to-dos
+    query_paths: [items, "items;{id}"]
+    immutable: true
+  Item:
+    properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true
+      id:
+        type: string
+        readOnly: true
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
 relationships:
-    list-to-items:
-        one_end:
-            entity: TodoList
-            property: items
-            multiplicity: 0:n
-        other_end:
-            entity: Item
+  list-to-items:
+    one_end:
+      entity: TodoList
+      property: items
+      multiplicity: 0:n
+    other_end:
+      entity: Item

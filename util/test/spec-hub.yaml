@@ -3,192 +3,192 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-    multi_valued_relationships: Collection
-    error_response:
-        type: string
+  multi_valued_relationships: Collection
+  error_response:
+    type: string
 entities:
-    ServerEntity:
-        abstract: true
-        type: object
-        properties:
-            created:
-                type: string
-                format: date-time
-                readOnly: true
-            creator:
-                type: string
-                format: URL
-                readOnly: true
-            modified:
-                type: string
-                format: date-time
-                readOnly: true
-            modifier:
-                type: string
-                format: date-time
-                readOnly: true
-    Entity:
-        allOf:
-        - $ref: '#/entities/ServerEntity'
-        abstract: true
-        properties:
-            self:
-                type: string
-                readOnly: true
-            kind:
-                type: string
-    Collection:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-        query_parameters:
-        - name: properties
-          type: string
-        - name: limit
-          type: integer
-        - name: orderby
-          type: string
-        - name: direction
-          type: string
-        immutable: true
-    Page:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-            collection:
-                type: string
-                format: uri
-        query_parameters:
-        - name: properties
-          type: string
-        - name: limit
-          type: integer
-        immutable: true
-        implementation_path: /pages
-    Hub:
-        allOf:
-        - $ref: '#/entities/Entity'
-        well_known_URLs: /
-        query_paths: [myHub, sharedWithMe]
-        immutable: true
-    Folder:
-        allOf:
-        - $ref: '#/entities/Entity'
-        implementation_path: /folders
-        properties:
-            name:
-                type: string
-            permissions:
-                type: array
-                items: 
-                    properties:
-                        actor:
-                            format: URL
-                            type: string
-                        action:
-                            type: string
-    Spec:
-        allOf:
-        - $ref: '#/entities/Entity'
-        query_paths: [content]
-        implementation_path: /specs
-        properties:
-            name:
-                type: string
-            permissions:
-                type: array
-                items: 
-                    properties:
-                        actor:
-                            format: URL
-                            type: string
-                        action:
-                            type: string
-    Content:
+  ServerEntity:
+    abstract: true
+    type: object
+    properties:
+      created:
         type: string
-        consumes: application/x-yaml text/yaml text/html text/plain
-        produces: application/x-yaml text/yaml text/html text/plain
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Entity:
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    abstract: true
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      type: string
+    - name: limit
+      type: integer
+    - name: orderby
+      type: string
+    - name: direction
+      type: string
+    immutable: true
+  Page:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+      collection:
+        type: string
+        format: uri
+    query_parameters:
+    - name: properties
+      type: string
+    - name: limit
+      type: integer
+    immutable: true
+    implementation_path: /pages
+  Hub:
+    allOf:
+    - $ref: '#/entities/Entity'
+    well_known_URLs: /
+    query_paths: [myHub, sharedWithMe]
+    immutable: true
+  Folder:
+    allOf:
+    - $ref: '#/entities/Entity'
+    implementation_path: /folders
+    properties:
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+  Spec:
+    allOf:
+    - $ref: '#/entities/Entity'
+    query_paths: [content]
+    implementation_path: /specs
+    properties:
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+  Content:
+    type: string
+    consumes: application/x-yaml text/yaml text/html text/plain
+    produces: application/x-yaml text/yaml text/html text/plain
 relationships:
-    hub-to-my-folder:
-        one_end:
-            entity: Hub
-            property: myHub
-            multiplicity: 0:n
-        other_end:
-            entity: Folder
-    hub-to-my-spec:
-        one_end:
-            entity: Hub
-            property: myHub
-            multiplicity: 0:n
-        other_end:
-            entity: Spec
-    hub-to-shared-folder:
-        one_end:
-            entity: Hub
-            property: sharedWithMe
-            multiplicity: 0:n
-            readOnly: true
-        other_end:
-            entity: Folder
-    hub-to-shared-spec:
-        one_end:
-            entity: Hub
-            property: sharedWithMe
-            multiplicity: 0:n
-            readOnly: true
-        other_end:
-            entity: Spec
-    folder-to-spec:
-        one_end:
-            entity: Folder
-            property: contents
-            multiplicity: 0:n
-        other_end:
-            entity: Spec
-            property: folders
-            multiplicity: 0:n
-            collection_resource: false
-    folder-to-folder:
-        one_end:
-            entity: Folder
-            property: contents
-            multiplicity: 0:n
-        other_end:
-            entity: Folder
-            property: folders
-            multiplicity: 0:n
-            collection_resource: false
-    spec-to-content:
-        one_end:
-            entity: Spec
-            property: content
-            multiplicity: 0:1
-        other_end:
-            entity: Content
-    page-to-next-page:
-        one_end:
-            entity: Page
-            property: next_page
-            multiplicity: 0:1
-        other_end:
-            entity: Page
-    page-to-previous-page:
-        one_end:
-            entity: Page
-            property: previous_page
-            multiplicity: 0:1
-        other_end:
-            entity: Page
+  hub-to-my-folder:
+    one_end:
+      entity: Hub
+      property: myHub
+      multiplicity: 0:n
+    other_end:
+      entity: Folder
+  hub-to-my-spec:
+    one_end:
+      entity: Hub
+      property: myHub
+      multiplicity: 0:n
+    other_end:
+      entity: Spec
+  hub-to-shared-folder:
+    one_end:
+      entity: Hub
+      property: sharedWithMe
+      multiplicity: 0:n
+      readOnly: true
+    other_end:
+      entity: Folder
+  hub-to-shared-spec:
+    one_end:
+      entity: Hub
+      property: sharedWithMe
+      multiplicity: 0:n
+      readOnly: true
+    other_end:
+      entity: Spec
+  folder-to-spec:
+    one_end:
+      entity: Folder
+      property: contents
+      multiplicity: 0:n
+    other_end:
+      entity: Spec
+      property: folders
+      multiplicity: 0:n
+      collection_resource: false
+  folder-to-folder:
+    one_end:
+      entity: Folder
+      property: contents
+      multiplicity: 0:n
+    other_end:
+      entity: Folder
+      property: folders
+      multiplicity: 0:n
+      collection_resource: false
+  spec-to-content:
+    one_end:
+      entity: Spec
+      property: content
+      multiplicity: 0:1
+    other_end:
+      entity: Content
+  page-to-next-page:
+    one_end:
+      entity: Page
+      property: next_page
+      multiplicity: 0:1
+    other_end:
+      entity: Page
+  page-to-previous-page:
+    one_end:
+      entity: Page
+      property: previous_page
+      multiplicity: 0:1
+    other_end:
+      entity: Page
