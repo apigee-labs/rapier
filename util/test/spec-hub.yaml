@@ -77,7 +77,6 @@ entities:
     - name: limit
       type: integer
     immutable: true
-    implementation_path: /pages
   Hub:
     allOf:
     - $ref: '#/entities/Entity'
