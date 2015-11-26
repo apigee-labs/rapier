@@ -49,6 +49,15 @@ entities:
                 items: 
                     type: object
                 readOnly: true
+        query_parameters:
+        - name: properties
+          type: string
+        - name: limit
+          type: integer
+        - name: orderby
+          type: string
+        - name: direction
+          type: string
     Hub:
         allOf:
         - $ref: '#/entities/Entity'

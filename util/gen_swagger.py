@@ -244,6 +244,7 @@ class SwaggerGenerator(object):
         entity_spec = self.rapier_spec['entities'][entity_name]
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
+        query_parameters = entity_spec.get('query_parameters') 
         structured = 'type' not in entity_spec
         response_200 = {
             'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
@@ -272,6 +273,8 @@ class SwaggerGenerator(object):
                 }
         if produces:
             path_spec['get']['produces'] = produces
+        if query_parameters:
+            path_spec['get']['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
         if not self.yaml_merge:
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:

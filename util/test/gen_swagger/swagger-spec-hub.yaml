@@ -382,7 +382,18 @@ x-uris:
     get:
       description: Retrieve a Collection
       parameters:
-      - $ref: '#/parameters/Accept'
+      - in: query
+        name: properties
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - in: query
+        name: direction
+        type: string
       responses:
         '200':
           description: successful
