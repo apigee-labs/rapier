@@ -1,0 +1,226 @@
+title: SSL API
+version: "0.1"
+conventions:
+  multi_valued_relationships: Collection
+entities:
+  PersistentEntity:
+    abstract: true
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  ServerEntity:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string      
+  Entity:
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    - $ref: '#/entities/PersitentEntity'
+    abstract: true
+  Collection:
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+  SSL:
+    well_known_URLs: /
+    query_paths: keystores keystores;{name} keystores;{name}/aliases
+    immutable: true
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    properties:
+      kind:
+        type: string
+        enum: [SSL]
+  Keystore:
+    type: object
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum: [Keystore]
+  Alias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [Alias]
+      name:
+        type: string
+      key:
+        type: string
+      certsInfo:
+        readOnly: true
+        type: array
+        items: 
+          type: object
+          properties:
+            version:
+              type: integer
+            expiryDate:
+              type: string
+              format: date
+            issuer:
+              type: string
+            subject:
+              type: string
+  Pkcs12Alias:
+    type: object
+    consumes: multipart/form-data
+    properties:
+      kind:
+        type: string
+        enum: [Pkcs12Alias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      pkcs12File:
+        type: file
+  Certificate:
+    type: string
+  CSR:
+    type: string
+  KeyCertGenInfo:
+    type: object
+    properties:
+      alias:
+        type: string
+      keySize:
+        type: string
+      certValidityInDays:
+        type: integer
+      sigAlg:
+        type: string
+      issuer:
+        type:
+          $ref: '#/definitions/X500Name'
+      subject:
+        type:
+          $ref: '#/definitions/X500Name'
+      subjectAlternativeDNSNames:
+        type: array
+        items:
+          type: string
+  KeyCertGenInfo:
+    type: object
+    properties:
+      alias:
+        type: string
+      keySize:
+        type: string
+      certValidityInDays:
+        type: integer
+      sigAlg:
+        type: string
+      issuer:
+        type:
+          $ref: '#/definitions/X500Name'
+      subject:
+        type:
+          $ref: '#/definitions/X500Name'
+      subjectAlternativeDNSNames:
+        type: array
+        items:
+          type: string
+  KeyFileCertFileAlias:
+    type: object
+    consumes: multipart/form-data
+    properties:
+      kind:
+        type: string
+        enum: [Pkcs12Alias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        type: file
+      certFile:
+        type: file
+  X500Name:
+    subject:
+      type: object
+      properties:
+        countryCose:
+          type: string
+        state: 
+          type: string
+        locality:
+          type: string
+        orgName:
+          type: string
+        orgUnitName:
+          type: string
+        email:
+          type: string
+relationships:
+  ssl-to-keystores:
+    one_end:
+      entity: SSL
+      property: keystores
+      multiplicity: 0:n
+    other_end:
+      entity: Keystore
+  keystore-to-aliases:
+    one_end:
+      entity: Keystore
+      property: aliases
+      multiplicity: 0:n
+      consumes_entities: Pkcs12Alias KeyCertAlias
+    other_end:
+      entity: Alias
+  alias-to-certificate:
+    one_end:
+      entity: Alias
+      property: certificate
+      multiplicity: 0:1
+    other_end:
+      entity: Certificate
+  alias-to-csr:
+    one_end:
+      entity: Alias
+      property: csr
+      multiplicity: 0:1
+      readOnly: true
+    other_end:
+      entity: CSR
+  alias-to-selfSignedCertificate:
+    one_end:
+      entity: Alias
+      property: selfSignedCertificate
+      multiplicity: 0:n
+    other_end:
+      entity: KeyCertGenInfo

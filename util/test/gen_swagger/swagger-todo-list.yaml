@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: TodoListAPI
+  title: Todo List API
   version: '0.1'
 consumes:
 - application/json
@@ -323,7 +323,7 @@ x-uris:
   '{Collection_URL}':
     parameters:
     - description: The URL of a Collection entity
-      in: path
+      in: URL
       name: Collection_URL
       required: true
       type: string
@@ -452,7 +452,7 @@ x-uris:
   '{Item_URL}':
     parameters:
     - description: The URL of an Item entity
-      in: path
+      in: URL
       name: Item_URL
       required: true
       type: string
@@ -581,7 +581,7 @@ x-uris:
   '{TodoList_URL}':
     parameters:
     - description: The URL of a TodoList entity
-      in: path
+      in: URL
       name: TodoList_URL
       required: true
       type: string

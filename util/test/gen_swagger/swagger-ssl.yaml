@@ -1,19 +1,66 @@
 swagger: '2.0'
 info:
-  title: DogTrackerAPI
+  title: SSL API
   version: '0.1'
 consumes:
 - application/json
 produces:
 - application/json
 definitions:
+  Alias:
+    allOf:
+    - $ref: '#/definitions/AliasMutableProperties'
+    properties:
+      certsInfo:
+        items:
+          properties:
+            expiryDate:
+              format: date
+              type: string
+            issuer:
+              type: string
+            subject:
+              type: string
+            version:
+              type: integer
+          type: object
+        readOnly: true
+        type: array
+      csr:
+        description: URL of a CSR
+        format: uri
+        type: string
+      selfSignedCertificate:
+        description: URL of a Collection of KeyCertGenInfos
+        format: uri
+        type: string
+    type: object
+  AliasMutableProperties:
+    properties:
+      certificate:
+        description: URL of a Certificate
+        format: uri
+        type: string
+      key:
+        type: string
+      kind:
+        enum:
+        - Alias
+        type: string
+      name:
+        type: string
+    type: object
+  CSR:
+    type: string
+  Certificate:
+    type: string
   Collection:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/ServerEntity'
     - $ref: '#/definitions/CollectionMutableProperties'
   CollectionMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       item_type:
         type: string
@@ -21,88 +68,84 @@ definitions:
         items:
           type: object
         type: array
-  Dog:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogMutableProperties'
-  DogMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
-    properties:
-      birth_date:
+      kind:
+        enum:
+        - Collection
         type: string
-      fur_color:
-        type: string
-      name:
-        type: string
-      owner:
-        description: URL of a Person
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Person'
-  DogTracker:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogTrackerMutableProperties'
-    properties:
-      dogs:
-        description: URL of a Collection of Dogs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
-      people:
-        description: URL of a Collection of Persons
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Person'
-  DogTrackerMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/PersitentEntity'
     - $ref: '#/definitions/EntityMutableProperties'
   EntityMutableProperties:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/PersitentEntityMutableProperties'
+  KeyCertGenInfo:
+    allOf:
+    - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
+  KeyCertGenInfoMutableProperties:
     properties:
+      alias:
+        type: string
+      certValidityInDays:
+        type: integer
+      issuer:
+        type:
+          $ref: '#/definitions/X500Name'
+      keySize:
+        type: string
+      sigAlg:
+        type: string
+      subject:
+        type:
+          $ref: '#/definitions/X500Name'
+      subjectAlternativeDNSNames:
+        items:
+          type: string
+        type: array
+    type: object
+  KeyFileCertFileAlias:
+    allOf:
+    - $ref: '#/definitions/KeyFileCertFileAliasMutableProperties'
+  KeyFileCertFileAliasMutableProperties:
+    properties:
+      certFile:
+        type: file
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        type: file
       kind:
-        type: string
-      self:
-        type: string
-  Person:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PersonMutableProperties'
-    properties:
-      dogs:
-        description: URL of a Collection of Dogs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
-  PersonMutableProperties:
-    allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
-    properties:
-      birth-date:
+        enum:
+        - Pkcs12Alias
         type: string
       name:
         type: string
-  ServerEntity:
+      password:
+        type: string
+    type: object
+  Keystore:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/KeystoreMutableProperties'
+    properties:
+      aliases:
+        description: URL of a Collection of Aliass
+        format: uri
+        type: string
+    type: object
+  KeystoreMutableProperties:
+    properties:
+      kind:
+        enum:
+        - Keystore
+        type: string
+      name:
+        type: string
+    type: object
+  PersistentEntity:
+    allOf:
+    - $ref: '#/definitions/PersistentEntityMutableProperties'
     properties:
       created:
         format: date-time
@@ -120,12 +163,61 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntityMutableProperties:
+  PersistentEntityMutableProperties:
     properties: {}
+    type: object
+  Pkcs12Alias:
+    allOf:
+    - $ref: '#/definitions/Pkcs12AliasMutableProperties'
+  Pkcs12AliasMutableProperties:
+    properties:
+      ignoreExpiryValidation:
+        type: boolean
+      kind:
+        enum:
+        - Pkcs12Alias
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      pkcs12File:
+        type: file
+    type: object
+  SSL:
+    allOf:
+    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/SSLMutableProperties'
+    properties:
+      keystores:
+        description: URL of a Collection of Keystores
+        format: uri
+        type: string
+      kind:
+        enum:
+        - SSL
+        type: string
+  SSLMutableProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityMutableProperties'
+  ServerEntity:
+    allOf:
+    - $ref: '#/definitions/ServerEntityMutableProperties'
+  ServerEntityMutableProperties:
+    properties:
+      kind:
+        type: string
+      self:
+        type: string
+    type: object
+  X500Name:
+    allOf:
+    - $ref: '#/definitions/X500NameMutableProperties'
+  X500NameMutableProperties: {}
 paths:
   /:
     get:
-      description: Retrieve a DogTracker
+      description: Retrieve a SSL
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -140,7 +232,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/SSL'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -180,7 +272,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs:
+  /keystores:
     get:
       responses:
         '200':
@@ -204,25 +296,25 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Dog
+      description: Create a new Keystore
       parameters:
-      - description: The representation of the new Dog being created
+      - description: The representation of the new Keystore being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogMutableProperties'
+          $ref: '#/definitions/KeystoreMutableProperties'
       responses:
         '201':
-          description: Created new Dog
+          description: Created new Keystore
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Dog
+              description: perma-link URL of newly-created Keystore
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Keystore'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -264,14 +356,14 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{name}:
+  /keystores;{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
     get:
-      description: Retrieve a Dog
+      description: Retrieve a Keystore
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -286,7 +378,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Keystore'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -297,18 +389,15 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Dog entity
+    put:
+      description: Create or Update a Keystore entity
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Dog being updated
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Keystore being replaced
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogMutableProperties'
+          $ref: '#/definitions/Keystore'
       responses:
         '200':
           description: successful
@@ -321,347 +410,15 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Dog'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Dog
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  /dogs;{name}/owner:
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    get:
-      description: Retrieve a Person
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Person entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Person being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/PersonMutableProperties'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Person
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  /people:
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Person
-      parameters:
-      - description: The representation of the new Person being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/PersonMutableProperties'
-      responses:
+            $ref: '#/definitions/Keystore'
         '201':
-          description: Created new Person
+          description: Created new Keystore
           headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
             Location:
-              description: perma-link URL of newly-created Person
+              description: perma-link URL of newly-created Keystore
               type: string
           schema:
-            $ref: '#/definitions/Person'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  /people;{name}:
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    get:
-      description: Retrieve a Person
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Person entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Person being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/PersonMutableProperties'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Keystore'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -677,7 +434,7 @@ paths:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Person
+      description: Delete a Keystore
       responses:
         '200':
           description: successful
@@ -690,7 +447,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/Keystore'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -732,7 +489,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{name}/dogs:
+  /keystores;{name}/aliases:
     parameters:
     - in: path
       name: name
@@ -761,25 +518,28 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Dog
+      description: Create a new Alias
       parameters:
-      - description: The representation of the new Dog being created
+      - description: The representation of the new Alias being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogMutableProperties'
+          $ref: '#/definitions/EntityMutableProperties'
+          x-oneOf:
+          - $ref: '#/definitions/Pkcs12AliasMutableProperties'
+          - $ref: '#/definitions/KeyCertAliasMutableProperties'
       responses:
         '201':
-          description: Created new Dog
+          description: Created new Alias
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Dog
+              description: perma-link URL of newly-created Alias
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/Alias'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -822,6 +582,408 @@ paths:
         default:
           $ref: '#/responses/default'
 x-uris:
+  '{Alias_URL}':
+    parameters:
+    - description: The URL of an Alias entity
+      in: URL
+      name: Alias_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve an Alias
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Alias'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update an Alias entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Alias being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Alias'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Alias'
+        '201':
+          description: Created new Alias
+          headers:
+            Location:
+              description: perma-link URL of newly-created Alias
+              type: string
+          schema:
+            $ref: '#/definitions/Alias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Alias
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Alias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{CSR_URL}':
+    parameters:
+    - description: The URL of a CSR entity
+      in: URL
+      name: CSR_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a CSR
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update a CSR entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the CSR being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/CSR'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
+        '201':
+          description: Created new CSR
+          headers:
+            Location:
+              description: perma-link URL of newly-created CSR
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a CSR
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Certificate_URL}':
+    parameters:
+    - description: The URL of a Certificate entity
+      in: URL
+      name: Certificate_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Certificate
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Certificate'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update a Certificate entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Certificate being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Certificate'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Certificate'
+        '201':
+          description: Created new Certificate
+          headers:
+            Location:
+              description: perma-link URL of newly-created Certificate
+              type: string
+          schema:
+            $ref: '#/definitions/Certificate'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Certificate
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Certificate'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   '{Collection_URL}':
     parameters:
     - description: The URL of a Collection entity
@@ -951,15 +1113,15 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{DogTracker_URL}':
+  '{KeyCertGenInfo_URL}':
     parameters:
-    - description: The URL of a DogTracker entity
+    - description: The URL of a KeyCertGenInfo entity
       in: URL
-      name: DogTracker_URL
+      name: KeyCertGenInfo_URL
       required: true
       type: string
     get:
-      description: Retrieve a DogTracker
+      description: Retrieve a KeyCertGenInfo
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -974,7 +1136,7 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DogTracker'
+            $ref: '#/definitions/KeyCertGenInfo'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -985,81 +1147,15 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
+    put:
+      description: Create or Update a KeyCertGenInfo entity
       parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{Dog_URL}':
-    parameters:
-    - description: The URL of a Dog entity
-      in: URL
-      name: Dog_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a Dog
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Dog entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Dog being updated
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the KeyCertGenInfo being replaced
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogMutableProperties'
+          $ref: '#/definitions/KeyCertGenInfo'
       responses:
         '200':
           description: successful
@@ -1072,7 +1168,15 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/KeyCertGenInfo'
+        '201':
+          description: Created new KeyCertGenInfo
+          headers:
+            Location:
+              description: perma-link URL of newly-created KeyCertGenInfo
+              type: string
+          schema:
+            $ref: '#/definitions/KeyCertGenInfo'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1088,7 +1192,7 @@ x-uris:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Dog
+      description: Delete a KeyCertGenInfo
       responses:
         '200':
           description: successful
@@ -1101,7 +1205,7 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Dog'
+            $ref: '#/definitions/KeyCertGenInfo'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1143,15 +1247,15 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Person_URL}':
+  '{KeyFileCertFileAlias_URL}':
     parameters:
-    - description: The URL of a Person entity
+    - description: The URL of a KeyFileCertFileAlias entity
       in: URL
-      name: Person_URL
+      name: KeyFileCertFileAlias_URL
       required: true
       type: string
     get:
-      description: Retrieve a Person
+      description: Retrieve a KeyFileCertFileAlias
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1166,7 +1270,7 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/KeyFileCertFileAlias'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1177,18 +1281,17 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
+    put:
       consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Person entity
+      - multipart/form-data
+      description: Create or Update a KeyFileCertFileAlias entity
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Person being updated
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the KeyFileCertFileAlias being replaced
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonMutableProperties'
+          $ref: '#/definitions/KeyFileCertFileAlias'
       responses:
         '200':
           description: successful
@@ -1201,7 +1304,15 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/KeyFileCertFileAlias'
+        '201':
+          description: Created new KeyFileCertFileAlias
+          headers:
+            Location:
+              description: perma-link URL of newly-created KeyFileCertFileAlias
+              type: string
+          schema:
+            $ref: '#/definitions/KeyFileCertFileAlias'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1217,7 +1328,7 @@ x-uris:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Person
+      description: Delete a KeyFileCertFileAlias
       responses:
         '200':
           description: successful
@@ -1230,7 +1341,469 @@ x-uris:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Person'
+            $ref: '#/definitions/KeyFileCertFileAlias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Keystore_URL}':
+    parameters:
+    - description: The URL of a Keystore entity
+      in: URL
+      name: Keystore_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Keystore
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Keystore'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update a Keystore entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Keystore being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Keystore'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Keystore'
+        '201':
+          description: Created new Keystore
+          headers:
+            Location:
+              description: perma-link URL of newly-created Keystore
+              type: string
+          schema:
+            $ref: '#/definitions/Keystore'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Keystore
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Keystore'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Pkcs12Alias_URL}':
+    parameters:
+    - description: The URL of a Pkcs12Alias entity
+      in: URL
+      name: Pkcs12Alias_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Pkcs12Alias
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Pkcs12Alias'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      consumes:
+      - multipart/form-data
+      description: Create or Update a Pkcs12Alias entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Pkcs12Alias being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Pkcs12Alias'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Pkcs12Alias'
+        '201':
+          description: Created new Pkcs12Alias
+          headers:
+            Location:
+              description: perma-link URL of newly-created Pkcs12Alias
+              type: string
+          schema:
+            $ref: '#/definitions/Pkcs12Alias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Pkcs12Alias
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Pkcs12Alias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{SSL_URL}':
+    parameters:
+    - description: The URL of a SSL entity
+      in: URL
+      name: SSL_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a SSL
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/SSL'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{X500Name_URL}':
+    parameters:
+    - description: The URL of a X500Name entity
+      in: URL
+      name: X500Name_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a X500Name
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/X500Name'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update a X500Name entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the X500Name being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/X500NameMutableProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/X500Name'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a X500Name
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/X500Name'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1296,6 +1869,12 @@ parameters:
     in: header
     name: If-Match
     required: true
+    type: string
+  Put-If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: false
     type: string
 responses:
   '303':

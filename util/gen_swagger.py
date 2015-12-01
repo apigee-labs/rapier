@@ -114,7 +114,7 @@ class SwaggerGenerator(object):
                         else:
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if rel_prop_specs[0].is_collection_resource():
+                        if rel_prop_specs[0].is_collection_resource() or rel_prop_specs[0].readonly:
                             definition = self.definitions[entity_name]
                         else:
                             definition = self.mutable_definitions(entity_name)
@@ -200,8 +200,10 @@ class SwaggerGenerator(object):
         result = []
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
-                p_spec = (RelMVPropertySpec if get_multiplicity(one_end) == 'n' else RelSVPropertySpec)(
-                    self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), one_end.get('readOnly'))
+                p_spec = \
+                    RelMVPropertySpec(self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), as_list(one_end.get('consumes_entities')) if 'consumes_entities' in one_end else None, one_end.get('readOnly')) \
+                        if get_multiplicity(one_end) == 'n' else \
+                    RelSVPropertySpec(self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('readOnly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
@@ -369,12 +371,16 @@ class SwaggerGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
         relationship_name = rel_property_spec.property_name
         entity_name = rel_property_spec.target_entity
+        entity_spec = self.rapier_spec['entities'][entity_name]
+        consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
+        produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         path_spec = PresortedOrderedDict()
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
+        consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities()]
         if len(rel_property_specs) > 1:
             schema = self.global_definition_ref('Entity')
             schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
@@ -387,10 +393,10 @@ class SwaggerGenerator(object):
             location_desciption = 'perma-link URL of newly-created %s'  % entity_name
             body_desciption =  'The representation of the new %s being created' % entity_name 
         if not rel_property_spec.readonly:
-            if len(rel_property_specs) > 1:
+            if len(consumes_entities) > 1:
                 post_schema = self.mutable_definition_ref('Entity')
                 #if False: # should validate but does not?
-                post_schema['x-oneOf'] = [self.mutable_definition_ref(spec.target_entity) for spec in rel_property_specs]
+                post_schema['x-oneOf'] = [self.mutable_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = self.mutable_definition_ref(entity_name)
@@ -421,6 +427,10 @@ class SwaggerGenerator(object):
                         }
                     }                
                 }
+            if consumes:
+                path_spec['post']['consumes'] = consumes
+            if produces:
+                path_spec['post']['produces'] = produces
             if not self.yaml_merge:
                 path_spec['post']['responses'].update(self.response_sets['post_responses'])
             else:
@@ -745,7 +755,7 @@ class PathPrefix(object):
       
 class RelSVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, collection_resource=None, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -764,7 +774,7 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource=None, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource, consumes_entities, readonly):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -772,6 +782,7 @@ class RelMVPropertySpec(SegmentSpec):
         self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
+        self.consumes_entities_var = consumes_entities
         self.collection_resource = True if collection_resource == None else collection_resource
 
     def is_multivalued(self):
@@ -790,6 +801,9 @@ class RelMVPropertySpec(SegmentSpec):
 
     def __hash__():
         return self.__dict__.hash()
+        
+    def consumes_entities(self):
+        return self.consumes_entities_var if self.consumes_entities_var else [self.target_entity] 
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -904,7 +918,7 @@ class EntityURLSpec(PathPrefix):
     def build_param(self):
         return {
             'name': '%s_URL' % self.target_entity,
-            'in': 'path',
+            'in': 'URL',
             'type': 'string',
             'description':
                 "The URL of %s entity" % articled(self.target_entity),
@@ -914,7 +928,6 @@ class EntityURLSpec(PathPrefix):
     def is_uri_spec(self):
         return True
  
-
 def as_list(value, separator = None):
     if isinstance(value, basestring):
         if separator:

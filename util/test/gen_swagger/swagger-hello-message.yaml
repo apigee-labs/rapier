@@ -115,7 +115,7 @@ x-uris:
   '{HelloMessage_URL}':
     parameters:
     - description: The URL of a HelloMessage entity
-      in: path
+      in: URL
       name: HelloMessage_URL
       required: true
       type: string

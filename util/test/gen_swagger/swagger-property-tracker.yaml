@@ -1545,7 +1545,7 @@ x-uris:
   '{Bicycle_URL}':
     parameters:
     - description: The URL of a Bicycle entity
-      in: path
+      in: URL
       name: Bicycle_URL
       required: true
       type: string
@@ -1674,7 +1674,7 @@ x-uris:
   '{Collection_URL}':
     parameters:
     - description: The URL of a Collection entity
-      in: path
+      in: URL
       name: Collection_URL
       required: true
       type: string
@@ -1803,7 +1803,7 @@ x-uris:
   '{Dog_URL}':
     parameters:
     - description: The URL of a Dog entity
-      in: path
+      in: URL
       name: Dog_URL
       required: true
       type: string
@@ -1932,7 +1932,7 @@ x-uris:
   '{Institution_URL}':
     parameters:
     - description: The URL of an Institution entity
-      in: path
+      in: URL
       name: Institution_URL
       required: true
       type: string
@@ -2061,7 +2061,7 @@ x-uris:
   '{Person_URL}':
     parameters:
     - description: The URL of a Person entity
-      in: path
+      in: URL
       name: Person_URL
       required: true
       type: string
@@ -2190,7 +2190,7 @@ x-uris:
   '{PropertyTracker_URL}':
     parameters:
     - description: The URL of a PropertyTracker entity
-      in: path
+      in: URL
       name: PropertyTracker_URL
       required: true
       type: string

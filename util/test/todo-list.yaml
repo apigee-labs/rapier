@@ -1,4 +1,4 @@
-title: TodoListAPI
+title: Todo List API
 version: "0.1"
 conventions:
   multi_valued_relationships: Collection
