@@ -9,6 +9,7 @@ produces:
 definitions:
   Alias:
     allOf:
+    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/AliasMutableProperties'
     properties:
       certsInfo:
@@ -34,8 +35,9 @@ definitions:
         description: URL of a Collection of KeyCertGenInfos
         format: uri
         type: string
-    type: object
   AliasMutableProperties:
+    allOf:
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       certificate:
         description: URL of a Certificate
@@ -49,7 +51,6 @@ definitions:
         type: string
       name:
         type: string
-    type: object
   CSR:
     type: string
   Certificate:
@@ -84,6 +85,7 @@ definitions:
   KeyCertGenInfo:
     allOf:
     - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
+    type: object
   KeyCertGenInfoMutableProperties:
     properties:
       alias:
@@ -94,6 +96,10 @@ definitions:
         type:
           $ref: '#/definitions/X500Name'
       keySize:
+        type: string
+      kind:
+        enum:
+        - KeyCertGenInfo
         type: string
       sigAlg:
         type: string
@@ -108,6 +114,7 @@ definitions:
   KeyFileCertFileAlias:
     allOf:
     - $ref: '#/definitions/KeyFileCertFileAliasMutableProperties'
+    type: object
   KeyFileCertFileAliasMutableProperties:
     properties:
       certFile:
@@ -118,7 +125,7 @@ definitions:
         type: file
       kind:
         enum:
-        - Pkcs12Alias
+        - KeyFileCertFileAlias
         type: string
       name:
         type: string
@@ -127,14 +134,16 @@ definitions:
     type: object
   Keystore:
     allOf:
+    - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/KeystoreMutableProperties'
     properties:
       aliases:
         description: URL of a Collection of Aliass
         format: uri
         type: string
-    type: object
   KeystoreMutableProperties:
+    allOf:
+    - $ref: '#/definitions/EntityMutableProperties'
     properties:
       kind:
         enum:
@@ -142,7 +151,6 @@ definitions:
         type: string
       name:
         type: string
-    type: object
   PersistentEntity:
     allOf:
     - $ref: '#/definitions/PersistentEntityMutableProperties'
@@ -163,12 +171,14 @@ definitions:
         format: date-time
         readOnly: true
         type: string
+    type: object
   PersistentEntityMutableProperties:
     properties: {}
     type: object
   Pkcs12Alias:
     allOf:
     - $ref: '#/definitions/Pkcs12AliasMutableProperties'
+    type: object
   Pkcs12AliasMutableProperties:
     properties:
       ignoreExpiryValidation:
@@ -203,6 +213,7 @@ definitions:
   ServerEntity:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
+    type: object
   ServerEntityMutableProperties:
     properties:
       kind:
@@ -389,15 +400,18 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    put:
-      description: Create or Update a Keystore entity
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update a Keystore entity
       parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Keystore being replaced
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Keystore being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Keystore'
+          $ref: '#/definitions/KeystoreMutableProperties'
       responses:
         '200':
           description: successful
@@ -408,14 +422,6 @@ paths:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Keystore'
-        '201':
-          description: Created new Keystore
-          headers:
-            Location:
-              description: perma-link URL of newly-created Keystore
               type: string
           schema:
             $ref: '#/definitions/Keystore'
@@ -528,6 +534,7 @@ paths:
           x-oneOf:
           - $ref: '#/definitions/Pkcs12AliasMutableProperties'
           - $ref: '#/definitions/KeyCertAliasMutableProperties'
+          - $ref: '#/definitions/KeyCertGetInfoMutableProperties'
       responses:
         '201':
           description: Created new Alias
@@ -616,15 +623,18 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    put:
-      description: Create or Update an Alias entity
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update an Alias entity
       parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Alias being replaced
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Alias being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Alias'
+          $ref: '#/definitions/AliasMutableProperties'
       responses:
         '200':
           description: successful
@@ -635,14 +645,6 @@ x-uris:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Alias'
-        '201':
-          description: Created new Alias
-          headers:
-            Location:
-              description: perma-link URL of newly-created Alias
               type: string
           schema:
             $ref: '#/definitions/Alias'
@@ -1113,276 +1115,6 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{KeyCertGenInfo_URL}':
-    parameters:
-    - description: The URL of a KeyCertGenInfo entity
-      in: URL
-      name: KeyCertGenInfo_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a KeyCertGenInfo
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyCertGenInfo'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      description: Create or Update a KeyCertGenInfo entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the KeyCertGenInfo being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/KeyCertGenInfo'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyCertGenInfo'
-        '201':
-          description: Created new KeyCertGenInfo
-          headers:
-            Location:
-              description: perma-link URL of newly-created KeyCertGenInfo
-              type: string
-          schema:
-            $ref: '#/definitions/KeyCertGenInfo'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a KeyCertGenInfo
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyCertGenInfo'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{KeyFileCertFileAlias_URL}':
-    parameters:
-    - description: The URL of a KeyFileCertFileAlias entity
-      in: URL
-      name: KeyFileCertFileAlias_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a KeyFileCertFileAlias
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyFileCertFileAlias'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      consumes:
-      - multipart/form-data
-      description: Create or Update a KeyFileCertFileAlias entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the KeyFileCertFileAlias being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/KeyFileCertFileAlias'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyFileCertFileAlias'
-        '201':
-          description: Created new KeyFileCertFileAlias
-          headers:
-            Location:
-              description: perma-link URL of newly-created KeyFileCertFileAlias
-              type: string
-          schema:
-            $ref: '#/definitions/KeyFileCertFileAlias'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a KeyFileCertFileAlias
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/KeyFileCertFileAlias'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
   '{Keystore_URL}':
     parameters:
     - description: The URL of a Keystore entity
@@ -1417,15 +1149,18 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    put:
-      description: Create or Update a Keystore entity
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update a Keystore entity
       parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Keystore being replaced
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Keystore being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Keystore'
+          $ref: '#/definitions/KeystoreMutableProperties'
       responses:
         '200':
           description: successful
@@ -1436,14 +1171,6 @@ x-uris:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Keystore'
-        '201':
-          description: Created new Keystore
-          headers:
-            Location:
-              description: perma-link URL of newly-created Keystore
               type: string
           schema:
             $ref: '#/definitions/Keystore'
@@ -1476,142 +1203,6 @@ x-uris:
               type: string
           schema:
             $ref: '#/definitions/Keystore'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{Pkcs12Alias_URL}':
-    parameters:
-    - description: The URL of a Pkcs12Alias entity
-      in: URL
-      name: Pkcs12Alias_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a Pkcs12Alias
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Pkcs12Alias'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      consumes:
-      - multipart/form-data
-      description: Create or Update a Pkcs12Alias entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Pkcs12Alias being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Pkcs12Alias'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Pkcs12Alias'
-        '201':
-          description: Created new Pkcs12Alias
-          headers:
-            Location:
-              description: perma-link URL of newly-created Pkcs12Alias
-              type: string
-          schema:
-            $ref: '#/definitions/Pkcs12Alias'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Pkcs12Alias
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Pkcs12Alias'
         '400':
           $ref: '#/responses/400'
         '401':

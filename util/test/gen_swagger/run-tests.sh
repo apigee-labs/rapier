@@ -9,3 +9,4 @@ echo $ROOT_DIR
 ./rapier/util/gen_swagger.py rapier/util/test/property-tracker.yaml > rapier/util/test/gen_swagger/swagger-property-tracker.yaml
 ./rapier/util/gen_swagger.py rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub.yaml
 ./rapier/util/gen_swagger.py -is rapier/util/test/spec-hub.yaml > rapier/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml
+./rapier/util/gen_swagger.py -s rapier/util/test/ssl.yaml > rapier/util/test/gen_swagger/swagger-ssl.yaml

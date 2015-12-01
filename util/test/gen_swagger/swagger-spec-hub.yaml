@@ -162,6 +162,7 @@ definitions:
         format: date-time
         readOnly: true
         type: string
+    type: object
   ServerEntityMutableProperties:
     properties: {}
     type: object

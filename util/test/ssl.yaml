@@ -60,7 +60,8 @@ entities:
         type: string
         enum: [SSL]
   Keystore:
-    type: object
+    allOf:
+    - $ref: '#/entities/Entity'
     properties:
       name:
         type: string
@@ -68,7 +69,8 @@ entities:
         type: string
         enum: [Keystore]
   Alias:
-    type: object
+    allOf:
+    - $ref: '#/entities/Entity'
     properties:
       kind:
         type: string
@@ -94,6 +96,7 @@ entities:
               type: string
   Pkcs12Alias:
     type: object
+    persistent: false
     consumes: multipart/form-data
     properties:
       kind:
@@ -113,28 +116,11 @@ entities:
     type: string
   KeyCertGenInfo:
     type: object
+    persistent: false
     properties:
-      alias:
+      kind:
         type: string
-      keySize:
-        type: string
-      certValidityInDays:
-        type: integer
-      sigAlg:
-        type: string
-      issuer:
-        type:
-          $ref: '#/definitions/X500Name'
-      subject:
-        type:
-          $ref: '#/definitions/X500Name'
-      subjectAlternativeDNSNames:
-        type: array
-        items:
-          type: string
-  KeyCertGenInfo:
-    type: object
-    properties:
+        enum: [KeyCertGenInfo]
       alias:
         type: string
       keySize:
@@ -155,11 +141,12 @@ entities:
           type: string
   KeyFileCertFileAlias:
     type: object
+    persistent: false
     consumes: multipart/form-data
     properties:
       kind:
         type: string
-        enum: [Pkcs12Alias]
+        enum: [KeyFileCertFileAlias]
       name:
         type: string
       password:
@@ -199,7 +186,7 @@ relationships:
       entity: Keystore
       property: aliases
       multiplicity: 0:n
-      consumes_entities: Pkcs12Alias KeyCertAlias
+      consumes_entities: Pkcs12Alias KeyCertAlias KeyCertGetInfo
     other_end:
       entity: Alias
   alias-to-certificate:

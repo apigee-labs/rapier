@@ -78,11 +78,7 @@ class SwaggerGenerator(object):
                 if 'allOf' in entity_spec:
                     mutable_definition['allOf'] = [{key: '%sMutableProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
-                if  'type' in entity_spec and entity_spec['type'] != 'object': # TODO: maybe need to climb allOf tree to check this more fully
-                    if 'properties' in spec:
-                        sys.exit('error: unstructured entities must not have properties')
-                    definition['type'] = entity_spec['type']
-                else:
+                if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
                         immutable = entity_spec.get('immutable', False)
@@ -99,6 +95,8 @@ class SwaggerGenerator(object):
                     if 'type' in entity_spec:
                         mutable_definition['type'] = entity_spec['type']
                 self.definitions[entity_name] = definition
+                if 'type' in entity_spec:
+                    definition['type'] = entity_spec['type']
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
@@ -126,7 +124,7 @@ class SwaggerGenerator(object):
                     implementation_path_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
                     entity_interface =  self.build_entity_interface(implementation_path_spec, None, None, implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
-                elif not self.include_impl and ('abstract' not in entity_spec or not entity_spec['abstract']): 
+                elif not self.include_impl and ('abstract' not in entity_spec or not entity_spec['abstract']) and ('persistent' not in entity_spec or entity_spec['persistent']): 
                     entity_url_property_spec = EntityURLSpec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
