@@ -251,7 +251,7 @@ class SwaggerGenerator(object):
         query_parameters = entity_spec.get('query_parameters') 
         structured = 'type' not in entity_spec
         response_200 = {
-            'schema': self.global_definition_ref('Entity' if len(rel_property_specs) > 1 else entity_name)
+            'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_name)
             }
         if len(rel_property_specs) > 1:
             response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
@@ -392,7 +392,7 @@ class SwaggerGenerator(object):
             body_desciption =  'The representation of the new %s being created' % entity_name 
         if not rel_property_spec.readonly:
             if len(consumes_entities) > 1:
-                post_schema = self.mutable_definition_ref('Entity')
+                post_schema = {}
                 #if False: # should validate but does not?
                 post_schema['x-oneOf'] = [self.mutable_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
@@ -528,8 +528,6 @@ class SwaggerGenerator(object):
         return {'$ref': '#/definitions/ServerEntityProperties'}
     
     def global_definition_ref(self, key):
-        if key == 'Entity' and 'Entity' not in self.definitions:
-            return {}
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):

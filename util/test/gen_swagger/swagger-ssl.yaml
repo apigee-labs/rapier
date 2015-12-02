@@ -530,7 +530,6 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EntityMutableProperties'
           x-oneOf:
           - $ref: '#/definitions/Pkcs12AliasMutableProperties'
           - $ref: '#/definitions/KeyCertAliasMutableProperties'
