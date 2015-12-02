@@ -8,9 +8,20 @@ produces:
 - application/json
 - text/html
 definitions:
+  BaseEntity:
+    allOf:
+    - $ref: '#/definitions/BaseEntityMutableProperties'
+    properties:
+      self:
+        readOnly: true
+        type: string
+  BaseEntityMutableProperties:
+    properties:
+      kind:
+        type: string
   Collection:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/BaseEntity'
     - $ref: '#/definitions/CollectionMutableProperties'
     properties:
       item_type:
@@ -19,25 +30,24 @@ definitions:
         items:
           type: object
         type: array
+      kind:
+        enum:
+        - Collection
+        type: string
   CollectionMutableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/BaseEntityMutableProperties'
   Content:
     type: string
   Entity:
     allOf:
-    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/BaseEntity'
     - $ref: '#/definitions/EntityMutableProperties'
-    properties:
-      self:
-        readOnly: true
-        type: string
   EntityMutableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    properties:
-      kind:
-        type: string
+    - $ref: '#/definitions/ResourceMutableProperties'
+    - $ref: '#/definitions/BaseEntityMutableProperties'
   ErrorResponse:
     type: string
   Folder:
@@ -59,6 +69,10 @@ definitions:
           format: uri
           type: string
         type: array
+      kind:
+        enum:
+        - Folder
+        type: string
       name:
         type: string
       permissions:
@@ -75,6 +89,10 @@ definitions:
     - $ref: '#/definitions/Entity'
     - $ref: '#/definitions/HubMutableProperties'
     properties:
+      kind:
+        enum:
+        - Hub
+        type: string
       myHub:
         description: URL of a Collection of Specs and Folders
         format: uri
@@ -100,6 +118,10 @@ definitions:
         items:
           type: object
         type: array
+      kind:
+        enum:
+        - Page
+        type: string
   PageMutableProperties:
     allOf:
     - $ref: '#/definitions/EntityMutableProperties'
@@ -112,9 +134,9 @@ definitions:
         description: URL of a Page
         format: uri
         type: string
-  ServerEntity:
+  Resource:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/ResourceMutableProperties'
     properties:
       created:
         format: date-time
@@ -133,7 +155,7 @@ definitions:
         readOnly: true
         type: string
     type: object
-  ServerEntityMutableProperties:
+  ResourceMutableProperties:
     properties: {}
     type: object
   Spec:
@@ -154,6 +176,10 @@ definitions:
           format: uri
           type: string
         type: array
+      kind:
+        enum:
+        - Spec
+        type: string
       name:
         type: string
       permissions:

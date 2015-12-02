@@ -8,7 +8,7 @@ conventions:
   error_response:
     type: string
 entities:
-  ServerEntity:
+  Resource:
     abstract: true
     type: object
     properties:
@@ -28,9 +28,7 @@ entities:
         type: string
         format: date-time
         readOnly: true
-  Entity:
-    allOf:
-    - $ref: '#/entities/ServerEntity'
+  BaseEntity:
     abstract: true
     properties:
       self:
@@ -38,10 +36,18 @@ entities:
         readOnly: true
       kind:
         type: string
+  Entity:
+    allOf:
+    - $ref: '#/entities/Resource'
+    - $ref: '#/entities/BaseEntity'
+    abstract: true
   Collection:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/BaseEntity'
     properties:
+      kind:
+        type: string
+        enum: [Collection]
       item_type: 
         type: string
       items:
@@ -62,6 +68,9 @@ entities:
     allOf:
     - $ref: '#/entities/Entity'
     properties:
+      kind:
+        type: string
+        enum: [Page]
       item_type: 
         type: string
       items:
@@ -80,6 +89,10 @@ entities:
   Hub:
     allOf:
     - $ref: '#/entities/Entity'
+    properties:
+      kind:
+        type: string
+        enum: [Hub]
     well_known_URLs: /
     query_paths: [myHub, sharedWithMe]
     readOnly: true
@@ -89,6 +102,9 @@ entities:
     implementation_path: /folders
     query_paths: [contents]
     properties:
+      kind:
+        type: string
+        enum: [Folder]
       name:
         type: string
       permissions:
@@ -106,6 +122,9 @@ entities:
     query_paths: [content]
     implementation_path: /specs
     properties:
+      kind:
+        type: string
+        enum: [Spec]
       name:
         type: string
       permissions:
