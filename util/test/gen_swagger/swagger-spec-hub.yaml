@@ -329,7 +329,6 @@ paths:
               description: perma-link URL of newly-created Spec or Folder
               type: string
           schema:
-            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
@@ -833,7 +832,6 @@ x-uris:
               description: perma-link URL of newly-created Spec or Folder
               type: string
           schema:
-            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'

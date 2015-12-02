@@ -1188,7 +1188,6 @@ paths:
               description: perma-link URL of newly-created Dog or Bicycle
               type: string
           schema:
-            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
@@ -1494,7 +1493,6 @@ paths:
               description: perma-link URL of newly-created Dog or Bicycle
               type: string
           schema:
-            $ref: '#/definitions/Entity'
             x-oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'

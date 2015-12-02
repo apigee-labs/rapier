@@ -382,7 +382,7 @@ class SwaggerGenerator(object):
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities()]
         if len(rel_property_specs) > 1:
-            schema = self.global_definition_ref('Entity')
+            schema = {}
             schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
             i201_description = 'Created new %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
             location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
