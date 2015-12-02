@@ -46,7 +46,7 @@ entities:
     - $ref: '#/entities/Entity'
     well_known_URLs: /
     query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
-    immutable: true
+    readOnly: true
   Dog:
     allOf:
     - $ref: '#/entities/Entity'

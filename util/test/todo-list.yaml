@@ -14,7 +14,7 @@ entities:
   TodoList:
     well_known_URLs: /to-dos
     query_paths: [items, "items;{id}"]
-    immutable: true
+    readOnly: true
   Item:
     properties:
       self:

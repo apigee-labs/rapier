@@ -57,7 +57,7 @@ entities:
       type: string
     - name: direction
       type: string
-    immutable: true
+    readOnly: true
   Page:
     allOf:
     - $ref: '#/entities/Entity'
@@ -76,13 +76,13 @@ entities:
       type: string
     - name: limit
       type: integer
-    immutable: true
+    readOnly: true
   Hub:
     allOf:
     - $ref: '#/entities/Entity'
     well_known_URLs: /
     query_paths: [myHub, sharedWithMe]
-    immutable: true
+    readOnly: true
   Folder:
     allOf:
     - $ref: '#/entities/Entity'

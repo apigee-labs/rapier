@@ -52,7 +52,7 @@ entities:
   SSL:
     well_known_URLs: /
     query_paths: keystores keystores;{name} keystores;{name}/aliases
-    immutable: true
+    readOnly: true
     allOf:
     - $ref: '#/entities/ServerEntity'
     properties:

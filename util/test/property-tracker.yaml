@@ -58,7 +58,7 @@ entities:
     - "bicycles;{name}/owner"
     - "institutions;{name}/assets"
     - "people;{name}/possessions"
-    immutable: true
+    readOnly: true
   Dog:
     allOf:
     - $ref: '#/entities/Entity'

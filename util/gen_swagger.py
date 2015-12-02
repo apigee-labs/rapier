@@ -81,7 +81,7 @@ class SwaggerGenerator(object):
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
-                        immutable = entity_spec.get('immutable', False)
+                        immutable = entity_spec.get('readOnly', False)
                         if immutable:
                             immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems()}
                         else:    
@@ -283,7 +283,7 @@ class SwaggerGenerator(object):
             path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
-        immutable = entity_spec.get('immutable', False)
+        immutable = entity_spec.get('readOnly', False)
         if not immutable:
             if structured:
                 update_verb = 'patch'
