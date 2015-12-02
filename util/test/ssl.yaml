@@ -50,7 +50,7 @@ entities:
     readOnly: true
   SSL:
     well_known_URLs: /
-    query_paths: keystores keystores;{name} keystores;{name}/aliases
+    query_paths: keystores keystores;{name} keystores;{name}/aliases keystores;{name}/aliases;{name}/csr
     readOnly: true
     allOf:
     - $ref: '#/entities/ServerEntity'
@@ -96,7 +96,7 @@ entities:
   Pkcs12Alias:
     type: object
     resource: false
-    consumes: multipart/form-data
+    media-type: multipart/form-data
     properties:
       kind:
         type: string
@@ -108,10 +108,13 @@ entities:
       ignoreExpiryValidation:
         type: boolean
       pkcs12File:
-        type: file
+        type: string
+        format: file
   Certificate:
+    readOnly: true
     type: string
   CSR:
+    readOnly: true
     type: string
   KeyCertGenInfo:
     type: object
@@ -129,19 +132,17 @@ entities:
       sigAlg:
         type: string
       issuer:
-        type:
-          $ref: '#/definitions/X500Name'
+        $ref: '#/definitions/X500Name'
       subject:
-        type:
-          $ref: '#/definitions/X500Name'
+        $ref: '#/definitions/X500Name'
       subjectAlternativeDNSNames:
         type: array
         items:
           type: string
-  KeyFileCertFileAlias:
+  KeyCertFileAlias:
     type: object
     resource: false
-    consumes: multipart/form-data
+    media-type: multipart/form-data
     properties:
       kind:
         type: string
@@ -153,25 +154,43 @@ entities:
       ignoreExpiryValidation:
         type: boolean
       keyFile:
-        type: file
+        type: string
+        format: file
       certFile:
-        type: file
+        type: string
+        format: file
+  KeyCertJarAlias:
+    type: object
+    resource: false
+    media-type: multipart/form-data
+    properties:
+      kind:
+        type: string
+        enum: [KeyFileCertFileAlias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyCertJar:
+        type: string
+        format: file
   X500Name:
-    subject:
-      type: object
-      properties:
-        countryCose:
-          type: string
-        state: 
-          type: string
-        locality:
-          type: string
-        orgName:
-          type: string
-        orgUnitName:
-          type: string
-        email:
-          type: string
+    type: object
+    properties:
+      countryCose:
+        type: string
+      state: 
+        type: string
+      locality:
+        type: string
+      orgName:
+        type: string
+      orgUnitName:
+        type: string
+      email:
+        type: string
 relationships:
   ssl-to-keystores:
     one_end:
@@ -185,7 +204,7 @@ relationships:
       entity: Keystore
       property: aliases
       multiplicity: 0:n
-      consumes_entities: Pkcs12Alias KeyCertAlias KeyCertGetInfo
+      consumes_entities: Pkcs12Alias KeyCertFileAlias KeyCertJarAlias KeyCertGenInfo
     other_end:
       entity: Alias
   alias-to-certificate:

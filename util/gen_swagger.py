@@ -234,7 +234,7 @@ class SwaggerGenerator(object):
             if spec.is_multivalued() and not query_path.query_segments[inx].param and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
         is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].param
-        path = '/'.join([prefix.path_segment(), query_path.query_path_string])
+        path = '/'.join([prefix.path_segment(), query_path.swagger_path_string])
         if not (self.include_impl and prefix.is_uri_spec()):
             paths = self.uris if prefix.is_uri_spec() else self.paths 
             if path not in paths:
@@ -821,6 +821,9 @@ class QueryPath(object):
     def __init__(self, query_path_string):
         self.query_path_string = query_path_string
         self.query_segments = [QuerySegment(segment_string) for segment_string in query_path_string.split('/')]
+        for inx, query_segment in enumerate(self.query_segments):
+            query_segment.parse_query_segment(inx, self.query_segments)
+        self.swagger_path_string = '/'.join([query_segment.swagger_segment_string for query_segment in self.query_segments])
             
     def matches(self, rel_stack):
         if len(self.query_segments) == len(rel_stack):
@@ -840,10 +843,13 @@ class QueryPath(object):
 class QuerySegment(object):
 
     def __init__(self, segment_string):
-        self.segment_string = segment_string 
-        parts = segment_string.split(';')
+        self.query_segment_string = segment_string
+        self.swagger_segment_string = segment_string
+        
+    def parse_query_segment(self, index, query_segments):
+        parts = self.query_segment_string.split(';')
         if len(parts) > 2:
-            sys.exit('query path segment contains more than 1 ; - %s' % segment_string)
+            sys.exit('query path segment contains more than 1 ; - %s' % self.query_segment_string)
         elif len(parts) == 2:
             path_params = parts[1]
             if '{' in path_params:
@@ -852,6 +858,11 @@ class QuerySegment(object):
                     close_brace_offset = path_params.index('}')
                     if open_brace_offset < close_brace_offset:
                         self.param = path_params[open_brace_offset+1 : close_brace_offset]
+                        duplicate_count = len([query_segement.param == self.param for query_segement in query_segments[:index]])
+                        if duplicate_count > 0:
+                            self.param = '_'.join((self.param, str(duplicate_count)))
+                            path_params = self.param.join((path_params[:open_brace_offset+1], path_params[close_brace_offset:]))
+                            self.swagger_segment_string = ';'.join((parts[0], path_params))
                     else:
                         sys.exit('empty path parameter ({}) - %s' % segment_string)
                 else:
@@ -871,10 +882,10 @@ class QuerySegment(object):
             } if self.param else None
 
     def __str__(self):
-        return self.segment_string
+        return self.query_segment_string
 
     def __repr__(self):
-        return 'QuerySegment(%s)' % self.segment_string
+        return 'QuerySegment(%s)' % self.query_segment_string
         
 class ImplementationPathSpec(PathPrefix):
 

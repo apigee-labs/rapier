@@ -80,6 +80,29 @@ definitions:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
     - $ref: '#/definitions/PersistentEntityMutableProperties'
+  KeyCertFileAlias:
+    allOf:
+    - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
+    type: object
+  KeyCertFileAliasMutableProperties:
+    properties:
+      certFile:
+        format: file
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        format: file
+        type: string
+      kind:
+        enum:
+        - KeyFileCertFileAlias
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   KeyCertGenInfo:
     allOf:
     - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
@@ -91,8 +114,7 @@ definitions:
       certValidityInDays:
         type: integer
       issuer:
-        type:
-          $ref: '#/definitions/X500Name'
+        $ref: '#/definitions/X500Name'
       keySize:
         type: string
       kind:
@@ -102,25 +124,23 @@ definitions:
       sigAlg:
         type: string
       subject:
-        type:
-          $ref: '#/definitions/X500Name'
+        $ref: '#/definitions/X500Name'
       subjectAlternativeDNSNames:
         items:
           type: string
         type: array
     type: object
-  KeyFileCertFileAlias:
+  KeyCertJarAlias:
     allOf:
-    - $ref: '#/definitions/KeyFileCertFileAliasMutableProperties'
+    - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
     type: object
-  KeyFileCertFileAliasMutableProperties:
+  KeyCertJarAliasMutableProperties:
     properties:
-      certFile:
-        type: file
       ignoreExpiryValidation:
         type: boolean
-      keyFile:
-        type: file
+      keyCertJar:
+        format: file
+        type: string
       kind:
         enum:
         - KeyFileCertFileAlias
@@ -190,7 +210,8 @@ definitions:
       password:
         type: string
       pkcs12File:
-        type: file
+        format: file
+        type: string
     type: object
   SSL:
     allOf:
@@ -222,7 +243,22 @@ definitions:
   X500Name:
     allOf:
     - $ref: '#/definitions/X500NameMutableProperties'
-  X500NameMutableProperties: {}
+    type: object
+  X500NameMutableProperties:
+    properties:
+      countryCose:
+        type: string
+      email:
+        type: string
+      locality:
+        type: string
+      orgName:
+        type: string
+      orgUnitName:
+        type: string
+      state:
+        type: string
+    type: object
 paths:
   /:
     get:
@@ -530,8 +566,9 @@ paths:
         schema:
           x-oneOf:
           - $ref: '#/definitions/Pkcs12AliasMutableProperties'
-          - $ref: '#/definitions/KeyCertAliasMutableProperties'
-          - $ref: '#/definitions/KeyCertGetInfoMutableProperties'
+          - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
+          - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
+          - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
       responses:
         '201':
           description: Created new Alias
@@ -558,6 +595,72 @@ paths:
           $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /keystores;{name}/aliases;{name_1}/csr:
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    get:
+      description: Retrieve a CSR
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -749,77 +852,6 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    put:
-      description: Create or Update a CSR entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the CSR being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/CSR'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/CSR'
-        '201':
-          description: Created new CSR
-          headers:
-            Location:
-              description: perma-link URL of newly-created CSR
-              type: string
-          schema:
-            $ref: '#/definitions/CSR'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a CSR
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/CSR'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
       description: retrieve HEAD
       responses:
@@ -873,77 +905,6 @@ x-uris:
               type: string
           schema:
             $ref: '#/definitions/Certificate'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      description: Create or Update a Certificate entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Certificate being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Certificate'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Certificate'
-        '201':
-          description: Created new Certificate
-          headers:
-            Location:
-              description: perma-link URL of newly-created Certificate
-              type: string
-          schema:
-            $ref: '#/definitions/Certificate'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Certificate
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Certificate'
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1272,18 +1233,15 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a X500Name entity
+    put:
+      description: Create or Update a X500Name entity
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the X500Name being updated
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the X500Name being replaced
         in: body
         name: body
         schema:
-          $ref: '#/definitions/X500NameMutableProperties'
+          $ref: '#/definitions/X500Name'
       responses:
         '200':
           description: successful
@@ -1294,6 +1252,14 @@ x-uris:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/X500Name'
+        '201':
+          description: Created new X500Name
+          headers:
+            Location:
+              description: perma-link URL of newly-created X500Name
               type: string
           schema:
             $ref: '#/definitions/X500Name'
