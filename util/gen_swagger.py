@@ -89,8 +89,6 @@ class SwaggerGenerator(object):
                             immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
                         if immutable_properties:
                             definition['properties'] = immutable_properties
-                    if 'media-type' in entity_spec:
-                        mutable_definition['x-media-type'] = entity_spec['media-type']
                     self.definitions['%sMutableProperties' % entity_name] = mutable_definition
                     if 'required' in entity_spec:
                         mutable_definition['required'] = entity_spec['required']

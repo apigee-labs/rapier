@@ -96,7 +96,6 @@ entities:
   Pkcs12Alias:
     type: object
     resource: false
-    media-type: multipart/form-data
     properties:
       kind:
         type: string
@@ -142,7 +141,6 @@ entities:
   KeyCertFileAlias:
     type: object
     resource: false
-    media-type: multipart/form-data
     properties:
       kind:
         type: string
@@ -162,7 +160,6 @@ entities:
   KeyCertJarAlias:
     type: object
     resource: false
-    media-type: multipart/form-data
     properties:
       kind:
         type: string
