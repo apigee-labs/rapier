@@ -116,13 +116,13 @@ entities:
   CSR:
     readOnly: true
     type: string
-  KeyCertGenInfo:
+  SelfSignedCertAlias:
     type: object
     resource: false
     properties:
       kind:
         type: string
-        enum: [KeyCertGenInfo]
+        enum: [SelfSignedCertAlias]
       alias:
         type: string
       keySize:
@@ -204,7 +204,7 @@ relationships:
       entity: Keystore
       property: aliases
       multiplicity: 0:n
-      consumes_entities: Pkcs12Alias KeyCertFileAlias KeyCertJarAlias KeyCertGenInfo
+      consumes_entities: Pkcs12Alias KeyCertFileAlias KeyCertJarAlias SelfSignedCertAlias
     other_end:
       entity: Alias
   alias-to-certificate:
@@ -228,4 +228,4 @@ relationships:
       property: selfSignedCertificate
       multiplicity: 0:n
     other_end:
-      entity: KeyCertGenInfo
+      entity: SelfSignedCertAlias

@@ -32,7 +32,7 @@ definitions:
         format: uri
         type: string
       selfSignedCertificate:
-        description: URL of a Collection of KeyCertGenInfos
+        description: URL of a Collection of SelfSignedCertAliass
         format: uri
         type: string
   AliasMutableProperties:
@@ -102,33 +102,6 @@ definitions:
         type: string
       password:
         type: string
-    type: object
-  KeyCertGenInfo:
-    allOf:
-    - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
-    type: object
-  KeyCertGenInfoMutableProperties:
-    properties:
-      alias:
-        type: string
-      certValidityInDays:
-        type: integer
-      issuer:
-        $ref: '#/definitions/X500Name'
-      keySize:
-        type: string
-      kind:
-        enum:
-        - KeyCertGenInfo
-        type: string
-      sigAlg:
-        type: string
-      subject:
-        $ref: '#/definitions/X500Name'
-      subjectAlternativeDNSNames:
-        items:
-          type: string
-        type: array
     type: object
   KeyCertJarAlias:
     allOf:
@@ -229,6 +202,33 @@ definitions:
   SSLMutableProperties:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
+  SelfSignedCertAlias:
+    allOf:
+    - $ref: '#/definitions/SelfSignedCertAliasMutableProperties'
+    type: object
+  SelfSignedCertAliasMutableProperties:
+    properties:
+      alias:
+        type: string
+      certValidityInDays:
+        type: integer
+      issuer:
+        $ref: '#/definitions/X500Name'
+      keySize:
+        type: string
+      kind:
+        enum:
+        - SelfSignedCertAlias
+        type: string
+      sigAlg:
+        type: string
+      subject:
+        $ref: '#/definitions/X500Name'
+      subjectAlternativeDNSNames:
+        items:
+          type: string
+        type: array
+    type: object
   ServerEntity:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
@@ -568,7 +568,7 @@ paths:
           - $ref: '#/definitions/Pkcs12AliasMutableProperties'
           - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
           - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
-          - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
+          - $ref: '#/definitions/SelfSignedCertAliasMutableProperties'
       responses:
         '201':
           description: Created new Alias
