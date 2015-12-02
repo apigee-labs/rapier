@@ -759,6 +759,101 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  '{Folder_URL}/contents':
+    parameters:
+    - description: The URL of a Folder entity
+      in: URL
+      name: Folder_URL
+      required: true
+      type: string
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Spec or Folder
+      parameters:
+      - description: The representation of the new Spec or Folder being created
+        in: body
+        name: body
+        schema:
+          x-oneOf:
+          - $ref: '#/definitions/SpecMutableProperties'
+          - $ref: '#/definitions/FolderMutableProperties'
+      responses:
+        '201':
+          description: Created new Spec or Folder
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Spec or Folder
+              type: string
+          schema:
+            $ref: '#/definitions/Entity'
+            x-oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   '{Hub_URL}':
     parameters:
     - description: The URL of a Hub entity

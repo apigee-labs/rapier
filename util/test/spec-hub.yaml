@@ -87,6 +87,7 @@ entities:
     allOf:
     - $ref: '#/entities/Entity'
     implementation_path: /folders
+    query_paths: [contents]
     properties:
       name:
         type: string
