@@ -103,6 +103,7 @@ definitions:
       password:
         type: string
     type: object
+    x-media-type: multipart/form-data
   KeyCertJarAlias:
     allOf:
     - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
@@ -123,6 +124,7 @@ definitions:
       password:
         type: string
     type: object
+    x-media-type: multipart/form-data
   Keystore:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -186,6 +188,7 @@ definitions:
         format: file
         type: string
     type: object
+    x-media-type: multipart/form-data
   SSL:
     allOf:
     - $ref: '#/definitions/ServerEntity'
