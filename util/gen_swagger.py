@@ -395,7 +395,6 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(consumes_entities) > 1:
                 post_schema = {}
-                #if False: # should validate but does not?
                 post_schema['x-oneOf'] = [self.mutable_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
@@ -543,7 +542,10 @@ class SwaggerGenerator(object):
         result = []
         param = prefix.build_param()
         if param:
-            result.append(param)
+            if isinstance(param, list):
+                result.extend(param)
+            else:
+                result.append(param)
         if query_path:
             for query_segment in query_path.query_segments:
                 param = query_segment.build_param()
@@ -816,7 +818,20 @@ class WellKnownURLSpec(PathPrefix):
         return self.base_URL[1:] if self.base_URL.endswith('/') else self.base_URL
 
     def build_param(self):
-        return None        
+        input_string = self.base_URL
+        param_name = ''
+        params = []
+        while param_name is not None:
+            param_name, next_start = get_param_name(input_string)
+            if param_name:
+                params.append({
+                'name': param_name,
+                'in': 'path',
+                'type': 'string',
+                'required': True
+                })
+                input_string = input_string[next_start:]
+        return params
 
 class QueryPath(object):
 
@@ -975,6 +990,22 @@ def article(name):
         
 def articled(name):
     return '%s %s' % (article(name), name)
-        
+    
+def get_param_name(input_string):
+    if '{' in input_string:
+        open_brace_offset = input_string.index('{')
+        if '}' in input_string:
+            close_brace_offset = input_string.index('}')
+            if open_brace_offset < close_brace_offset:
+                param = input_string[open_brace_offset+1 : close_brace_offset]
+            else:
+                sys.exit('empty path parameter ({}) - %s' % segment_string)
+        else:
+            sys.exit('no closing { for path paramter - %s' % segment_string)
+    else:
+        param = None
+        close_brace_offset = -1
+    return param, close_brace_offset + 1
+                
 if __name__ == "__main__":
     main(sys.argv)

@@ -80,6 +80,22 @@ definitions:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
     - $ref: '#/definitions/PersistentEntityMutableProperties'
+  Environment:
+    allOf:
+    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/EnvironmentMutableProperties'
+    properties:
+      keystores:
+        description: URL of a Collection of Keystores
+        format: uri
+        type: string
+      kind:
+        enum:
+        - Environment
+        type: string
+  EnvironmentMutableProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityMutableProperties'
   KeyCertFileAlias:
     allOf:
     - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
@@ -189,22 +205,6 @@ definitions:
         type: string
     type: object
     x-media-type: multipart/form-data
-  SSL:
-    allOf:
-    - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/SSLMutableProperties'
-    properties:
-      keystores:
-        description: URL of a Collection of Keystores
-        format: uri
-        type: string
-      kind:
-        enum:
-        - SSL
-        type: string
-  SSLMutableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
   SelfSignedCertAlias:
     allOf:
     - $ref: '#/definitions/SelfSignedCertAliasMutableProperties'
@@ -263,9 +263,18 @@ definitions:
         type: string
     type: object
 paths:
-  /:
+  /v1/o/{org}/e/{env}:
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
     get:
-      description: Retrieve a SSL
+      description: Retrieve an Environment
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -280,7 +289,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/SSL'
+            $ref: '#/definitions/Environment'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -320,7 +329,16 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /keystores:
+  /v1/o/{org}/e/{env}/keystores:
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
     get:
       responses:
         '200':
@@ -404,8 +422,16 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /keystores;{name}:
+  /v1/o/{org}/e/{env}/keystores;{name}:
     parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
     - in: path
       name: name
       required: true
@@ -532,8 +558,16 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /keystores;{name}/aliases:
+  /v1/o/{org}/e/{env}/keystores;{name}/aliases:
     parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
     - in: path
       name: name
       required: true
@@ -625,8 +659,16 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /keystores;{name}/aliases;{name_1}/csr:
+  /v1/o/{org}/e/{env}/keystores;{name}/aliases;{name_1}/csr:
     parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
     - in: path
       name: name
       required: true
@@ -1010,6 +1052,69 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+  '{Environment_URL}':
+    parameters:
+    - description: The URL of an Environment entity
+      in: URL
+      name: Environment_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve an Environment
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
   '{Keystore_URL}':
     parameters:
     - description: The URL of a Keystore entity
@@ -1100,69 +1205,6 @@ x-uris:
             $ref: '#/definitions/Keystore'
         '400':
           $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{SSL_URL}':
-    parameters:
-    - description: The URL of a SSL entity
-      in: URL
-      name: SSL_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a SSL
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/SSL'
         '401':
           $ref: '#/responses/401'
         '403':

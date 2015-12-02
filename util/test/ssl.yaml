@@ -48,8 +48,8 @@ entities:
         items: 
           type: object
     readOnly: true
-  SSL:
-    well_known_URLs: /
+  Environment:
+    well_known_URLs: /v1/o/{org}/e/{env}
     query_paths: keystores keystores;{name} keystores;{name}/aliases keystores;{name}/aliases;{name}/csr
     readOnly: true
     allOf:
@@ -57,7 +57,7 @@ entities:
     properties:
       kind:
         type: string
-        enum: [SSL]
+        enum: [Environment]
   Keystore:
     allOf:
     - $ref: '#/entities/Entity'
@@ -194,7 +194,7 @@ entities:
 relationships:
   ssl-to-keystores:
     one_end:
-      entity: SSL
+      entity: Environment
       property: keystores
       multiplicity: 0:n
     other_end:
