@@ -48,8 +48,6 @@ entities:
       kind:
         type: string
         enum: [Collection]
-      item_type: 
-        type: string
       items:
         type: array
         items: 

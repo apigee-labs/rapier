@@ -34,7 +34,7 @@ entities:
   Entity:
     allOf:
     - $ref: '#/entities/ServerEntity'
-    - $ref: '#/entities/PersitentEntity'
+    - $ref: '#/entities/PersistentEntity'
     abstract: true
   Collection:
     allOf:
@@ -43,8 +43,6 @@ entities:
       kind:
         type: string
         enum: [Collection]
-      item_type: 
-        type: string
       items:
         type: array
         items: 

@@ -63,8 +63,6 @@ definitions:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
-      item_type:
-        type: string
       items:
         items:
           type: object
@@ -76,12 +74,12 @@ definitions:
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/PersitentEntity'
+    - $ref: '#/definitions/PersistentEntity'
     - $ref: '#/definitions/EntityMutableProperties'
   EntityMutableProperties:
     allOf:
     - $ref: '#/definitions/ServerEntityMutableProperties'
-    - $ref: '#/definitions/PersitentEntityMutableProperties'
+    - $ref: '#/definitions/PersistentEntityMutableProperties'
   KeyCertGenInfo:
     allOf:
     - $ref: '#/definitions/KeyCertGenInfoMutableProperties'
