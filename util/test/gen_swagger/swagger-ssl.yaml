@@ -59,9 +59,6 @@ definitions:
     allOf:
     - $ref: '#/definitions/ServerEntity'
     - $ref: '#/definitions/CollectionMutableProperties'
-  CollectionMutableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
     properties:
       items:
         items:
@@ -71,6 +68,9 @@ definitions:
         enum:
         - Collection
         type: string
+  CollectionMutableProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityMutableProperties'
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
@@ -1007,72 +1007,6 @@ x-uris:
               type: string
           schema:
             $ref: '#/definitions/Collection'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Collection entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Collection being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/CollectionMutableProperties'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Collection
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':

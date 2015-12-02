@@ -47,6 +47,7 @@ entities:
         type: array
         items: 
           type: object
+    readOnly: true
   SSL:
     well_known_URLs: /
     query_paths: keystores keystores;{name} keystores;{name}/aliases
