@@ -124,7 +124,7 @@ class SwaggerGenerator(object):
                     implementation_path_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
                     entity_interface =  self.build_entity_interface(implementation_path_spec, None, None, implementation_path_specs)
                     self.paths[implementation_path_spec.path_segment()] = entity_interface
-                elif not self.include_impl and ('abstract' not in entity_spec or not entity_spec['abstract']) and ('persistent' not in entity_spec or entity_spec['persistent']): 
+                elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:

@@ -95,7 +95,7 @@ entities:
               type: string
   Pkcs12Alias:
     type: object
-    persistent: false
+    resource: false
     consumes: multipart/form-data
     properties:
       kind:
@@ -115,7 +115,7 @@ entities:
     type: string
   KeyCertGenInfo:
     type: object
-    persistent: false
+    resource: false
     properties:
       kind:
         type: string
@@ -140,7 +140,7 @@ entities:
           type: string
   KeyFileCertFileAlias:
     type: object
-    persistent: false
+    resource: false
     consumes: multipart/form-data
     properties:
       kind:
