@@ -459,7 +459,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores;{name}:
+  /v1/o/{org}/e/{env}/keystores/{name}:
     parameters:
     - in: path
       name: org
@@ -595,7 +595,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores;{name}/aliases:
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases:
     parameters:
     - in: path
       name: org
@@ -699,7 +699,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores;{name}/aliases;{name_1}/certificate:
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
     parameters:
     - in: path
       name: org
@@ -773,7 +773,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores;{name}/aliases;{name_1}/csr:
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
     parameters:
     - in: path
       name: org
