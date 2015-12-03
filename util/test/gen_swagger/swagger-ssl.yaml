@@ -89,13 +89,14 @@ definitions:
         description: URL of a Collection of Keystores
         format: uri
         type: string
+  EnvironmentMutableProperties:
+    allOf:
+    - $ref: '#/definitions/ServerEntityMutableProperties'
+    properties:
       kind:
         enum:
         - Environment
         type: string
-  EnvironmentMutableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
   KeyCertFileAlias:
     allOf:
     - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
@@ -295,6 +296,45 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update an Environment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Environment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentMutableProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
     head:
@@ -1160,6 +1200,45 @@ x-uris:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update an Environment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Environment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentMutableProperties'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
     head:
       description: retrieve HEAD
       responses:
@@ -1318,140 +1397,6 @@ x-uris:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{X500Name_URL}':
-    parameters:
-    - description: The URL of a X500Name entity
-      in: URL
-      name: X500Name_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a X500Name
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/X500Name'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      description: Create or Update a X500Name entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the X500Name being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/X500Name'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/X500Name'
-        '201':
-          description: Created new X500Name
-          headers:
-            Location:
-              description: perma-link URL of newly-created X500Name
-              type: string
-          schema:
-            $ref: '#/definitions/X500Name'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a X500Name
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/X500Name'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
 parameters:
   Accept:
     description: specifies the requested media type - required
@@ -1476,12 +1421,6 @@ parameters:
     in: header
     name: If-Match
     required: true
-    type: string
-  Put-If-Match:
-    description: specifies the last known ETag value of the resource being modified
-    in: header
-    name: If-Match
-    required: false
     type: string
 responses:
   '303':

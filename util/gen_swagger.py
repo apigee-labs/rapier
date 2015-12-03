@@ -57,6 +57,7 @@ class SwaggerGenerator(object):
         else:
             self.error_response = {}
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
+        self.discriminator_separator = self.conventions.get('discriminator_separator', ';')
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths
@@ -128,7 +129,7 @@ class SwaggerGenerator(object):
                     entity_url_property_spec = EntityURLSpec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
-                    query_paths = [QueryPath(query_path_string) for query_path_string in as_list(entity_spec['query_paths'])]
+                    query_paths = [QueryPath(query_path_string, self) for query_path_string in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
                         if self.include_impl and 'implementation_path' in entity_spec:
@@ -843,9 +844,9 @@ class WellKnownURLSpec(PathPrefix):
 
 class QueryPath(object):
 
-    def __init__(self, query_path_string):
+    def __init__(self, query_path_string, generator):
         self.query_path_string = query_path_string
-        self.query_segments = [QuerySegment(segment_string) for segment_string in query_path_string.split('/')]
+        self.query_segments = [QuerySegment(segment_string, generator) for segment_string in query_path_string.split('/')]
         for inx, query_segment in enumerate(self.query_segments):
             query_segment.parse_query_segment(inx, self.query_segments)
         self.swagger_path_string = '/'.join([query_segment.swagger_segment_string for query_segment in self.query_segments])
@@ -867,9 +868,10 @@ class QueryPath(object):
         
 class QuerySegment(object):
 
-    def __init__(self, segment_string):
+    def __init__(self, segment_string, generator):
         self.query_segment_string = segment_string
-        self.swagger_segment_string = segment_string
+        self.swagger_segment_string = segment_string.replace(';', generator.discriminator_separator)
+        self.generator = generator
         
     def parse_query_segment(self, index, query_segments):
         parts = self.query_segment_string.split(';')
@@ -887,7 +889,7 @@ class QuerySegment(object):
                         if duplicate_count > 0:
                             self.param = '_'.join((self.param, str(duplicate_count)))
                             path_params = self.param.join((path_params[:open_brace_offset+1], path_params[close_brace_offset:]))
-                            self.swagger_segment_string = ';'.join((parts[0], path_params))
+                            self.swagger_segment_string = self.generator.discriminator_separator.join((parts[0], path_params))
                     else:
                         sys.exit('empty path parameter ({}) - %s' % segment_string)
                 else:

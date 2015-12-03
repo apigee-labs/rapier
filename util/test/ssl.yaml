@@ -56,7 +56,6 @@ entities:
     - keystores;{name}/aliases 
     - keystores;{name}/aliases;{name}/csr 
     - keystores;{name}/aliases;{name}/certificate
-    readOnly: true
     allOf:
     - $ref: '#/entities/ServerEntity'
     properties:
@@ -180,6 +179,7 @@ entities:
         format: file
   X500Name:
     type: object
+    resource: false
     properties:
       countryCose:
         type: string
