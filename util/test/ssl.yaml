@@ -50,7 +50,12 @@ entities:
     readOnly: true
   Environment:
     well_known_URLs: /v1/o/{org}/e/{env}
-    query_paths: keystores keystores;{name} keystores;{name}/aliases keystores;{name}/aliases;{name}/csr keystores;{name}/aliases;{name}/certificate
+    query_paths: 
+    - keystores 
+    - keystores;{name} 
+    - keystores;{name}/aliases 
+    - keystores;{name}/aliases;{name}/csr 
+    - keystores;{name}/aliases;{name}/certificate
     readOnly: true
     allOf:
     - $ref: '#/entities/ServerEntity'
