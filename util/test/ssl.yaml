@@ -93,6 +93,12 @@ entities:
               type: string
             subject:
               type: string
+  Certificate:
+    readOnly: true
+    type: string
+  CSR:
+    readOnly: true
+    type: string
   Pkcs12Alias:
     type: object
     resource: false
@@ -109,12 +115,6 @@ entities:
       pkcs12File:
         type: string
         format: file
-  Certificate:
-    readOnly: true
-    type: string
-  CSR:
-    readOnly: true
-    type: string
   SelfSignedCertAlias:
     type: object
     resource: false
@@ -201,7 +201,9 @@ relationships:
       entity: Keystore
       property: aliases
       multiplicity: 0:n
-      consumes_entities: Pkcs12Alias KeyCertFileAlias KeyCertJarAlias SelfSignedCertAlias
+      consumes: 
+        multi-part/form-data: Pkcs12Alias KeyCertFileAlias KeyCertJarAlias
+        application/json: SelfSignedCertAlias
     other_end:
       entity: Alias
   alias-to-certificate:

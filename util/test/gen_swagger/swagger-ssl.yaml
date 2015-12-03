@@ -592,6 +592,9 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
+      consumes:
+      - multi-part/form-data
+      - application/json
       description: Create a new Alias
       parameters:
       - description: The representation of the new Alias being created

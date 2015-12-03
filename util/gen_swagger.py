@@ -199,9 +199,23 @@ class SwaggerGenerator(object):
         def add_type(rel_name, one_end, other_end):
             if 'property' in one_end:
                 p_spec = \
-                    RelMVPropertySpec(self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('collection_resource'), as_list(one_end.get('consumes_entities')) if 'consumes_entities' in one_end else None, one_end.get('readOnly')) \
-                        if get_multiplicity(one_end) == 'n' else \
-                    RelSVPropertySpec(self.conventions, one_end['property'], one_end['entity'], other_end['entity'], rel_name, one_end.get('multiplicity'), one_end.get('readOnly'))
+                    RelMVPropertySpec(
+                        self.conventions, 
+                        one_end['property'], 
+                        one_end['entity'], 
+                        other_end['entity'], 
+                        rel_name, one_end.get('multiplicity'), 
+                        one_end.get('collection_resource'), 
+                        one_end.get('consumes'), 
+                        one_end.get('readOnly')) \
+                if get_multiplicity(one_end) == 'n' else \
+                    RelSVPropertySpec(self.conventions, 
+                        one_end['property'], 
+                        one_end['entity'], 
+                        other_end['entity'], 
+                        rel_name, 
+                        one_end.get('multiplicity'), 
+                        one_end.get('readOnly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
@@ -370,15 +384,14 @@ class SwaggerGenerator(object):
         relationship_name = rel_property_spec.property_name
         entity_name = rel_property_spec.target_entity
         entity_spec = self.rapier_spec['entities'][entity_name]
-        consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
-        produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         path_spec = PresortedOrderedDict()
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
-        consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities()]
+        consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
+        consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
         if len(rel_property_specs) > 1:
             schema = {}
             schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
@@ -424,10 +437,8 @@ class SwaggerGenerator(object):
                         }
                     }                
                 }
-            if consumes:
-                path_spec['post']['consumes'] = consumes
-            if produces:
-                path_spec['post']['produces'] = produces
+            if consumes_media_types:
+                path_spec['post']['consumes'] = consumes_media_types
             if not self.yaml_merge:
                 path_spec['post']['responses'].update(self.response_sets['post_responses'])
             else:
@@ -772,7 +783,7 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource, consumes_entities, readonly):
+    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource, consumes, readonly):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -780,8 +791,10 @@ class RelMVPropertySpec(SegmentSpec):
         self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
-        self.consumes_entities_var = consumes_entities
         self.collection_resource = True if collection_resource == None else collection_resource
+        self.consumes = consumes
+        self.consumes_media_types = consumes.keys() if isinstance(consumes, dict) else as_list(consumes) if consumes is not None else None
+        self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity] 
 
     def is_multivalued(self):
         return True
@@ -800,9 +813,6 @@ class RelMVPropertySpec(SegmentSpec):
     def __hash__():
         return self.__dict__.hash()
         
-    def consumes_entities(self):
-        return self.consumes_entities_var if self.consumes_entities_var else [self.target_entity] 
-
     def __ne__(self, other):
         return not self.__eq__(other)
         
