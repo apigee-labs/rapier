@@ -4,74 +4,6 @@ conventions:
   multi_valued_relationship_entity: Collection
   discriminator_separator: /
 entities:
-  PersistentEntity:
-    abstract: true
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Resource:
-    abstract: true
-    type: object
-    properties:
-      self:
-        type: string
-      kind:
-        type: string      
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    - $ref: '#/entities/PersistentEntity'
-    abstract: true
-  Collection:
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    readOnly: true
-  Environment:
-    well_known_URLs: /v1/o/{org}/e/{env}
-    query_paths: 
-    - keystores 
-    - keystores;{name} 
-    - keystores;{name}/aliases 
-    - keystores;{name}/aliases;{name}/csr 
-    - keystores;{name}/aliases;{name}/certificate
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [Environment]
-  Keystore:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum: [Keystore]
   Alias:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -101,9 +33,44 @@ entities:
   Certificate:
     readOnly: true
     type: string
+  Collection:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
   CSR:
     readOnly: true
     type: string
+  Environment:
+    well_known_URLs: /v1/o/{org}/e/{env}
+    query_paths: 
+    - keystores 
+    - keystores;{name} 
+    - keystores;{name}/aliases 
+    - keystores;{name}/aliases;{name}/csr 
+    - keystores;{name}/aliases;{name}/certificate
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Environment]
+  Keystore:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum: [Keystore]
   Pkcs12Alias:
     type: object
     resource: false
@@ -178,6 +145,39 @@ entities:
       keyCertJar:
         type: string
         format: file
+  PersistentEntity:
+    abstract: true
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    - $ref: '#/entities/PersistentEntity'
+    abstract: true
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
   X500Name:
     type: object
     resource: false
