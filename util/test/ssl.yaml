@@ -133,6 +133,22 @@ entities:
       keyCertJar:
         type: string
         format: file
+  X500Name:
+    type: object
+    resource: false
+    properties:
+      countryCose:
+        type: string
+      state: 
+        type: string
+      locality:
+        type: string
+      orgName:
+        type: string
+      orgUnitName:
+        type: string
+      email:
+        type: string
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
@@ -177,22 +193,6 @@ entities:
       self:
         type: string
       kind:
-        type: string
-  X500Name:
-    type: object
-    resource: false
-    properties:
-      countryCose:
-        type: string
-      state: 
-        type: string
-      locality:
-        type: string
-      orgName:
-        type: string
-      orgUnitName:
-        type: string
-      email:
         type: string
 relationships:
   ssl-to-keystores:
