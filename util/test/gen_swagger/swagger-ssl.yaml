@@ -9,7 +9,7 @@ produces:
 definitions:
   Alias:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/AliasSettableProperties'
     properties:
       certsInfo:
@@ -37,7 +37,7 @@ definitions:
         type: string
   AliasSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       certificate:
         description: URL of a Certificate
@@ -57,7 +57,7 @@ definitions:
     type: string
   Collection:
     allOf:
-    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/CollectionSettableProperties'
     properties:
       items:
@@ -70,19 +70,10 @@ definitions:
         type: string
   CollectionSettableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
-  Entity:
-    allOf:
-    - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/PersistentEntity'
-    - $ref: '#/definitions/EntitySettableProperties'
-  EntitySettableProperties:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
-    - $ref: '#/definitions/PersistentEntitySettableProperties'
+    - $ref: '#/definitions/ResourceSettableProperties'
   Environment:
     allOf:
-    - $ref: '#/definitions/ServerEntity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/EnvironmentSettableProperties'
     properties:
       keystores:
@@ -91,7 +82,7 @@ definitions:
         type: string
   EnvironmentSettableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       kind:
         enum:
@@ -142,7 +133,7 @@ definitions:
     type: object
   Keystore:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/KeystoreSettableProperties'
     properties:
       aliases:
@@ -151,7 +142,7 @@ definitions:
         type: string
   KeystoreSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       kind:
         enum:
@@ -183,6 +174,15 @@ definitions:
   PersistentEntitySettableProperties:
     properties: {}
     type: object
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentEntity'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
+  PersistentResourceSettableProperties:
+    allOf:
+    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/PersistentEntitySettableProperties'
   Pkcs12Alias:
     allOf:
     - $ref: '#/definitions/Pkcs12AliasSettableProperties'
@@ -201,6 +201,17 @@ definitions:
         type: string
       pkcs12File:
         format: file
+        type: string
+    type: object
+  Resource:
+    allOf:
+    - $ref: '#/definitions/ResourceSettableProperties'
+    type: object
+  ResourceSettableProperties:
+    properties:
+      kind:
+        type: string
+      self:
         type: string
     type: object
   SelfSignedCertAlias:
@@ -229,17 +240,6 @@ definitions:
         items:
           type: string
         type: array
-    type: object
-  ServerEntity:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
-    type: object
-  ServerEntitySettableProperties:
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
     type: object
   X500Name:
     allOf:

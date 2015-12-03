@@ -24,7 +24,7 @@ entities:
         type: string
         format: date-time
         readOnly: true
-  ServerEntity:
+  Resource:
     abstract: true
     type: object
     properties:
@@ -32,14 +32,14 @@ entities:
         type: string
       kind:
         type: string      
-  Entity:
+  PersistentResource:
     allOf:
-    - $ref: '#/entities/ServerEntity'
+    - $ref: '#/entities/Resource'
     - $ref: '#/entities/PersistentEntity'
     abstract: true
   Collection:
     allOf:
-    - $ref: '#/entities/ServerEntity'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -58,14 +58,14 @@ entities:
     - keystores;{name}/aliases;{name}/csr 
     - keystores;{name}/aliases;{name}/certificate
     allOf:
-    - $ref: '#/entities/ServerEntity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [Environment]
   Keystore:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -74,7 +74,7 @@ entities:
         enum: [Keystore]
   Alias:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
