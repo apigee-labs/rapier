@@ -149,6 +149,7 @@ entities:
         type: string
       email:
         type: string
+# Boilerplate schemas from here
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
