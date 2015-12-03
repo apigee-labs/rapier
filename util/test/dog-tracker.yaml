@@ -1,7 +1,7 @@
 title: DogTrackerAPI
 version: "0.1"
 conventions:
-  multi_valued_relationships: Collection
+  multi_valued_relationship_entity: Collection
 entities:
   ServerEntity:
     abstract: true

@@ -32,8 +32,8 @@ class SwaggerGenerator(object):
             self.set_rapier_spec_from_filename(filename)
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
-        if 'multi_valued_relationships' in self.conventions:
-            self.collection_entity_name = self.conventions['multi_valued_relationships']
+        if 'multi_valued_relationship_entity' in self.conventions:
+            self.collection_entity_name = self.conventions['multi_valued_relationship_entity']
         if 'selector_location' in self.conventions and self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
             sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
         patterns = spec.get('patterns')

@@ -3,7 +3,7 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-  multi_valued_relationships: Collection
+  multi_valued_relationship_entity: Collection
   patch_consumes: application/merge-patch+json
   error_response:
     type: string
