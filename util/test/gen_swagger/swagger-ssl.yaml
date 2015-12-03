@@ -10,7 +10,7 @@ definitions:
   Alias:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/AliasMutableProperties'
+    - $ref: '#/definitions/AliasSettableProperties'
     properties:
       certsInfo:
         items:
@@ -35,9 +35,9 @@ definitions:
         description: URL of a Collection of SelfSignedCertAliass
         format: uri
         type: string
-  AliasMutableProperties:
+  AliasSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
     properties:
       certificate:
         description: URL of a Certificate
@@ -58,7 +58,7 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/CollectionMutableProperties'
+    - $ref: '#/definitions/CollectionSettableProperties'
     properties:
       items:
         items:
@@ -68,30 +68,30 @@ definitions:
         enum:
         - Collection
         type: string
-  CollectionMutableProperties:
+  CollectionSettableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/ServerEntitySettableProperties'
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
     - $ref: '#/definitions/PersistentEntity'
-    - $ref: '#/definitions/EntityMutableProperties'
-  EntityMutableProperties:
+    - $ref: '#/definitions/EntitySettableProperties'
+  EntitySettableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
-    - $ref: '#/definitions/PersistentEntityMutableProperties'
+    - $ref: '#/definitions/ServerEntitySettableProperties'
+    - $ref: '#/definitions/PersistentEntitySettableProperties'
   Environment:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EnvironmentMutableProperties'
+    - $ref: '#/definitions/EnvironmentSettableProperties'
     properties:
       keystores:
         description: URL of a Collection of Keystores
         format: uri
         type: string
-  EnvironmentMutableProperties:
+  EnvironmentSettableProperties:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/ServerEntitySettableProperties'
     properties:
       kind:
         enum:
@@ -99,9 +99,9 @@ definitions:
         type: string
   KeyCertFileAlias:
     allOf:
-    - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
+    - $ref: '#/definitions/KeyCertFileAliasSettableProperties'
     type: object
-  KeyCertFileAliasMutableProperties:
+  KeyCertFileAliasSettableProperties:
     properties:
       certFile:
         format: file
@@ -122,9 +122,9 @@ definitions:
     type: object
   KeyCertJarAlias:
     allOf:
-    - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
+    - $ref: '#/definitions/KeyCertJarAliasSettableProperties'
     type: object
-  KeyCertJarAliasMutableProperties:
+  KeyCertJarAliasSettableProperties:
     properties:
       ignoreExpiryValidation:
         type: boolean
@@ -143,15 +143,15 @@ definitions:
   Keystore:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/KeystoreMutableProperties'
+    - $ref: '#/definitions/KeystoreSettableProperties'
     properties:
       aliases:
         description: URL of a Collection of Aliass
         format: uri
         type: string
-  KeystoreMutableProperties:
+  KeystoreSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
     properties:
       kind:
         enum:
@@ -161,7 +161,7 @@ definitions:
         type: string
   PersistentEntity:
     allOf:
-    - $ref: '#/definitions/PersistentEntityMutableProperties'
+    - $ref: '#/definitions/PersistentEntitySettableProperties'
     properties:
       created:
         format: date-time
@@ -180,14 +180,14 @@ definitions:
         readOnly: true
         type: string
     type: object
-  PersistentEntityMutableProperties:
+  PersistentEntitySettableProperties:
     properties: {}
     type: object
   Pkcs12Alias:
     allOf:
-    - $ref: '#/definitions/Pkcs12AliasMutableProperties'
+    - $ref: '#/definitions/Pkcs12AliasSettableProperties'
     type: object
-  Pkcs12AliasMutableProperties:
+  Pkcs12AliasSettableProperties:
     properties:
       ignoreExpiryValidation:
         type: boolean
@@ -205,9 +205,9 @@ definitions:
     type: object
   SelfSignedCertAlias:
     allOf:
-    - $ref: '#/definitions/SelfSignedCertAliasMutableProperties'
+    - $ref: '#/definitions/SelfSignedCertAliasSettableProperties'
     type: object
-  SelfSignedCertAliasMutableProperties:
+  SelfSignedCertAliasSettableProperties:
     properties:
       alias:
         type: string
@@ -232,9 +232,9 @@ definitions:
     type: object
   ServerEntity:
     allOf:
-    - $ref: '#/definitions/ServerEntityMutableProperties'
+    - $ref: '#/definitions/ServerEntitySettableProperties'
     type: object
-  ServerEntityMutableProperties:
+  ServerEntitySettableProperties:
     properties:
       kind:
         type: string
@@ -243,9 +243,9 @@ definitions:
     type: object
   X500Name:
     allOf:
-    - $ref: '#/definitions/X500NameMutableProperties'
+    - $ref: '#/definitions/X500NameSettableProperties'
     type: object
-  X500NameMutableProperties:
+  X500NameSettableProperties:
     properties:
       countryCose:
         type: string
@@ -309,7 +309,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentMutableProperties'
+          $ref: '#/definitions/EnvironmentSettableProperties'
       responses:
         '200':
           description: successful
@@ -405,7 +405,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreMutableProperties'
+          $ref: '#/definitions/KeystoreSettableProperties'
       responses:
         '201':
           description: Created new Keystore
@@ -511,7 +511,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreMutableProperties'
+          $ref: '#/definitions/KeystoreSettableProperties'
       responses:
         '200':
           description: successful
@@ -642,10 +642,10 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/Pkcs12AliasMutableProperties'
-          - $ref: '#/definitions/KeyCertFileAliasMutableProperties'
-          - $ref: '#/definitions/KeyCertJarAliasMutableProperties'
-          - $ref: '#/definitions/SelfSignedCertAliasMutableProperties'
+          - $ref: '#/definitions/Pkcs12AliasSettableProperties'
+          - $ref: '#/definitions/KeyCertFileAliasSettableProperties'
+          - $ref: '#/definitions/KeyCertJarAliasSettableProperties'
+          - $ref: '#/definitions/SelfSignedCertAliasSettableProperties'
       responses:
         '201':
           description: Created new Alias
@@ -893,7 +893,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/AliasMutableProperties'
+          $ref: '#/definitions/AliasSettableProperties'
       responses:
         '200':
           description: successful
@@ -1211,7 +1211,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentMutableProperties'
+          $ref: '#/definitions/EnvironmentSettableProperties'
       responses:
         '200':
           description: successful
@@ -1313,7 +1313,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreMutableProperties'
+          $ref: '#/definitions/KeystoreSettableProperties'
       responses:
         '200':
           description: successful

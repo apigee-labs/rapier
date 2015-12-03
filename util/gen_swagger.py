@@ -77,7 +77,7 @@ class SwaggerGenerator(object):
                 mutable_definition = dict()
                 definition = dict()
                 if 'allOf' in entity_spec:
-                    mutable_definition['allOf'] = [{key: '%sMutableProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
+                    mutable_definition['allOf'] = [{key: '%sSettableProperties' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
@@ -90,7 +90,7 @@ class SwaggerGenerator(object):
                             immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
                         if immutable_properties:
                             definition['properties'] = immutable_properties
-                    self.definitions['%sMutableProperties' % entity_name] = mutable_definition
+                    self.definitions['%sSettableProperties' % entity_name] = mutable_definition
                     if 'required' in entity_spec:
                         mutable_definition['required'] = entity_spec['required']
                     if 'type' in entity_spec:
@@ -542,11 +542,11 @@ class SwaggerGenerator(object):
         return {'$ref': '#/definitions/%s' % key}
         
     def mutable_definition_ref(self, key):
-        mod_key = '%sMutableProperties' % key
+        mod_key = '%sSettableProperties' % key
         return self.global_definition_ref(mod_key)
         
     def mutable_definitions(self, entity_name):
-        return self.definitions['%sMutableProperties' % entity_name]
+        return self.definitions['%sSettableProperties' % entity_name]
         
     def build_parameters(self, prefix, query_path):
         result = []

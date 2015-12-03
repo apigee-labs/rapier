@@ -10,19 +10,19 @@ produces:
 definitions:
   BaseEntity:
     allOf:
-    - $ref: '#/definitions/BaseEntityMutableProperties'
+    - $ref: '#/definitions/BaseEntitySettableProperties'
     properties:
       self:
         readOnly: true
         type: string
-  BaseEntityMutableProperties:
+  BaseEntitySettableProperties:
     properties:
       kind:
         type: string
   Collection:
     allOf:
     - $ref: '#/definitions/BaseEntity'
-    - $ref: '#/definitions/CollectionMutableProperties'
+    - $ref: '#/definitions/CollectionSettableProperties'
     properties:
       items:
         items:
@@ -32,26 +32,26 @@ definitions:
         enum:
         - Collection
         type: string
-  CollectionMutableProperties:
+  CollectionSettableProperties:
     allOf:
-    - $ref: '#/definitions/BaseEntityMutableProperties'
+    - $ref: '#/definitions/BaseEntitySettableProperties'
   Content:
     type: string
   Entity:
     allOf:
     - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/BaseEntity'
-    - $ref: '#/definitions/EntityMutableProperties'
-  EntityMutableProperties:
+    - $ref: '#/definitions/EntitySettableProperties'
+  EntitySettableProperties:
     allOf:
-    - $ref: '#/definitions/ResourceMutableProperties'
-    - $ref: '#/definitions/BaseEntityMutableProperties'
+    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/BaseEntitySettableProperties'
   ErrorResponse:
     type: string
   Folder:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/FolderMutableProperties'
+    - $ref: '#/definitions/FolderSettableProperties'
     properties:
       contents:
         description: URL of a Collection of Specs and Folders
@@ -63,9 +63,9 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  FolderMutableProperties:
+  FolderSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
     properties:
       folders:
         description: Array of URLs of Folders
@@ -95,7 +95,7 @@ definitions:
   Hub:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/HubMutableProperties'
+    - $ref: '#/definitions/HubSettableProperties'
     properties:
       kind:
         enum:
@@ -121,13 +121,13 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  HubMutableProperties:
+  HubSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
   Page:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PageMutableProperties'
+    - $ref: '#/definitions/PageSettableProperties'
     properties:
       collection:
         format: uri
@@ -142,9 +142,9 @@ definitions:
         enum:
         - Page
         type: string
-  PageMutableProperties:
+  PageSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
     properties:
       next_page:
         description: URL of a Page
@@ -164,7 +164,7 @@ definitions:
             $ref: '#/definitions/Page'
   Resource:
     allOf:
-    - $ref: '#/definitions/ResourceMutableProperties'
+    - $ref: '#/definitions/ResourceSettableProperties'
     properties:
       created:
         format: date-time
@@ -183,16 +183,16 @@ definitions:
         readOnly: true
         type: string
     type: object
-  ResourceMutableProperties:
+  ResourceSettableProperties:
     properties: {}
     type: object
   Spec:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/SpecMutableProperties'
-  SpecMutableProperties:
+    - $ref: '#/definitions/SpecSettableProperties'
+  SpecSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntityMutableProperties'
+    - $ref: '#/definitions/EntitySettableProperties'
     properties:
       content:
         description: URL of a Content
@@ -316,8 +316,8 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/SpecMutableProperties'
-          - $ref: '#/definitions/FolderMutableProperties'
+          - $ref: '#/definitions/SpecSettableProperties'
+          - $ref: '#/definitions/FolderSettableProperties'
       responses:
         '201':
           description: Created new Spec or Folder
@@ -698,7 +698,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderMutableProperties'
+          $ref: '#/definitions/FolderSettableProperties'
       responses:
         '200':
           description: successful
@@ -819,8 +819,8 @@ x-uris:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/SpecMutableProperties'
-          - $ref: '#/definitions/FolderMutableProperties'
+          - $ref: '#/definitions/SpecSettableProperties'
+          - $ref: '#/definitions/FolderSettableProperties'
       responses:
         '201':
           description: Created new Spec or Folder
@@ -1051,7 +1051,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecMutableProperties'
+          $ref: '#/definitions/SpecSettableProperties'
       responses:
         '200':
           description: successful

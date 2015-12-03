@@ -9,8 +9,8 @@ produces:
 definitions:
   HelloMessage:
     allOf:
-    - $ref: '#/definitions/HelloMessageMutableProperties'
-  HelloMessageMutableProperties:
+    - $ref: '#/definitions/HelloMessageSettableProperties'
+  HelloMessageSettableProperties:
     properties:
       text:
         type: string
@@ -54,7 +54,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessageMutableProperties'
+          $ref: '#/definitions/HelloMessageSettableProperties'
       responses:
         '200':
           description: successful
@@ -157,7 +157,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessageMutableProperties'
+          $ref: '#/definitions/HelloMessageSettableProperties'
       responses:
         '200':
           description: successful

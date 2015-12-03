@@ -9,8 +9,8 @@ produces:
 definitions:
   Collection:
     allOf:
-    - $ref: '#/definitions/CollectionMutableProperties'
-  CollectionMutableProperties:
+    - $ref: '#/definitions/CollectionSettableProperties'
+  CollectionSettableProperties:
     properties:
       item_type:
         type: string
@@ -20,7 +20,7 @@ definitions:
         type: array
   Item:
     allOf:
-    - $ref: '#/definitions/ItemMutableProperties'
+    - $ref: '#/definitions/ItemSettableProperties'
     properties:
       id:
         readOnly: true
@@ -29,7 +29,7 @@ definitions:
         format: uri
         readOnly: true
         type: string
-  ItemMutableProperties:
+  ItemSettableProperties:
     properties:
       description:
         type: string
@@ -38,7 +38,7 @@ definitions:
         type: string
   TodoList:
     allOf:
-    - $ref: '#/definitions/TodoListMutableProperties'
+    - $ref: '#/definitions/TodoListSettableProperties'
     properties:
       items:
         description: URL of a Collection of Items
@@ -48,7 +48,7 @@ definitions:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Item'
-  TodoListMutableProperties: {}
+  TodoListSettableProperties: {}
 paths:
   /to-dos:
     get:
@@ -137,7 +137,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemMutableProperties'
+          $ref: '#/definitions/ItemSettableProperties'
       responses:
         '201':
           description: Created new Item
@@ -235,7 +235,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemMutableProperties'
+          $ref: '#/definitions/ItemSettableProperties'
       responses:
         '200':
           description: successful
@@ -365,7 +365,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionMutableProperties'
+          $ref: '#/definitions/CollectionSettableProperties'
       responses:
         '200':
           description: successful
@@ -494,7 +494,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemMutableProperties'
+          $ref: '#/definitions/ItemSettableProperties'
       responses:
         '200':
           description: successful
