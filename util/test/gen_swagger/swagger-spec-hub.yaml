@@ -8,20 +8,9 @@ produces:
 - application/json
 - text/html
 definitions:
-  BaseEntity:
-    allOf:
-    - $ref: '#/definitions/BaseEntitySettableProperties'
-    properties:
-      self:
-        readOnly: true
-        type: string
-  BaseEntitySettableProperties:
-    properties:
-      kind:
-        type: string
   Collection:
     allOf:
-    - $ref: '#/definitions/BaseEntity'
+    - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/CollectionSettableProperties'
     properties:
       items:
@@ -34,23 +23,14 @@ definitions:
         type: string
   CollectionSettableProperties:
     allOf:
-    - $ref: '#/definitions/BaseEntitySettableProperties'
+    - $ref: '#/definitions/ResourceSettableProperties'
   Content:
     type: string
-  Entity:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/BaseEntity'
-    - $ref: '#/definitions/EntitySettableProperties'
-  EntitySettableProperties:
-    allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
-    - $ref: '#/definitions/BaseEntitySettableProperties'
   ErrorResponse:
     type: string
   Folder:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/FolderSettableProperties'
     properties:
       contents:
@@ -65,7 +45,7 @@ definitions:
             - $ref: '#/definitions/Folder'
   FolderSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       folders:
         description: Array of URLs of Folders
@@ -94,7 +74,7 @@ definitions:
         type: array
   Hub:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/HubSettableProperties'
     properties:
       kind:
@@ -102,15 +82,13 @@ definitions:
         - Hub
         type: string
       myHub:
-        description: URL of a Collection of Specs and Folders
+        description: URL of a Folder
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
+          multiplicity: '1:1'
           type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
+            $ref: '#/definitions/Folder'
       sharedWithMe:
         description: URL of a Collection of Specs and Folders
         format: uri
@@ -123,10 +101,10 @@ definitions:
             - $ref: '#/definitions/Folder'
   HubSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/ResourceSettableProperties'
   Page:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/PageSettableProperties'
     properties:
       collection:
@@ -142,10 +120,6 @@ definitions:
         enum:
         - Page
         type: string
-  PageSettableProperties:
-    allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
-    properties:
       next_page:
         description: URL of a Page
         format: uri
@@ -162,9 +136,13 @@ definitions:
           multiplicity: 0:1
           type:
             $ref: '#/definitions/Page'
-  Resource:
+  PageSettableProperties:
     allOf:
     - $ref: '#/definitions/ResourceSettableProperties'
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       created:
         format: date-time
@@ -182,17 +160,30 @@ definitions:
         format: date-time
         readOnly: true
         type: string
+  PersistentResourceSettableProperties:
+    allOf:
+    - $ref: '#/definitions/ResourceSettableProperties'
+    properties: {}
+  Resource:
+    allOf:
+    - $ref: '#/definitions/ResourceSettableProperties'
+    properties:
+      self:
+        readOnly: true
+        type: string
     type: object
   ResourceSettableProperties:
-    properties: {}
+    properties:
+      kind:
+        type: string
     type: object
   Spec:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/SpecSettableProperties'
   SpecSettableProperties:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       content:
         description: URL of a Content
@@ -287,17 +278,22 @@ paths:
           $ref: '#/responses/default'
   /myHub:
     get:
+      description: Retrieve a Folder
+      parameters:
+      - $ref: '#/parameters/Accept'
       responses:
         '200':
-          description: description
+          description: successful
           headers:
             Content-Location:
-              description: perma-link URL of collection
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
+            $ref: '#/definitions/Folder'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -308,30 +304,59 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    post:
-      description: Create a new Spec or Folder
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Folder entity
       parameters:
-      - description: The representation of the new Spec or Folder being created
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Folder being updated
         in: body
         name: body
         schema:
-          x-oneOf:
-          - $ref: '#/definitions/SpecSettableProperties'
-          - $ref: '#/definitions/FolderSettableProperties'
+          $ref: '#/definitions/FolderSettableProperties'
       responses:
-        '201':
-          description: Created new Spec or Folder
+        '200':
+          description: successful
           headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
+            Content-Location:
+              description: perma-link URL of resource
               type: string
-            Location:
-              description: perma-link URL of newly-created Spec or Folder
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
               type: string
           schema:
-            x-oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
+            $ref: '#/definitions/Folder'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Folder
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -345,7 +370,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: Retrieve HEAD
+      description: retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'

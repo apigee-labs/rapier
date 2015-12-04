@@ -113,7 +113,7 @@ class SwaggerGenerator(object):
                         else:
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if rel_prop_specs[0].is_collection_resource() or rel_prop_specs[0].readonly:
+                        if rel_prop_specs[0].is_collection_resource() or rel_prop_specs[0].readonly or entity_spec.get('readOnly', False):
                             definition = self.definitions[entity_name]
                         else:
                             definition = self.mutable_definitions(entity_name)

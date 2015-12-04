@@ -12,6 +12,16 @@ entities:
     abstract: true
     type: object
     properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    abstract: true
+    properties:
       created:
         type: string
         format: date-time
@@ -28,22 +38,10 @@ entities:
         type: string
         format: date-time
         readOnly: true
-  BaseEntity:
-    abstract: true
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  Entity:
-    allOf:
-    - $ref: '#/entities/Resource'
-    - $ref: '#/entities/BaseEntity'
     abstract: true
   Collection:
     allOf:
-    - $ref: '#/entities/BaseEntity'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -64,7 +62,7 @@ entities:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -86,7 +84,7 @@ entities:
     readOnly: true
   Hub:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -96,7 +94,7 @@ entities:
     readOnly: true
   Folder:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     implementation_path: /folders
     query_paths: [contents]
     properties:
@@ -116,7 +114,7 @@ entities:
               type: string
   Spec:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     query_paths: [content]
     implementation_path: /specs
     properties:
@@ -143,16 +141,9 @@ relationships:
     one_end:
       entity: Hub
       property: myHub
-      multiplicity: 0:n
+      multiplicity: '1:1'
     other_end:
       entity: Folder
-  hub-to-my-spec:
-    one_end:
-      entity: Hub
-      property: myHub
-      multiplicity: 0:n
-    other_end:
-      entity: Spec
   hub-to-shared-folder:
     one_end:
       entity: Hub
