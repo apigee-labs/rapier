@@ -10,7 +10,7 @@ definitions:
   Alias:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/AliasSettableProperties'
+    - $ref: '#/definitions/AliasSettable'
     properties:
       certsInfo:
         items:
@@ -35,9 +35,9 @@ definitions:
         description: URL of a Collection of SelfSignedCertAliass
         format: uri
         type: string
-  AliasSettableProperties:
+  AliasSettable:
     allOf:
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       certificate:
         description: URL of a Certificate
@@ -58,7 +58,7 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/CollectionSettableProperties'
+    - $ref: '#/definitions/CollectionSettable'
     properties:
       items:
         items:
@@ -68,21 +68,21 @@ definitions:
         enum:
         - Collection
         type: string
-  CollectionSettableProperties:
+  CollectionSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/EnvironmentSettableProperties'
+    - $ref: '#/definitions/EnvironmentSettable'
     properties:
       keystores:
         description: URL of a Collection of Keystores
         format: uri
         type: string
-  EnvironmentSettableProperties:
+  EnvironmentSettable:
     allOf:
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       kind:
         enum:
@@ -90,9 +90,9 @@ definitions:
         type: string
   KeyCertFileAlias:
     allOf:
-    - $ref: '#/definitions/KeyCertFileAliasSettableProperties'
+    - $ref: '#/definitions/KeyCertFileAliasSettable'
     type: object
-  KeyCertFileAliasSettableProperties:
+  KeyCertFileAliasSettable:
     properties:
       certFile:
         format: file
@@ -113,9 +113,9 @@ definitions:
     type: object
   KeyCertJarAlias:
     allOf:
-    - $ref: '#/definitions/KeyCertJarAliasSettableProperties'
+    - $ref: '#/definitions/KeyCertJarAliasSettable'
     type: object
-  KeyCertJarAliasSettableProperties:
+  KeyCertJarAliasSettable:
     properties:
       ignoreExpiryValidation:
         type: boolean
@@ -134,15 +134,15 @@ definitions:
   Keystore:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/KeystoreSettableProperties'
+    - $ref: '#/definitions/KeystoreSettable'
     properties:
       aliases:
         description: URL of a Collection of Aliass
         format: uri
         type: string
-  KeystoreSettableProperties:
+  KeystoreSettable:
     allOf:
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       kind:
         enum:
@@ -153,7 +153,7 @@ definitions:
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       created:
         format: date-time
@@ -172,16 +172,16 @@ definitions:
         readOnly: true
         type: string
     type: object
-  PersistentResourceSettableProperties:
+  PersistentResourceSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
     properties: {}
     type: object
   Pkcs12Alias:
     allOf:
-    - $ref: '#/definitions/Pkcs12AliasSettableProperties'
+    - $ref: '#/definitions/Pkcs12AliasSettable'
     type: object
-  Pkcs12AliasSettableProperties:
+  Pkcs12AliasSettable:
     properties:
       ignoreExpiryValidation:
         type: boolean
@@ -199,9 +199,9 @@ definitions:
     type: object
   Resource:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
     type: object
-  ResourceSettableProperties:
+  ResourceSettable:
     properties:
       kind:
         type: string
@@ -210,9 +210,9 @@ definitions:
     type: object
   SelfSignedCertAlias:
     allOf:
-    - $ref: '#/definitions/SelfSignedCertAliasSettableProperties'
+    - $ref: '#/definitions/SelfSignedCertAliasSettable'
     type: object
-  SelfSignedCertAliasSettableProperties:
+  SelfSignedCertAliasSettable:
     properties:
       alias:
         type: string
@@ -237,9 +237,9 @@ definitions:
     type: object
   X500Name:
     allOf:
-    - $ref: '#/definitions/X500NameSettableProperties'
+    - $ref: '#/definitions/X500NameSettable'
     type: object
-  X500NameSettableProperties:
+  X500NameSettable:
     properties:
       countryCose:
         type: string
@@ -303,7 +303,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentSettableProperties'
+          $ref: '#/definitions/EnvironmentSettable'
       responses:
         '200':
           description: successful
@@ -399,7 +399,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreSettableProperties'
+          $ref: '#/definitions/KeystoreSettable'
       responses:
         '201':
           description: Created new Keystore
@@ -505,7 +505,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreSettableProperties'
+          $ref: '#/definitions/KeystoreSettable'
       responses:
         '200':
           description: successful
@@ -636,10 +636,10 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/Pkcs12AliasSettableProperties'
-          - $ref: '#/definitions/KeyCertFileAliasSettableProperties'
-          - $ref: '#/definitions/KeyCertJarAliasSettableProperties'
-          - $ref: '#/definitions/SelfSignedCertAliasSettableProperties'
+          - $ref: '#/definitions/Pkcs12AliasSettable'
+          - $ref: '#/definitions/KeyCertFileAliasSettable'
+          - $ref: '#/definitions/KeyCertJarAliasSettable'
+          - $ref: '#/definitions/SelfSignedCertAliasSettable'
       responses:
         '201':
           description: Created new Alias
@@ -887,7 +887,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/AliasSettableProperties'
+          $ref: '#/definitions/AliasSettable'
       responses:
         '200':
           description: successful
@@ -1205,7 +1205,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentSettableProperties'
+          $ref: '#/definitions/EnvironmentSettable'
       responses:
         '200':
           description: successful
@@ -1307,7 +1307,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/KeystoreSettableProperties'
+          $ref: '#/definitions/KeystoreSettable'
       responses:
         '200':
           description: successful

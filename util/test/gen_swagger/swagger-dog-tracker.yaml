@@ -10,10 +10,10 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/CollectionSettableProperties'
-  CollectionSettableProperties:
+    - $ref: '#/definitions/CollectionSettable'
+  CollectionSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/EntitySettable'
     properties:
       item_type:
         type: string
@@ -24,10 +24,10 @@ definitions:
   Dog:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogSettableProperties'
-  DogSettableProperties:
+    - $ref: '#/definitions/DogSettable'
+  DogSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/EntitySettable'
     properties:
       birth_date:
         type: string
@@ -46,7 +46,7 @@ definitions:
   DogTracker:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogTrackerSettableProperties'
+    - $ref: '#/definitions/DogTrackerSettable'
     properties:
       dogs:
         description: URL of a Collection of Dogs
@@ -64,16 +64,16 @@ definitions:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Person'
-  DogTrackerSettableProperties:
+  DogTrackerSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/EntitySettable'
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntitySettableProperties'
-  EntitySettableProperties:
+    - $ref: '#/definitions/EntitySettable'
+  EntitySettable:
     allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
+    - $ref: '#/definitions/ServerEntitySettable'
     properties:
       kind:
         type: string
@@ -82,7 +82,7 @@ definitions:
   Person:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PersonSettableProperties'
+    - $ref: '#/definitions/PersonSettable'
     properties:
       dogs:
         description: URL of a Collection of Dogs
@@ -92,9 +92,9 @@ definitions:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Dog'
-  PersonSettableProperties:
+  PersonSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettableProperties'
+    - $ref: '#/definitions/EntitySettable'
     properties:
       birth-date:
         type: string
@@ -102,7 +102,7 @@ definitions:
         type: string
   ServerEntity:
     allOf:
-    - $ref: '#/definitions/ServerEntitySettableProperties'
+    - $ref: '#/definitions/ServerEntitySettable'
     properties:
       created:
         format: date-time
@@ -120,7 +120,7 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntitySettableProperties:
+  ServerEntitySettable:
     properties: {}
 paths:
   /:
@@ -210,7 +210,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettableProperties'
+          $ref: '#/definitions/DogSettable'
       responses:
         '201':
           description: Created new Dog
@@ -308,7 +308,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettableProperties'
+          $ref: '#/definitions/DogSettable'
       responses:
         '200':
           description: successful
@@ -436,7 +436,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettableProperties'
+          $ref: '#/definitions/PersonSettable'
       responses:
         '200':
           description: successful
@@ -550,7 +550,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettableProperties'
+          $ref: '#/definitions/PersonSettable'
       responses:
         '201':
           description: Created new Person
@@ -648,7 +648,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettableProperties'
+          $ref: '#/definitions/PersonSettable'
       responses:
         '200':
           description: successful
@@ -767,7 +767,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettableProperties'
+          $ref: '#/definitions/DogSettable'
       responses:
         '201':
           description: Created new Dog
@@ -867,7 +867,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionSettableProperties'
+          $ref: '#/definitions/CollectionSettable'
       responses:
         '200':
           description: successful
@@ -1059,7 +1059,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettableProperties'
+          $ref: '#/definitions/DogSettable'
       responses:
         '200':
           description: successful
@@ -1188,7 +1188,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettableProperties'
+          $ref: '#/definitions/PersonSettable'
       responses:
         '200':
           description: successful

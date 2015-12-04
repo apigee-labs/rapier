@@ -11,7 +11,7 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/CollectionSettableProperties'
+    - $ref: '#/definitions/CollectionSettable'
     properties:
       items:
         items:
@@ -21,9 +21,9 @@ definitions:
         enum:
         - Collection
         type: string
-  CollectionSettableProperties:
+  CollectionSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
   Content:
     type: string
   ErrorResponse:
@@ -31,15 +31,15 @@ definitions:
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/FolderSettableProperties'
+    - $ref: '#/definitions/FolderSettable'
     properties:
       contents:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string
-  FolderSettableProperties:
+  FolderSettable:
     allOf:
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       folders:
         description: Array of URLs of Folders
@@ -65,7 +65,7 @@ definitions:
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/HubSettableProperties'
+    - $ref: '#/definitions/HubSettable'
     properties:
       kind:
         enum:
@@ -79,13 +79,13 @@ definitions:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string
-  HubSettableProperties:
+  HubSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PageSettableProperties'
+    - $ref: '#/definitions/PageSettable'
     properties:
       collection:
         format: uri
@@ -108,13 +108,13 @@ definitions:
         description: URL of a Page
         format: uri
         type: string
-  PageSettableProperties:
+  PageSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       created:
         format: date-time
@@ -132,19 +132,19 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  PersistentResourceSettableProperties:
+  PersistentResourceSettable:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
     properties: {}
   Resource:
     allOf:
-    - $ref: '#/definitions/ResourceSettableProperties'
+    - $ref: '#/definitions/ResourceSettable'
     properties:
       self:
         readOnly: true
         type: string
     type: object
-  ResourceSettableProperties:
+  ResourceSettable:
     properties:
       kind:
         type: string
@@ -152,10 +152,10 @@ definitions:
   Spec:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/SpecSettableProperties'
-  SpecSettableProperties:
+    - $ref: '#/definitions/SpecSettable'
+  SpecSettable:
     allOf:
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       content:
         description: URL of a Content
@@ -289,7 +289,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderSettableProperties'
+          $ref: '#/definitions/FolderSettable'
       responses:
         '200':
           description: successful
@@ -411,8 +411,8 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/SpecSettableProperties'
-          - $ref: '#/definitions/FolderSettableProperties'
+          - $ref: '#/definitions/SpecSettable'
+          - $ref: '#/definitions/FolderSettable'
       responses:
         '201':
           description: Created new Spec or Folder
@@ -506,7 +506,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderSettableProperties'
+          $ref: '#/definitions/FolderSettable'
       responses:
         '200':
           description: successful
@@ -691,7 +691,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecSettableProperties'
+          $ref: '#/definitions/SpecSettable'
       responses:
         '200':
           description: successful
