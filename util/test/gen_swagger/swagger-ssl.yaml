@@ -150,9 +150,10 @@ definitions:
         type: string
       name:
         type: string
-  PersistentEntity:
+  PersistentResource:
     allOf:
-    - $ref: '#/definitions/PersistentEntitySettableProperties'
+    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResourceSettableProperties'
     properties:
       created:
         format: date-time
@@ -171,18 +172,11 @@ definitions:
         readOnly: true
         type: string
     type: object
-  PersistentEntitySettableProperties:
-    properties: {}
-    type: object
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PersistentEntity'
-    - $ref: '#/definitions/PersistentResourceSettableProperties'
   PersistentResourceSettableProperties:
     allOf:
     - $ref: '#/definitions/ResourceSettableProperties'
-    - $ref: '#/definitions/PersistentEntitySettableProperties'
+    properties: {}
+    type: object
   Pkcs12Alias:
     allOf:
     - $ref: '#/definitions/Pkcs12AliasSettableProperties'

@@ -162,7 +162,9 @@ entities:
         items: 
           type: object
     readOnly: true
-  PersistentEntity:
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
     abstract: true
     type: object
     properties:
@@ -182,10 +184,6 @@ entities:
         type: string
         format: date-time
         readOnly: true
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    - $ref: '#/entities/PersistentEntity'
     abstract: true
   Resource:
     abstract: true
