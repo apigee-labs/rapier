@@ -382,6 +382,7 @@ paths:
         default:
           $ref: '#/responses/default'
   /folders;{implementation_key}/contents:
+    x-private: true
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API

@@ -390,6 +390,8 @@ class SwaggerGenerator(object):
         entity_name = rel_property_spec.target_entity
         entity_spec = self.rapier_spec['entities'][entity_name]
         path_spec = PresortedOrderedDict()
+        if prefix.is_private():
+            path_spec['x-private'] = True            
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
