@@ -1,7 +1,8 @@
 title: PropertyTrackerAPI
 version: "0.1"
 conventions:
-  multi_valued_relationship_entity: Collection
+  multi_valued_relationships:
+    entity: Collection
 entities:
   ServerEntity:
     abstract: true

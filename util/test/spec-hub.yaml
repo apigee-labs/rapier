@@ -3,7 +3,26 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-  multi_valued_relationship_entity: Collection
+  multi_valued_relationships:
+    entity: Collection
+    query_parameters:
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: orderBy
+      type: string
+      required: false
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
   patch_consumes: application/merge-patch+json
   error_response:
     type: string
@@ -14,8 +33,7 @@ securityDefinitions:
     flow: application
     tokenUrl: whatever
 security:
--
-  sso: []
+- sso: []
 entities:
   Resource:
     abstract: true

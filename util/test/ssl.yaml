@@ -1,7 +1,8 @@
 title: SSL API
 version: "0.1"
 conventions:
-  multi_valued_relationship_entity: Collection
+  multi_valued_relationships:
+    entity: Collection
   discriminator_separator: /
 entities:
   Environment:
