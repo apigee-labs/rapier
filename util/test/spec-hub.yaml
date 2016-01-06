@@ -107,7 +107,7 @@ entities:
     implementation_spec: 
       path: /folders
       type: integer
-      name: folder_id
+      name: implementation_key
     query_paths: [contents]
     properties:
       kind:
@@ -131,7 +131,7 @@ entities:
     implementation_spec: 
       path: /specs
       type: integer
-      name: spec_id
+      name: implementation_key
     properties:
       kind:
         type: string
