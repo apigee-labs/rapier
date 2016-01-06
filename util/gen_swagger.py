@@ -124,11 +124,11 @@ class SwaggerGenerator(object):
                         definition.setdefault('properties', dict())[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                         if 'type' in entity_spec:
                             definition['type'] = entity_spec['type']
-                if self.include_impl and 'implementation_path' in entity_spec:
-                    implementation_path_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_path'], entity_name)
-                    implementation_path_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_path'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_path') == entity_spec['implementation_path']]
-                    entity_interface =  self.build_entity_interface(implementation_path_spec, None, None, implementation_path_specs)
-                    self.paths[implementation_path_spec.path_segment()] = entity_interface
+                if self.include_impl and 'implementation_spec' in entity_spec:
+                    implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_spec'], entity_name)
+                    implementation_spec_specs = [ImplementationPathSpec(self.conventions, e_s['implementation_spec'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation_spec') and e_s['implementation_spec']['path'] == entity_spec['implementation_spec']['path']]
+                    entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
+                    self.paths[implementation_spec_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
@@ -136,9 +136,9 @@ class SwaggerGenerator(object):
                     query_paths = [QueryPath(query_path_string, self) for query_path_string in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
-                        if self.include_impl and 'implementation_path' in entity_spec:
-                            implementation_path_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_path'], entity_name)
-                            self.add_query_paths(query_paths[:], implementation_path_spec, rel_property_spec_stack, rel_property_specs)
+                        if self.include_impl and 'implementation_spec' in entity_spec:
+                            implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation_spec'], entity_name)
+                            self.add_query_paths(query_paths[:], implementation_spec_spec, rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             leftover_query_paths = query_paths
@@ -915,20 +915,20 @@ class QuerySegment(object):
         
 class ImplementationPathSpec(PathPrefix):
 
-    def __init__(self, conventions, implementation_path, target_entity):
-        self.implementation_path = implementation_path
+    def __init__(self, conventions, implementation_spec, target_entity):
+        self.implementation_spec = implementation_spec
         self.target_entity = target_entity
         self.conventions = conventions
         
     def path_segment(self, select_one_of_many = False):
         separator = '/' if self.conventions.get('selector_location') == 'path-segment' else ';'
-        return '%s%s{implementation_key}' % (self.implementation_path, separator)
+        return '%s%s{%s}' % (self.implementation_spec['path'], separator, self.implementation_spec['name'])
 
     def build_param(self):
         return {
-            'name': 'implementation_key',
+            'name': self.implementation_spec['name'],
             'in': 'path',
-            'type': 'string',
+            'type': self.implementation_spec['type'],
             'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'required': True
             }

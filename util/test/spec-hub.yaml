@@ -104,7 +104,10 @@ entities:
   Folder:
     allOf:
     - $ref: '#/entities/PersistentResource'
-    implementation_path: /folders
+    implementation_spec: 
+      path: /folders
+      type: integer
+      name: folder_id
     query_paths: [contents]
     properties:
       kind:
@@ -125,7 +128,10 @@ entities:
     allOf:
     - $ref: '#/entities/PersistentResource'
     query_paths: [content]
-    implementation_path: /specs
+    implementation_spec: 
+      path: /specs
+      type: integer
+      name: spec_id
     properties:
       kind:
         type: string
