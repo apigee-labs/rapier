@@ -7,6 +7,14 @@ consumes:
 produces:
 - application/json
 - text/html
+securityDefinitions:
+  sso:
+    flow: application
+    scopes: {}
+    tokenUrl: whatever
+    type: oauth2
+security:
+- sso: []
 definitions:
   Collection:
     allOf:

@@ -50,6 +50,10 @@ class SwaggerGenerator(object):
             self.swagger['produces'] = as_list(spec.get('produces'))
         else:
             self.swagger['produces'] = ['application/json']
+        if 'securityDefinitions' in spec:
+            self.swagger['securityDefinitions'] = spec['securityDefinitions']            
+        if 'security' in spec:
+            self.swagger['security'] = spec['security']            
         self.definitions = {}
         if 'error_response' in self.conventions:
             self.definitions['ErrorResponse'] = self.conventions['error_response']

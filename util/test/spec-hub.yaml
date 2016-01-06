@@ -7,6 +7,15 @@ conventions:
   patch_consumes: application/merge-patch+json
   error_response:
     type: string
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+-
+  sso: []
 entities:
   Resource:
     abstract: true
