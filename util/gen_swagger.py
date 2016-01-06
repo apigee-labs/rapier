@@ -395,13 +395,6 @@ class SwaggerGenerator(object):
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
-        relationship_query_parameters = self.conventions['multi_valued_relationships'].get('query_parameters')
-        if relationship_query_parameters:
-            swagger_query_parameters = [make_swagger_query_parameter(q_p) for q_p in relationship_query_parameters]
-            if parameters:
-                parameters.extend(swagger_query_parameters)
-            else:
-                path_spec['parameters'] = swagger_query_parameters
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
@@ -649,7 +642,7 @@ class SwaggerGenerator(object):
     def build_collection_get(self):
         if not hasattr(self, 'collection_entity_name') or self.collection_entity_name not in self.definitions:
             sys.exit('error: must define entity for %s' % (self.collection_entity_name if hasattr(self, 'collection_entity_name') else 'multi-valued relationships'))
-        return {
+        rslt = {
             'responses': {
                 '200': {
                     'description': 'description',
@@ -669,6 +662,11 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
+        entity_spec = self.rapier_spec['entities'][self.collection_entity_name]
+        query_parameters = entity_spec.get('query_parameters') 
+        if query_parameters:
+            rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
+        return rslt        
  
     def define_put_if_match_header(self):
         if not 'Put-If-Match' in self.header_parameters:
@@ -721,12 +719,6 @@ class SwaggerGenerator(object):
                 }
             }
 
-def make_swagger_query_parameter(query_parameter):
-    swagger_query_parameter = dict()
-    swagger_query_parameter['in'] = 'query'
-    swagger_query_parameter.update(query_parameter)
-    return swagger_query_parameter
-    
 class SegmentSpec(object):
             
     def __eq__(self, other):

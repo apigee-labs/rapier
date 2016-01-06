@@ -390,30 +390,30 @@ paths:
       name: implementation_key
       required: true
       type: integer
-    - in: query
-      maximum: 1000
-      minimum: 1
-      name: limit
-      required: false
-      type: integer
-    - in: query
-      items:
-        type: string
-      name: properties
-      required: false
-      type: array
-    - in: query
-      name: orderBy
-      required: false
-      type: string
-    - enum:
-      - ascending
-      - descending
-      in: query
-      name: direction
-      required: false
-      type: string
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -623,31 +623,30 @@ paths:
         default:
           $ref: '#/responses/default'
   /sharedWithMe:
-    parameters:
-    - in: query
-      maximum: 1000
-      minimum: 1
-      name: limit
-      required: false
-      type: integer
-    - in: query
-      items:
-        type: string
-      name: properties
-      required: false
-      type: array
-    - in: query
-      name: orderBy
-      required: false
-      type: string
-    - enum:
-      - ascending
-      - descending
-      in: query
-      name: direction
-      required: false
-      type: string
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description

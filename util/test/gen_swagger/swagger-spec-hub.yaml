@@ -407,31 +407,30 @@ paths:
         default:
           $ref: '#/responses/default'
   /sharedWithMe:
-    parameters:
-    - in: query
-      maximum: 1000
-      minimum: 1
-      name: limit
-      required: false
-      type: integer
-    - in: query
-      items:
-        type: string
-      name: properties
-      required: false
-      type: array
-    - in: query
-      name: orderBy
-      required: false
-      type: string
-    - enum:
-      - ascending
-      - descending
-      in: query
-      name: direction
-      required: false
-      type: string
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -494,16 +493,26 @@ x-uris:
       description: Retrieve a Collection
       parameters:
       - in: query
+        items:
+          type: string
         name: properties
-        type: string
+        required: false
+        type: array
       - in: query
+        maximum: 1000
+        minimum: 1
         name: limit
+        required: false
         type: integer
       - in: query
         name: orderby
         type: string
-      - in: query
+      - enum:
+        - ascending
+        - descending
+        in: query
         name: direction
+        required: false
         type: string
       responses:
         '200':
@@ -846,30 +855,30 @@ x-uris:
       name: Folder_URL
       required: true
       type: string
-    - in: query
-      maximum: 1000
-      minimum: 1
-      name: limit
-      required: false
-      type: integer
-    - in: query
-      items:
-        type: string
-      name: properties
-      required: false
-      type: array
-    - in: query
-      name: orderBy
-      required: false
-      type: string
-    - enum:
-      - ascending
-      - descending
-      in: query
-      name: direction
-      required: false
-      type: string
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -1030,10 +1039,16 @@ x-uris:
       description: Retrieve a Page
       parameters:
       - in: query
+        items:
+          type: string
         name: properties
-        type: string
+        required: false
+        type: array
       - in: query
+        maximum: 1000
+        minimum: 1
         name: limit
+        required: false
         type: integer
       responses:
         '200':
