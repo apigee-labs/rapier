@@ -395,6 +395,13 @@ class SwaggerGenerator(object):
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
+        relationship_query_parameters = self.conventions['multi_valued_relationships'].get('query_parameters')
+        if relationship_query_parameters:
+            swagger_query_parameters = [make_swagger_query_parameter(q_p) for q_p in relationship_query_parameters]
+            if parameters:
+                parameters.extend(swagger_query_parameters)
+            else:
+                path_spec['parameters'] = swagger_query_parameters
         path_spec['get'] = self.global_collection_get()
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
@@ -714,6 +721,12 @@ class SwaggerGenerator(object):
                 }
             }
 
+def make_swagger_query_parameter(query_parameter):
+    swagger_query_parameter = dict()
+    swagger_query_parameter['in'] = 'query'
+    swagger_query_parameter.update(query_parameter)
+    return swagger_query_parameter
+    
 class SegmentSpec(object):
             
     def __eq__(self, other):

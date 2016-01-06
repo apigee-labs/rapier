@@ -407,6 +407,30 @@ paths:
         default:
           $ref: '#/responses/default'
   /sharedWithMe:
+    parameters:
+    - in: query
+      maximum: 1000
+      minimum: 1
+      name: limit
+      required: false
+      type: integer
+    - in: query
+      items:
+        type: string
+      name: properties
+      required: false
+      type: array
+    - in: query
+      name: orderBy
+      required: false
+      type: string
+    - enum:
+      - ascending
+      - descending
+      in: query
+      name: direction
+      required: false
+      type: string
     get:
       responses:
         '200':
@@ -821,6 +845,29 @@ x-uris:
       in: URL
       name: Folder_URL
       required: true
+      type: string
+    - in: query
+      maximum: 1000
+      minimum: 1
+      name: limit
+      required: false
+      type: integer
+    - in: query
+      items:
+        type: string
+      name: properties
+      required: false
+      type: array
+    - in: query
+      name: orderBy
+      required: false
+      type: string
+    - enum:
+      - ascending
+      - descending
+      in: query
+      name: direction
+      required: false
       type: string
     get:
       responses:
