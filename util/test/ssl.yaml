@@ -3,7 +3,7 @@ version: "0.1"
 conventions:
   multi_valued_relationships:
     entity: Collection
-  discriminator_separator: /
+  selector_location: path-segment
 entities:
   Environment:
     well_known_URLs: /v1/o/{org}/e/{env}

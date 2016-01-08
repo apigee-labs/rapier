@@ -34,8 +34,12 @@ class SwaggerGenerator(object):
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
         if 'multi_valued_relationships' in self.conventions:
             self.collection_entity_name = self.conventions['multi_valued_relationships']['entity']
-        if 'selector_location' in self.conventions and self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
-            sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
+        if 'selector_location' in self.conventions:
+            if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
+                sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
+            self.discriminator_separator = '/' if self.conventions['selector_location'] == 'path-segment' else ';'
+        else:
+            self.discriminator_separator = ';'
         patterns = spec.get('patterns')
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
@@ -61,7 +65,6 @@ class SwaggerGenerator(object):
         else:
             self.error_response = {}
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
-        self.discriminator_separator = self.conventions.get('discriminator_separator', ';')
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.paths

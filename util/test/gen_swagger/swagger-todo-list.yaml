@@ -191,7 +191,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /to-dos/items;{id}:
+  /to-dos/items/{id}:
     parameters:
     - in: path
       name: id

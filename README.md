@@ -67,6 +67,7 @@ version: "0.1"
 conventions:
   multi_valued_relationships: 
     entity: Collection
+  selector_location: path-segment
 entities:
   Collection:
     properties:
