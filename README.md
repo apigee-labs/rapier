@@ -167,7 +167,18 @@ conventions:
   multi_valued_relationships:
     entity: Collection
 entities:
-  ServerEntity:
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
     abstract: true
     properties:
       created:
@@ -186,34 +197,45 @@ entities:
         type: string
         format: date-time
         readOnly: true
-  Entity:
-    allOf:
-    - $ref: '#/entities/ServerEntity'
     abstract: true
-    properties:
-      self:
-        type: string
-      kind:
-        type: string            
   Collection:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/Resource'
     properties:
-      item_type: 
+      kind:
         type: string
+        enum: [Collection]
       items:
         type: array
         items: 
           type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderby
+      type: string
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
   DogTracker:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     well_known_URLs: /
     query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
     readOnly: true
   Dog:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -223,7 +245,7 @@ entities:
         type: string
   Person:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
