@@ -39,15 +39,14 @@ Rapier is very easy to understand and learn. The easiest way is by example.
 
 Here is a 'Hello-world' example in Rapier:
 ```yaml
-    info:
-        title: Hello World API
-        version: "0.1"
-    entities:
-        Hello_message:
-            well_known_URLs: /message
-            properties:
-                text:
-                    type: string
+title: HelloWorldAPI
+version: "0.1"
+entities:
+  HelloMessage:
+    well_known_URLs: /message
+    properties:
+      text:
+        type: string
 ```                    
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
