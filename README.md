@@ -62,45 +62,46 @@ The Swagger document generated for the 9-line Rapier sample above can be [found 
 
 Traditionally, the next example after 'Hello world' is 'To-do List':
 ```yaml
-title: TodoListAPI
+title: Todo List API
 version: "0.1"
 conventions:
-    multi_valued_relationships: Collection
+  multi_valued_relationships: 
+    entity: Collection
 entities:
-    Collection:
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-    TodoList:
-        well_known_URLs: /to-dos
-        query_paths: [items, "items;{id}"]
-        immutable: true
-    Item:
-        properties:
-            self:
-                type: string
-                format: uri
-                readOnly: true
-            id:
-                type: string
-                readOnly: true
-            description:
-                type: string
-            due:
-                type: string
-                format: date-time
+  Collection:
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+  TodoList:
+    well_known_URLs: /to-dos
+    query_paths: [items, "items;{id}"]
+    readOnly: true
+  Item:
+    properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true
+      id:
+        type: string
+        readOnly: true
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
 relationships:
-    list-to-items:
-        one_end:
-            entity: TodoList
-            property: items
-            multiplicity: 0:n
-        other_end:
-            entity: Item
+  list-to-items:
+    one_end:
+      entity: TodoList
+      property: items
+      multiplicity: 0:n
+    other_end:
+      entity: Item
 ```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
