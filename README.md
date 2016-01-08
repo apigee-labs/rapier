@@ -164,94 +164,95 @@ Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lk
 title: DogTrackerAPI
 version: "0.1"
 conventions:
-    multi_valued_relationships: Collection
+  multi_valued_relationships:
+    entity: Collection
 entities:
-    ServerEntity:
-        abstract: true
-        properties:
-            created:
-                type: string
-                format: date-time
-                readOnly: true
-            creator:
-                type: string
-                format: URL
-                readOnly: true
-            modified:
-                type: string
-                format: date-time
-                readOnly: true
-            modifier:
-                type: string
-                format: date-time
-                readOnly: true
-    Entity:
-        allOf:
-        - $ref: '#/entities/ServerEntity'
-        abstract: true
-        properties:
-            self:
-                type: string
-            kind:
-                type: string            
-    Collection:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            item_type: 
-                type: string
-            items:
-                type: array
-                items: 
-                    type: object
-    DogTracker:
-        allOf:
-        - $ref: '#/entities/Entity'
-        well_known_URLs: /
-        query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
-        immutable: true
-    Dog:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            birth_date:
-                type: string
-            fur_color:
-                type: string
-    Person:
-        allOf:
-        - $ref: '#/entities/Entity'
-        properties:
-            name:
-                type: string
-            birth-date:
-                type: string
+  ServerEntity:
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Entity:
+    allOf:
+    - $ref: '#/entities/ServerEntity'
+    abstract: true
+    properties:
+      self:
+        type: string
+      kind:
+        type: string            
+  Collection:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
+  DogTracker:
+    allOf:
+    - $ref: '#/entities/Entity'
+    well_known_URLs: /
+    query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
+    readOnly: true
+  Dog:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+  Person:
+    allOf:
+    - $ref: '#/entities/Entity'
+    properties:
+      name:
+        type: string
+      birth-date:
+        type: string
 relationships:
-    tracker-to-dogs:
-        one_end:
-            entity: DogTracker
-            property: dogs
-            multiplicity: 0:n
-        other_end:
-            entity: Dog
-    tracker-to-people:
-        one_end:
-            entity: DogTracker
-            property: people
-            multiplicity: 0:n
-        other_end:
-            entity: Person
-    dogs-to-people:
-        one_end:
-            entity: Person
-            property: dogs
-            multiplicity: 0:n
-        other_end:
-            entity: Dog
-            property: owner
-            multiplicity: 0:1
+  tracker-to-dogs:
+    one_end:
+      entity: DogTracker
+      property: dogs
+      multiplicity: 0:n
+    other_end:
+      entity: Dog
+  tracker-to-people:
+    one_end:
+      entity: DogTracker
+      property: people
+      multiplicity: 0:n
+    other_end:
+      entity: Person
+  dogs-to-people:
+    one_end:
+      entity: Person
+      property: dogs
+      multiplicity: 0:n
+    other_end:
+      entity: Dog
+      property: owner
+      multiplicity: 0:1
 ```                
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
