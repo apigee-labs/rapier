@@ -46,23 +46,6 @@ entities:
         type: array
         items: 
           type: object
-    query_parameters:
-    - name: properties
-      items:
-        type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
-    - name: orderby
-      type: string
-    - name: direction
-      type: string
-      required: false
-      enum: ['ascending', 'descending']
     readOnly: true
   DogTracker:
     allOf:

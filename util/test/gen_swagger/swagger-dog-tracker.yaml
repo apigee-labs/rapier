@@ -188,29 +188,6 @@ paths:
           $ref: '#/responses/default'
   /dogs:
     get:
-      parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
       responses:
         '200':
           description: description
@@ -551,29 +528,6 @@ paths:
           $ref: '#/responses/default'
   /people:
     get:
-      parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
       responses:
         '200':
           description: description
@@ -791,29 +745,6 @@ paths:
       required: true
       type: string
     get:
-      parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
       responses:
         '200':
           description: description
@@ -907,28 +838,7 @@ x-uris:
     get:
       description: Retrieve a Collection
       parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
+      - $ref: '#/parameters/Accept'
       responses:
         '200':
           description: successful
