@@ -9,25 +9,27 @@ produces:
 definitions:
   Collection:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/Resource'
     - $ref: '#/definitions/CollectionSettable'
-  CollectionSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
     properties:
-      item_type:
-        type: string
       items:
         items:
           type: object
         type: array
+      kind:
+        enum:
+        - Collection
+        type: string
+  CollectionSettable:
+    allOf:
+    - $ref: '#/definitions/ResourceSettable'
   Dog:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/DogSettable'
   DogSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettable'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       birth_date:
         type: string
@@ -45,7 +47,7 @@ definitions:
             $ref: '#/definitions/Person'
   DogTracker:
     allOf:
-    - $ref: '#/definitions/Entity'
+    - $ref: '#/definitions/PersistentResource'
     - $ref: '#/definitions/DogTrackerSettable'
     properties:
       dogs:
@@ -66,43 +68,11 @@ definitions:
             $ref: '#/definitions/Person'
   DogTrackerSettable:
     allOf:
-    - $ref: '#/definitions/EntitySettable'
-  Entity:
+    - $ref: '#/definitions/PersistentResourceSettable'
+  PersistentResource:
     allOf:
-    - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntitySettable'
-  EntitySettable:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettable'
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
-  Person:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PersonSettable'
-    properties:
-      dogs:
-        description: URL of a Collection of Dogs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
-  PersonSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
-    properties:
-      birth-date:
-        type: string
-      name:
-        type: string
-  ServerEntity:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettable'
+    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       created:
         format: date-time
@@ -120,8 +90,44 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntitySettable:
+  PersistentResourceSettable:
+    allOf:
+    - $ref: '#/definitions/ResourceSettable'
     properties: {}
+  Person:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    - $ref: '#/definitions/PersonSettable'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:n
+          type:
+            $ref: '#/definitions/Dog'
+  PersonSettable:
+    allOf:
+    - $ref: '#/definitions/PersistentResourceSettable'
+    properties:
+      birth-date:
+        type: string
+      name:
+        type: string
+  Resource:
+    allOf:
+    - $ref: '#/definitions/ResourceSettable'
+    properties:
+      self:
+        readOnly: true
+        type: string
+    type: object
+  ResourceSettable:
+    properties:
+      kind:
+        type: string
+    type: object
 paths:
   /:
     get:
@@ -182,6 +188,29 @@ paths:
           $ref: '#/responses/default'
   /dogs:
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -522,6 +551,29 @@ paths:
           $ref: '#/responses/default'
   /people:
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -739,6 +791,29 @@ paths:
       required: true
       type: string
     get:
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: description
@@ -832,7 +907,28 @@ x-uris:
     get:
       description: Retrieve a Collection
       parameters:
-      - $ref: '#/parameters/Accept'
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
       responses:
         '200':
           description: successful
@@ -846,72 +942,6 @@ x-uris:
               type: string
           schema:
             $ref: '#/definitions/Collection'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a Collection entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Collection being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/CollectionSettable'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Collection
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '400':
-          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
