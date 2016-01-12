@@ -81,30 +81,22 @@ class SwaggerGenerator(object):
             entities = spec['entities']
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
-                mutable_definition = dict()
                 definition = dict()
                 if 'allOf' in entity_spec:
-                    mutable_definition['allOf'] = [{key: '%sSettable' % value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
-                    definition.setdefault('allOf', list()).append(self.mutable_definition_ref(entity_name))
                     if 'properties' in entity_spec:
-                        immutable = entity_spec.get('readOnly', False)
-                        if immutable:
-                            immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems()}
-                        else:
-                            mutable_definition['properties'] = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' not in prop or not prop['readOnly']}
-                            immutable_properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if 'readOnly' in prop and prop['readOnly']}
-                        if immutable_properties:
-                            definition['properties'] = immutable_properties
-                    self.definitions['%sSettable' % entity_name] = mutable_definition
+                        immutable_entity = entity_spec.get('readOnly', False)
+                        properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems()}
+                        if immutable_entity:
+                            for prop in properties.itervalues():
+                                prop['readOnly'] = True
+                        definition['properties'] = properties
                     if 'required' in entity_spec:
-                        mutable_definition['required'] = entity_spec['required']
+                        definition['required'] = entity_spec['required']
                     if 'type' in entity_spec:
-                        mutable_definition['type'] = entity_spec['type']
+                        definition['type'] = entity_spec['type']
                 self.definitions[entity_name] = definition
-                if 'type' in entity_spec:
-                    definition['type'] = entity_spec['type']
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
@@ -120,10 +112,7 @@ class SwaggerGenerator(object):
                         else:
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if rel_prop_specs[0].is_collection_resource() or rel_prop_specs[0].readonly or entity_spec.get('readOnly', False):
-                            definition = self.definitions[entity_name]
-                        else:
-                            definition = self.mutable_definitions(entity_name)
+                        definition = self.definitions[entity_name]
                         definition.setdefault('properties', dict())[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                         if 'type' in entity_spec:
                             definition['type'] = entity_spec['type']
@@ -172,6 +161,7 @@ class SwaggerGenerator(object):
                     ,
                 'type': 'string',
                 'format': 'uri',
+                'readOnly': True
                 }
         elif rel_prop_specs[0].is_multivalued():
             result = {
@@ -191,6 +181,8 @@ class SwaggerGenerator(object):
                 'type': 'string',
                 'format': 'uri',
                 }
+        if rel_prop_specs[0].readonly:
+            result['readOnly'] = True
         if not self.suppress_annotations:
             result['x-rapier-relationship'] = {
                 'type': {
@@ -312,14 +304,13 @@ class SwaggerGenerator(object):
                 description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
                 body_desciption =  'The subset of properties of the %s being updated' % entity_name
-                schema = self.mutable_definition_ref(entity_name)                 
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
                 body_desciption =  'The representation of the %s being replaced' % entity_name
-                schema = self.global_definition_ref(entity_name)
+            schema = self.global_definition_ref(entity_name)
             description = description % articled(entity_name)
             path_spec[update_verb] = {
                 'description': description,
@@ -416,10 +407,10 @@ class SwaggerGenerator(object):
         if not rel_property_spec.readonly:
             if len(consumes_entities) > 1:
                 post_schema = {}
-                post_schema['x-oneOf'] = [self.mutable_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
+                post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
             else:
-                post_schema = self.mutable_definition_ref(entity_name)
+                post_schema = self.global_definition_ref(entity_name)
                 description = 'Create a new %s' % entity_name
             path_spec['post'] = {
                 'description': description,
@@ -544,13 +535,6 @@ class SwaggerGenerator(object):
 
     def global_definition_ref(self, key):
         return {'$ref': '#/definitions/%s' % key}
-        
-    def mutable_definition_ref(self, key):
-        mod_key = '%sSettable' % key
-        return self.global_definition_ref(mod_key)
-        
-    def mutable_definitions(self, entity_name):
-        return self.definitions['%sSettable' % entity_name]
         
     def build_parameters(self, prefix, query_path):
         result = []

@@ -10,10 +10,6 @@ definitions:
   Bicycle:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/BicycleSettable'
-  BicycleSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
     properties:
       name:
         type: string
@@ -34,10 +30,6 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/CollectionSettable'
-  CollectionSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
     properties:
       item_type:
         type: string
@@ -48,10 +40,6 @@ definitions:
   Dog:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/DogSettable'
-  DogSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
     properties:
       birth_date:
         type: string
@@ -72,10 +60,6 @@ definitions:
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
-    - $ref: '#/definitions/EntitySettable'
-  EntitySettable:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettable'
     properties:
       kind:
         type: string
@@ -84,11 +68,11 @@ definitions:
   Institution:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/InstitutionSettable'
     properties:
       assets:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -96,10 +80,6 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-  InstitutionSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
-    properties:
       birth-date:
         type: string
       name:
@@ -107,11 +87,15 @@ definitions:
   Person:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PersonSettable'
     properties:
+      birth-date:
+        type: string
+      name:
+        type: string
       possessions:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -119,22 +103,14 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Dog'
             - $ref: '#/definitions/Bicycle'
-  PersonSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
-    properties:
-      birth-date:
-        type: string
-      name:
-        type: string
   PropertyTracker:
     allOf:
     - $ref: '#/definitions/Entity'
-    - $ref: '#/definitions/PropertyTrackerSettable'
     properties:
       bicycles:
         description: URL of a Collection of Bicycles
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -143,6 +119,7 @@ definitions:
       dogs:
         description: URL of a Collection of Dogs
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -151,6 +128,7 @@ definitions:
       institutions:
         description: URL of a Collection of Institutions
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -159,17 +137,13 @@ definitions:
       people:
         description: URL of a Collection of Persons
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Person'
-  PropertyTrackerSettable:
-    allOf:
-    - $ref: '#/definitions/EntitySettable'
   ServerEntity:
-    allOf:
-    - $ref: '#/definitions/ServerEntitySettable'
     properties:
       created:
         format: date-time
@@ -187,8 +161,6 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  ServerEntitySettable:
-    properties: {}
 paths:
   /:
     get:
@@ -277,7 +249,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleSettable'
+          $ref: '#/definitions/Bicycle'
       responses:
         '201':
           description: Created new Bicycle
@@ -375,7 +347,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleSettable'
+          $ref: '#/definitions/Bicycle'
       responses:
         '200':
           description: successful
@@ -503,7 +475,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionSettable'
+          $ref: '#/definitions/Institution'
       responses:
         '200':
           description: successful
@@ -617,7 +589,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog
@@ -715,7 +687,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '200':
           description: successful
@@ -843,7 +815,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionSettable'
+          $ref: '#/definitions/Institution'
       responses:
         '200':
           description: successful
@@ -957,7 +929,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionSettable'
+          $ref: '#/definitions/Institution'
       responses:
         '201':
           description: Created new Institution
@@ -1055,7 +1027,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionSettable'
+          $ref: '#/definitions/Institution'
       responses:
         '200':
           description: successful
@@ -1175,8 +1147,8 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/DogSettable'
-          - $ref: '#/definitions/BicycleSettable'
+          - $ref: '#/definitions/Dog'
+          - $ref: '#/definitions/Bicycle'
       responses:
         '201':
           description: Created new Dog or Bicycle
@@ -1262,7 +1234,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '201':
           description: Created new Person
@@ -1360,7 +1332,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
@@ -1480,8 +1452,8 @@ paths:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/DogSettable'
-          - $ref: '#/definitions/BicycleSettable'
+          - $ref: '#/definitions/Dog'
+          - $ref: '#/definitions/Bicycle'
       responses:
         '201':
           description: Created new Dog or Bicycle
@@ -1583,7 +1555,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/BicycleSettable'
+          $ref: '#/definitions/Bicycle'
       responses:
         '200':
           description: successful
@@ -1712,7 +1684,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionSettable'
+          $ref: '#/definitions/Collection'
       responses:
         '200':
           description: successful
@@ -1841,7 +1813,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '200':
           description: successful
@@ -1970,7 +1942,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/InstitutionSettable'
+          $ref: '#/definitions/Institution'
       responses:
         '200':
           description: successful
@@ -2099,7 +2071,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful

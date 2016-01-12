@@ -8,9 +8,6 @@ produces:
 - application/json
 definitions:
   Collection:
-    allOf:
-    - $ref: '#/definitions/CollectionSettable'
-  CollectionSettable:
     properties:
       item_type:
         type: string
@@ -19,9 +16,12 @@ definitions:
           type: object
         type: array
   Item:
-    allOf:
-    - $ref: '#/definitions/ItemSettable'
     properties:
+      description:
+        type: string
+      due:
+        format: date-time
+        type: string
       id:
         readOnly: true
         type: string
@@ -29,26 +29,17 @@ definitions:
         format: uri
         readOnly: true
         type: string
-  ItemSettable:
-    properties:
-      description:
-        type: string
-      due:
-        format: date-time
-        type: string
   TodoList:
-    allOf:
-    - $ref: '#/definitions/TodoListSettable'
     properties:
       items:
         description: URL of a Collection of Items
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Item'
-  TodoListSettable: {}
 paths:
   /to-dos:
     get:
@@ -137,7 +128,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemSettable'
+          $ref: '#/definitions/Item'
       responses:
         '201':
           description: Created new Item
@@ -235,7 +226,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemSettable'
+          $ref: '#/definitions/Item'
       responses:
         '200':
           description: successful
@@ -365,7 +356,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CollectionSettable'
+          $ref: '#/definitions/Collection'
       responses:
         '200':
           description: successful
@@ -494,7 +485,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/ItemSettable'
+          $ref: '#/definitions/Item'
       responses:
         '200':
           description: successful

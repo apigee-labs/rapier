@@ -221,6 +221,7 @@ relationships:
       entity: Page
       property: next_page
       multiplicity: 0:1
+      readOnly: True
     other_end:
       entity: Page
   page-to-previous-page:
@@ -228,5 +229,6 @@ relationships:
       entity: Page
       property: previous_page
       multiplicity: 0:1
+      readOnly: True
     other_end:
       entity: Page

@@ -19,31 +19,28 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/CollectionSettable'
     properties:
       items:
         items:
           type: object
+        readOnly: true
         type: array
       kind:
         enum:
         - Collection
+        readOnly: true
         type: string
-  CollectionSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
-  Content:
-    type: string
+  Content: {}
   ErrorResponse:
     type: string
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/FolderSettable'
     properties:
       contents:
         description: URL of a Collection of Specs and Folders
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -51,10 +48,6 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  FolderSettable:
-    allOf:
-    - $ref: '#/definitions/PersistentResourceSettable'
-    properties:
       folders:
         description: Array of URLs of Folders
         items:
@@ -83,11 +76,11 @@ definitions:
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/HubSettable'
     properties:
       kind:
         enum:
         - Hub
+        readOnly: true
         type: string
       myHub:
         description: URL of a Folder
@@ -100,6 +93,7 @@ definitions:
       sharedWithMe:
         description: URL of a Collection of Specs and Folders
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -107,30 +101,31 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-  HubSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PageSettable'
     properties:
       collection:
         format: uri
+        readOnly: true
         type: string
       item_type:
+        readOnly: true
         type: string
       items:
         items:
           type: object
+        readOnly: true
         type: array
       kind:
         enum:
         - Page
+        readOnly: true
         type: string
       next_page:
         description: URL of a Page
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
@@ -139,18 +134,15 @@ definitions:
       previous_page:
         description: URL of a Page
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
           type:
             $ref: '#/definitions/Page'
-  PageSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       created:
         format: date-time
@@ -168,30 +160,17 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  PersistentResourceSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
-    properties: {}
   Resource:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
-    properties:
-      self:
-        readOnly: true
-        type: string
-    type: object
-  ResourceSettable:
     properties:
       kind:
+        type: string
+      self:
+        readOnly: true
         type: string
     type: object
   Spec:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/SpecSettable'
-  SpecSettable:
-    allOf:
-    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       content:
         description: URL of a Content
@@ -322,7 +301,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderSettable'
+          $ref: '#/definitions/Folder'
       responses:
         '200':
           description: successful
@@ -764,7 +743,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/FolderSettable'
+          $ref: '#/definitions/Folder'
       responses:
         '200':
           description: successful
@@ -908,8 +887,8 @@ x-uris:
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/SpecSettable'
-          - $ref: '#/definitions/FolderSettable'
+          - $ref: '#/definitions/Spec'
+          - $ref: '#/definitions/Folder'
       responses:
         '201':
           description: Created new Spec or Folder
@@ -1146,7 +1125,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/SpecSettable'
+          $ref: '#/definitions/Spec'
       responses:
         '200':
           description: successful

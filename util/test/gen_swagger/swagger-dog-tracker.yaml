@@ -10,26 +10,20 @@ definitions:
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/CollectionSettable'
     properties:
       items:
         items:
           type: object
+        readOnly: true
         type: array
       kind:
         enum:
         - Collection
+        readOnly: true
         type: string
-  CollectionSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
   Dog:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/DogSettable'
-  DogSettable:
-    allOf:
-    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       birth_date:
         type: string
@@ -48,11 +42,11 @@ definitions:
   DogTracker:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/DogTrackerSettable'
     properties:
       dogs:
         description: URL of a Collection of Dogs
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
@@ -61,18 +55,15 @@ definitions:
       people:
         description: URL of a Collection of Persons
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Person'
-  DogTrackerSettable:
-    allOf:
-    - $ref: '#/definitions/PersistentResourceSettable'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
-    - $ref: '#/definitions/PersistentResourceSettable'
     properties:
       created:
         format: date-time
@@ -90,42 +81,29 @@ definitions:
         format: date-time
         readOnly: true
         type: string
-  PersistentResourceSettable:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
-    properties: {}
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
-    - $ref: '#/definitions/PersonSettable'
     properties:
+      birth-date:
+        type: string
       dogs:
         description: URL of a Collection of Dogs
         format: uri
+        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Dog'
-  PersonSettable:
-    allOf:
-    - $ref: '#/definitions/PersistentResourceSettable'
-    properties:
-      birth-date:
-        type: string
       name:
         type: string
   Resource:
-    allOf:
-    - $ref: '#/definitions/ResourceSettable'
-    properties:
-      self:
-        readOnly: true
-        type: string
-    type: object
-  ResourceSettable:
     properties:
       kind:
+        type: string
+      self:
+        readOnly: true
         type: string
     type: object
 paths:
@@ -216,7 +194,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog
@@ -314,7 +292,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '200':
           description: successful
@@ -442,7 +420,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
@@ -556,7 +534,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '201':
           description: Created new Person
@@ -654,7 +632,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
@@ -773,7 +751,7 @@ paths:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '201':
           description: Created new Dog
@@ -999,7 +977,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DogSettable'
+          $ref: '#/definitions/Dog'
       responses:
         '200':
           description: successful
@@ -1128,7 +1106,7 @@ x-uris:
         in: body
         name: body
         schema:
-          $ref: '#/definitions/PersonSettable'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
