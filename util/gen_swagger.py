@@ -207,7 +207,7 @@ class SwaggerGenerator(object):
     def get_relationship_property_specs(self, entity_name):
         spec = self.rapier_spec
         result = []
-        def add_type(rel_name, one_end, other_end):
+        def add_type(one_end, other_end):
             if 'property' in one_end:
                 p_spec = \
                     RelMVPropertySpec(
@@ -215,7 +215,7 @@ class SwaggerGenerator(object):
                         one_end['property'], 
                         one_end['entity'], 
                         other_end['entity'], 
-                        rel_name, one_end.get('multiplicity'), 
+                        one_end.get('multiplicity'), 
                         one_end.get('collection_resource'), 
                         one_end.get('consumes'), 
                         one_end.get('readOnly')) \
@@ -224,18 +224,17 @@ class SwaggerGenerator(object):
                         one_end['property'], 
                         one_end['entity'], 
                         other_end['entity'], 
-                        rel_name, 
                         one_end.get('multiplicity'), 
                         one_end.get('readOnly'))
                 result.append(p_spec)
            
         if 'relationships' in spec:
             relationships = spec['relationships']
-            for rel_name, relationship in relationships.iteritems():
+            for relationship in relationships.itervalues() if isinstance(relationships, dict) else relationships:
                 if relationship['one_end']['entity'] == entity_name:
-                    add_type(rel_name, relationship['one_end'], relationship['other_end'])
+                    add_type(relationship['one_end'], relationship['other_end'])
                 if relationship['other_end']['entity'] == entity_name:
-                    add_type(rel_name, relationship['other_end'], relationship['one_end'])
+                    add_type(relationship['other_end'], relationship['one_end'])
         return result
         
     def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):
@@ -769,11 +768,10 @@ class PathPrefix(object):
       
 class RelSVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity, readonly=False):
+    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, readonly=False):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
-        self.rel_name = rel_name
         self.multiplicity = multiplicity
         self.readonly = readonly 
         
@@ -788,11 +786,10 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, rel_name, multiplicity,  collection_resource, consumes, readonly):
+    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity,  collection_resource, consumes, readonly):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
-        self.rel_name = rel_name
         self.multiplicity = multiplicity
         self.readonly = readonly 
         self.conventions = conventions
