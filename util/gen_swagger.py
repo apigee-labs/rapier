@@ -11,6 +11,17 @@ class PresortedOrderedDict(OrderedDict):
     def items(self, *args, **kwargs):
         return PresortedList(OrderedDict.items(self, *args, **kwargs))
 
+def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=PresortedOrderedDict):
+    class OrderedLoader(Loader):
+        pass
+    def construct_mapping(loader, node):
+        loader.flatten_mapping(node)
+        return object_pairs_hook(loader.construct_pairs(node))
+    OrderedLoader.add_constructor(
+        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+        construct_mapping)
+    return yaml.load(stream, OrderedLoader)
+
 class SwaggerGenerator(object):
 
     def __init__(self):
@@ -18,7 +29,7 @@ class SwaggerGenerator(object):
 
     def set_rapier_spec_from_filename(self, filename):
         with open(filename) as f:
-            self.rapier_spec = yaml.load(f.read())
+            self.rapier_spec = ordered_load(f.read(), yaml.SafeLoader)
             
     def set_opts(self, opts):
         self.opts = opts
@@ -58,7 +69,7 @@ class SwaggerGenerator(object):
             self.swagger['securityDefinitions'] = spec['securityDefinitions']            
         if 'security' in spec:
             self.swagger['security'] = spec['security']            
-        self.definitions = {}
+        self.definitions = PresortedOrderedDict()
         if 'error_response' in self.conventions:
             self.definitions['ErrorResponse'] = self.conventions['error_response']
             self.error_response = self.global_definition_ref('ErrorResponse')
@@ -81,7 +92,7 @@ class SwaggerGenerator(object):
             entities = spec['entities']
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
-                definition = dict()
+                definition = PresortedOrderedDict()
                 if 'allOf' in entity_spec:
                     definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully

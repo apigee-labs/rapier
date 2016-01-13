@@ -12,23 +12,9 @@ definitions:
       item_type:
         type: string
       items:
+        type: array
         items:
           type: object
-        type: array
-  Item:
-    properties:
-      description:
-        type: string
-      due:
-        format: date-time
-        type: string
-      id:
-        readOnly: true
-        type: string
-      self:
-        format: uri
-        readOnly: true
-        type: string
   TodoList:
     properties:
       items:
@@ -40,6 +26,20 @@ definitions:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Item'
+  Item:
+    properties:
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+      id:
+        type: string
+        readOnly: true
+      self:
+        type: string
+        format: uri
+        readOnly: true
 paths:
   /to-dos:
     get:

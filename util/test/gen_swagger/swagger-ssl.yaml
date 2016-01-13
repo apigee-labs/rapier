@@ -7,63 +7,6 @@ consumes:
 produces:
 - application/json
 definitions:
-  Alias:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      certificate:
-        description: URL of a Certificate
-        format: uri
-        type: string
-      certsInfo:
-        items:
-          properties:
-            expiryDate:
-              format: date
-              type: string
-            issuer:
-              type: string
-            subject:
-              type: string
-            version:
-              type: integer
-          type: object
-        readOnly: true
-        type: array
-      csr:
-        description: URL of a CSR
-        format: uri
-        readOnly: true
-        type: string
-      key:
-        type: string
-      kind:
-        enum:
-        - Alias
-        type: string
-      name:
-        type: string
-      selfSignedCertificate:
-        description: URL of a Collection of SelfSignedCertAliass
-        format: uri
-        readOnly: true
-        type: string
-  CSR: {}
-  Certificate: {}
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      items:
-        items:
-          type: object
-        readOnly: true
-        type: array
-      kind:
-        enum:
-        - Collection
-        readOnly: true
-        type: string
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -74,44 +17,9 @@ definitions:
         readOnly: true
         type: string
       kind:
+        type: string
         enum:
         - Environment
-        type: string
-  KeyCertFileAlias:
-    properties:
-      certFile:
-        format: file
-        type: string
-      ignoreExpiryValidation:
-        type: boolean
-      keyFile:
-        format: file
-        type: string
-      kind:
-        enum:
-        - KeyFileCertFileAlias
-        type: string
-      name:
-        type: string
-      password:
-        type: string
-    type: object
-  KeyCertJarAlias:
-    properties:
-      ignoreExpiryValidation:
-        type: boolean
-      keyCertJar:
-        format: file
-        type: string
-      kind:
-        enum:
-        - KeyFileCertFileAlias
-        type: string
-      name:
-        type: string
-      password:
-        type: string
-    type: object
   Keystore:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -122,54 +30,69 @@ definitions:
         readOnly: true
         type: string
       kind:
+        type: string
         enum:
         - Keystore
-        type: string
       name:
         type: string
-  PersistentResource:
+  Alias:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
     properties:
-      created:
-        format: date-time
+      certificate:
+        description: URL of a Certificate
+        format: uri
+        type: string
+      certsInfo:
+        readOnly: true
+        type: array
+        items:
+          type: object
+          properties:
+            version:
+              type: integer
+            expiryDate:
+              type: string
+              format: date
+            issuer:
+              type: string
+            subject:
+              type: string
+      csr:
+        description: URL of a CSR
+        format: uri
         readOnly: true
         type: string
-      creator:
-        format: URL
+      key:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Alias
+      name:
+        type: string
+      selfSignedCertificate:
+        description: URL of a Collection of SelfSignedCertAliass
+        format: uri
         readOnly: true
         type: string
-      modified:
-        format: date-time
-        readOnly: true
-        type: string
-      modifier:
-        format: date-time
-        readOnly: true
-        type: string
-    type: object
+  Certificate: {}
+  CSR: {}
   Pkcs12Alias:
     properties:
       ignoreExpiryValidation:
         type: boolean
       kind:
+        type: string
         enum:
         - Pkcs12Alias
-        type: string
       name:
         type: string
       password:
         type: string
       pkcs12File:
+        type: string
         format: file
-        type: string
-    type: object
-  Resource:
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
     type: object
   SelfSignedCertAlias:
     properties:
@@ -182,17 +105,52 @@ definitions:
       keySize:
         type: string
       kind:
+        type: string
         enum:
         - SelfSignedCertAlias
-        type: string
       sigAlg:
         type: string
       subject:
         $ref: '#/definitions/X500Name'
       subjectAlternativeDNSNames:
+        type: array
         items:
           type: string
-        type: array
+    type: object
+  KeyCertFileAlias:
+    properties:
+      certFile:
+        type: string
+        format: file
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        type: string
+        format: file
+      kind:
+        type: string
+        enum:
+        - KeyFileCertFileAlias
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  KeyCertJarAlias:
+    properties:
+      ignoreExpiryValidation:
+        type: boolean
+      keyCertJar:
+        type: string
+        format: file
+      kind:
+        type: string
+        enum:
+        - KeyFileCertFileAlias
+      name:
+        type: string
+      password:
+        type: string
     type: object
   X500Name:
     properties:
@@ -207,6 +165,48 @@ definitions:
       orgUnitName:
         type: string
       state:
+        type: string
+    type: object
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+        readOnly: true
+      kind:
+        type: string
+        enum:
+        - Collection
+        readOnly: true
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+    type: object
+  Resource:
+    properties:
+      kind:
+        type: string
+      self:
         type: string
     type: object
 paths:

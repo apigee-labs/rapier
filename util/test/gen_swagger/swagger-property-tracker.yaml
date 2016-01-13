@@ -7,56 +7,24 @@ consumes:
 produces:
 - application/json
 definitions:
-  Bicycle:
-    allOf:
-    - $ref: '#/definitions/Entity'
+  ServerEntity:
     properties:
-      name:
+      created:
         type: string
-      owner:
-        description: URL of an Institution or Person
-        format: uri
+        format: date-time
+        readOnly: true
+      creator:
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            oneOf:
-            - $ref: '#/definitions/Institution'
-            - $ref: '#/definitions/Person'
-      paint_color:
+        format: URL
+        readOnly: true
+      modified:
         type: string
-      purchase_date:
+        format: date-time
+        readOnly: true
+      modifier:
         type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    properties:
-      item_type:
-        type: string
-      items:
-        items:
-          type: object
-        type: array
-  Dog:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    properties:
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      name:
-        type: string
-      owner:
-        description: URL of an Institution or Person
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            oneOf:
-            - $ref: '#/definitions/Institution'
-            - $ref: '#/definitions/Person'
+        format: date-time
+        readOnly: true
   Entity:
     allOf:
     - $ref: '#/definitions/ServerEntity'
@@ -65,44 +33,16 @@ definitions:
         type: string
       self:
         type: string
-  Institution:
+  Collection:
     allOf:
     - $ref: '#/definitions/Entity'
     properties:
-      assets:
-        description: URL of a Collection of Dogs and Bicycles
-        format: uri
-        readOnly: true
+      item_type:
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
-      birth-date:
-        type: string
-      name:
-        type: string
-  Person:
-    allOf:
-    - $ref: '#/definitions/Entity'
-    properties:
-      birth-date:
-        type: string
-      name:
-        type: string
-      possessions:
-        description: URL of a Collection of Dogs and Bicycles
-        format: uri
-        readOnly: true
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
+      items:
+        type: array
+        items:
+          type: object
   PropertyTracker:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -143,23 +83,83 @@ definitions:
           multiplicity: 0:n
           type:
             $ref: '#/definitions/Person'
-  ServerEntity:
+  Dog:
+    allOf:
+    - $ref: '#/definitions/Entity'
     properties:
-      created:
-        format: date-time
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      name:
+        type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:1
+          type:
+            oneOf:
+            - $ref: '#/definitions/Person'
+            - $ref: '#/definitions/Institution'
+  Bicycle:
+    allOf:
+    - $ref: '#/definitions/Entity'
+    properties:
+      name:
+        type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:1
+          type:
+            oneOf:
+            - $ref: '#/definitions/Person'
+            - $ref: '#/definitions/Institution'
+      paint_color:
+        type: string
+      purchase_date:
+        type: string
+  Person:
+    allOf:
+    - $ref: '#/definitions/Entity'
+    properties:
+      birth-date:
+        type: string
+      name:
+        type: string
+      possessions:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
         readOnly: true
         type: string
-      creator:
-        format: URL
+        x-rapier-relationship:
+          multiplicity: 0:n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
+  Institution:
+    allOf:
+    - $ref: '#/definitions/Entity'
+    properties:
+      assets:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
         readOnly: true
         type: string
-      modified:
-        format: date-time
-        readOnly: true
+        x-rapier-relationship:
+          multiplicity: 0:n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
+      birth-date:
         type: string
-      modifier:
-        format: date-time
-        readOnly: true
+      name:
         type: string
 paths:
   /:
@@ -438,7 +438,7 @@ paths:
       required: true
       type: string
     get:
-      description: Retrieve an Institution
+      description: Retrieve a Person
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -453,7 +453,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -468,14 +468,14 @@ paths:
       consumes:
       - application/merge-patch+json
       - application/json-patch+json
-      description: Update an Institution entity
+      description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Institution being updated
+      - description: The subset of properties of the Person being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Institution'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
@@ -488,7 +488,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -504,7 +504,7 @@ paths:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Institution
+      description: Delete a Person
       responses:
         '200':
           description: successful
@@ -517,7 +517,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -778,7 +778,7 @@ paths:
       required: true
       type: string
     get:
-      description: Retrieve an Institution
+      description: Retrieve a Person
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -793,7 +793,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -808,14 +808,14 @@ paths:
       consumes:
       - application/merge-patch+json
       - application/json-patch+json
-      description: Update an Institution entity
+      description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Institution being updated
+      - description: The subset of properties of the Person being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Institution'
+          $ref: '#/definitions/Person'
       responses:
         '200':
           description: successful
@@ -828,7 +828,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -844,7 +844,7 @@ paths:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Institution
+      description: Delete a Person
       responses:
         '200':
           description: successful
@@ -857,7 +857,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Person'
         '400':
           $ref: '#/responses/400'
         '401':

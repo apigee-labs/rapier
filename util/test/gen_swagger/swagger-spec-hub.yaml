@@ -9,30 +9,124 @@ produces:
 - text/html
 securityDefinitions:
   sso:
-    flow: application
-    scopes: {}
-    tokenUrl: whatever
     type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
 security:
 - sso: []
 definitions:
+  ErrorResponse:
+    type: string
+  Resource:
+    properties:
+      kind:
+        type: string
+      self:
+        type: string
+        readOnly: true
+    type: object
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       items:
+        type: array
         items:
           type: object
         readOnly: true
-        type: array
       kind:
+        type: string
         enum:
         - Collection
         readOnly: true
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      collection:
         type: string
-  Content: {}
-  ErrorResponse:
-    type: string
+        format: uri
+        readOnly: true
+      item_type:
+        type: string
+        readOnly: true
+      items:
+        type: array
+        items:
+          type: object
+        readOnly: true
+      kind:
+        type: string
+        enum:
+        - Page
+        readOnly: true
+      next_page:
+        description: URL of a Page
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:1
+          type:
+            $ref: '#/definitions/Page'
+      previous_page:
+        description: URL of a Page
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:1
+          type:
+            $ref: '#/definitions/Page'
+  Hub:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Hub
+        readOnly: true
+      myHub:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: '1:1'
+          type:
+            $ref: '#/definitions/Folder'
+      sharedWithMe:
+        description: URL of a Collection of Folders and Specs
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Folder'
+            - $ref: '#/definitions/Spec'
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -59,115 +153,20 @@ definitions:
           type:
             $ref: '#/definitions/Folder'
       kind:
+        type: string
         enum:
         - Folder
-        type: string
       name:
         type: string
       permissions:
+        type: array
         items:
           properties:
-            action:
-              type: string
             actor:
               format: URL
               type: string
-        type: array
-  Hub:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        enum:
-        - Hub
-        readOnly: true
-        type: string
-      myHub:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: '1:1'
-          type:
-            $ref: '#/definitions/Folder'
-      sharedWithMe:
-        description: URL of a Collection of Specs and Folders
-        format: uri
-        readOnly: true
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
-  Page:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      collection:
-        format: uri
-        readOnly: true
-        type: string
-      item_type:
-        readOnly: true
-        type: string
-      items:
-        items:
-          type: object
-        readOnly: true
-        type: array
-      kind:
-        enum:
-        - Page
-        readOnly: true
-        type: string
-      next_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Page'
-      previous_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Page'
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        format: date-time
-        readOnly: true
-        type: string
-      creator:
-        format: URL
-        readOnly: true
-        type: string
-      modified:
-        format: date-time
-        readOnly: true
-        type: string
-      modifier:
-        format: date-time
-        readOnly: true
-        type: string
-  Resource:
-    properties:
-      kind:
-        type: string
-      self:
-        readOnly: true
-        type: string
-    type: object
+            action:
+              type: string
   Spec:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -191,20 +190,21 @@ definitions:
           type:
             $ref: '#/definitions/Folder'
       kind:
+        type: string
         enum:
         - Spec
-        type: string
       name:
         type: string
       permissions:
+        type: array
         items:
           properties:
-            action:
-              type: string
             actor:
               format: URL
               type: string
-        type: array
+            action:
+              type: string
+  Content: {}
 paths:
   /:
     get:
