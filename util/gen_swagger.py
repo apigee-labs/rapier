@@ -55,8 +55,8 @@ class SwaggerGenerator(object):
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
         self.swagger['info'] = dict()
-        self.paths = dict()
-        self.uris = dict()
+        self.paths = PresortedOrderedDict()
+        self.uris = PresortedOrderedDict()
         if 'consumes' in spec:
             self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
