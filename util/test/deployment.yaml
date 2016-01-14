@@ -1,0 +1,175 @@
+title: Deployment Service API
+version: "0.1"
+consumes: application/json
+produces: application/json text/html
+conventions:
+  multi_valued_relationships:
+    entities: '#/entities/Collection'
+  patch_consumes: application/merge-patch+json
+  error_response:
+    type: string
+entities:
+  Application:
+    allOf:
+    - $ref: '#/entities/Resource'
+  Environment:
+    allOf:
+    - $ref: '#/entities/Resource'
+  Microservice:
+    allOf:
+    - $ref: '#/entities/Resource'
+  Revision:
+    allOf:
+    - $ref: '#/entities/Resource'
+  Deployment:
+    allOf:
+    - $ref: '#/entities/Resource'
+  EnvironmentStartCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  EnvironmentStopCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  DeploymentStartCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  DeploymentStopCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  DeploymentOfflineCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  DeploymentOnlineCommand:
+    allOf:
+    - $ref: '#/entities/Resource'
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+    abstract: true
+  Collection:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderby
+      type: string
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
+  Page:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Page]
+      items:
+        type: array
+        items: 
+          type: object
+      collection:
+        type: string
+        format: uri
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    readOnly: true
+relationships:
+  environment-to-application:
+    one_end:
+      entity: '#Environment'
+      property: deploys
+      multiplicity: 0:1
+    other_end:
+      entity: '#Application'
+      property: environments
+      multiplicity: 0:n
+  microservice-to-application:
+    one_end:
+      entity: '#Microservice'
+      property: belongsIn
+      multiplicity: 0:1
+    other_end:
+      entity: '#Application'
+      property: comprises
+      multiplicity: 0:n
+  revision-to-microservice:
+    one_end:
+      entity: '#Revision'
+      property: revises
+      multiplicity: 0:1
+    other_end:
+      entity: '#Microservice'
+      property: has
+      multiplicity: 0:n
+  deployment-to-environment:
+    one_end:
+      entity: '#Deployment'
+      property: runsIn
+      multiplicity: 0:1
+    other_end:
+      entity: '#Environment'
+      property: hosts
+      multiplicity: 0:n
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+- sso: []
