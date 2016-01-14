@@ -168,67 +168,67 @@ entities:
 relationships:
   hub-to-my-folder:
     one_end:
-      entity: Hub
+      entity: '#Hub'
       property: myHub
       multiplicity: '1:1'
     other_end:
-      entity: Folder
+      entity: '#Folder'
   hub-to-shared-folder:
     one_end:
-      entity: Hub
+      entity: '#Hub'
       property: sharedWithMe
       multiplicity: 0:n
       readOnly: true
     other_end:
-      entity: Folder
+      entity: '#Folder'
   hub-to-shared-spec:
     one_end:
-      entity: Hub
+      entity: '#Hub'
       property: sharedWithMe
       multiplicity: 0:n
       readOnly: true
     other_end:
-      entity: Spec
+      entity: '#Spec'
   folder-to-spec:
     one_end:
-      entity: Folder
+      entity: '#Folder'
       property: contents
       multiplicity: 0:n
     other_end:
-      entity: Spec
+      entity: '#Spec'
       property: folders
       multiplicity: 0:n
       collection_resource: false
   folder-to-folder:
     one_end:
-      entity: Folder
+      entity: '#Folder'
       property: contents
       multiplicity: 0:n
     other_end:
-      entity: Folder
+      entity: '#Folder'
       property: folders
       multiplicity: 0:n
       collection_resource: false
   spec-to-content:
     one_end:
-      entity: Spec
+      entity: '#Spec'
       property: content
       multiplicity: 0:1
     other_end:
-      entity: Content
+      entity: '#Content'
   page-to-next-page:
     one_end:
-      entity: Page
+      entity: '#Page'
       property: next_page
       multiplicity: 0:1
       readOnly: True
     other_end:
-      entity: Page
+      entity: '#Page'
   page-to-previous-page:
     one_end:
-      entity: Page
+      entity: '#Page'
       property: previous_page
       multiplicity: 0:1
       readOnly: True
     other_end:
-      entity: Page
+      entity: '#Page'

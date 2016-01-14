@@ -70,21 +70,13 @@ class SwaggerGenerator(object):
         if 'security' in spec:
             self.swagger['security'] = spec['security']            
         self.definitions = PresortedOrderedDict()
-        if 'error_response' in self.conventions:
-            self.definitions['ErrorResponse'] = self.conventions['error_response']
-            self.error_response = self.global_definition_ref('ErrorResponse')
-        else:
-            self.error_response = {}
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
         self.swagger['definitions'] = self.definitions
-        self.responses = self.build_standard_responses()
         self.swagger['paths'] = self.swagger_paths
         self.swagger['x-uris'] = self.swagger_uris
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.swagger['responses'] = dict()
-        self.response_sets = self.build_standard_response_sets()
-        self.methods = self.build_standard_methods()
         self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
 
@@ -97,6 +89,15 @@ class SwaggerGenerator(object):
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 entity_spec['name'] = entity_name
+            if 'error_response' in self.conventions:
+                self.definitions['ErrorResponse'] = self.conventions['error_response']
+                self.swagger_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
+                self.error_response = self.global_definition_ref('#ErrorResponse')
+            else:
+                self.error_response = {}
+            self.responses = self.build_standard_responses()
+            self.response_sets = self.build_standard_response_sets()
+            self.methods = self.build_standard_methods()
             for entity_name, entity_spec in entities.iteritems():
                 definition = PresortedOrderedDict()
                 if 'allOf' in entity_spec:
@@ -134,7 +135,7 @@ class SwaggerGenerator(object):
                         if 'type' in entity_spec:
                             definition['type'] = entity_spec['type']
                 if self.include_impl and 'implementation' in entity_spec:
-                    implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], entity_name)
+                    implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], '#%s' % entity_name)
                     implementation_spec_specs = [ImplementationPathSpec(self.conventions, e_s['implementation'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation') and e_s['implementation']['path'] == entity_spec['implementation']['path']]
                     entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
                     self.swagger_paths[implementation_spec_spec.path_segment()] = entity_interface
@@ -185,7 +186,7 @@ class SwaggerGenerator(object):
             result = {
                 'description': 
                     'Array of URLs of %s' % 
-                        (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity),
+                        (' and '.join(['%ss' % self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_name(rel_prop_specs[0].target_entity)),
                 'type': 'array',
                 'items': {
                     'type': 'string',
@@ -352,7 +353,7 @@ class SwaggerGenerator(object):
                 path_spec['patch']['consumes'] = self.patch_consumes
             else:
                 path_spec['put']['responses']['201'] = {
-                    'description': 'Created new %s' % entity_uri,
+                    'description': 'Created new %s' % self.resolve_name(entity_uri),
                     'schema': self.global_definition_ref(entity_uri),
                     'headers': {
                         'Location': {
