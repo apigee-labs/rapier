@@ -172,7 +172,7 @@ class SwaggerGenerator(object):
             result = {
                 'description': 
                         'URL of a Collection of %s' % 
-                            (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_name(rel_prop_specs[0].target_entity)) 
+                            (' and '.join(['%ss' % self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_name(rel_prop_specs[0].target_entity)) 
                     if rel_prop_specs[0].is_multivalued() else 
                         'URL of %s' % ('%s %s' % (article(self_resolve_name(rel_prop_specs[0].target_entity)), ' or '.join([self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs])) \
                         if len(rel_prop_specs) > 1 else articled(self.resolve_name(rel_prop_specs[0].target_entity)))

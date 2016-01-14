@@ -99,65 +99,65 @@ entities:
 relationships:
   tracker-to-dogs:
     one_end:
-      entity: PropertyTracker
+      entity: '#PropertyTracker'
       property: dogs
       multiplicity: 0:n
     other_end:
-      entity: Dog
+      entity: '#Dog'
   tracker-to-people:
     one_end:
-      entity: PropertyTracker
+      entity: '#PropertyTracker'
       property: people
       multiplicity: 0:n
     other_end:
-      entity: Person
+      entity: '#Person'
   tracker-to-bicycles:
     one_end:
-      entity: PropertyTracker
+      entity: '#PropertyTracker'
       property: bicycles
       multiplicity: 0:n
     other_end:
-      entity: Bicycle
+      entity: '#Bicycle'
   tracker-to-institutions:
     one_end:
-      entity: PropertyTracker
+      entity: '#PropertyTracker'
       property: institutions
       multiplicity: 0:n
     other_end:
-      entity: Institution
+      entity: '#Institution'
   dogs-to-people:
     one_end:
-      entity: Person
+      entity: '#Person'
       property: possessions
       multiplicity: 0:n
     other_end:
-      entity: Dog
+      entity: '#Dog'
       property: owner
       multiplicity: 0:1
   dogs-to-institutions:
     one_end:
-      entity: Institution
+      entity: '#Institution'
       property: assets
       multiplicity: 0:n
     other_end:
-      entity: Dog
+      entity: '#Dog'
       property: owner
       multiplicity: 0:1
   bicycles-to-people:
     one_end:
-      entity: Person
+      entity: '#Person'
       property: possessions
       multiplicity: 0:n
     other_end:
-      entity: Bicycle
+      entity: '#Bicycle'
       property: owner
       multiplicity: 0:1
   bicycles-to-institutions:
     one_end:
-      entity: Institution
+      entity: '#Institution'
       property: assets
       multiplicity: 0:n
     other_end:
-      entity: Bicycle
+      entity: '#Bicycle'
       property: owner
       multiplicity: 0:1
