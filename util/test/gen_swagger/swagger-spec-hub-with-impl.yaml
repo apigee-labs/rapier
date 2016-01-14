@@ -426,7 +426,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /folders;{implementation_key}:
+  /Zmxk-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -559,7 +559,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /folders;{implementation_key}/contents:
+  /Zmxk-{implementation_key}/contents:
     x-private: true
     parameters:
     - description: This parameter is a private part of the implementation. It is not
@@ -680,7 +680,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /specs;{implementation_key}:
+  /c3Bj-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -813,7 +813,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /specs;{implementation_key}/content:
+  /c3Bj-{implementation_key}/content:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven

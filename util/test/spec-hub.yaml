@@ -118,8 +118,8 @@ entities:
   Folder:
     allOf:
     - $ref: '#/entities/PersistentResource'
-    implementation_spec: 
-      path: /folders
+    implementation: 
+      path: /Zmxk-
       type: integer
       name: implementation_key
     query_paths: [contents]
@@ -142,8 +142,8 @@ entities:
     allOf:
     - $ref: '#/entities/PersistentResource'
     query_paths: [content]
-    implementation_spec: 
-      path: /specs
+    implementation: 
+      path: /c3Bj-
       type: integer
       name: implementation_key
     properties:
