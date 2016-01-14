@@ -44,7 +44,7 @@ class SwaggerGenerator(object):
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
         if 'multi_valued_relationships' in self.conventions:
-            self.collection_entity_names = as_list(self.conventions['multi_valued_relationships']['entity'])
+            self.collection_entity_names = as_list(self.conventions['multi_valued_relationships']['entities'])
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
                 sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
@@ -55,8 +55,8 @@ class SwaggerGenerator(object):
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
         self.swagger['info'] = dict()
-        self.paths = PresortedOrderedDict()
-        self.uris = PresortedOrderedDict()
+        self.swagger_paths = PresortedOrderedDict()
+        self.swagger_uris = PresortedOrderedDict()
         if 'consumes' in spec:
             self.swagger['consumes'] = as_list(spec.get('consumes'))
         else:
@@ -78,8 +78,8 @@ class SwaggerGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
         self.swagger['definitions'] = self.definitions
         self.responses = self.build_standard_responses()
-        self.swagger['paths'] = self.paths
-        self.swagger['x-uris'] = self.uris
+        self.swagger['paths'] = self.swagger_paths
+        self.swagger['x-uris'] = self.swagger_uris
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.swagger['responses'] = dict()
@@ -90,11 +90,14 @@ class SwaggerGenerator(object):
 
         if 'entities' in spec:
             entities = spec['entities']
+            self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
+            self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
+            self.uri_map.update({entity['id']: entity for name, entity in entities.iteritems() if 'id' in entity})
             self.swagger['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 definition = PresortedOrderedDict()
                 if 'allOf' in entity_spec:
-                    definition['allOf'] = [{key: value.replace('entities', 'definitions') for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
+                    definition['allOf'] = [{key: self.swagger_uri_map[value] for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     if 'properties' in entity_spec:
                         immutable_entity = entity_spec.get('readOnly', False)
@@ -131,7 +134,7 @@ class SwaggerGenerator(object):
                     implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], entity_name)
                     implementation_spec_specs = [ImplementationPathSpec(self.conventions, e_s['implementation'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation') and e_s['implementation']['path'] == entity_spec['implementation']['path']]
                     entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
-                    self.paths[implementation_spec_spec.path_segment()] = entity_interface
+                    self.swagger_paths[implementation_spec_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec(entity_name)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
@@ -155,7 +158,7 @@ class SwaggerGenerator(object):
                             self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % query_paths)  
-        if not self.uris:
+        if not self.swagger_uris:
             del self.swagger['x-uris']
         return self.swagger
 
@@ -260,7 +263,7 @@ class SwaggerGenerator(object):
         is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].param
         path = '/'.join([prefix.path_segment(), query_path.swagger_path_string])
         if not (self.include_impl and prefix.is_uri_spec()):
-            paths = self.uris if prefix.is_uri_spec() else self.paths 
+            paths = self.swagger_uris if prefix.is_uri_spec() else self.swagger_paths 
             if path not in paths:
                 if is_collection_resource:
                     paths[path] = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
@@ -641,13 +644,13 @@ class SwaggerGenerator(object):
             sys.exit('error: must define value for multi-valued relationships')
         else:
             for name in self.collection_entity_names:
-                if name not in self.definitions:
+                if name not in self.uri_map:
                     sys.exit('error: must define entity %s' % name)                
         rslt = {
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': {'x-oneOf': [self.global_definition_ref(name) for name in self.collection_entity_names]} if len(self.collection_entity_names) > 1 else self.global_definition_ref(self.collection_entity_names[0]),
+                    'schema': {'x-oneOf': [json_ref(self.swagger_uri_map[name]) for name in self.collection_entity_names]} if len(self.collection_entity_names) > 1 else json_ref(self.swagger_uri_map[self.collection_entity_names[0]]),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
@@ -663,8 +666,7 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-        entity_spec = self.rapier_spec['entities'][self.collection_entity_names[0]]
-        query_parameters = [param for entity_name in self.collection_entity_names for param in self.rapier_spec['entities'][entity_name].get('query_parameters',[])] 
+        query_parameters = [param for entity_name in self.collection_entity_names for param in self.uri_map[entity_name].get('query_parameters',[])] 
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
             rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
@@ -1022,5 +1024,8 @@ def get_param_name(input_string):
         close_brace_offset = -1
     return param, close_brace_offset + 1
                 
+def json_ref(key):
+    return {'$ref': key}
+        
 if __name__ == "__main__":
     main(sys.argv)

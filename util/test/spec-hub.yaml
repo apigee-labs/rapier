@@ -4,7 +4,7 @@ consumes: application/json
 produces: application/json text/html
 conventions:
   multi_valued_relationships:
-    entity: Collection Page
+    entities: '#/entities/Collection #/entities/Page'
   patch_consumes: application/merge-patch+json
   error_response:
     type: string

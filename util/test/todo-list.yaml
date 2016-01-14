@@ -2,7 +2,7 @@ title: Todo List API
 version: "0.1"
 conventions:
   multi_valued_relationships: 
-    entity: Collection
+    entities: '#/entities/Collection'
   selector_location: path-segment
 entities:
   Collection:
