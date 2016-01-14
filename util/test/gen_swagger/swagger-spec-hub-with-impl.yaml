@@ -109,6 +109,11 @@ definitions:
         format: uri
         readOnly: true
         type: string
+      things:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        readOnly: true
+        type: string
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'

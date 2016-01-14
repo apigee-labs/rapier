@@ -127,6 +127,17 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Folder'
             - $ref: '#/definitions/Spec'
+      things:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:n
+          type:
+            oneOf:
+            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Folder'
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'

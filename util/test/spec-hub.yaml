@@ -232,3 +232,19 @@ relationships:
       readOnly: True
     other_end:
       entity: '#Page'
+  hub-to-spec:
+    one_end:
+      entity: '#Hub'
+      property: things
+      multiplicity: 0:n
+    other_end:
+      entity: '#Spec'
+  hub-to-folder:
+    one_end:
+      entity: '#Hub'
+      property: things
+      multiplicity: 0:n
+    other_end:
+      entity: '#Folder'
+      
+      
