@@ -92,8 +92,11 @@ class SwaggerGenerator(object):
             entities = spec['entities']
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
-            self.uri_map.update({entity['id']: entity for name, entity in entities.iteritems() if 'id' in entity})
+            self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
+            self.swagger_uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: '#/definitions/%s' % name for name, entity in entities.iteritems()})
             self.swagger['definitions'] = self.definitions
+            for entity_name, entity_spec in entities.iteritems():
+                entity_spec['name'] = entity_name
             for entity_name, entity_spec in entities.iteritems():
                 definition = PresortedOrderedDict()
                 if 'allOf' in entity_spec:
@@ -114,8 +117,8 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        self.swagger['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, entity_name))
-                rel_property_specs = self.get_relationship_property_specs(entity_name)
+                        self.swagger['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, '#%s' % entity_name))
+                rel_property_specs = self.get_relationship_property_specs(entity_spec)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
                     rel_prop_spec_dict = {}
@@ -136,7 +139,7 @@ class SwaggerGenerator(object):
                     entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
                     self.swagger_paths[implementation_spec_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
-                    entity_url_property_spec = EntityURLSpec(entity_name)
+                    entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                     self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path_string, self) for query_path_string in as_list(entity_spec['query_paths'])]
@@ -154,7 +157,7 @@ class SwaggerGenerator(object):
                                 self.add_query_paths(leftover_query_paths, baseURL_spec, rel_property_spec_stack, rel_property_specs)
                             query_paths = leftover_query_paths
                         else:
-                            entity_url_property_spec = EntityURLSpec(entity_name)
+                            entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                             self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % query_paths)  
@@ -169,9 +172,10 @@ class SwaggerGenerator(object):
             result = {
                 'description': 
                         'URL of a Collection of %s' % 
-                            (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % rel_prop_specs[0].target_entity) 
+                            (' and '.join(['%ss' % rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_name(rel_prop_specs[0].target_entity)) 
                     if rel_prop_specs[0].is_multivalued() else 
-                        'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity))
+                        'URL of %s' % ('%s %s' % (article(self_resolve_name(rel_prop_specs[0].target_entity)), ' or '.join([self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs])) \
+                        if len(rel_prop_specs) > 1 else articled(self.resolve_name(rel_prop_specs[0].target_entity)))
                     ,
                 'type': 'string',
                 'format': 'uri',
@@ -191,7 +195,8 @@ class SwaggerGenerator(object):
         else:
             result = {
                 'description': 
-                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_prop_specs])) if len(rel_prop_specs) > 1 else articled(rel_prop_specs[0].target_entity)),
+                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs])) \
+                    if len(rel_prop_specs) > 1 else articled(self.resolve_name(rel_prop_specs[0].target_entity))),
                 'type': 'string',
                 'format': 'uri',
                 }
@@ -200,14 +205,14 @@ class SwaggerGenerator(object):
         if not self.suppress_annotations:
             result['x-rapier-relationship'] = {
                 'type': {
-                    'oneOf': [{'$ref': '#/definitions/%s' % rel_prop_spec.target_entity} for rel_prop_spec in rel_prop_specs]
+                    'oneOf': [self.global_definition_ref(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]
                     } if len(rel_prop_specs) > 1 else
-                    {'$ref': '#/definitions/%s' % rel_prop_specs[0].target_entity },
+                    self.global_definition_ref(rel_prop_specs[0].target_entity),
                 'multiplicity': rel_prop_specs[0].get_multiplicity()
                 }
         return result
         
-    def get_relationship_property_specs(self, entity_name):
+    def get_relationship_property_specs(self, entity_spec):
         spec = self.rapier_spec
         result = []
         def add_type(one_end, other_end):
@@ -234,9 +239,9 @@ class SwaggerGenerator(object):
         if 'relationships' in spec:
             relationships = spec['relationships']
             for relationship in relationships.itervalues() if isinstance(relationships, dict) else relationships:
-                if relationship['one_end']['entity'] == entity_name:
+                if self.resolve(relationship['one_end']['entity']) == entity_spec:
                     add_type(relationship['one_end'], relationship['other_end'])
-                if relationship['other_end']['entity'] == entity_name:
+                if self.resolve(relationship['other_end']['entity']) == entity_spec:
                     add_type(relationship['other_end'], relationship['one_end'])
         return result
         
@@ -244,8 +249,8 @@ class SwaggerGenerator(object):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity = rel_property_spec.target_entity
-        entity_spec = rapier_spec['entities'][target_entity]
-        rel_property_specs = self.get_relationship_property_specs(target_entity)
+        entity_spec = self.resolve(target_entity)
+        rel_property_specs = self.get_relationship_property_specs(entity_spec)
         for rel_spec in rel_property_specs:
             if rel_spec not in rel_property_spec_stack:
                 rel_property_spec_stack.append(rel_spec)
@@ -271,14 +276,14 @@ class SwaggerGenerator(object):
                     paths[path] = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                     
     def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
-        entity_name = rel_property_spec_stack[-1].target_entity if rel_property_spec_stack else prefix.target_entity
-        entity_spec = self.rapier_spec['entities'][entity_name]
+        entity_uri = rel_property_spec_stack[-1].target_entity if rel_property_spec_stack else prefix.target_entity
+        entity_spec = self.resolve(entity_uri)
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
         structured = 'type' not in entity_spec
         response_200 = {
-            'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_name)
+            'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_uri)
             }
         if len(rel_property_specs) > 1:
             response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
@@ -296,7 +301,7 @@ class SwaggerGenerator(object):
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = {
-                'description': 'Retrieve %s' % articled(entity_name),
+                'description': 'Retrieve %s' % articled(self.resolve_name(entity_uri)),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
                     '200': response_200, 
@@ -316,15 +321,15 @@ class SwaggerGenerator(object):
                 update_verb = 'patch'
                 description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
-                body_desciption =  'The subset of properties of the %s being updated' % entity_name
+                body_desciption =  'The subset of properties of the %s being updated' % self.resolve_name(entity_uri)
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
-                body_desciption =  'The representation of the %s being replaced' % entity_name
-            schema = self.global_definition_ref(entity_name)
-            description = description % articled(entity_name)
+                body_desciption =  'The representation of the %s being replaced' % self.resolve_name(entity_uri)
+            schema = self.global_definition_ref(entity_uri)
+            description = description % articled(self.resolve_name(entity_uri))
             path_spec[update_verb] = {
                 'description': description,
                 'parameters': [
@@ -347,12 +352,12 @@ class SwaggerGenerator(object):
                 path_spec['patch']['consumes'] = self.patch_consumes
             else:
                 path_spec['put']['responses']['201'] = {
-                    'description': 'Created new %s' % entity_name,
-                    'schema': self.global_definition_ref(entity_name),
+                    'description': 'Created new %s' % entity_uri,
+                    'schema': self.global_definition_ref(entity_uri),
                     'headers': {
                         'Location': {
                             'type': 'string',
-                            'description': 'perma-link URL of newly-created %s'  % entity_name
+                            'description': 'perma-link URL of newly-created %s'  % self.resolve_name(entity_uri)
                             }
                         }
                     }
@@ -364,7 +369,7 @@ class SwaggerGenerator(object):
         well_known = entity_spec.get('well_known_URLs')
         if not well_known and not immutable:        
             path_spec['delete'] = {
-                'description': 'Delete %s %s' % ('an' if entity_name[0].lower() in 'aeiou' else 'a', entity_name),
+                'description': 'Delete %s' % articled(self.resolve_name(entity_uri)),
                 'responses': {
                     '200': response_200
                     }
@@ -394,8 +399,8 @@ class SwaggerGenerator(object):
     def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
         relationship_name = rel_property_spec.property_name
-        entity_name = rel_property_spec.target_entity
-        entity_spec = self.rapier_spec['entities'][entity_name]
+        entity_uri = rel_property_spec.target_entity
+        entity_spec = self.resolve(entity_uri)
         path_spec = PresortedOrderedDict()
         if prefix.is_private():
             path_spec['x-private'] = True            
@@ -409,22 +414,22 @@ class SwaggerGenerator(object):
         if len(rel_property_specs) > 1:
             schema = {}
             schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
-            i201_description = 'Created new %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
-            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([spec.target_entity for spec in rel_property_specs])
-            body_desciption =  'The representation of the new %s being created' % ' or '.join([spec.target_entity for spec in rel_property_specs])
+            i201_description = 'Created new %s' % ' or '.join([self.resolve_name(spec.target_entity) for spec in rel_property_specs])
+            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_name(spec.target_entity) for spec in rel_property_specs])
+            body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_name(spec.target_entity) for spec in rel_property_specs])
         else:    
-            schema = self.global_definition_ref(entity_name)
-            i201_description = 'Created new %s' % entity_name
-            location_desciption = 'perma-link URL of newly-created %s'  % entity_name
-            body_desciption =  'The representation of the new %s being created' % entity_name 
+            schema = self.global_definition_ref(entity_uri)
+            i201_description = 'Created new %s' % self.resolve_name(entity_uri)
+            location_desciption = 'perma-link URL of newly-created %s'  % self.resolve_name(entity_uri)
+            body_desciption =  'The representation of the new %s being created' % self.resolve_name(entity_uri) 
         if not rel_property_spec.readonly:
             if len(consumes_entities) > 1:
                 post_schema = {}
                 post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
-                description = 'Create a new %s' % ' or '.join([rel_prop_spec.target_entity for rel_prop_spec in rel_property_specs])
+                description = 'Create a new %s' % ' or '.join([self.resolve_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_property_specs])
             else:
-                post_schema = self.global_definition_ref(entity_name)
-                description = 'Create a new %s' % entity_name
+                post_schema = self.global_definition_ref(entity_uri)
+                description = 'Create a new %s' % self.resolve_name(entity_uri)
             path_spec['post'] = {
                 'description': description,
                 'parameters': [
@@ -547,7 +552,7 @@ class SwaggerGenerator(object):
         return {'$ref': '#/responses/%s' % key}
 
     def global_definition_ref(self, key):
-        return {'$ref': '#/definitions/%s' % key}
+        return {'$ref': self.swagger_uri_map[key]}
         
     def build_parameters(self, prefix, query_path):
         result = []
@@ -666,7 +671,7 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-        query_parameters = [param for entity_name in self.collection_entity_names for param in self.uri_map[entity_name].get('query_parameters',[])] 
+        query_parameters = [param for entity_uri in self.collection_entity_names for param in self.uri_map[entity_uri].get('query_parameters',[])] 
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
             rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
@@ -713,15 +718,12 @@ class SwaggerGenerator(object):
                 'type': 'string'
                 }
             }
-    
-    def build_error_definition(self):
-        return {
-            'properties': {
-                'message': {
-                    'type': 'string'
-                    }
-                }
-            }
+                
+    def resolve(self, uri):
+        return self.uri_map[uri]
+
+    def resolve_name(self, uri):
+        return self.uri_map[uri]['name']
 
 class SegmentSpec(object):
             
@@ -737,7 +739,7 @@ class SegmentSpec(object):
         return self.__dict__.hash()
 
     def __str__(self):
-        return self.__dict__.str()
+        return 'SegmentSpec(%s)' % self.__dict__.__str__()
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
@@ -950,19 +952,20 @@ class ImplementationPathSpec(PathPrefix):
 
 class EntityURLSpec(PathPrefix):
     
-    def __init__(self, target_entity):
+    def __init__(self, target_entity, swagger_generator):
         self.target_entity = target_entity
+        self.swagger_generator = swagger_generator
 
     def path_segment(self, select_one_of_many = False):
-        return '{%s_URL}' % self.target_entity
+        return '{%s_URL}' % self.swagger_generator.resolve_name(self.target_entity)
 
     def build_param(self):
         return {
-            'name': '%s_URL' % self.target_entity,
+            'name': '%s_URL' % self.swagger_generator.resolve_name(self.target_entity),
             'in': 'URL',
             'type': 'string',
             'description':
-                "The URL of %s entity" % articled(self.target_entity),
+                "The URL of %s entity" % articled(self.swagger_generator.resolve_name(self.target_entity)),
             'required': True
             }
             
