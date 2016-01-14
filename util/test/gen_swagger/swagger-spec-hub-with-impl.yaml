@@ -353,18 +353,6 @@ paths:
     get:
       parameters:
       - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         name: orderby
         type: string
       - enum:
@@ -374,6 +362,18 @@ paths:
         name: direction
         required: false
         type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
       responses:
         '200':
           description: description
@@ -382,7 +382,9 @@ paths:
               description: perma-link URL of collection
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            x-oneOf:
+            - $ref: '#/definitions/Collection'
+            - $ref: '#/definitions/Page'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -569,18 +571,6 @@ paths:
     get:
       parameters:
       - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         name: orderby
         type: string
       - enum:
@@ -590,6 +580,18 @@ paths:
         name: direction
         required: false
         type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
       responses:
         '200':
           description: description
@@ -598,7 +600,9 @@ paths:
               description: perma-link URL of collection
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            x-oneOf:
+            - $ref: '#/definitions/Collection'
+            - $ref: '#/definitions/Page'
         '303':
           $ref: '#/responses/303'
         '401':

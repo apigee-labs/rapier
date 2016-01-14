@@ -44,7 +44,7 @@ class SwaggerGenerator(object):
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
         if 'multi_valued_relationships' in self.conventions:
-            self.collection_entity_name = self.conventions['multi_valued_relationships']['entity']
+            self.collection_entity_names = as_list(self.conventions['multi_valued_relationships']['entity'])
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
                 sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
@@ -637,13 +637,17 @@ class SwaggerGenerator(object):
             }
         
     def build_collection_get(self):
-        if not hasattr(self, 'collection_entity_name') or self.collection_entity_name not in self.definitions:
-            sys.exit('error: must define entity for %s' % (self.collection_entity_name if hasattr(self, 'collection_entity_name') else 'multi-valued relationships'))
+        if not hasattr(self, 'collection_entity_names'):
+            sys.exit('error: must define value for multi-valued relationships')
+        else:
+            for name in self.collection_entity_names:
+                if name not in self.definitions:
+                    sys.exit('error: must define entity %s' % name)                
         rslt = {
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': self.global_definition_ref(self.collection_entity_name),
+                    'schema': {'x-oneOf': [self.global_definition_ref(name) for name in self.collection_entity_names]} if len(self.collection_entity_names) > 1 else self.global_definition_ref(self.collection_entity_names[0]),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
@@ -659,8 +663,9 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-        entity_spec = self.rapier_spec['entities'][self.collection_entity_name]
-        query_parameters = entity_spec.get('query_parameters') 
+        entity_spec = self.rapier_spec['entities'][self.collection_entity_names[0]]
+        query_parameters = [param for entity_name in self.collection_entity_names for param in self.rapier_spec['entities'][entity_name].get('query_parameters',[])] 
+        query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
             rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
         return rslt        
