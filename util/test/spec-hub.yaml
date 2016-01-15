@@ -113,7 +113,7 @@ entities:
         type: string
         enum: [Hub]
     well_known_URLs: /
-    query_paths: [myHub, sharedWithMe]
+    query_paths: [myHub, sharedWithMe, things]
     readOnly: true
   Folder:
     allOf:
