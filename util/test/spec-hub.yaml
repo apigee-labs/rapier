@@ -113,15 +113,22 @@ entities:
         type: string
         enum: [Hub]
     well_known_URLs: /
-    query_paths: [myHub, sharedWithMe, things]
+    query_paths: 
+    - myHub
+    - sharedWithMe
+    - things
+    - segments: Zmxk;{implementation_key}
+      discriminator_separator: "-"
+    - segments: Zmxk;{implementation_key}/contents
+      discriminator_separator: "-"
+    - segments: c3Bj;{implementation_key}
+      discriminator_separator: "-"
+    - segments: c3Bj;{implementation_key}/content
+      discriminator_separator: "-"
     readOnly: true
   Folder:
     allOf:
     - $ref: '#/entities/PersistentResource'
-    implementation: 
-      path: /Zmxk-
-      type: integer
-      name: implementation_key
     query_paths: [contents]
     properties:
       kind:
@@ -138,14 +145,13 @@ entities:
               type: string
             action:
               type: string
+      implementation_key:
+        implementation_private: true
+        type: integer  
   Spec:
     allOf:
     - $ref: '#/entities/PersistentResource'
     query_paths: [content]
-    implementation: 
-      path: /c3Bj-
-      type: integer
-      name: implementation_key
     properties:
       kind:
         type: string
@@ -161,6 +167,9 @@ entities:
               type: string
             action:
               type: string
+      implementation_key:
+        implementation_private: true
+        type: integer  
   Content:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
@@ -239,12 +248,26 @@ relationships:
       multiplicity: 0:n
     other_end:
       entity: '#Spec'
-  hub-to-folder:
+  hub-to-things:
     one_end:
       entity: '#Hub'
       property: things
       multiplicity: 0:n
     other_end:
       entity: '#Folder'
-      
-      
+  hub-to-folders:
+    one_end:
+      implementation_private: true
+      entity: '#Hub'
+      property: Zmxk
+      multiplicity: 0:n
+    other_end:
+      entity: '#Folder'
+  hub-to-specs:
+    one_end:
+      implementation_private: true
+      entity: '#Hub'
+      property: c3Bj
+      multiplicity: 0:n
+    other_end:
+      entity: '#Spec'

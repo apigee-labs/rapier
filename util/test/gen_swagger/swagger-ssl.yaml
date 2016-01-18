@@ -315,258 +315,6 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    parameters:
-    - in: path
-      name: org
-      required: true
-      type: string
-    - in: path
-      name: env
-      required: true
-      type: string
-    - in: path
-      name: name
-      required: true
-      type: string
-    - in: path
-      name: name_1
-      required: true
-      type: string
-    get:
-      description: Retrieve a Certificate
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Certificate'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    parameters:
-    - in: path
-      name: org
-      required: true
-      type: string
-    - in: path
-      name: env
-      required: true
-      type: string
-    - in: path
-      name: name
-      required: true
-      type: string
-    - in: path
-      name: name_1
-      required: true
-      type: string
-    get:
-      description: Retrieve a CSR
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/CSR'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    parameters:
-    - in: path
-      name: org
-      required: true
-      type: string
-    - in: path
-      name: env
-      required: true
-      type: string
-    - in: path
-      name: name
-      required: true
-      type: string
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      consumes:
-      - multi-part/form-data
-      - application/json
-      description: Create a new Alias
-      parameters:
-      - description: The representation of the new Alias being created
-        in: body
-        name: body
-        schema:
-          x-oneOf:
-          - $ref: '#/definitions/Pkcs12Alias'
-          - $ref: '#/definitions/KeyCertFileAlias'
-          - $ref: '#/definitions/KeyCertJarAlias'
-          - $ref: '#/definitions/SelfSignedCertAlias'
-      responses:
-        '201':
-          description: Created new Alias
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Alias
-              type: string
-          schema:
-            $ref: '#/definitions/Alias'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
   /v1/o/{org}/e/{env}/keystores:
     parameters:
     - in: path
@@ -757,6 +505,258 @@ paths:
             $ref: '#/definitions/Keystore'
         '400':
           $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases:
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      consumes:
+      - multi-part/form-data
+      - application/json
+      description: Create a new Alias
+      parameters:
+      - description: The representation of the new Alias being created
+        in: body
+        name: body
+        schema:
+          x-oneOf:
+          - $ref: '#/definitions/Pkcs12Alias'
+          - $ref: '#/definitions/KeyCertFileAlias'
+          - $ref: '#/definitions/KeyCertJarAlias'
+          - $ref: '#/definitions/SelfSignedCertAlias'
+      responses:
+        '201':
+          description: Created new Alias
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Alias
+              type: string
+          schema:
+            $ref: '#/definitions/Alias'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    get:
+      description: Retrieve a Certificate
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Certificate'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    get:
+      description: Retrieve a CSR
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CSR'
         '401':
           $ref: '#/responses/401'
         '403':
