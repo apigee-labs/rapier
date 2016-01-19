@@ -262,7 +262,7 @@ class SwaggerGenerator(object):
                                 entity_uri, 
                                 target_entity_uri, 
                                 relationship.get('multiplicity', '1').split(':')[-1], 
-                                relationship.get('implementation_private', False), 
+                                property.get('implementation_private', False), 
                                 relationship.get('collection_resource'), 
                                 relationship.get('consumes'), 
                                 relationship.get('readOnly')) \
@@ -272,7 +272,7 @@ class SwaggerGenerator(object):
                                 entity_uri, 
                                 target_entity_uri, 
                                 relationship.get('multiplicity', '1').split(':')[0], 
-                                relationship.get('implementation_private', False), 
+                                property.get('implementation_private', False), 
                                 relationship.get('readOnly'))
                         p_spec.from_property = True
                         result.append(p_spec)            

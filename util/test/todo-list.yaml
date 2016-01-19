@@ -22,9 +22,9 @@ entities:
         type: string
         format: uri
         x-rapier-relationship:
-            entities: '#Item'
-            multiplicity: O:n
-            multi_valued_representations: '#Collection'
+          entities: '#Item'
+          multiplicity: O:n
+          multi_valued_representations: '#Collection'
   Item:
     properties:
       self:

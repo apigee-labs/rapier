@@ -93,6 +93,18 @@ entities:
       collection:
         type: string
         format: uri
+      next_page:
+        type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: True
+      previous_page:
+        type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: True
     query_parameters:
     - name: properties
       items:
@@ -112,6 +124,43 @@ entities:
       kind:
         type: string
         enum: [Hub]
+      myHub:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Folder'
+      sharedWithMe:
+        description: URL of a Collection of Folders and Specs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Folder #Spec'
+          multiplicity: O:n
+          readOnly: true
+      things:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        type: string        
+        x-rapier-relationship:
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+      Zmxk:
+        implementation_private: true
+        description: URL of a Collection of Folders
+        format: uri
+        type: string        
+        x-rapier-relationship:
+          entities: '#Folder'
+          multiplicity: O:n
+      c3Bj:
+        implementation_private: true
+        description: URL of a Collection of Specs
+        format: uri
+        type: string        
+        x-rapier-relationship:
+          entities: '#Spec'
+          multiplicity: O:n
     well_known_URLs: /
     query_paths: 
     - myHub
@@ -131,6 +180,20 @@ entities:
     - $ref: '#/entities/PersistentResource'
     query_paths: [contents]
     properties:
+      contents:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Folder'
       kind:
         type: string
         enum: [Folder]
@@ -153,6 +216,18 @@ entities:
     - $ref: '#/entities/PersistentResource'
     query_paths: [content]
     properties:
+      content:
+        description: URL of a Content
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Content'
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Folder'
       kind:
         type: string
         enum: [Spec]
@@ -174,100 +249,3 @@ entities:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
     produces: application/x-yaml text/yaml text/html text/plain
-relationships:
-  hub-to-my-folder:
-    one_end:
-      entity: '#Hub'
-      property: myHub
-      multiplicity: '1:1'
-    other_end:
-      entity: '#Folder'
-  hub-to-shared-folder:
-    one_end:
-      entity: '#Hub'
-      property: sharedWithMe
-      multiplicity: 0:n
-      readOnly: true
-    other_end:
-      entity: '#Folder'
-  hub-to-shared-spec:
-    one_end:
-      entity: '#Hub'
-      property: sharedWithMe
-      multiplicity: 0:n
-      readOnly: true
-    other_end:
-      entity: '#Spec'
-  folder-to-spec:
-    one_end:
-      entity: '#Folder'
-      property: contents
-      multiplicity: 0:n
-    other_end:
-      entity: '#Spec'
-      property: folder
-      multiplicity: 0:1
-      collection_resource: false
-  folder-to-folder:
-    one_end:
-      entity: '#Folder'
-      property: contents
-      multiplicity: 0:n
-    other_end:
-      entity: '#Folder'
-      property: folder
-      multiplicity: 0:1
-      collection_resource: false
-  spec-to-content:
-    one_end:
-      entity: '#Spec'
-      property: content
-      multiplicity: 0:1
-    other_end:
-      entity: '#Content'
-  page-to-next-page:
-    one_end:
-      entity: '#Page'
-      property: next_page
-      multiplicity: 0:1
-      readOnly: True
-    other_end:
-      entity: '#Page'
-  page-to-previous-page:
-    one_end:
-      entity: '#Page'
-      property: previous_page
-      multiplicity: 0:1
-      readOnly: True
-    other_end:
-      entity: '#Page'
-  hub-to-spec:
-    one_end:
-      entity: '#Hub'
-      property: things
-      multiplicity: 0:n
-    other_end:
-      entity: '#Spec'
-  hub-to-things:
-    one_end:
-      entity: '#Hub'
-      property: things
-      multiplicity: 0:n
-    other_end:
-      entity: '#Folder'
-  hub-to-folders:
-    one_end:
-      implementation_private: true
-      entity: '#Hub'
-      property: Zmxk
-      multiplicity: 0:n
-    other_end:
-      entity: '#Folder'
-  hub-to-specs:
-    one_end:
-      implementation_private: true
-      entity: '#Hub'
-      property: c3Bj
-      multiplicity: 0:n
-    other_end:
-      entity: '#Spec'

@@ -82,23 +82,19 @@ definitions:
         - Page
         readOnly: true
       next_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
         type: string
+        format: uri
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Page'
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
       previous_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
         type: string
+        format: uri
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Page'
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -113,31 +109,25 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: '1:1'
-          type:
-            $ref: '#/definitions/Folder'
+          entities: '#Folder'
+        readOnly: true
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Folder'
-            - $ref: '#/definitions/Spec'
+          entities: '#Folder #Spec'
+          multiplicity: O:n
+          readOnly: true
+        readOnly: true
       things:
         description: URL of a Collection of Specs and Folders
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+        readOnly: true
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -148,19 +138,14 @@ definitions:
         readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
+          entities: '#Spec #Folder'
+          multiplicity: O:n
       folder:
         description: URL of a Folder
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Folder'
+          entities: '#Folder'
       kind:
         type: string
         enum:
@@ -185,17 +170,13 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Content'
+          entities: '#Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Folder'
+          entities: '#Folder'
       kind:
         type: string
         enum:

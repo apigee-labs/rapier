@@ -82,15 +82,19 @@ definitions:
         - Page
         readOnly: true
       next_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
         type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
       previous_page:
-        description: URL of a Page
-        format: uri
-        readOnly: true
         type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -104,16 +108,26 @@ definitions:
         description: URL of a Folder
         format: uri
         type: string
+        x-rapier-relationship:
+          entities: '#Folder'
+        readOnly: true
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
-        readOnly: true
         type: string
+        x-rapier-relationship:
+          entities: '#Folder #Spec'
+          multiplicity: O:n
+          readOnly: true
+        readOnly: true
       things:
         description: URL of a Collection of Specs and Folders
         format: uri
-        readOnly: true
         type: string
+        x-rapier-relationship:
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+        readOnly: true
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -123,10 +137,15 @@ definitions:
         format: uri
         readOnly: true
         type: string
+        x-rapier-relationship:
+          entities: '#Spec #Folder'
+          multiplicity: O:n
       folder:
         description: URL of a Folder
         format: uri
         type: string
+        x-rapier-relationship:
+          entities: '#Folder'
       kind:
         type: string
         enum:
@@ -150,10 +169,14 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
+        x-rapier-relationship:
+          entities: '#Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
+        x-rapier-relationship:
+          entities: '#Folder'
       kind:
         type: string
         enum:
