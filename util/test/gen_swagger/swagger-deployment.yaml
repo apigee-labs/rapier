@@ -25,12 +25,14 @@ definitions:
       comprises:
         format: uri
         type: string
+        readOnly: true
         x-rapier-relationship:
           multiplicity: 0:n
           entities: '#Microservice'
       environments:
         format: uri
         type: string
+        readOnly: true
         x-rapier-relationship:
           multiplicity: 0:n
           entities: '#Environment'
@@ -63,6 +65,7 @@ definitions:
       has:
         format: uri
         type: string
+        reradOnly: true
         x-rapier-relationship:
           multiplicity: 0:n
           entities: '#Revision'
