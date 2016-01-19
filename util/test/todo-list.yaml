@@ -19,8 +19,9 @@ entities:
     readOnly: true
     properties:
       items:
-        type: uri
-        relationship:
+        type: string
+        format: uri
+        x-rapier-relationship:
             entities: '#Item'
             multiplicity: O:n
             multi_valued_representations: '#Collection'

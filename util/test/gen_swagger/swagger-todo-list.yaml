@@ -18,14 +18,13 @@ definitions:
   TodoList:
     properties:
       items:
-        description: URL of a Collection of Items
-        format: uri
-        readOnly: true
         type: string
+        format: uri
         x-rapier-relationship:
-          multiplicity: n
-          type:
-            $ref: '#/definitions/Item'
+          entities: '#Item'
+          multiplicity: O:n
+          multi_valued_representations: '#Collection'
+        readOnly: true
   Item:
     properties:
       description:

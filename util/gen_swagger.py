@@ -131,7 +131,7 @@ class SwaggerGenerator(object):
                         else:
                             rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
                     for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if not rel_prop_specs[0].implementation_private:
+                        if not rel_prop_specs[0].implementation_private and rel_prop_name not in definition.get('properties', {}):
                             definition.setdefault('properties', dict())[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                     if 'type' in entity_spec:
                         definition['type'] = entity_spec['type']
@@ -252,8 +252,8 @@ class SwaggerGenerator(object):
                     add_type(relationship['other_end'], relationship['one_end'])
         if 'properties' in entity_spec:
             for prop_name, property in entity_spec['properties'].iteritems():
-                if 'relationship' in property:
-                    relationship = property['relationship']
+                if 'x-rapier-relationship' in property:
+                    relationship = property['x-rapier-relationship']
                     for target_entity_uri in as_list(relationship['entities']):
                         p_spec = \
                             RelMVPropertySpec(
@@ -871,7 +871,7 @@ class RelMVPropertySpec(SegmentSpec):
         return self.implementation_private
         
     def is_collection_resource(self):
-        return self.collection_resource
+        return not not self.collection_resource
             
     def get_multiplicity(self):
         return self.multiplicity
