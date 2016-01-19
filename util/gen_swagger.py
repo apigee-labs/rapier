@@ -160,39 +160,6 @@ class SwaggerGenerator(object):
     def get_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
         result = []
-        def add_type(one_end, other_end):
-            def get_multiplicity(rel_property_spec):
-                multiplicity = rel_property_spec.get('multiplicity', '1')
-                return multiplicity.split(':')[-1]
-            if 'property' in one_end:
-                p_spec = \
-                    RelMVPropertySpec(
-                        self.conventions, 
-                        one_end['property'], 
-                        one_end['entity'], 
-                        other_end['entity'], 
-                        one_end.get('multiplicity'), 
-                        one_end.get('implementation_private'), 
-                        one_end.get('collection_resource'), 
-                        one_end.get('consumes'), 
-                        one_end.get('readOnly')) \
-                if get_multiplicity(one_end) == 'n' else \
-                    RelSVPropertySpec(self.conventions, 
-                        one_end['property'], 
-                        one_end['entity'], 
-                        other_end['entity'], 
-                        one_end.get('multiplicity'), 
-                        one_end.get('implementation_private'), 
-                        one_end.get('readOnly'))
-                result.append(p_spec)
-           
-        if 'relationships' in spec:
-            relationships = spec['relationships']
-            for relationship in relationships.itervalues() if isinstance(relationships, dict) else relationships:
-                if self.resolve_entity(relationship['one_end']['entity']) == entity_spec:
-                    add_type(relationship['one_end'], relationship['other_end'])
-                if self.resolve_entity(relationship['other_end']['entity']) == entity_spec:
-                    add_type(relationship['other_end'], relationship['one_end'])
         if 'properties' in entity_spec:
             for prop_name, property in entity_spec['properties'].iteritems():
                 if 'x-rapier-relationship' in property:
@@ -637,7 +604,8 @@ class SwaggerGenerator(object):
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': {'x-oneOf': [json_ref(self.swagger_uri_map[name]) for name in self.collection_entity_names]} if len(self.collection_entity_names) > 1 else json_ref(self.swagger_uri_map[self.collection_entity_names[0]]),
+                    'schema': {'x-oneOf': [json_ref(self.swagger_uri_map[name]) for name in self.collection_entity_names]} \
+                        if len(self.collection_entity_names) > 1 else json_ref(self.swagger_uri_map[self.collection_entity_names[0]]),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
