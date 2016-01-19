@@ -54,6 +54,7 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       dogs:
+        description: URL of a Collection of Dogs
         format: uri
         type: string
         x-rapier-relationship:
@@ -61,6 +62,7 @@ definitions:
           multiplicity: O:n
         readOnly: true
       people:
+        description: URL of a Collection of Persons
         format: uri
         type: string
         x-rapier-relationship:
