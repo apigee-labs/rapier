@@ -12,10 +12,12 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       keystores:
-        description: URL of a Collection of Keystores
         format: uri
-        readOnly: true
         type: string
+        readOnly: true
+        x-rapier-relationship:
+          entities: '#Keystore'
+          multiplicity: 0:n
       kind:
         type: string
         enum:
@@ -25,10 +27,15 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       aliases:
-        description: URL of a Collection of Aliass
         format: uri
-        readOnly: true
         type: string
+        readOnly: true
+        x-rapier-relationship:
+          entities: '#Alias'
+          multiplicity: 0:n
+          consumes:
+            multi-part/form-data: '#Pkcs12Alias #KeyCertFileAlias #KeyCertJarAlias'
+            application/json: '#SelfSignedCertAlias'
       kind:
         type: string
         enum:
@@ -40,9 +47,11 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       certificate:
-        description: URL of a Certificate
         format: uri
         type: string
+        x-rapier-relationship:
+          multiplicity: 0:1
+          entities: '#Certificate'
       certsInfo:
         readOnly: true
         type: array
@@ -59,10 +68,11 @@ definitions:
             subject:
               type: string
       csr:
-        description: URL of a CSR
         format: uri
-        readOnly: true
         type: string
+        x-rapier-relationship:
+          readOnly: true
+          entities: '#CSR'
       key:
         type: string
       kind:
@@ -72,10 +82,12 @@ definitions:
       name:
         type: string
       selfSignedCertificate:
-        description: URL of a Collection of SelfSignedCertAliass
         format: uri
-        readOnly: true
         type: string
+        readOnly: true
+        x-rapier-relationship:
+          multiplicity: 0:n
+          entities: '#SelfSignedCertAlias'
   Certificate: {}
   CSR: {}
   Pkcs12Alias:
