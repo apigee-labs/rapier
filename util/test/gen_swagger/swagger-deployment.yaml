@@ -23,89 +23,69 @@ definitions:
     - $ref: '#/definitions/Resource'
     properties:
       comprises:
-        description: URL of a Collection of Microservices
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Microservice'
+          entities: '#Microservice'
       environments:
-        description: URL of a Collection of Environments
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Environment'
+          entities: '#Environment'
   Environment:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       deploys:
-        description: URL of an Application
         format: uri
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Application'
+          entities: '#Application'
       hosts:
-        description: URL of a Collection of Deployments
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Deployment'
+          entities: '#Deployment'
   Microservice:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       belongsIn:
-        description: URL of an Application
         format: uri
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Application'
+          entities: '#Application'
       has:
-        description: URL of a Collection of Revisions
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Revision'
+          entities: '#Revision'
   Revision:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       revises:
-        description: URL of a Microservice
         format: uri
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Microservice'
+          entities: '#Microservice'
   Deployment:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       runsIn:
-        description: URL of an Environment
         format: uri
         type: string
         x-rapier-relationship:
           multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Environment'
+          entities: '#Environment'
   EnvironmentStartCommand:
     allOf:
     - $ref: '#/definitions/Resource'
