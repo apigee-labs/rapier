@@ -153,14 +153,12 @@ definitions:
             oneOf:
             - $ref: '#/definitions/Spec'
             - $ref: '#/definitions/Folder'
-      folders:
-        description: Array of URLs of Folders
-        items:
-          format: uri
-          type: string
-        type: array
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
         x-rapier-relationship:
-          multiplicity: 0:n
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Folder'
       kind:
@@ -190,14 +188,12 @@ definitions:
           multiplicity: 0:1
           type:
             $ref: '#/definitions/Content'
-      folders:
-        description: Array of URLs of Folders
-        items:
-          format: uri
-          type: string
-        type: array
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
         x-rapier-relationship:
-          multiplicity: 0:n
+          multiplicity: 0:1
           type:
             $ref: '#/definitions/Folder'
       kind:

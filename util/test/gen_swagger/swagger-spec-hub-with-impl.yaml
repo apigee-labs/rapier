@@ -123,12 +123,10 @@ definitions:
         format: uri
         readOnly: true
         type: string
-      folders:
-        description: Array of URLs of Folders
-        items:
-          format: uri
-          type: string
-        type: array
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
       kind:
         type: string
         enum:
@@ -152,12 +150,10 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
-      folders:
-        description: Array of URLs of Folders
-        items:
-          format: uri
-          type: string
-        type: array
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
       kind:
         type: string
         enum:
