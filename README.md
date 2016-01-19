@@ -66,7 +66,7 @@ title: Todo List API
 version: "0.1"
 conventions:
   multi_valued_relationships: 
-    entity: Collection
+    entities: '#Collection'
   selector_location: path-segment
 entities:
   Collection:
@@ -81,6 +81,13 @@ entities:
     well_known_URLs: /to-dos
     query_paths: [items, "items;{id}"]
     readOnly: true
+    properties:
+      items:
+        type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Item'
+          multiplicity: O:n
   Item:
     properties:
       self:
@@ -95,14 +102,6 @@ entities:
       due:
         type: string
         format: date-time
-relationships:
-  list-to-items:
-    one_end:
-      entity: TodoList
-      property: items
-      multiplicity: 0:n
-    other_end:
-      entity: Item
 ```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
@@ -165,7 +164,7 @@ title: DogTrackerAPI
 version: "0.1"
 conventions:
   multi_valued_relationships:
-    entity: Collection
+    entities: '#/entities/Collection'
 entities:
   Resource:
     abstract: true
@@ -213,6 +212,21 @@ entities:
   DogTracker:
     allOf:
     - $ref: '#/entities/PersistentResource'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog'
+          multiplicity: O:n
+      people:
+        description: URL of a Collection of Persons
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person'
+          multiplicity: O:n
     well_known_URLs: /
     query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
     readOnly: true
@@ -226,6 +240,11 @@ entities:
         type: string
       fur_color:
         type: string
+      owner:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person'
   Person:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -234,30 +253,12 @@ entities:
         type: string
       birth-date:
         type: string
-relationships:
-  tracker-to-dogs:
-    one_end:
-      entity: DogTracker
-      property: dogs
-      multiplicity: 0:n
-    other_end:
-      entity: Dog
-  tracker-to-people:
-    one_end:
-      entity: DogTracker
-      property: people
-      multiplicity: 0:n
-    other_end:
-      entity: Person
-  dogs-to-people:
-    one_end:
-      entity: Person
-      property: dogs
-      multiplicity: 0:n
-    other_end:
-      entity: Dog
-      property: owner
-      multiplicity: 0:1
+      dogs:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog'
+          multiplicity: O:n
 ```                
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection

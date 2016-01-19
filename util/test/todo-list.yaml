@@ -24,7 +24,6 @@ entities:
         x-rapier-relationship:
           entities: '#Item'
           multiplicity: O:n
-          multi_valued_representations: '#Collection'
   Item:
     properties:
       self:
