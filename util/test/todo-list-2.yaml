@@ -17,13 +17,6 @@ entities:
     well_known_URLs: /to-dos
     query_paths: [items, "items;{id}"]
     readOnly: true
-    properties:
-      items:
-        type: uri
-        relationship:
-            entities: '#Item'
-            multiplicity: O:n
-            multi_valued_representations: '#Collection'
   Item:
     properties:
       self:
@@ -38,3 +31,11 @@ entities:
       due:
         type: string
         format: date-time
+relationships:
+  list-to-items:
+    one_end:
+      entity: '#TodoList'
+      property: items
+      multiplicity: 0:n
+    other_end:
+      entity: '#Item'

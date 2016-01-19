@@ -23,7 +23,7 @@ definitions:
         readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: n
+          multiplicity: 0:n
           type:
             $ref: '#/definitions/Item'
   Item:

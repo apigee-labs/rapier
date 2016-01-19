@@ -4,3 +4,4 @@ ROOT_DIR=$( cd "$( dirname "$DIR/../../../../../" )" && pwd)
 cd $ROOT_DIR
 #echo $ROOT_DIR
 ./rapier/util/gen_swagger.py rapier/util/test/todo-list.yaml > rapier/util/test/gen_swagger/swagger-todo-list.yaml
+./rapier/util/gen_swagger.py rapier/util/test/todo-list-2.yaml > rapier/util/test/gen_swagger/swagger-todo-list-2.yaml

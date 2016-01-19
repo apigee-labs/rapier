@@ -120,7 +120,7 @@ class SwaggerGenerator(object):
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         self.swagger['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, '#%s' % entity_name))
-                rel_property_specs = self.get_relationship_property_specs(entity_spec)
+                rel_property_specs = self.get_relationship_property_specs('#%s' % entity_name, entity_spec)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
                     rel_prop_spec_dict = {}
@@ -214,10 +214,13 @@ class SwaggerGenerator(object):
                 }
         return result
         
-    def get_relationship_property_specs(self, entity_spec):
+    def get_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
         result = []
         def add_type(one_end, other_end):
+            def get_multiplicity(rel_property_spec):
+                multiplicity = rel_property_spec.get('multiplicity', '1')
+                return multiplicity.split(':')[-1]
             if 'property' in one_end:
                 p_spec = \
                     RelMVPropertySpec(
@@ -247,14 +250,40 @@ class SwaggerGenerator(object):
                     add_type(relationship['one_end'], relationship['other_end'])
                 if self.resolve_entity(relationship['other_end']['entity']) == entity_spec:
                     add_type(relationship['other_end'], relationship['one_end'])
+        if 'properties' in entity_spec:
+            for prop_name, property in entity_spec['properties'].iteritems():
+                if 'relationship' in property:
+                    relationship = property['relationship']
+                    for target_entity_uri in as_list(relationship['entities']):
+                        p_spec = \
+                            RelMVPropertySpec(
+                                self.conventions, 
+                                prop_name, 
+                                entity_uri, 
+                                target_entity_uri, 
+                                relationship.get('multiplicity', '1').split(':')[-1], 
+                                relationship.get('implementation_private', False), 
+                                relationship.get('collection_resource'), 
+                                relationship.get('consumes'), 
+                                relationship.get('readOnly')) \
+                        if relationship.get('multiplicity', '1').split(':')[-1] == 'n' else \
+                            RelSVPropertySpec(self.conventions, 
+                                prop_name, 
+                                entity_uri, 
+                                target_entity_uri, 
+                                relationship.get('multiplicity', '1').split(':')[0], 
+                                relationship.get('implementation_private', False), 
+                                relationship.get('readOnly'))
+                        p_spec.from_property = True
+                        result.append(p_spec)            
         return result
         
     def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
-        target_entity = rel_property_spec.target_entity
-        entity_spec = self.resolve_entity(target_entity)
-        rel_property_specs = self.get_relationship_property_specs(entity_spec)
+        target_entity_uri = rel_property_spec.target_entity
+        target_entity_spec = self.resolve_entity(target_entity_uri)
+        rel_property_specs = self.get_relationship_property_specs(target_entity_uri, target_entity_spec)
         for query_path in query_paths[:]:
             if query_path.matches(rel_property_spec_stack):
                 self.emit_query_path(prefix, query_path, rel_property_spec_stack, prev_rel_property_specs)
@@ -1001,11 +1030,7 @@ def as_list(value, separator = None):
         else:
             result = [value]
     return result
-    
-def get_multiplicity(rel_property_spec):
-    multiplicity = rel_property_spec.get('multiplicity')
-    return multiplicity.split(':')[-1] if multiplicity else 1
-    
+        
 def main(args):
     generator = SwaggerGenerator()
     try:
