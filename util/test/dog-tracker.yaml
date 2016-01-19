@@ -50,6 +50,21 @@ entities:
   DogTracker:
     allOf:
     - $ref: '#/entities/PersistentResource'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog'
+          multiplicity: O:n
+      people:
+        description: URL of a Collection of Persons
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person'
+          multiplicity: O:n
     well_known_URLs: /
     query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
     readOnly: true
@@ -63,6 +78,11 @@ entities:
         type: string
       fur_color:
         type: string
+      owner:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person'
   Person:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -71,27 +91,9 @@ entities:
         type: string
       birth-date:
         type: string
-relationships:
-  tracker-to-dogs:
-    one_end:
-      entity: '#DogTracker'
-      property: dogs
-      multiplicity: 0:n
-    other_end:
-      entity: '#Dog'
-  tracker-to-people:
-    one_end:
-      entity: '#DogTracker'
-      property: people
-      multiplicity: 0:n
-    other_end:
-      entity: '#Person'
-  dogs-to-people:
-    one_end:
-      entity: '#Person'
-      property: dogs
-      multiplicity: 0:n
-    other_end:
-      entity: '#Dog'
-      property: owner
-      multiplicity: 0:1
+      dogs:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog'
+          multiplicity: O:n

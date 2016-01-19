@@ -54,23 +54,19 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       dogs:
-        description: URL of a Collection of Dogs
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
+          entities: '#Dog'
+          multiplicity: O:n
+        readOnly: true
       people:
-        description: URL of a Collection of Persons
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Person'
+          entities: '#Person'
+          multiplicity: O:n
+        readOnly: true
   Dog:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -82,13 +78,10 @@ definitions:
       name:
         type: string
       owner:
-        description: URL of a Person
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            $ref: '#/definitions/Person'
+          entities: '#Person'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -96,14 +89,11 @@ definitions:
       birth-date:
         type: string
       dogs:
-        description: URL of a Collection of Dogs
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
+          entities: '#Dog'
+          multiplicity: O:n
       name:
         type: string
 paths:
