@@ -50,39 +50,35 @@ definitions:
       bicycles:
         description: URL of a Collection of Bicycles
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Bicycle'
+          entities: '#Bicycle'
+          multiplicity: O:n
+        readOnly: true
       dogs:
         description: URL of a Collection of Dogs
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Dog'
+          entities: '#Dog'
+          multiplicity: O:n
+        readOnly: true
       institutions:
         description: URL of a Collection of Institutions
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Institution'
+          entities: '#Institution'
+          multiplicity: O:n
+        readOnly: true
       people:
         description: URL of a Collection of Persons
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
-          multiplicity: 0:n
-          type:
-            $ref: '#/definitions/Person'
+          entities: '#Person'
+          multiplicity: O:n
+        readOnly: true
   Dog:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -98,11 +94,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            oneOf:
-            - $ref: '#/definitions/Person'
-            - $ref: '#/definitions/Institution'
+          entities: '#Person #Institution'
   Bicycle:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -114,11 +106,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multiplicity: 0:1
-          type:
-            oneOf:
-            - $ref: '#/definitions/Person'
-            - $ref: '#/definitions/Institution'
+          entities: '#Person #Institution'
       paint_color:
         type: string
       purchase_date:
@@ -134,14 +122,10 @@ definitions:
       possessions:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
+          entities: '#Dog #Bicycle'
           multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
   Institution:
     allOf:
     - $ref: '#/definitions/Entity'
@@ -149,15 +133,11 @@ definitions:
       assets:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
-        readOnly: true
         type: string
         x-rapier-relationship:
+          entities: '#Dog #Bicycle'
           multiplicity: 0:n
-          type:
-            oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
-      birth-date:
+      foundation-date:
         type: string
       name:
         type: string

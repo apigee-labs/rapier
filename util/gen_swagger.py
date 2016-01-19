@@ -275,7 +275,7 @@ class SwaggerGenerator(object):
                                 property.get('implementation_private', False), 
                                 relationship.get('readOnly'))
                         p_spec.from_property = True
-                        result.append(p_spec)            
+                        result.append(p_spec)
         return result
         
     def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):

@@ -45,6 +45,35 @@ entities:
   PropertyTracker:
     allOf:
     - $ref: '#/entities/Entity'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog'
+          multiplicity: O:n
+      people:
+        description: URL of a Collection of Persons
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person'
+          multiplicity: O:n
+      bicycles:
+        description: URL of a Collection of Bicycles
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Bicycle'
+          multiplicity: O:n
+      institutions:
+        description: URL of a Collection of Institutions
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Institution'
+          multiplicity: O:n
     well_known_URLs: /
     query_paths: 
     - dogs
@@ -70,6 +99,12 @@ entities:
         type: string
       fur_color:
         type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person #Institution'
   Bicycle:
     allOf:
     - $ref: '#/entities/Entity'
@@ -80,6 +115,12 @@ entities:
         type: string
       paint_color: 
         type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Person #Institution'
   Person:
     allOf:
     - $ref: '#/entities/Entity'
@@ -88,76 +129,25 @@ entities:
         type: string
       birth-date:
         type: string
+      possessions:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog #Bicycle'
+          multiplicity: 0:n
   Institution:
     allOf:
     - $ref: '#/entities/Entity'
     properties:
       name:
         type: string
-      birth-date:
+      foundation-date:
         type: string
-relationships:
-  tracker-to-dogs:
-    one_end:
-      entity: '#PropertyTracker'
-      property: dogs
-      multiplicity: 0:n
-    other_end:
-      entity: '#Dog'
-  tracker-to-people:
-    one_end:
-      entity: '#PropertyTracker'
-      property: people
-      multiplicity: 0:n
-    other_end:
-      entity: '#Person'
-  tracker-to-bicycles:
-    one_end:
-      entity: '#PropertyTracker'
-      property: bicycles
-      multiplicity: 0:n
-    other_end:
-      entity: '#Bicycle'
-  tracker-to-institutions:
-    one_end:
-      entity: '#PropertyTracker'
-      property: institutions
-      multiplicity: 0:n
-    other_end:
-      entity: '#Institution'
-  dogs-to-people:
-    one_end:
-      entity: '#Person'
-      property: possessions
-      multiplicity: 0:n
-    other_end:
-      entity: '#Dog'
-      property: owner
-      multiplicity: 0:1
-  dogs-to-institutions:
-    one_end:
-      entity: '#Institution'
-      property: assets
-      multiplicity: 0:n
-    other_end:
-      entity: '#Dog'
-      property: owner
-      multiplicity: 0:1
-  bicycles-to-people:
-    one_end:
-      entity: '#Person'
-      property: possessions
-      multiplicity: 0:n
-    other_end:
-      entity: '#Bicycle'
-      property: owner
-      multiplicity: 0:1
-  bicycles-to-institutions:
-    one_end:
-      entity: '#Institution'
-      property: assets
-      multiplicity: 0:n
-    other_end:
-      entity: '#Bicycle'
-      property: owner
-      multiplicity: 0:1
+      assets:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
+        type: string
+        x-rapier-relationship:
+          entities: '#Dog #Bicycle'
+          multiplicity: 0:n
