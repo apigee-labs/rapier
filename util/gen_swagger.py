@@ -123,16 +123,6 @@ class SwaggerGenerator(object):
                 rel_property_specs = self.get_relationship_property_specs('#%s' % entity_name, entity_spec)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
-                    rel_prop_spec_dict = {}
-                    for rel_property_spec in rel_property_specs:
-                        rel_prop_name = rel_property_spec.property_name
-                        if rel_prop_name in rel_prop_spec_dict:
-                            rel_prop_spec_dict[rel_prop_name].append(rel_property_spec)
-                        else:
-                            rel_prop_spec_dict[rel_prop_name] = [rel_property_spec]
-                    for rel_prop_name, rel_prop_specs in rel_prop_spec_dict.iteritems():
-                        if not rel_prop_specs[0].implementation_private and rel_prop_name not in definition.get('properties', {}):
-                            definition.setdefault('properties', dict())[rel_prop_name] = self.build_relationship_property_spec(rel_prop_name, rel_prop_specs)
                     if 'type' in entity_spec:
                         definition['type'] = entity_spec['type']
                 if self.include_impl and 'implementation' in entity_spec:
@@ -167,53 +157,6 @@ class SwaggerGenerator(object):
             del self.swagger['x-uris']
         return self.swagger
 
-    def build_relationship_property_spec(self, rel_prop_name, rel_prop_specs):
-        if len({rel_prop_spec.is_multivalued() for rel_prop_spec in rel_prop_specs}) > 1:
-            sys.exit('error: all multiplicities for relationship property %s must be the same' % rel_prop_name)
-        if rel_prop_specs[0].is_collection_resource():
-            result = {
-                'description': 
-                        'URL of a Collection of %s' % 
-                            (' and '.join(['%ss' % self.resolve_entity_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_entity_name(rel_prop_specs[0].target_entity)) 
-                    if rel_prop_specs[0].is_multivalued() else 
-                        'URL of %s' % ('%s %s' % (article(self_resolve_entity_name(rel_prop_specs[0].target_entity)), ' or '.join([self.resolve_entity_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs])) \
-                        if len(rel_prop_specs) > 1 else articled(self.resolve_entity_name(rel_prop_specs[0].target_entity)))
-                    ,
-                'type': 'string',
-                'format': 'uri',
-                'readOnly': True
-                }
-        elif rel_prop_specs[0].is_multivalued():
-            result = {
-                'description': 
-                    'Array of URLs of %s' % 
-                        (' and '.join(['%ss' % self.resolve_entity_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]) if len(rel_prop_specs) > 1 else '%ss' % self.resolve_entity_name(rel_prop_specs[0].target_entity)),
-                'type': 'array',
-                'items': {
-                    'type': 'string',
-                    'format': 'uri'
-                    }
-                }
-        else:
-            result = {
-                'description': 
-                    'URL of %s' % ('%s %s' % (article(rel_prop_specs[0].target_entity), ' or '.join([self.resolve_entity_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs])) \
-                    if len(rel_prop_specs) > 1 else articled(self.resolve_entity_name(rel_prop_specs[0].target_entity))),
-                'type': 'string',
-                'format': 'uri',
-                }
-        if rel_prop_specs[0].readonly:
-            result['readOnly'] = True
-        if not self.suppress_annotations:
-            result['x-rapier-relationship'] = {
-                'type': {
-                    'oneOf': [self.global_definition_ref(rel_prop_spec.target_entity) for rel_prop_spec in rel_prop_specs]
-                    } if len(rel_prop_specs) > 1 else
-                    self.global_definition_ref(rel_prop_specs[0].target_entity),
-                'multiplicity': rel_prop_specs[0].get_multiplicity()
-                }
-        return result
-        
     def get_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
         result = []
