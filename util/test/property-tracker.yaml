@@ -1,47 +1,9 @@
 title: PropertyTrackerAPI
 version: "0.1"
 entities:
-  ServerEntity:
-    abstract: true
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Entity:
-    allOf:
-    - $ref: '#/entities/ServerEntity'
-    abstract: true
-    properties:
-      self:
-        type: string
-      kind:
-        type: string      
-  Collection:
-    allOf:
-    - $ref: '#/entities/Entity'
-    properties:
-      item_type: 
-        type: string
-      items:
-        type: array
-        items: 
-          type: object
   PropertyTracker:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       dogs:
         description: URL of a Collection of Dogs
@@ -92,7 +54,7 @@ entities:
     readOnly: true
   Dog:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -108,7 +70,7 @@ entities:
           entities: '#Person #Institution'
   Bicycle:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -124,7 +86,7 @@ entities:
           entities: '#Person #Institution'
   Person:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -140,7 +102,7 @@ entities:
           multiplicity: 0:n
   Institution:
     allOf:
-    - $ref: '#/entities/Entity'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -154,3 +116,47 @@ entities:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
+#Boilerplate entities from here
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+    abstract: true
+  Collection:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true

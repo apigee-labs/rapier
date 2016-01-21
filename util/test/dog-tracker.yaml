@@ -54,6 +54,7 @@ entities:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
+#Boilerplate entities from here
   Resource:
     abstract: true
     type: object
