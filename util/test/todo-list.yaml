@@ -21,7 +21,7 @@ entities:
         type: string
         format: uri
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Item'
           multiplicity: O:n
   Item:

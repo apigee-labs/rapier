@@ -27,6 +27,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Microservice'
       environments:
@@ -34,6 +35,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
   Environment:
@@ -43,9 +45,7 @@ definitions:
       deploys:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Application'
+        x-rapier-relationship: '#Application'
       hosts:
         format: uri
         type: string
@@ -59,14 +59,13 @@ definitions:
       belongsIn:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Application'
+        x-rapier-relationship: '#Application'
       has:
         format: uri
         type: string
         reradOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Revision'
   Revision:
@@ -76,9 +75,7 @@ definitions:
       revises:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Microservice'
+        x-rapier-relationship: '#Microservice'
   Deployment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -86,9 +83,7 @@ definitions:
       runsIn:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Environment'
+        x-rapier-relationship: '#Environment'
   EnvironmentStartCommand:
     allOf:
     - $ref: '#/definitions/Resource'

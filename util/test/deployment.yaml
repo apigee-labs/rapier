@@ -3,8 +3,6 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-  multi_valued_relationships:
-    entities: '#/entities/Collection'
   patch_consumes: application/merge-patch+json
   error_response:
     type: string
@@ -18,6 +16,7 @@ entities:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
       comprises:
@@ -25,6 +24,7 @@ entities:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Microservice'
   Environment:
@@ -34,9 +34,7 @@ entities:
       deploys:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Application'
+        x-rapier-relationship: '#Application'
       hosts:
         format: uri
         type: string
@@ -50,14 +48,13 @@ entities:
       belongsIn:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Application'
+        x-rapier-relationship: '#Application'
       has:
         format: uri
         type: string
         reradOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#Revision'
   Revision:
@@ -67,9 +64,7 @@ entities:
       revises:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Microservice'
+        x-rapier-relationship: '#Microservice'
   Deployment:
     allOf:
     - $ref: '#/entities/Resource'
@@ -77,9 +72,7 @@ entities:
       runsIn:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Environment'
+        x-rapier-relationship: '#Environment'
   EnvironmentStartCommand:
     allOf:
     - $ref: '#/entities/Resource'

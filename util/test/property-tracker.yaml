@@ -1,8 +1,5 @@
 title: PropertyTrackerAPI
 version: "0.1"
-conventions:
-  multi_valued_relationships:
-    entities: '#/entities/Collection'
 entities:
   ServerEntity:
     abstract: true
@@ -51,7 +48,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -59,7 +56,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
       bicycles:
@@ -67,7 +64,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Bicycle'
           multiplicity: O:n
       institutions:
@@ -75,7 +72,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Institution'
           multiplicity: O:n
     well_known_URLs: /
@@ -138,7 +135,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
   Institution:
@@ -154,6 +151,6 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n

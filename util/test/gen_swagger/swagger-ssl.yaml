@@ -16,6 +16,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
       kind:
@@ -31,6 +32,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Alias'
           multiplicity: 0:n
           consumes:
@@ -49,9 +51,7 @@ definitions:
       certificate:
         format: uri
         type: string
-        x-rapier-relationship:
-          multiplicity: 0:1
-          entities: '#Certificate'
+        x-rapier-relationship: '#Certificate'
       certsInfo:
         readOnly: true
         type: array
@@ -86,6 +86,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#SelfSignedCertAlias'
   Certificate: {}

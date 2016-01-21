@@ -1,8 +1,5 @@
 title: DogTrackerAPI
 version: "0.1"
-conventions:
-  multi_valued_relationships:
-    entities: '#/entities/Collection'
 entities:
   Resource:
     abstract: true
@@ -56,7 +53,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -64,7 +61,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
     well_known_URLs: /
@@ -97,6 +94,6 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_resource: '#Collection'
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
