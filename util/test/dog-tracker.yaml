@@ -56,6 +56,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -63,6 +64,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
     well_known_URLs: /
@@ -95,5 +97,6 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n

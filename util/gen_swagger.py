@@ -779,6 +779,8 @@ class RelMVPropertySpec(SegmentSpec):
         self.consumes_media_types = consumes.keys() if isinstance(consumes, dict) else as_list(consumes) if consumes is not None else None
         self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity]
         self.multi_valued_relationship_resource = multi_valued_relationship_resource 
+        if not multi_valued_relationship_resource:
+            sys.exit('Must provide multi_valued_relationship_resource for relationship %s of entity %s' % (property_name, source_entity))
 
     def is_multivalued(self):
         return True

@@ -51,6 +51,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -58,6 +59,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
       bicycles:
@@ -65,6 +67,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Bicycle'
           multiplicity: O:n
       institutions:
@@ -72,6 +75,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Institution'
           multiplicity: O:n
     well_known_URLs: /
@@ -134,6 +138,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
   Institution:
@@ -149,5 +154,6 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n

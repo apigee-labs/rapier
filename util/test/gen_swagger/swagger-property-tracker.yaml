@@ -52,6 +52,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Bicycle'
           multiplicity: O:n
         readOnly: true
@@ -60,6 +61,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
         readOnly: true
@@ -68,6 +70,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Institution'
           multiplicity: O:n
         readOnly: true
@@ -76,6 +79,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
         readOnly: true
@@ -124,6 +128,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
   Institution:
@@ -135,6 +140,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
       foundation-date:
