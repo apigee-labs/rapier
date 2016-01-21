@@ -3,8 +3,6 @@ version: "0.1"
 consumes: application/json
 produces: application/json text/html
 conventions:
-  multi_valued_relationships:
-    entities: '#/entities/Collection #/entities/Page'
   patch_consumes: application/merge-patch+json
   error_response:
     type: string
@@ -117,6 +115,11 @@ entities:
       maximum: 1000
       required: false
     readOnly: true
+  MultiValuedRelationshipResource:
+    readOnly: true
+    oneOf:
+      - $ref: '#/entities/Collection'
+      - $ref: '#/entities/Page'
   Hub:
     allOf:
     - $ref: '#/entities/Resource'
@@ -128,13 +131,13 @@ entities:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
@@ -143,6 +146,7 @@ entities:
         format: uri
         type: string        
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       Zmxk:
@@ -186,14 +190,14 @@ entities:
         readOnly: true
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum: [Folder]
@@ -220,14 +224,12 @@ entities:
         description: URL of a Content
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Content'
+        x-rapier-relationship: '#Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum: [Spec]

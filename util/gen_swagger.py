@@ -44,8 +44,6 @@ class SwaggerGenerator(object):
             self.set_rapier_spec_from_filename(filename)
         spec = self.rapier_spec 
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
-        if 'multi_valued_relationships' in self.conventions:
-            self.collection_entity_names = as_list(self.conventions['multi_valued_relationships']['entities'])
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
                 sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
@@ -103,6 +101,8 @@ class SwaggerGenerator(object):
                 definition = PresortedOrderedDict()
                 if 'allOf' in entity_spec:
                     definition['allOf'] = [{key: self.swagger_uri_map[value] for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
+                if 'oneOf' in entity_spec:
+                    definition['x-oneOf'] = [{key: self.swagger_uri_map[value] for key, value in ref.iteritems()} for ref in entity_spec['oneOf']]
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     if 'properties' in entity_spec:
                         immutable_entity = entity_spec.get('readOnly', False)
@@ -163,23 +163,24 @@ class SwaggerGenerator(object):
         if 'properties' in entity_spec:
             for prop_name, property in entity_spec['properties'].iteritems():
                 if 'x-rapier-relationship' in property:
-                    relationship = property['x-rapier-relationship']
+                    relationship = as_relationship(property['x-rapier-relationship'])
                     for target_entity_uri in as_list(relationship['entities']):
                         p_spec = \
                             RelMVPropertySpec(
                                 self.conventions, 
-                                prop_name, 
-                                entity_uri, 
+                                prop_name,
+                                entity_uri,
                                 target_entity_uri, 
                                 relationship.get('multiplicity', '1').split(':')[-1], 
                                 property.get('implementation_private', False), 
                                 relationship.get('collection_resource'), 
                                 relationship.get('consumes'), 
-                                relationship.get('readOnly')) \
+                                relationship.get('readOnly'),
+                                relationship.get('multi_valued_relationship_resource')) \
                         if relationship.get('multiplicity', '1').split(':')[-1] == 'n' else \
                             RelSVPropertySpec(self.conventions, 
-                                prop_name, 
-                                entity_uri, 
+                                prop_name,
+                                entity_uri,
                                 target_entity_uri, 
                                 relationship.get('multiplicity', '1').split(':')[0], 
                                 property.get('implementation_private', False), 
@@ -356,7 +357,7 @@ class SwaggerGenerator(object):
         parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
-        path_spec['get'] = self.global_collection_get()
+        path_spec['get'] = self.build_collection_get(rel_property_spec)
         rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
@@ -490,11 +491,6 @@ class SwaggerGenerator(object):
 
         return result
 
-    def global_collection_get(self):
-        if not hasattr(self, 'collection_get'):
-            self.collection_get = self.build_collection_get()
-        return self.collection_get
-        
     def global_response_ref(self, key):
         if key not in self.swagger['responses']:
              self.swagger['responses'][key] = self.responses[key]
@@ -593,19 +589,17 @@ class SwaggerGenerator(object):
                 }
             }
         
-    def build_collection_get(self):
-        if not hasattr(self, 'collection_entity_names'):
-            sys.exit('error: must define value for multi-valued relationships')
+    def build_collection_get(self, rel_property_spec):
+        collection_entity_uri = rel_property_spec.multi_valued_relationship_resource
+        if collection_entity_uri not in self.uri_map:
+            sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
-            for name in self.collection_entity_names:
-                if name not in self.uri_map:
-                    sys.exit('error: must define entity %s' % name)                
+            collection_entity = self.resolve_entity(collection_entity_uri)
         rslt = {
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': {'x-oneOf': [json_ref(self.swagger_uri_map[name]) for name in self.collection_entity_names]} \
-                        if len(self.collection_entity_names) > 1 else json_ref(self.swagger_uri_map[self.collection_entity_names[0]]),
+                    'schema': json_ref(self.swagger_uri_map[collection_entity_uri]),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
@@ -621,7 +615,14 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-        query_parameters = [param for entity_uri in self.collection_entity_names for param in self.uri_map[entity_uri].get('query_parameters',[])] 
+        def add_query_parameters(entity, query_params):
+            if 'query_parameters' in entity:
+                query_params.extend(entity['query_parameters'])
+            if 'oneOf' in entity:
+                for entity_ref in entity['oneOf']:
+                    add_query_parameters(self.resolve_entity_ref(entity_ref), query_params) 
+        query_parameters = []
+        add_query_parameters(collection_entity, query_parameters)
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
             rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
@@ -671,6 +672,9 @@ class SwaggerGenerator(object):
                 
     def resolve_entity(self, uri):
         return self.uri_map[uri]
+
+    def resolve_entity_ref(self, ref):
+        return self.resolve_entity(ref['$ref'])
 
     def resolve_entity_name(self, uri):
         return self.uri_map[uri]['name']
@@ -762,7 +766,7 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, collection_resource, consumes, readonly):
+    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, collection_resource, consumes, readonly, multi_valued_relationship_resource):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -773,7 +777,8 @@ class RelMVPropertySpec(SegmentSpec):
         self.collection_resource = True if collection_resource == None else collection_resource
         self.consumes = consumes
         self.consumes_media_types = consumes.keys() if isinstance(consumes, dict) else as_list(consumes) if consumes is not None else None
-        self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity] 
+        self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity]
+        self.multi_valued_relationship_resource = multi_valued_relationship_resource 
 
     def is_multivalued(self):
         return True
@@ -941,6 +946,12 @@ def as_list(value, separator = None):
         else:
             result = [value]
     return result
+    
+def as_relationship(input):
+    if hasattr(input, 'keys'):
+        return input
+    else:
+        return {'entities': input}
         
 def main(args):
     generator = SwaggerGenerator()

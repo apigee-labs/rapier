@@ -95,6 +95,10 @@ definitions:
           entities: '#Page'
           readOnly: true
         readOnly: true
+  MultiValuedRelationshipResource:
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -108,14 +112,14 @@ definitions:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
         readOnly: true
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
@@ -125,6 +129,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
         readOnly: true
@@ -138,14 +143,14 @@ definitions:
         readOnly: true
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum:
@@ -169,14 +174,12 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Content'
+        x-rapier-relationship: '#Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Folder'
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum:
@@ -406,9 +409,7 @@ paths:
               description: perma-link URL of collection
               type: string
           schema:
-            x-oneOf:
-            - $ref: '#/definitions/Collection'
-            - $ref: '#/definitions/Page'
+            $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -483,9 +484,7 @@ paths:
               description: perma-link URL of collection
               type: string
           schema:
-            x-oneOf:
-            - $ref: '#/definitions/Collection'
-            - $ref: '#/definitions/Page'
+            $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -683,6 +682,69 @@ x-uris:
               type: string
           schema:
             $ref: '#/definitions/Page'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{MultiValuedRelationshipResource_URL}':
+    parameters:
+    - description: The URL of a MultiValuedRelationshipResource entity
+      in: URL
+      name: MultiValuedRelationshipResource_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a MultiValuedRelationshipResource
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -952,9 +1014,7 @@ x-uris:
               description: perma-link URL of collection
               type: string
           schema:
-            x-oneOf:
-            - $ref: '#/definitions/Collection'
-            - $ref: '#/definitions/Page'
+            $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
           $ref: '#/responses/303'
         '401':
