@@ -114,9 +114,6 @@ entities:
               type: string
             action:
               type: string
-      implementation_key:
-        implementation_private: true
-        type: integer  
   Spec:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -146,9 +143,6 @@ entities:
               type: string
             action:
               type: string
-      implementation_key:
-        implementation_private: true
-        type: integer
   Content:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
@@ -254,3 +248,11 @@ implementation_only:
       discriminator_separator: "-"
     - segments: c3Bj;{implementation_key}/content
       discriminator_separator: "-"
+  Folder:
+    properties
+      implementation_key:
+        type: integer  
+  Spec:
+    properties
+      implementation_key:
+        type: integer  
