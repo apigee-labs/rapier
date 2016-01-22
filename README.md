@@ -303,3 +303,12 @@ shows an example of how Rapier handles this case. Here is the [corresponding gen
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier Swagger generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml).
 
+## Navigating the Repository
+
+- The js directory contains a Node package that is used by the generated Javascript SDK
+- The js directory contains a Python module that is used by the generated Python SDK
+- The test-servers directory contains some simple servers used to test the genenrated SDKs
+- the util directory contains the sdk genenrators and the Swagger genenrator
+  - gen_swagger.py is the Swagger generator
+
+## The Rapier Language Spec
