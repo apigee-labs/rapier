@@ -122,6 +122,7 @@ entities:
         format: date-time
         readOnly: true
     abstract: true
+technical_resources:
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
