@@ -65,18 +65,8 @@ Traditionally, the next example after 'Hello world' is 'To-do List':
 title: Todo List API
 version: "0.1"
 conventions:
-  multi_valued_relationships: 
-    entities: '#Collection'
   selector_location: path-segment
 entities:
-  Collection:
-    properties:
-      item_type: 
-        type: string
-      items:
-        type: array
-        items: 
-          type: object
   TodoList:
     well_known_URLs: /to-dos
     query_paths: [items, "items;{id}"]
@@ -86,6 +76,7 @@ entities:
         type: string
         format: uri
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Item'
           multiplicity: O:n
   Item:
@@ -102,6 +93,16 @@ entities:
       due:
         type: string
         format: date-time
+technical_resources:
+  Collection:
+    readOnly: true
+    properties:
+      item_type: 
+        type: string
+      items:
+        type: array
+        items: 
+          type: object
 ```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
 called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
@@ -162,53 +163,7 @@ Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lk
 ```yaml 
 title: DogTrackerAPI
 version: "0.1"
-conventions:
-  multi_valued_relationships:
-    entities: '#/entities/Collection'
 entities:
-  Resource:
-    abstract: true
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    abstract: true
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-    abstract: true
-  Collection:
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    readOnly: true
   DogTracker:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -218,6 +173,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -225,6 +181,7 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
     well_known_URLs: /
@@ -257,8 +214,54 @@ entities:
         format: uri
         type: string
         x-rapier-relationship:
+          multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
+#Boilerplate entities from here
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+    abstract: true
+technical_resources:
+  Collection:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
 ```                
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
