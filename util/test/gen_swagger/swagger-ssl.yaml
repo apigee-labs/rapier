@@ -180,20 +180,6 @@ definitions:
       state:
         type: string
     type: object
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-        readOnly: true
-      kind:
-        type: string
-        enum:
-        - Collection
-        readOnly: true
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -222,6 +208,20 @@ definitions:
       self:
         type: string
     type: object
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+        readOnly: true
+      kind:
+        type: string
+        enum:
+        - Collection
+        readOnly: true
 paths:
   /v1/o/{org}/e/{env}:
     parameters:

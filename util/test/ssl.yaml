@@ -186,18 +186,6 @@ entities:
       email:
         type: string
 # Boilerplate schemas from here
-  Collection:
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    readOnly: true
   PersistentResource:
     allOf:
     - $ref: '#/entities/Resource'
@@ -229,3 +217,16 @@ entities:
         type: string
       kind:
         type: string
+technical_resources:
+  Collection:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
