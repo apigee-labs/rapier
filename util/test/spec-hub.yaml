@@ -46,6 +46,114 @@ entities:
         format: date-time
         readOnly: true
     abstract: true
+  Hub:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Hub]
+      myHub:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
+      sharedWithMe:
+        description: URL of a Collection of Folders and Specs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          entities: '#Folder #Spec'
+          multiplicity: O:n
+          readOnly: true
+      things:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        type: string        
+        x-rapier-relationship:
+          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+    well_known_URLs: /
+    query_paths: 
+    - myHub
+    - sharedWithMe
+    - things
+    readOnly: true
+  Folder:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    query_paths: [contents]
+    properties:
+      contents:
+        description: URL of a Collection of Specs and Folders
+        format: uri
+        readOnly: true
+        type: string
+        x-rapier-relationship:
+          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          entities: '#Spec #Folder'
+          multiplicity: O:n
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
+      kind:
+        type: string
+        enum: [Folder]
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+      implementation_key:
+        implementation_private: true
+        type: integer  
+  Spec:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    query_paths: [content]
+    properties:
+      content:
+        description: URL of a Content
+        format: uri
+        type: string
+        x-rapier-relationship: '#Content'
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
+      kind:
+        type: string
+        enum: [Spec]
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+      implementation_key:
+        implementation_private: true
+        type: integer
+  Content:
+    type: string
+    consumes: application/x-yaml text/yaml text/html text/plain
+    produces: application/x-yaml text/yaml text/html text/plain
+technical_resources:
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
@@ -120,37 +228,10 @@ entities:
     oneOf:
       - $ref: '#/entities/Collection'
       - $ref: '#/entities/Page'
+implementation_only:
   Hub:
-    allOf:
-    - $ref: '#/entities/Resource'
     properties:
-      kind:
-        type: string
-        enum: [Hub]
-      myHub:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
-      sharedWithMe:
-        description: URL of a Collection of Folders and Specs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
-          entities: '#Folder #Spec'
-          multiplicity: O:n
-          readOnly: true
-      things:
-        description: URL of a Collection of Specs and Folders
-        format: uri
-        type: string        
-        x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
-          multiplicity: O:n
       Zmxk:
-        implementation_private: true
         description: URL of a Collection of Folders
         format: uri
         type: string        
@@ -158,18 +239,13 @@ entities:
           entities: '#Folder'
           multiplicity: O:n
       c3Bj:
-        implementation_private: true
         description: URL of a Collection of Specs
         format: uri
         type: string        
         x-rapier-relationship:
           entities: '#Spec'
           multiplicity: O:n
-    well_known_URLs: /
     query_paths: 
-    - myHub
-    - sharedWithMe
-    - things
     - segments: Zmxk;{implementation_key}
       discriminator_separator: "-"
     - segments: Zmxk;{implementation_key}/contents
@@ -178,76 +254,3 @@ entities:
       discriminator_separator: "-"
     - segments: c3Bj;{implementation_key}/content
       discriminator_separator: "-"
-    readOnly: true
-  Folder:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    query_paths: [contents]
-    properties:
-      contents:
-        description: URL of a Collection of Specs and Folders
-        format: uri
-        readOnly: true
-        type: string
-        x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
-          multiplicity: O:n
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
-      kind:
-        type: string
-        enum: [Folder]
-      name:
-        type: string
-      permissions:
-        type: array
-        items: 
-          properties:
-            actor:
-              format: URL
-              type: string
-            action:
-              type: string
-      implementation_key:
-        implementation_private: true
-        type: integer  
-  Spec:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    query_paths: [content]
-    properties:
-      content:
-        description: URL of a Content
-        format: uri
-        type: string
-        x-rapier-relationship: '#Content'
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
-      kind:
-        type: string
-        enum: [Spec]
-      name:
-        type: string
-      permissions:
-        type: array
-        items: 
-          properties:
-            actor:
-              format: URL
-              type: string
-            action:
-              type: string
-      implementation_key:
-        implementation_private: true
-        type: integer  
-  Content:
-    type: string
-    consumes: application/x-yaml text/yaml text/html text/plain
-    produces: application/x-yaml text/yaml text/html text/plain

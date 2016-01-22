@@ -80,7 +80,27 @@ class SwaggerGenerator(object):
         self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
 
         if 'entities' in spec:
-            entities = spec['entities']
+            entities = spec['entities'].copy()
+            entities.update(spec.get('technical_resources',{}))
+            for entity_name, entity in entities.iteritems():
+                if 'properties' in entity:
+                    entity['properties'] = entity['properties'].copy()
+            if 'implementation_only' in spec:
+                for entity_name, entity in spec['implementation_only'].iteritems():
+                    if 'properties' in entity:
+                        properties = {prop_name: {k: v for d in [{'implementation_private': True}, prop] for k, v in d.iteritems()} for prop_name, prop in entity['properties'].iteritems()}
+                        entity = entity.copy()
+                        entity['properties'] = properties
+                    if entity_name in entities:
+                        if 'properties' in entities[entity_name]:
+                            entities[entity_name]['properties'].update(properties)
+                        else:
+                            entities[entity_name]['properties'] = properties
+                        if 'query_paths' in entity:
+                            entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
+                            entities[entity_name]['query_paths'].extend(entity['query_paths'])
+                    else:
+                        entities[entity_name] = entity
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
@@ -152,7 +172,7 @@ class SwaggerGenerator(object):
                             entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                             self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
-                        sys.exit('query paths not valid or listed more than once: %s' % query_paths)  
+                        sys.exit('query paths not valid or listed more than once: %s' % [query_path.swagger_path_string for query_path in query_paths] )  
         if not self.swagger_uris:
             del self.swagger['x-uris']
         return self.swagger
@@ -894,7 +914,6 @@ class QuerySegment(object):
         if self.param:
             property = self.generator.resolve_property(self.rel_property_spec.target_entity, self.discriminator_property_name)
             if not property:
-                print >> sys.stderr, self.property_name, self.param
                 sys.exit('Property named %s not found in Entity %s in file %s' % (self.property_name, self.rel_property_spec.target_entity, self.generator.filename))
             rslt = {
                 'name': self.param,

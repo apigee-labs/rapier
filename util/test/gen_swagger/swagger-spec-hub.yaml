@@ -46,59 +46,6 @@ definitions:
         type: string
         format: date-time
         readOnly: true
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-        readOnly: true
-      kind:
-        type: string
-        enum:
-        - Collection
-        readOnly: true
-  Page:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      collection:
-        type: string
-        format: uri
-        readOnly: true
-      item_type:
-        type: string
-        readOnly: true
-      items:
-        type: array
-        items:
-          type: object
-        readOnly: true
-      kind:
-        type: string
-        enum:
-        - Page
-        readOnly: true
-      next_page:
-        type: string
-        format: uri
-        x-rapier-relationship:
-          entities: '#Page'
-          readOnly: true
-        readOnly: true
-      previous_page:
-        type: string
-        format: uri
-        x-rapier-relationship:
-          entities: '#Page'
-          readOnly: true
-        readOnly: true
-  MultiValuedRelationshipResource:
-    x-oneOf:
-    - $ref: '#/definitions/Collection'
-    - $ref: '#/definitions/Page'
   Hub:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -196,6 +143,59 @@ definitions:
             action:
               type: string
   Content: {}
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+        readOnly: true
+      kind:
+        type: string
+        enum:
+        - Collection
+        readOnly: true
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      collection:
+        type: string
+        format: uri
+        readOnly: true
+      item_type:
+        type: string
+        readOnly: true
+      items:
+        type: array
+        items:
+          type: object
+        readOnly: true
+      kind:
+        type: string
+        enum:
+        - Page
+        readOnly: true
+      next_page:
+        type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
+      previous_page:
+        type: string
+        format: uri
+        x-rapier-relationship:
+          entities: '#Page'
+          readOnly: true
+        readOnly: true
+  MultiValuedRelationshipResource:
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
 paths:
   /:
     get:
@@ -563,227 +563,6 @@ paths:
         default:
           $ref: '#/responses/default'
 x-uris:
-  '{Collection_URL}':
-    parameters:
-    - description: The URL of a Collection entity
-      in: URL
-      name: Collection_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a Collection
-      parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{Page_URL}':
-    parameters:
-    - description: The URL of a Page entity
-      in: URL
-      name: Page_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a Page
-      parameters:
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Page'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{MultiValuedRelationshipResource_URL}':
-    parameters:
-    - description: The URL of a MultiValuedRelationshipResource entity
-      in: URL
-      name: MultiValuedRelationshipResource_URL
-      required: true
-      type: string
-    get:
-      description: Retrieve a MultiValuedRelationshipResource
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
   '{Hub_URL}':
     parameters:
     - description: The URL of a Hub entity
@@ -1489,6 +1268,227 @@ x-uris:
             $ref: '#/definitions/Content'
         '400':
           $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Collection_URL}':
+    parameters:
+    - description: The URL of a Collection entity
+      in: URL
+      name: Collection_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Collection
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Page_URL}':
+    parameters:
+    - description: The URL of a Page entity
+      in: URL
+      name: Page_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Page
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Page'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{MultiValuedRelationshipResource_URL}':
+    parameters:
+    - description: The URL of a MultiValuedRelationshipResource entity
+      in: URL
+      name: MultiValuedRelationshipResource_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a MultiValuedRelationshipResource
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
         '401':
           $ref: '#/responses/401'
         '403':
