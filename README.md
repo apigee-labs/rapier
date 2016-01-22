@@ -31,6 +31,11 @@ or follow different conventions to the ones Rapier currently understands, or are
 
 Rapier also includes SDK generators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
 
+
+\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
+“Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
+the remainder” - Fred Brooks, "The Design of Design", 2010
+
 ## Examples
 
 Rapier is very easy to understand and learn. The easiest way is by example.
@@ -298,7 +303,3 @@ shows an example of how Rapier handles this case. Here is the [corresponding gen
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier Swagger generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml).
 
-
-\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
-“Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
-the remainder” - Fred Brooks, "The Design of Design", 2010
