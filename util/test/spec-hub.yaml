@@ -249,10 +249,10 @@ implementation_only:
     - segments: c3Bj;{implementation_key}/content
       discriminator_separator: "-"
   Folder:
-    properties
+    properties:
       implementation_key:
         type: integer  
   Spec:
-    properties
+    properties:
       implementation_key:
         type: integer  
