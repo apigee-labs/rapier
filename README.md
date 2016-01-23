@@ -358,16 +358,19 @@ Field Pattern | Type | Description
 
 #### <a name="property"></a>Property
 
-Each property is a JSON Schema. It includes the standard JSON Schema properties (e.g. `type`) as well as some Rapier-specific ones.
+Each property is a JSON Schema. It includes the standard JSON Schema properties (e.g. `type`, `format`, `readOnly`) as well as the following Rapier-specific ones.
 
 Field Name | Type | Description
 ---|:---:|---
- relationship | [Relationship](#relationship)
+ relationship | [Relationship](#relationship) | States that the property is a relationship property. If this property is present, 
+ the type of the property must be `string` with a `format` of `uri` or an `array` of `string`s with `format` of `uri`. 
  
- #### <a name="relationship"></a>Relationship
+#### <a name="relationship"></a>Relationship
 
 Describes [one end of] a relationship to one or more other entities
 
 Field Name | Type | Description
 ---|:---:|---
- entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
+entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
+multiplicity | `string` | The multiplicity of the relationship 
+
