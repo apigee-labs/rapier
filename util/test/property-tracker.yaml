@@ -9,7 +9,7 @@ entities:
         description: URL of a Collection of Dogs
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
@@ -17,7 +17,7 @@ entities:
         description: URL of a Collection of Persons
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
@@ -25,7 +25,7 @@ entities:
         description: URL of a Collection of Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Bicycle'
           multiplicity: O:n
@@ -33,7 +33,7 @@ entities:
         description: URL of a Collection of Institutions
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Institution'
           multiplicity: O:n
@@ -66,7 +66,7 @@ entities:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           entities: '#Person #Institution'
   Bicycle:
     allOf:
@@ -82,7 +82,7 @@ entities:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           entities: '#Person #Institution'
   Person:
     allOf:
@@ -96,7 +96,7 @@ entities:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
@@ -112,7 +112,7 @@ entities:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n

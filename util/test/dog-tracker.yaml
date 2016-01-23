@@ -9,7 +9,7 @@ entities:
         description: URL of a Collection of Dogs
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
@@ -17,7 +17,7 @@ entities:
         description: URL of a Collection of Persons
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
@@ -37,7 +37,7 @@ entities:
       owner:
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           entities: '#Person'
   Person:
     allOf:
@@ -50,7 +50,7 @@ entities:
       dogs:
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n

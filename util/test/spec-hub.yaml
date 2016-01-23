@@ -57,12 +57,12 @@ entities:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        relationship: '#Folder'
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
@@ -71,7 +71,7 @@ entities:
         description: URL of a Collection of Specs and Folders
         format: uri
         type: string        
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
@@ -91,7 +91,7 @@ entities:
         format: uri
         readOnly: true
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
@@ -99,7 +99,7 @@ entities:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        relationship: '#Folder'
       kind:
         type: string
         enum: [Folder]
@@ -123,12 +123,12 @@ entities:
         description: URL of a Content
         format: uri
         type: string
-        x-rapier-relationship: '#Content'
+        relationship: '#Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        relationship: '#Folder'
       kind:
         type: string
         enum: [Spec]
@@ -196,13 +196,13 @@ technical_resources:
       next_page:
         type: string
         format: uri
-        x-rapier-relationship:
+        relationship:
           entities: '#Page'
           readOnly: True
       previous_page:
         type: string
         format: uri
-        x-rapier-relationship:
+        relationship:
           entities: '#Page'
           readOnly: True
     query_parameters:
@@ -229,14 +229,14 @@ implementation_only:
         description: URL of a Collection of Folders
         format: uri
         type: string        
-        x-rapier-relationship:
+        relationship:
           entities: '#Folder'
           multiplicity: O:n
       c3Bj:
         description: URL of a Collection of Specs
         format: uri
         type: string        
-        x-rapier-relationship:
+        relationship:
           entities: '#Spec'
           multiplicity: O:n
     query_paths: 

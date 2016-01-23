@@ -126,7 +126,13 @@ class SwaggerGenerator(object):
                 if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
                     if 'properties' in entity_spec:
                         immutable_entity = entity_spec.get('readOnly', False)
-                        properties = {prop_name: prop for prop_name, prop in entity_spec['properties'].iteritems() if not prop.get('implementation_private', False)}
+                        properties = dict()
+                        for prop_name, prop in entity_spec['properties'].iteritems():
+                             if not prop.get('implementation_private', False):
+                                prop_props = PresortedOrderedDict()
+                                for p_n, p in prop.iteritems():
+                                    prop_props['x-rapier-relationship' if p_n == 'relationship' else p_n] = p 
+                                properties[prop_name] = prop_props
                         if immutable_entity:
                             for prop in properties.itervalues():
                                 prop['readOnly'] = True
@@ -182,8 +188,8 @@ class SwaggerGenerator(object):
         result = []
         if 'properties' in entity_spec:
             for prop_name, property in entity_spec['properties'].iteritems():
-                if 'x-rapier-relationship' in property:
-                    relationship = as_relationship(property['x-rapier-relationship'])
+                if 'relationship' in property:
+                    relationship = as_relationship(property['relationship'])
                     for target_entity_uri in as_list(relationship['entities']):
                         p_spec = \
                             RelMVPropertySpec(

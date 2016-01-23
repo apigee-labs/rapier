@@ -21,7 +21,7 @@ entities:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
@@ -38,7 +38,7 @@ entities:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Alias'
           multiplicity: 0:n
@@ -74,18 +74,18 @@ entities:
       certificate:
         format: uri
         type: string
-        x-rapier-relationship: '#Certificate'
+        relationship: '#Certificate'
       csr:
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           readOnly: true
           entities: '#CSR'
       selfSignedCertificate:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           multiplicity: 0:n
           entities: '#SelfSignedCertAlias'
