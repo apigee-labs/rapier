@@ -319,3 +319,21 @@ view of the API to be generated instead of the client view. It can be found [her
     - gen_js_sdk is a directory containing generated Python sdk files from the samples
 
 ## The Rapier Language Spec
+
+### Schema
+
+All properties are optional unless otherwise specified.
+
+#### <a name="rapier"></a>Rapier
+
+Field Name | Type | Description
+---|:---:|---
+title | `string` | The title of the API. Dublin Core title.
+version | `string` | The version of the API.
+entities | [Entities](#entities) | The entities of the API.
+
+#### <a name="entities"></a>Entities
+
+Field Pattern | Type | Description
+---|:---:|---
+{entity name} | [Entity](#entity) | An entity 
