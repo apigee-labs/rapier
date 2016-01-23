@@ -336,4 +336,11 @@ entities | [Entities](#entities) | The entities of the API.
 
 Field Pattern | Type | Description
 ---|:---:|---
-{entity name} | [Entity](#entity) | An entity 
+{entity name} | [Entity](#entity) | An entity
+
+Field Name | Type | Description
+---|:---:|---
+properties | `string` | The title of the API. Dublin Core title.
+query_paths | `string` | The version of the API.
+well_known_URLs | `string` or array of URLs | Well-known URLs at which an instance of this entity can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
+ 
