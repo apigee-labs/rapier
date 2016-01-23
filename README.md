@@ -338,9 +338,15 @@ Field Pattern | Type | Description
 ---|:---:|---
 {entity name} | [Entity](#entity) | An entity
 
+#### <a name="entity"></a>Entity
+
+Each entity is a JSON Schema. It includes the standard JSON Schema properties (e.g. `properties`) as well as some rapier-specific ones.
+
 Field Name | Type | Description
 ---|:---:|---
 properties | `string` | The title of the API. Dublin Core title.
 query_paths | `string` | The version of the API.
-well_known_URLs | `string` or array of URLs | Well-known URLs at which an instance of this entity can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
+well_known_URLs | `string` or `array` of URLs | Well-known URLs at which an instance of this entity can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
+properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
+readOnly | `string` | Indicates that the Entity can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed).
  
