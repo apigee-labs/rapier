@@ -102,12 +102,10 @@ technical_resources:
   Collection:
     readOnly: true
     properties:
-      item_type: 
-        type: string
       items:
         type: array
         items: 
-          type: object
+          $ref: '#/entities/Item'
 ```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
 called `items` that has a property called relationship. That tells you that the value of items represents a relationship to the `Items` of the `To_do_list`. 
