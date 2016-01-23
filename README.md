@@ -307,12 +307,12 @@ view of the API to be generated instead of the client view. It can be found [her
 - The js directory contains a Node package that is used by the generated Javascript SDK
 - The js directory contains a Python module that is used by the generated Python SDK
 - The test-servers directory contains some simple servers used to test the genenrated SDKs
-- the util directory contains the sdk genenrators and the Swagger genenrator. This directory is a Python module
+- the util directory contains the sdk generators and the Swagger generator. This directory is a Python module
   - gen_swagger.py is the Swagger generator
   - gen_js_sdk.py is the Javascript SDK genenrator
   - gen_py_sdk.py is the Python SDK genenrator
   - requirements.txt is the pip file with the python dependencies for these generators
-  - test is a directory containing tests for the genenrators. This directory contains numerous samples.
+  - test is a directory containing tests for the generators. This directory contains numerous samples.
     - gen_swagger is a directory containing generated swagger files from the samples
     - gen_js_sdk is a directory containing generated Javascript sdk files from the samples
     - gen_js_sdk is a directory containing generated Python sdk files from the samples
@@ -362,4 +362,12 @@ Each property is a JSON Schema. It includes the standard JSON Schema properties 
 
 Field Name | Type | Description
 ---|:---:|---
+ relationship | [Relationship](#relationship)
  
+ #### <a name="relationship"></a>Relationship
+
+Describes [one end of] a relationship to one or more other entities
+
+Field Name | Type | Description
+---|:---:|---
+ entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
