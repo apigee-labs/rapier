@@ -80,7 +80,7 @@ entities:
       items:
         type: string
         format: uri
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Item'
           multiplicity: O:n
@@ -109,9 +109,10 @@ technical_resources:
         items: 
           type: object
 ```                
-This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. In the relationships section, you can see that each `To_do_list` has a property
-called `items` that represents a multi-valued relationship to the `Items` of the `To_do_list`. The value of the `items` property will be a URL that points to a Collection
-resource that contains information on each item of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
+This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
+called `items` that has a property called relationship. That tells you that the value of items represents a relationship to the `Items` of the `To_do_list`. 
+The fact that the realtionship is multi-valued, plus the `multi_valued_relationship_entity` specification tells you that the value of the `items` property will be a URL that points to a Collection
+resource that contains information on the items of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
 ```
@@ -177,7 +178,7 @@ entities:
         description: URL of a Collection of Dogs
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
@@ -185,7 +186,7 @@ entities:
         description: URL of a Collection of Persons
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Person'
           multiplicity: O:n
@@ -205,7 +206,7 @@ entities:
       owner:
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           entities: '#Person'
   Person:
     allOf:
@@ -218,7 +219,7 @@ entities:
       dogs:
         format: uri
         type: string
-        x-rapier-relationship:
+        relationship:
           multi_valued_relationship_entity: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
@@ -267,7 +268,7 @@ technical_resources:
         items: 
           type: object
     readOnly: true
-```                
+```
 This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
 called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
 resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 

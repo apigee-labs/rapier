@@ -81,10 +81,18 @@ class SwaggerGenerator(object):
 
         if 'entities' in spec:
             entities = spec['entities'].copy()
+            self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
+            self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
+            self.uri_map.update({'#/technical_resources/%s' % name: entity for name, entity in spec.get('technical_resources',{}).iteritems()})
+            self.swagger_uri_map.update({'#/technical_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('technical_resources',{}).iterkeys()})
             entities.update(spec.get('technical_resources',{}))
             for entity_name, entity in entities.iteritems():
                 if 'properties' in entity:
                     entity['properties'] = entity['properties'].copy()
+                    for prop in entity['properties'].itervalues():
+                        if prop.get('type') == 'array':
+                            if '$ref' in prop['items']:
+                                prop['items']['$ref'] = self.swagger_uri_map[prop['items']['$ref']]
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:
@@ -101,8 +109,6 @@ class SwaggerGenerator(object):
                             entities[entity_name]['query_paths'].extend(entity['query_paths'])
                     else:
                         entities[entity_name] = entity
-            self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
-            self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
             self.swagger_uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: '#/definitions/%s' % name for name, entity in entities.iteritems()})
             self.swagger['definitions'] = self.definitions

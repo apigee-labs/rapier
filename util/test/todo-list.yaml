@@ -33,9 +33,7 @@ technical_resources:
   Collection:
     readOnly: true
     properties:
-      item_type: 
-        type: string
       items:
         type: array
         items: 
-          type: object
+          $ref: '#/entities/Item'

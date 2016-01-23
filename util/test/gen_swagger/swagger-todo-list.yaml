@@ -33,13 +33,10 @@ definitions:
         readOnly: true
   Collection:
     properties:
-      item_type:
-        type: string
-        readOnly: true
       items:
         type: array
         items:
-          type: object
+          $ref: '#/definitions/Item'
         readOnly: true
 paths:
   /to-dos:

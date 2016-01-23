@@ -220,8 +220,8 @@ technical_resources:
   MultiValuedRelationshipResource:
     readOnly: true
     oneOf:
-      - $ref: '#/entities/Collection'
-      - $ref: '#/entities/Page'
+      - $ref: '#/technical_resources/Collection'
+      - $ref: '#/technical_resources/Page'
 implementation_only:
   Hub:
     properties:
