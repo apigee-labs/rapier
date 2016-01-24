@@ -81,7 +81,7 @@ entities:
         type: string
         format: uri
         relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
   Item:
@@ -109,7 +109,7 @@ technical_resources:
 ```                
 This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
 called `items` that has a property called relationship. That tells you that the value of items represents a relationship to the `Items` of the `To_do_list`. 
-The fact that the realtionship is multi-valued, plus the `multi_valued_relationship_entity` specification tells you that the value of the `items` property will be a URL that points to a Collection
+The fact that the realtionship is multi-valued, plus the `relationship_resource` specification tells you that the value of the `items` property will be a URL that points to a Collection
 resource that contains information on the items of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
@@ -177,7 +177,7 @@ entities:
         format: uri
         type: string
         relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -185,7 +185,7 @@ entities:
         format: uri
         type: string
         relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
     well_known_URLs: /
@@ -218,7 +218,7 @@ entities:
         format: uri
         type: string
         relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
 #Boilerplate entities from here
@@ -372,5 +372,5 @@ Field Name | Type | Description
 ---|:---:|---
 entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
-multi_valued_relationship_entity | `url` | May only be set if the relatgionship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship.
+relationship_resource | `url` | May only be set if the relatgionship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship.
 

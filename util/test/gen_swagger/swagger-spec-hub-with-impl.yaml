@@ -66,7 +66,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
@@ -76,7 +76,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
         readOnly: true
@@ -90,7 +90,7 @@ definitions:
         readOnly: true
         type: string
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       folder:

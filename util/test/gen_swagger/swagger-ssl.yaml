@@ -16,7 +16,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
       kind:
@@ -32,7 +32,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           entities: '#Alias'
           multiplicity: 0:n
           consumes:
@@ -86,7 +86,7 @@ definitions:
         type: string
         readOnly: true
         x-rapier-relationship:
-          multi_valued_relationship_entity: '#Collection'
+          relationship_resource: '#Collection'
           multiplicity: 0:n
           entities: '#SelfSignedCertAlias'
   Certificate: {}

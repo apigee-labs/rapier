@@ -208,7 +208,7 @@ class SwaggerGenerator(object):
                                 relationship.get('collection_resource'), 
                                 relationship.get('consumes'), 
                                 relationship.get('readOnly'),
-                                relationship.get('multi_valued_relationship_entity')) \
+                                relationship.get('relationship_resource')) \
                         if relationship.get('multiplicity', '1').split(':')[-1] == 'n' else \
                             RelSVPropertySpec(self.conventions, 
                                 prop_name,
@@ -622,9 +622,9 @@ class SwaggerGenerator(object):
             }
         
     def build_collection_get(self, rel_property_spec):
-        collection_entity_uri = rel_property_spec.multi_valued_relationship_entity
+        collection_entity_uri = rel_property_spec.relationship_resource
         if not collection_entity_uri:
-            sys.exit('must provide multi_valued_relationship_entity for property %s in entity %s in spec %s' % (rel_property_spec.property_name, rel_property_spec.source_entity, self.filename))
+            sys.exit('must provide relationship_resource for property %s in entity %s in spec %s' % (rel_property_spec.property_name, rel_property_spec.source_entity, self.filename))
         if collection_entity_uri not in self.uri_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
@@ -800,7 +800,7 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, collection_resource, consumes, readonly, multi_valued_relationship_entity):
+    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, collection_resource, consumes, readonly, relationship_resource):
         self.property_name = property_name
         self.source_entity = source_entity
         self.target_entity = target_entity
@@ -812,7 +812,7 @@ class RelMVPropertySpec(SegmentSpec):
         self.consumes = consumes
         self.consumes_media_types = consumes.keys() if isinstance(consumes, dict) else as_list(consumes) if consumes is not None else None
         self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity]
-        self.multi_valued_relationship_entity = multi_valued_relationship_entity 
+        self.relationship_resource = relationship_resource 
 
     def is_multivalued(self):
         return True

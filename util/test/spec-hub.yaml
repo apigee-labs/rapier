@@ -63,7 +63,7 @@ entities:
         format: uri
         type: string
         relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
@@ -72,7 +72,7 @@ entities:
         format: uri
         type: string        
         relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
     well_known_URLs: /
@@ -92,7 +92,7 @@ entities:
         readOnly: true
         type: string
         relationship:
-          multi_valued_relationship_entity: '#MultiValuedRelationshipResource'
+          relationship_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       folder:
