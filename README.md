@@ -358,7 +358,8 @@ Field Pattern | Type | Description
 
 #### <a name="property"></a>Property
 
-Each property is a JSON Schema. It includes the standard JSON Schema properties (e.g. `type`, `format`, `readOnly`) as well as the following Rapier-specific ones.
+Each property is a JSON Schema. It includes the standard JSON Schema properties (e.g. `type`, `format`, `readOnly`) as well as the following Rapier-specific ones. `readOnly` is interpreted to mean that the property may appear in a GET, but may not be set by the client in a POST, PUT or PATCH.
+TODO: Support the common case of a 'write-once' property that can be set on POST, but not modified on PUT or PATCH. 
 
 Field Name | Type | Description
 ---|:---:|---
