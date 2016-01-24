@@ -196,6 +196,8 @@ class SwaggerGenerator(object):
             for prop_name, property in entity_spec['properties'].iteritems():
                 if 'relationship' in property:
                     relationship = as_relationship(property['relationship'])
+                    upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
+                    multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
                     for target_entity_uri in as_list(relationship['entities']):
                         p_spec = \
                             RelMVPropertySpec(
@@ -203,18 +205,18 @@ class SwaggerGenerator(object):
                                 prop_name,
                                 entity_uri,
                                 target_entity_uri, 
-                                relationship.get('multiplicity', '1').split(':')[-1], 
+                                relationship.get('multiplicity', '0:1'), 
                                 property.get('implementation_private', False), 
                                 relationship.get('collection_resource'), 
                                 relationship.get('consumes'), 
                                 relationship.get('readOnly'),
                                 relationship.get('relationship_resource')) \
-                        if relationship.get('multiplicity', '1').split(':')[-1] == 'n' else \
+                        if multi_valued else \
                             RelSVPropertySpec(self.conventions, 
                                 prop_name,
                                 entity_uri,
                                 target_entity_uri, 
-                                relationship.get('multiplicity', '1').split(':')[0], 
+                                relationship.get('multiplicity', '0:1'), 
                                 property.get('implementation_private', False), 
                                 relationship.get('readOnly'))
                         p_spec.from_property = True
