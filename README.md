@@ -344,7 +344,7 @@ Each entity is a JSON Schema. It includes the standard JSON Schema properties (e
 Field Name | Type | Description
 ---|:---:|---
 id | `string` | the id of the entity. If the Entity has an id value, it can be addressed using the URI fragment `#{id}`. If it does not have an id value, it can be addressed using the URI fragment `#{entity name}`
-query_paths | `string` or `array` of [QueryPath](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of QueryPaths.
+query_paths | `string` or `array` of [Query Path](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `string` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
@@ -379,21 +379,23 @@ relationship_resource | `url` | May only be set if the relationship is multi-val
 
 A `query path` defines an URL in the API that represents a traversal of a declared relationship. For example, if an Entity called 
 Child has a relationship property called 'mother',
-then declaring the `query path` 'mother' for the Child entity says that
-the URI template \{`child-URL`\}/mother is also part of the API. In other words, for a given value of `child-URL`, the
-URL \{`child-URL`\}/mother is guaranteed to be a valid URL, and further, 
-it is guaranteed to be an alias of the URL in the 'mother' property of the resource at `child-URL`.
+then declaring the `query path` `mother` for the Child entity says that
+the URI template `\{child-URL\}/mother` is also part of the API where child-URL is the URL of any child. In other words, for a given value of child-URL, the
+URL `\{child-URL\}/mother` is guaranteed to be a valid URL, and further, 
+it is guaranteed to be an alias of the URL in the `mother` property of the resource at `child-URL`.
 
 A `query path` can be represented as a string. Here are some examples with their meaning:  
  
-- mother - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
-- siblings - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
-- siblings;{name} - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
-- siblings;name={name} - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
+- `mother` - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
+- `siblings` - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
+- `siblings;{name}` - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
+- `siblings;name={name}` - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
+
+Alternatively, you can provide a query path as a structure:
 
 Field Pattern | Type | Description
 ---|:---:|---
-{property name} | [Property](#property) | A property name.
+segment | [Query Path Segment](#query_path_segment) | A property name.
 
 
 

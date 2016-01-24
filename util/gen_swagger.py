@@ -241,9 +241,9 @@ class SwaggerGenerator(object):
                 
     def emit_query_path(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         for inx, spec in enumerate(rel_property_spec_stack):
-            if spec.is_multivalued() and not query_path.query_segments[inx].param and not inx == len(rel_property_spec_stack) - 1:
+            if spec.is_multivalued() and not query_path.query_segments[inx].discriminates() and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
-        is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].param
+        is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].discriminates()
         path = '/'.join([prefix.path_segment(), query_path.swagger_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not (self.include_impl and prefix.is_uri_spec()) and not (is_private and not self.include_impl):
@@ -868,16 +868,15 @@ class QueryPath(object):
 
     def __init__(self, query_path, generator):
         self.query_segments = list()
-        segments = (query_path['segments'] if hasattr(query_path, 'keys') else query_path).split('/')
-        separator = query_path.get('discriminator_separator', generator.discriminator_separator) if hasattr(query_path, 'keys') else generator.discriminator_separator
+        segments = query_path['segments'] if hasattr(query_path, 'keys') else query_path.split('/')
         for segment in segments:
-            self.query_segments.append(QuerySegment(segment, self.query_segments, separator, generator))
+            self.query_segments.append(QuerySegment(segment, self.query_segments, generator))
         self.swagger_path_string = '/'.join([query_segment.swagger_segment_string for query_segment in self.query_segments])
             
     def matches(self, rel_stack):
         if len(self.query_segments) == len(rel_stack):
             for segment, rel_spec in itertools.izip(self.query_segments, rel_stack):
-                if segment.property_name != rel_spec.property_name:
+                if segment.relationship != rel_spec.property_name:
                     return False
             for segment, rel_spec in itertools.izip(self.query_segments, rel_stack):
                 segment.rel_property_spec = rel_spec            
@@ -893,56 +892,90 @@ class QueryPath(object):
         
 class QuerySegment(object):
 
-    def __init__(self, query_segment_string, query_segments, separator, generator):
+    def __init__(self, query_segment, query_segments, generator):
         self.generator = generator
-        parts = query_segment_string.split(';')
-        if len(parts) > 2:
-            sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
-        elif len(parts) == 2:
-            params_part = parts[1]
-            if '{' in params_part:
-                open_brace_offset = params_part.index('{')
-                if '}' in params_part:
-                    close_brace_offset = params_part.index('}')
-                    if open_brace_offset < close_brace_offset:
-                        self.discriminator_property_name = params_part[open_brace_offset+1 : close_brace_offset]
-                    else:
-                        sys.exit('empty path parameter ({}) - %s' % segment_string)
-                else:
-                    sys.exit('no closing { for path paramter - %s' % segment_string)
+        if hasattr(query_segment, 'keys'):
+            self.relationship = query_segment['relationship']
+            self.discriminator_separator = query_segment.get('discriminator_separator', ';')
+            self.discriminators = query_segment.get('discriminators',[])[:]
+            if 'discriminator_template' in query_segment:
+                self.discriminator_template = query_segment['template']
             else:
-                sys.exit('missing path paramter ({xxx}) - %s' % segment_string)
-            self.param = self.discriminator_property_name 
-            duplicate_count = len([query_segement.param == self.param for query_segement in query_segments])
-            if duplicate_count > 0:
-                self.param = '_'.join((self.param, str(duplicate_count)))
-                params_part = self.param.join((params_part[:open_brace_offset+1], params_part[close_brace_offset:]))
-            self.swagger_segment_string = separator.join((parts[0], params_part))
+                if len(self.discriminators) == 1:
+                    self.discriminator_template = '{%s}'
+                    self.discriminators[0]['brace_offset'] = 1
+                elif len(self.discriminators) > 1:
+                    brace_offset = 0
+                    template = ''
+                    for inx, discriminator in enumerate(self.discriminators):
+                        if inx > 0:
+                            template += '&'
+                        template = template + discriminator['property'] + '={%s}'
+                        discriminator['open_brace_offset'] = len(template) -1
+                    self.discriminator_template = template
         else:
-            self.discriminator_property_name = None
-            self.param = None
-            self.swagger_segment_string = query_segment_string
-        self.property_name = parts[0]      
+            parts = query_segment.split(';')
+            self.discriminator_separator = generator.discriminator_separator
+            if len(parts) > 2:
+                sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
+            elif len(parts) == 2:
+                params_part = parts[1]
+                if '{' in params_part:
+                    open_brace_offset = params_part.index('{')
+                    if '}' in params_part:
+                        close_brace_offset = params_part.index('}')
+                        if open_brace_offset < close_brace_offset:
+                            discriminator_property_name = params_part[open_brace_offset+1 : close_brace_offset]
+                            self.discriminators = [{
+                                'property': discriminator_property_name,
+                                'swagger_param': discriminator_property_name,
+                                'brace_offset': open_brace_offset
+                                }]
+                            self.discriminator_template = '%s'.join([params_part[:open_brace_offset+1], params_part[close_brace_offset:]])
+                        else:
+                            sys.exit('empty path parameter ({}) - %s' % segment_string)
+                    else:
+                        sys.exit('no closing { for path paramter - %s' % segment_string)
+                else:
+                    sys.exit('missing path parameter ({xxx}) - %s' % segment_string)
+            else:
+                self.discriminator_property_name = None
+                self.discriminators = []
+            self.relationship = parts[0]
+        for discriminator in self.discriminators:
+            duplicate_count = len([discriminator['property'] == disc['swagger_param'] for qs in query_segments for disc in qs.discriminators])
+            discriminator['swagger_param'] = '_'.join((discriminator['swagger_param'], str(duplicate_count))) if duplicate_count > 0 else discriminator['property']
+        if len(self.discriminators) > 0:
+            params_part = self.discriminator_template % self.discriminators[0]['swagger_param'] if len(self.discriminators) == 1 else [disc['swagger_param'] for disc in self.discriminators]
+            self.swagger_segment_string = self.discriminator_separator.join((self.relationship, params_part))
+        else:
+            self.swagger_segment_string = self.relationship
 
     def build_param(self):
-        if self.param:
-            property = self.generator.resolve_property(self.rel_property_spec.target_entity, self.discriminator_property_name)
-            if not property:
-                sys.exit('Property named %s not found in Entity %s in file %s' % (self.property_name, self.rel_property_spec.target_entity, self.generator.filename))
-            rslt = {
-                'name': self.param,
-                'in': 'path',
-                'type': property['type'],
-                'required': True
-                } 
-            if self.rel_property_spec.implementation_private:
-                rslt['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
+        if len(self.discriminators) > 0:
+            result = []
+            for discriminator in self.discriminators:
+                property = self.generator.resolve_property(self.rel_property_spec.target_entity, discriminator['property'])
+                if not property:
+                    sys.exit('Property named %s not found in Entity %s in file %s' % (discriminator['property'], self.rel_property_spec.target_entity, self.generator.filename))
+                rslt = {
+                    'name': discriminator['swagger_param'],
+                    'in': 'path',
+                    'type': property['type'],
+                    'required': True
+                    } 
+                if self.rel_property_spec.implementation_private:
+                    rslt['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
+                result.append(rslt)
             return rslt
         else:
             return None
+            
+    def discriminates(self):
+        return len(self.discriminators) > 0
 
     def __str__(self):
-        return self.__dict__.str()
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
