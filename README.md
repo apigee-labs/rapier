@@ -386,10 +386,10 @@ it is guaranteed to be an alias of the URL in the 'mother' property of the resou
 
 A `query path` can be represented as a string. Here are some examples with their meaning:  
  
-mother - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
-siblings - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
-siblings;{name} - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
-siblings;name={name} - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
+- mother - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
+- siblings - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
+- siblings;{name} - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
+- siblings;name={name} - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
 
 Field Pattern | Type | Description
 ---|:---:|---
