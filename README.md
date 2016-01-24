@@ -364,7 +364,7 @@ TODO: Support the common case of a 'write-once' property that can be set on POST
 
 Field Name | Type | Description
 ---|:---:|---
-relationship | [Relationship](#relationship) | States that the property is a relationship property. If this property is present, the type of the property must be `string` with a `format` of `uri` or an `array` of `string`s with `format` of `uri`. 
+relationship | [Relationship](#relationship) | States that the property is a relationship property. If this property is present, the type of the property must be `string` with a `format` of `uri`. 
  
 #### <a name="relationship"></a>Relationship
 
