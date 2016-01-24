@@ -384,11 +384,11 @@ the URI template \{`child-URL`\}/mother is also part of the API. In other words,
 URL \{`child-URL`\}/mother is guaranteed to be a valid URL, and further, 
 it is guaranteed to be an alias of the URL in the 'mother' property of the resource at `child-URL`.
 
-A `query path` can be represented as a string. Here are some examples with their meaning
-mother - traverse the mother relationship. URL template is \{`child-URL`\}/mother
-siblings - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection
-siblings;{name} - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}.
-siblings;name={name} - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}.
+A `query path` can be represented as a string. Here are some examples with their meaning  
+mother - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
+siblings - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
+siblings;{name} - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
+siblings;name={name} - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
 
 Field Pattern | Type | Description
 ---|:---:|---
