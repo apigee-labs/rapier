@@ -47,9 +47,9 @@ class SwaggerGenerator(object):
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
                 sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
-            self.discriminator_separator = '/' if self.conventions['selector_location'] == 'path-segment' else ';'
+            self.relationship_separator = '/' if self.conventions['selector_location'] == 'path-segment' else ';'
         else:
-            self.discriminator_separator = ';'
+            self.relationship_separator = ';'
         patterns = spec.get('patterns')
         self.swagger = PresortedOrderedDict()
         self.swagger['swagger'] = '2.0'
@@ -896,7 +896,7 @@ class QuerySegment(object):
         self.generator = generator
         if hasattr(query_segment, 'keys'):
             self.relationship = query_segment['relationship']
-            self.discriminator_separator = query_segment.get('discriminator_separator', ';')
+            self.relationship_separator = query_segment.get('relationship_separator', ';')
             self.discriminators = query_segment.get('discriminators',[])[:]
             if 'discriminator_template' in query_segment:
                 self.discriminator_template = query_segment['template']
@@ -915,7 +915,7 @@ class QuerySegment(object):
                     self.discriminator_template = template
         else:
             parts = query_segment.split(';')
-            self.discriminator_separator = generator.discriminator_separator
+            self.relationship_separator = generator.relationship_separator
             if len(parts) > 2:
                 sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
             elif len(parts) == 2:
@@ -947,7 +947,7 @@ class QuerySegment(object):
             discriminator['swagger_param'] = '_'.join((discriminator['swagger_param'], str(duplicate_count))) if duplicate_count > 0 else discriminator['property']
         if len(self.discriminators) > 0:
             params_part = self.discriminator_template % self.discriminators[0]['swagger_param'] if len(self.discriminators) == 1 else [disc['swagger_param'] for disc in self.discriminators]
-            self.swagger_segment_string = self.discriminator_separator.join((self.relationship, params_part))
+            self.swagger_segment_string = self.relationship_separator.join((self.relationship, params_part))
         else:
             self.swagger_segment_string = self.relationship
 
