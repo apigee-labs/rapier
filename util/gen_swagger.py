@@ -192,15 +192,18 @@ class SwaggerGenerator(object):
     def get_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
         result = []
-        if 'properties' in entity_spec:
-            for prop_name, property in entity_spec['properties'].iteritems():
-                if 'relationship' in property:
-                    relationship = as_relationship(prop_name, property['relationship'])
-                    upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
-                    multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
-                    for target_entity_uri in as_list(relationship['entities']):
-                        p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
-                        result.append(p_spec)
+        def add_properties(spec):
+            if 'properties' in spec:
+                for prop_name, property in entity_spec['properties'].iteritems():
+                    if 'relationship' in property:
+                        relationship = as_relationship(prop_name, property['relationship'])
+                        upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
+                        multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
+                        for target_entity_uri in as_list(relationship['entities']):
+                            p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
+                            result.append(p_spec)
+                    add_properties(property)
+        add_properties(entity_spec)
         return result
         
     def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):
