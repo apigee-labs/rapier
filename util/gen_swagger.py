@@ -202,7 +202,8 @@ class SwaggerGenerator(object):
                         for target_entity_uri in as_list(relationship['entities']):
                             p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
                             result.append(p_spec)
-                    add_properties(property)
+                    else:
+                        add_properties(property)
         add_properties(entity_spec)
         return result
         
