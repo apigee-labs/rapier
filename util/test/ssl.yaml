@@ -22,7 +22,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
   Keystore:
@@ -39,7 +39,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Alias'
           multiplicity: 0:n
           consumes: 
@@ -86,7 +86,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#SelfSignedCertAlias'
   Certificate:

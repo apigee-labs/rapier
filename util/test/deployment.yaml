@@ -16,7 +16,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
       comprises:
@@ -24,7 +24,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Microservice'
   Environment:
@@ -54,7 +54,7 @@ entities:
         type: string
         reradOnly: true
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Revision'
   Revision:

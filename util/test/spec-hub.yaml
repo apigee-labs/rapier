@@ -63,7 +63,7 @@ entities:
         format: uri
         type: string
         relationship:
-          relationship_resource: '#MultiValuedRelationshipResource'
+          collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
@@ -72,7 +72,7 @@ entities:
         format: uri
         type: string        
         relationship:
-          relationship_resource: '#MultiValuedRelationshipResource'
+          collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
     well_known_URLs: /
@@ -92,7 +92,7 @@ entities:
         readOnly: true
         type: string
         relationship:
-          relationship_resource: '#MultiValuedRelationshipResource'
+          collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
       folder:
@@ -230,7 +230,7 @@ implementation_only:
         format: uri
         type: string        
         relationship:
-          relationship_resource: '#MultiValuedRelationshipResource'
+          collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder'
           multiplicity: O:n
       c3Bj:
@@ -238,7 +238,7 @@ implementation_only:
         format: uri
         type: string        
         relationship:
-          relationship_resource: '#MultiValuedRelationshipResource'
+          collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec'
           multiplicity: O:n
     query_paths: 

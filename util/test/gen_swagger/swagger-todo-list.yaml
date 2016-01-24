@@ -13,7 +13,7 @@ definitions:
         type: string
         format: uri
         x-rapier-relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
         readOnly: true

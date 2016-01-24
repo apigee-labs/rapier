@@ -12,7 +12,7 @@ entities:
         type: string
         format: uri
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
   Item:

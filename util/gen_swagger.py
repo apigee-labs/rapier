@@ -195,38 +195,18 @@ class SwaggerGenerator(object):
         if 'properties' in entity_spec:
             for prop_name, property in entity_spec['properties'].iteritems():
                 if 'relationship' in property:
-                    relationship = as_relationship(property['relationship'])
+                    relationship = as_relationship(prop_name, property['relationship'])
                     upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
                     multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
                     for target_entity_uri in as_list(relationship['entities']):
-                        p_spec = \
-                            RelMVPropertySpec(
-                                self.conventions, 
-                                prop_name,
-                                entity_uri,
-                                target_entity_uri, 
-                                relationship.get('multiplicity', '0:1'), 
-                                property.get('implementation_private', False), 
-                                relationship.get('collection_resource'), 
-                                relationship.get('consumes'), 
-                                relationship.get('readOnly'),
-                                relationship.get('relationship_resource')) \
-                        if multi_valued else \
-                            RelSVPropertySpec(self.conventions, 
-                                prop_name,
-                                entity_uri,
-                                target_entity_uri, 
-                                relationship.get('multiplicity', '0:1'), 
-                                property.get('implementation_private', False), 
-                                relationship.get('readOnly'))
-                        p_spec.from_property = True
+                        p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
                         result.append(p_spec)
         return result
         
     def add_query_paths(self, query_paths, prefix, rel_property_spec_stack, prev_rel_property_specs):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
-        target_entity_uri = rel_property_spec.target_entity
+        target_entity_uri = rel_property_spec.target_entity_uri
         target_entity_spec = self.resolve_entity(target_entity_uri)
         rel_property_specs = self.get_relationship_property_specs(target_entity_uri, target_entity_spec)
         for query_path in query_paths[:]:
@@ -255,7 +235,7 @@ class SwaggerGenerator(object):
                     paths[path] = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                     
     def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
-        entity_uri = rel_property_spec_stack[-1].target_entity if rel_property_spec_stack else prefix.target_entity
+        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
@@ -381,8 +361,8 @@ class SwaggerGenerator(object):
 
     def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
-        relationship_name = rel_property_spec.property_name
-        entity_uri = rel_property_spec.target_entity
+        relationship_name = rel_property_spec.relationship_name
+        entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
         path_spec = PresortedOrderedDict()
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
@@ -392,25 +372,25 @@ class SwaggerGenerator(object):
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = self.build_collection_get(rel_property_spec)
-        rel_property_specs = [spec for spec in rel_property_specs if spec.property_name == relationship_name]
+        rel_property_specs = [spec for spec in rel_property_specs if spec.relationship_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
         if len(rel_property_specs) > 1:
             schema = {}
-            schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
-            i201_description = 'Created new %s' % ' or '.join([self.resolve_entity_name(spec.target_entity) for spec in rel_property_specs])
-            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_entity_name(spec.target_entity) for spec in rel_property_specs])
-            body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_entity_name(spec.target_entity) for spec in rel_property_specs])
+            schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
+            i201_description = 'Created new %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+            body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
         else:    
             schema = self.global_definition_ref(entity_uri)
             i201_description = 'Created new %s' % self.resolve_entity_name(entity_uri)
             location_desciption = 'perma-link URL of newly-created %s'  % self.resolve_entity_name(entity_uri)
             body_desciption =  'The representation of the new %s being created' % self.resolve_entity_name(entity_uri) 
-        if not rel_property_spec.readonly:
+        if not rel_property_spec.readOnly:
             if len(consumes_entities) > 1:
                 post_schema = {}
                 post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
-                description = 'Create a new %s' % ' or '.join([self.resolve_entity_name(rel_prop_spec.target_entity) for rel_prop_spec in rel_property_specs])
+                description = 'Create a new %s' % ' or '.join([self.resolve_entity_name(rel_prop_spec.target_entity_uri) for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = self.global_definition_ref(entity_uri)
                 description = 'Create a new %s' % self.resolve_entity_name(entity_uri)
@@ -624,9 +604,9 @@ class SwaggerGenerator(object):
             }
         
     def build_collection_get(self, rel_property_spec):
-        collection_entity_uri = rel_property_spec.relationship_resource
+        collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
-            sys.exit('must provide relationship_resource for property %s in entity %s in spec %s' % (rel_property_spec.property_name, rel_property_spec.source_entity, self.filename))
+            sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.property_name, rel_property_spec.source_entity, self.filename))
         if collection_entity_uri not in self.uri_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
@@ -780,13 +760,11 @@ class PathPrefix(object):
       
 class RelSVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, readonly):
-        self.property_name = property_name
-        self.source_entity = source_entity
-        self.target_entity = target_entity
-        self.multiplicity = multiplicity
-        self.implementation_private = implementation_private
-        self.readonly = readonly 
+    def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
+        self.readOnly = relationship.get('readOnly')                                 
+        self.target_entity_uri = target_entity_uri
+        self.relationship_name = relationship['name']        
+        self.implementation_private = property.get('implementation_private', False)                                
         
     def is_multivalued(self):
         return False
@@ -802,19 +780,22 @@ class RelSVPropertySpec(SegmentSpec):
                 
 class RelMVPropertySpec(SegmentSpec):
     
-    def __init__(self, conventions, property_name, source_entity, target_entity, multiplicity, implementation_private, collection_resource, consumes, readonly, relationship_resource):
-        self.property_name = property_name
-        self.source_entity = source_entity
-        self.target_entity = target_entity
-        self.multiplicity = multiplicity
-        self.implementation_private = implementation_private
-        self.readonly = readonly 
-        self.conventions = conventions
-        self.collection_resource = True if collection_resource == None else collection_resource
-        self.consumes = consumes
-        self.consumes_media_types = consumes.keys() if isinstance(consumes, dict) else as_list(consumes) if consumes is not None else None
-        self.consumes_entities = [entity for entity_list in consumes.values() for entity in as_list(entity_list)] if isinstance(consumes, dict) else [self.target_entity]
-        self.relationship_resource = relationship_resource 
+    def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
+        self._generator = generator
+        self._entity_uri = entity_uri
+        self._entity_spec = entity_spec
+        self._property = property
+        self._relationship = relationship
+        self._collection_resource = relationship.get('collection_resource', True)
+        self._consumes = relationship.get('consumes')
+
+        self.readOnly = relationship.get('readOnly')                                 
+        self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
+        self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
+        self.collection_resource = relationship.get('collection_resource')        
+        self.target_entity_uri = target_entity_uri 
+        self.relationship_name = relationship['name']        
+        self.implementation_private = property.get('implementation_private', False)                                
 
     def is_multivalued(self):
         return True
@@ -823,7 +804,7 @@ class RelMVPropertySpec(SegmentSpec):
         return self.implementation_private
         
     def is_collection_resource(self):
-        return not not self.collection_resource
+        return not not self._collection_resource
             
     def get_multiplicity(self):
         return self.multiplicity
@@ -841,9 +822,9 @@ class RelMVPropertySpec(SegmentSpec):
         
 class WellKnownURLSpec(PathPrefix):
     
-    def __init__(self, base_URL, target_entity):
+    def __init__(self, base_URL, target_entity_uri):
         self.base_URL = base_URL 
-        self.target_entity = target_entity
+        self.target_entity_uri = target_entity_uri
 
     def path_segment(self, select_one_of_many = False):
         return self.base_URL[1:] if self.base_URL.endswith('/') else self.base_URL
@@ -876,7 +857,7 @@ class QueryPath(object):
     def matches(self, rel_stack):
         if len(self.query_segments) == len(rel_stack):
             for segment, rel_spec in itertools.izip(self.query_segments, rel_stack):
-                if segment.relationship != rel_spec.property_name:
+                if segment.relationship != rel_spec.relationship_name:
                     return False
             for segment, rel_spec in itertools.izip(self.query_segments, rel_stack):
                 segment.rel_property_spec = rel_spec            
@@ -955,9 +936,9 @@ class QuerySegment(object):
         if len(self.discriminators) > 0:
             result = []
             for discriminator in self.discriminators:
-                property = self.generator.resolve_property(self.rel_property_spec.target_entity, discriminator['property'])
+                property = self.generator.resolve_property(self.rel_property_spec.target_entity_uri, discriminator['property'])
                 if not property:
-                    sys.exit('Property named %s not found in Entity %s in file %s' % (discriminator['property'], self.rel_property_spec.target_entity, self.generator.filename))
+                    sys.exit('Property named %s not found in Entity %s in file %s' % (discriminator['property'], self.rel_property_spec.target_entity_uri, self.generator.filename))
                 rslt = {
                     'name': discriminator['swagger_param'],
                     'in': 'path',
@@ -982,20 +963,20 @@ class QuerySegment(object):
         
 class EntityURLSpec(PathPrefix):
     
-    def __init__(self, target_entity, swagger_generator):
-        self.target_entity = target_entity
+    def __init__(self, target_entity_uri, swagger_generator):
+        self.target_entity_uri = target_entity_uri
         self.swagger_generator = swagger_generator
 
     def path_segment(self, select_one_of_many = False):
-        return '{%s_URL}' % self.swagger_generator.resolve_entity_name(self.target_entity)
+        return '{%s_URL}' % self.swagger_generator.resolve_entity_name(self.target_entity_uri)
 
     def build_param(self):
         return {
-            'name': '%s_URL' % self.swagger_generator.resolve_entity_name(self.target_entity),
+            'name': '%s_URL' % self.swagger_generator.resolve_entity_name(self.target_entity_uri),
             'in': 'URL',
             'type': 'string',
             'description':
-                "The URL of %s entity" % articled(self.swagger_generator.resolve_entity_name(self.target_entity)),
+                "The URL of %s entity" % articled(self.swagger_generator.resolve_entity_name(self.target_entity_uri)),
             'required': True
             }
             
@@ -1015,11 +996,19 @@ def as_list(value, separator = None):
             result = [value]
     return result
     
-def as_relationship(input):
+def as_relationship(property_name, input):
     if hasattr(input, 'keys'):
-        return input
+        if not 'name' in input:
+            result = {'name': property_name}
+            result.update(input)
+            return result
+        else:
+            return input
     else:
-        return {'entities': input}
+        return {
+            'entities': input,
+            'name': property_name
+            }
         
 def main(args):
     generator = SwaggerGenerator()
