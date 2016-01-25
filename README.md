@@ -143,8 +143,9 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-[The author of this example should consider including a 'self-URL' property in the representation of an item]
+The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
 
+The author of this example should consider including a 'self-URL' property in the representation of an item.
 
 ### To-do List Extended
  
@@ -195,11 +196,6 @@ non_entity_resources:
           $ref: '#/entities/Item'
 ```                
 
-The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
-
-`http://example.org/xxxxx` and `http://example.org/yyyyy` are 'perma-link' URLs. The format of the perma-link URLs is part of the private implementation of the server — it is not part of the API — 
-and clients should treat them as opaque. Navigating between resources using perma-link URLs is the primary navigation mechnism for clients using the API.
- 
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
