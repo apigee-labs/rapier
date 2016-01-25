@@ -127,7 +127,7 @@ property called `items`. In this case, the declaration of the relationship prope
 In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the entity property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
-relationship - at a very minimum their URLs. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
+relationship. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
 it is not an entity in the data model - it is a 'technical' resource needed only to represent a collection of entities.
 In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 ```json
@@ -444,7 +444,8 @@ Field Name | Type | Description
 ---|:---:|---
 entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
-relationship_resource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entitis in the realtionship.
+relationship_resource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, 
+at a minimum, the URLs of the entities in the relationship.
 
 #### <a name="query_path"></a>Query Path
 
