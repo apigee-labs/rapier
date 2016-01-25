@@ -83,7 +83,7 @@ entities:
 ```
 
 Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
-that is identified by that URI is a Parson. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
+that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list-basic.yaml) generated from this example spells out all the detail,
 but if you know the HTTP REST model, you probably know already what it will say.
 
