@@ -122,8 +122,8 @@ non_entity_resources:
           $ref: '#/entities/Item'
 ```
 
-This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
-called `items`. In this case, the declaration of the relationship property - items - is a bit more complex.
+This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
+property called `items`. In this case, the declaration of the relationship property is a bit more complex.
 In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When this property is present, the property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
