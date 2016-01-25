@@ -24,7 +24,7 @@ definitions:
       due:
         type: string
         format: date-time
-      name:
+      id:
         type: string
         readOnly: true
       self:
@@ -180,10 +180,10 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /to-dos/items/{name}:
+  /to-dos/items/{id}:
     parameters:
     - in: path
-      name: name
+      name: id
       required: true
       type: string
     get:

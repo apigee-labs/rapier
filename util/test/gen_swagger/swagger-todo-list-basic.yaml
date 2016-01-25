@@ -24,6 +24,10 @@ definitions:
       due:
         type: string
         format: date-time
+      self:
+        type: string
+        format: uri
+        readOnly: true
   Collection:
     readOnly: true
     properties:

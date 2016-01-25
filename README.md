@@ -107,10 +107,6 @@ entities:
           multiplicity: O:n
   Item:
     properties:
-      self:
-        type: string
-        format: uri
-        readOnly: true
       description:
         type: string
       due:
@@ -140,7 +136,6 @@ In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
     {"items": [{
-         "self": "http://example.org/yyyyy",
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
          }
@@ -165,7 +160,7 @@ conventions:
 entities:
   TodoList:
     well_known_URLs: /to-dos
-    query_paths: [items, "items;{name}"]
+    query_paths: [items, "items;{id}"]
     readOnly: true
     properties:
       items:
@@ -181,7 +176,7 @@ entities:
         type: string
         format: uri
         readOnly: true
-      name:
+      id:
         type: string
         readOnly: true
       description:
@@ -211,6 +206,19 @@ The meaning of the first URL is "the resource that is referenced by the items pr
 and following the `items` relationship declared in the relationships section. From this, we know that `http://example.org/xxxxx`
 and `http://example.org/todos/items` must be URLs for the same resource. An implementation may use the 
 same URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it.
+
+In this example, the Collection at `http://example.org/xxxxx` will look like this in JSON:
+```json
+    {"items": [{
+         "self": "http://example.org/yyyyy",
+         "id": "10293847",
+         "description": "Get milk on the way home",
+         "due": "2016-10-30T09:30:10Z"
+         }
+      ]
+    }
+``` 
+
 The second URL template indicates that we can form a query URL by tacking the value of the `id` property of an `Item` on to the end 
 of `todos/items/` to form a URL that will identify a single `Item`. We know from this and the example above that
 `http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Since the `id` value is immutable, an implementation may use the 
@@ -222,7 +230,7 @@ and you can DELETE items to remove them. You can also perform a GET on `http://e
  
     {
      "self": "http://example.org/yyyyy",
-     "name": "get-milk",
+     "id": "10293847",
      "description": "Get milk on the way home",
      "due": "2016-10-30T09:30:10Z"
     }
