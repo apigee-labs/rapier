@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: untitled
+  title: Todo List API
   version: initial
 consumes:
 - application/json
@@ -24,10 +24,6 @@ definitions:
       due:
         type: string
         format: date-time
-      self:
-        type: string
-        format: uri
-        readOnly: true
   Collection:
     readOnly: true
     properties:

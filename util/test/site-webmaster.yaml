@@ -1,3 +1,4 @@
+title: Site Webmaster API
 entities:
   Site:
     well_known_URLs: /

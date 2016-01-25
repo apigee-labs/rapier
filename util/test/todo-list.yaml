@@ -5,7 +5,7 @@ conventions:
 entities:
   TodoList:
     well_known_URLs: /to-dos
-    query_paths: [items, "items;{id}"]
+    query_paths: [items, "items;{name}"]
     readOnly: true
     properties:
       items:
@@ -21,7 +21,7 @@ entities:
         type: string
         format: uri
         readOnly: true
-      id:
+      name:
         type: string
         readOnly: true
       description:

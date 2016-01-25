@@ -38,14 +38,14 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 
 ## Examples
 
-Rapier is very easy to understand and learn. The easiest way is by example.
+Rapier is very easy to understand and learn. The easiest way is by example. Rapier build on to of the [JSON Schema](http://json-schema.org/) standard,
+so if you have never seen JSON Schema, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
 
 ### Hello World
 
 Here is a 'Hello-world' example in Rapier:
 ```yaml
 title: HelloWorldAPI
-version: "0.1"
 entities:
   HelloMessage:
     well_known_URLs: /message
@@ -63,9 +63,80 @@ The `Hello-message` at `/message` will look like this:
 ``` 
 The Swagger document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
 
+### Webmaster
+
+The next step beyond our simple hello-world example is to show a Rapier API that illustrates a relationship:
+
+```yaml
+title: Site Webmaster API
+entities:
+  Site:
+    well_known_URLs: /
+    properties:
+      webmaster:
+        type: string
+        format: uri
+        relationship: '#Person'
+  Person:
+    properties:
+      name:
+        type: string
+```
+
+Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
+that is identified by that URI is a Parson. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
+that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [Swagger document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list-basic.yaml) generated from this example spells out all the detail,
+but if you know the HTTP REST model, you probably know already what it will say.
+
 ### To-do List
 
-Traditionally, the next example after 'Hello world' is 'To-do List':
+The example above shows how easy it is to declare a single-valued realtionship. Here is what it look like if your realtionship is multi-valued:
+
+```yaml
+title: Todo List API
+entities:
+  TodoList:
+    well_known_URLs: /to-dos
+    readOnly: true
+    properties:
+      items:
+        type: string
+        format: uri
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Item'
+          multiplicity: O:n
+  Item:
+    properties:
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+non_entity_resources:
+  Collection:
+    readOnly: true
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/entities/Item'
+```
+
+In this case, the declaration of the relationship property - items - is a bit more complex.
+In addition to declaring the entity type at the end of the relationship, it declares the resource that will be used to hold the list of 
+entities of the relationship. this is specified in the `collection_resource` property. When this property is present, the property is assumed to be
+a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
+relationship. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because it is not an entity in the data model - 
+it is a 'technical' resource needed only to represent a collection of entities.
+
+### To-do List Extended
+ 
+So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to design URLs that allow the user to
+'jump' directly to a particular resource? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Qury Paths`.
+A `Query Path` defines a path though the web of resources across relationships. Each `Query Path` implies a [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
+The following example should make this clearer.
+
 ```yaml
 title: Todo List API
 version: "0.1"

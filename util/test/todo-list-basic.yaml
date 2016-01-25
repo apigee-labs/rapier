@@ -1,3 +1,4 @@
+title: Todo List API
 entities:
   TodoList:
     well_known_URLs: /to-dos
@@ -12,10 +13,6 @@ entities:
           multiplicity: O:n
   Item:
     properties:
-      self:
-        type: string
-        format: uri
-        readOnly: true
       description:
         type: string
       due:
