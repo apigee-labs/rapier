@@ -98,7 +98,7 @@ entities:
       due:
         type: string
         format: date-time
-technical_resources:
+non_entity_resources:
   Collection:
     readOnly: true
     properties:
@@ -253,7 +253,7 @@ entities:
         format: date-time
         readOnly: true
     abstract: true
-technical_resources:
+non_entity_resources:
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
