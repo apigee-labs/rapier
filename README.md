@@ -124,9 +124,9 @@ non_entity_resources:
 
 In this case, the declaration of the relationship property - items - is a bit more complex.
 In addition to declaring the entity type at the end of the relationship, it declares the resource that will be used to hold the list of 
-entities of the relationship. this is specified in the `collection_resource` property. When this property is present, the property is assumed to be
+entities of the relationship. This is specified in the `collection_resource` property. When this property is present, the property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
-relationship. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because it is not an entity in the data model - 
+relationship - at a very minimum their URLs. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because it is not an entity in the data model - 
 it is a 'technical' resource needed only to represent a collection of entities.
 
 ### To-do List Extended
