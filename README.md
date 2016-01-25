@@ -379,10 +379,10 @@ relationship_resource | `url` | May only be set if the relationship is multi-val
 
 A `query path` defines an URL in the API that represents a traversal of a declared relationship. For example, if an Entity called 
 Child has a relationship property called 'mother',
-then declaring the `query path` `mother` for the Child entity says that
-the URI template `\{child-URL\}/mother` is also part of the API where child-URL is the URL of any child. In other words, for a given value of child-URL, the
-URL `\{child-URL\}/mother` is guaranteed to be a valid URL, and further, 
-it is guaranteed to be an alias of the URL in the `mother` property of the resource at `child-URL`.
+then declaring the `query path` 'mother' for the Child entity says that
+the URI template `{child-URL}/mother` is also part of the API where child-URL is the URL of any child. In other words, for a given value of child-URL, the
+URL `{child-URL}/mother` is guaranteed to be a valid URL, and further, 
+it is guaranteed to be an alias of the URL in the 'mother' property of the resource at `child-URL`.
 
 A `query path` can be represented as a string. Here are some examples with their meaning:  
  
