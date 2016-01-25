@@ -143,7 +143,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-/[The author of this example should consider including a 'self-URL' in the representation of an item/]
+[The author of this example should consider including a 'self-URL' in the representation of an item]
 
 
 ### To-do List Extended
