@@ -58,7 +58,7 @@ retrieved using GET and modified using PATCH. You don't have to say this explici
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
-    {"message": "Hello, world"}
+    {"text": "Hello, world"}
 ``` 
 The OAS document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
 
