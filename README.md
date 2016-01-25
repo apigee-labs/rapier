@@ -19,14 +19,13 @@ Rapier does - primarily defined in IETF specifications for HTTP and URL - and wa
 
 Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
-known and understood, we provide a tool that will generate a 
-Swagger document from a Rapier specification. The Swagger documents spell out the conventions used by Rapier in a way that is familiar to many.
-Once you have seen a few examples of the generated Swagger, the conventions will become quickly obvious and you will stop looking at the Swagger. 
-You can stop generating the Swagger
-documents, which are not required, or you may continue to generate them for integrating with tools that are Swagger-based, or for communicating with
-people who know Swagger but not Rapier. 
+known and understood, we provide a tool that will generate an Open API specification (OAS - formerly known as OAS) 
+document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
+Once you have seen a few examples of the generated OAS, the conventions will become quickly obvious and you may stop looking at the OAS. 
+You may continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
+people who know OAS but not Rapier. 
 
-Swagger will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
+OAS will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
 
 Rapier also includes SDK generators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
@@ -61,7 +60,7 @@ The `Hello-message` at `/message` will look like this:
 ```json
     {"message": "Hello, world"}
 ``` 
-The Swagger document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
+The OAS document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-hello-message.yaml). 
 
 ### Webmaster
 
@@ -85,7 +84,7 @@ entities:
 
 Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Parson. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [Swagger document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list-basic.yaml) generated from this example spells out all the detail,
+that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list-basic.yaml) generated from this example spells out all the detail,
 but if you know the HTTP REST model, you probably know already what it will say.
 
 ### To-do List
@@ -230,7 +229,7 @@ and you can DELETE items to remove them. You can also perform a GET on `http://e
      "due": "2016-10-30T09:30:10Z"
     }
  
-If you want to see the generated Swagger document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list.yaml)
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-todo-list.yaml)
  
 ### Dog Tracker
  
@@ -357,20 +356,20 @@ From the `well_known_URLs` and `query_paths` properties, you can infer that the 
     /dog-tracker/people;{name}
     /dog-tracker/people;{name}/dogs
 
-Since you know the pattern, you already know what all these mean, but if you want to see a generated Swagger document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-dog-tracker.yaml)
+Since you know the pattern, you already know what all these mean, but if you want to see a generated OAS document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-dog-tracker.yaml)
 
 ### Property Tracker
  
 The next example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://github.com/apigee/rapier/blob/master/util/test/property-tracker.yaml). 
-This example strains the expressive power of Swagger - you can see a generated [Swagger document here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-property-tracker.yaml).
+This example strains the expressive power of OAS - you can see a generated [OAS document here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-property-tracker.yaml).
 
 ### Spec Repo
 
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee/rapier/blob/master/util/test/spec-hub.yaml) 
-shows an example of how Rapier handles this case. Here is the [corresponding generated Swagger document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub.yaml).
-The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier Swagger generator supports a -i command-line option that allows the implementation
+shows an example of how Rapier handles this case. Here is the [corresponding generated OAS document](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub.yaml).
+The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OAS generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_swagger/swagger-spec-hub-with-impl.yaml).
 
 ## Navigating the Repository
@@ -378,8 +377,8 @@ view of the API to be generated instead of the client view. It can be found [her
 - The js directory contains a Node package that is used by the generated Javascript SDK
 - The js directory contains a Python module that is used by the generated Python SDK
 - The test-servers directory contains some simple servers used to test the genenrated SDKs
-- the util directory contains the sdk generators and the Swagger generator. This directory is a Python module
-  - gen_swagger.py is the Swagger generator
+- the util directory contains the sdk generators and the OAS generator. This directory is a Python module
+  - gen_swagger.py is the OAS generator
   - gen_js_sdk.py is the Javascript SDK genenrator
   - gen_py_sdk.py is the Python SDK genenrator
   - requirements.txt is the pip file with the python dependencies for these generators
