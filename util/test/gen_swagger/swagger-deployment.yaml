@@ -160,7 +160,7 @@ definitions:
         - Page
     readOnly: true
 paths: {}
-x-uris:
+x-URI-templates:
   '{Application_URL}':
     parameters:
     - description: The URL of an Application entity

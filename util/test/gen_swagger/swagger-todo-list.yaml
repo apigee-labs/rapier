@@ -308,7 +308,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-x-uris:
+x-URI-templates:
   '{TodoList_URL}':
     parameters:
     - description: The URL of a TodoList entity

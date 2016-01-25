@@ -72,7 +72,7 @@ class SwaggerGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
         self.swagger['definitions'] = self.definitions
         self.swagger['paths'] = self.swagger_paths
-        self.swagger['x-uris'] = self.swagger_uris
+        self.swagger['x-URI-templates'] = self.swagger_uris
         self.header_parameters = self.build_standard_header_parameters()
         self.swagger['parameters'] = self.header_parameters
         self.swagger['responses'] = dict()
@@ -135,7 +135,7 @@ class SwaggerGenerator(object):
                     self.swagger_paths[implementation_spec_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
-                    self.swagger['x-uris'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
+                    self.swagger['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
@@ -157,7 +157,7 @@ class SwaggerGenerator(object):
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_path.swagger_path_string for query_path in query_paths] )  
         if not self.swagger_uris:
-            del self.swagger['x-uris']
+            del self.swagger['x-URI-templates']
         return self.swagger
 
     def get_relationship_property_specs(self, entity_uri, entity_spec):

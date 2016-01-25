@@ -108,7 +108,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-x-uris:
+x-URI-templates:
   '{HelloMessage_URL}':
     parameters:
     - description: The URL of a HelloMessage entity

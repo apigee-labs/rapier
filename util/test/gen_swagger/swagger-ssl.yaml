@@ -812,7 +812,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-x-uris:
+x-URI-templates:
   '{Environment_URL}':
     parameters:
     - description: The URL of an Environment entity

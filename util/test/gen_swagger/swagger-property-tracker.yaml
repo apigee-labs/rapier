@@ -1497,7 +1497,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-x-uris:
+x-URI-templates:
   '{PropertyTracker_URL}':
     parameters:
     - description: The URL of a PropertyTracker entity
