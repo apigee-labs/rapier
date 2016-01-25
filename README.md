@@ -81,7 +81,7 @@ entities:
         type: string
         format: uri
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
   Item:
@@ -177,7 +177,7 @@ entities:
         format: uri
         type: string
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
       people:
@@ -185,7 +185,7 @@ entities:
         format: uri
         type: string
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
     well_known_URLs: /
@@ -218,7 +218,7 @@ entities:
         format: uri
         type: string
         relationship:
-          relationship_resource: '#Collection'
+          collection_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
 #Boilerplate entities from here
