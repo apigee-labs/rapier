@@ -83,9 +83,9 @@ class SwaggerGenerator(object):
             entities = spec['entities'].copy()
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
-            self.uri_map.update({'#/technical_resources/%s' % name: entity for name, entity in spec.get('technical_resources',{}).iteritems()})
-            self.swagger_uri_map.update({'#/technical_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('technical_resources',{}).iterkeys()})
-            entities.update(spec.get('technical_resources',{}))
+            self.uri_map.update({'#/non_entity_resources/%s' % name: entity for name, entity in spec.get('non_entity_resources',{}).iteritems()})
+            self.swagger_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
+            entities.update(spec.get('non_entity_resources',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:

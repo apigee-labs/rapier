@@ -217,7 +217,7 @@ entities:
         type: string
       kind:
         type: string
-technical_resources:
+non_entity_resources:
   Collection:
     allOf:
     - $ref: '#/entities/Resource'

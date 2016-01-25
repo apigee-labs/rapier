@@ -39,7 +39,7 @@ entities:
       due:
         type: string
         format: date-time
-technical_resources:
+non_entity_resources:
   Collection:
     readOnly: true
     properties:

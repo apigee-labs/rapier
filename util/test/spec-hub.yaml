@@ -147,7 +147,7 @@ entities:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
     produces: application/x-yaml text/yaml text/html text/plain
-technical_resources:
+non_entity_resources:
   Collection:
     allOf:
     - $ref: '#/entities/Resource'
@@ -220,8 +220,8 @@ technical_resources:
   MultiValuedRelationshipResource:
     readOnly: true
     oneOf:
-      - $ref: '#/technical_resources/Collection'
-      - $ref: '#/technical_resources/Page'
+      - $ref: '#/non_entity_resources/Collection'
+      - $ref: '#/non_entity_resources/Page'
 implementation_only:
   Hub:
     properties:
