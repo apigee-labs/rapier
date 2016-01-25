@@ -409,7 +409,7 @@ separator | `string` | The string that separates the relationship name from the 
 
 #### <a name="discriminator"></a>Discriminator
 
-Describes one segment of a query path. Each segment corresponds to a single relationship being traversed.
+Describes one discriminator in a segment. Each discriminator corresponds to a single property of the elements of a relationship.
 
 Field Name | Type | Description
 ---|:---:|---
