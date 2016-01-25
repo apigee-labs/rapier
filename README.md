@@ -19,7 +19,7 @@ Rapier does - primarily defined in IETF specifications for HTTP and URL - and wa
 
 Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
-known and understood, we provide a tool that will generate an Open API specification (OAS - formerly known as OAS) 
+known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as OAS) 
 document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
 Once you have seen a few examples of the generated OAS, the conventions will become quickly obvious and you may stop looking at the OAS. 
 You may continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
