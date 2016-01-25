@@ -911,7 +911,7 @@ class QuerySegment(object):
         if hasattr(query_segment, 'keys'):
             self.relationship = query_segment['relationship']
             self.relationship_separator = query_segment.get('separator', generator.relationship_separator)
-            self.discriminators = query_segment.get('discriminators',[])[:]
+            self.discriminators = as_discriminators(query_segment.get('discriminators', []))
             if 'discriminator_template' in query_segment:
                 self.discriminator_template = query_segment['template']
             else:
@@ -1042,6 +1042,12 @@ def as_relationship(property_name, input):
             'entities': input,
             'name': property_name
             }
+
+def as_discriminators(input):
+    if isinstance(input, list):
+        return input[:]
+    else:
+        return [{'property': property_name} for property_name in as_list(input)]       
         
 def main(args):
     generator = SwaggerGenerator()

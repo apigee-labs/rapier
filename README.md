@@ -404,6 +404,12 @@ Describes one segment of a query path. Each segment corresponds to a single rela
 Field Name | Type | Description
 ---|:---:|---
 relationship | `string` | The name of the relationship for this segment
-discriminators | `array` of [Discriminator](#discriminator) | For multi-valued relationships, defines the properties that will be used to filter the relationship members
+discriminators | `array` of [Discriminator](#discriminator) | For multi-valued relationships, defines the properties that will be used to filter the relationship members. May be specified as a simple string, in which case the string is specified as a space-delimited list of property names
 separator | `string` | The string that separates the relationship name from the discriminators in the query URL. Default value is ';'. Popular alternative is '/'.
 
+#### <a name="discriminator"></a>Discriminator
+
+Describes one segment of a query path. Each segment corresponds to a single relationship being traversed.
+
+Field Name | Type | Description
+---|:---:|---
