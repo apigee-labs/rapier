@@ -107,6 +107,10 @@ entities:
           multiplicity: O:n
   Item:
     properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true
       description:
         type: string
       due:
@@ -136,6 +140,7 @@ In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
     {"items": [{
+         "self": "http://example.org/yyyyy",
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
          }
@@ -143,14 +148,12 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
-
-The author of this example should consider including a 'self-URL' property in the representation of an item.
+The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
 ### To-do List Extended
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to design URLs that allow the user to
-'jump' directly to a particular resource? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Qury Paths`.
+'jump' directly to a particular resource? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
 A `Query Path` defines a path though the web of resources across relationships. Each `Query Path` implies a [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
@@ -219,7 +222,7 @@ and you can DELETE items to remove them. You can also perform a GET on `http://e
  
     {
      "self": "http://example.org/yyyyy",
-     "id": "10293847",
+     "name": "get-milk",
      "description": "Get milk on the way home",
      "due": "2016-10-30T09:30:10Z"
     }
