@@ -127,9 +127,9 @@ entities:
       sigAlg:
         type: string
       issuer:
-        $ref: '#/definitions/X500Name'
+        $ref: '#/entities/X500Name'
       subject:
-        $ref: '#/definitions/X500Name'
+        $ref: '#/entities/X500Name'
       subjectAlternativeDNSNames:
         type: array
         items:
@@ -173,7 +173,7 @@ entities:
     type: object
     resource: false
     properties:
-      countryCose:
+      countryCode:
         type: string
       state: 
         type: string

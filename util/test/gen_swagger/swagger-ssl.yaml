@@ -114,7 +114,7 @@ definitions:
       certValidityInDays:
         type: integer
       issuer:
-        $ref: '#/definitions/X500Name'
+        $ref: '#/entities/X500Name'
       keySize:
         type: string
       kind:
@@ -124,7 +124,7 @@ definitions:
       sigAlg:
         type: string
       subject:
-        $ref: '#/definitions/X500Name'
+        $ref: '#/entities/X500Name'
       subjectAlternativeDNSNames:
         type: array
         items:
@@ -167,7 +167,7 @@ definitions:
     type: object
   X500Name:
     properties:
-      countryCose:
+      countryCode:
         type: string
       email:
         type: string

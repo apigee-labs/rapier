@@ -193,17 +193,23 @@ class SwaggerGenerator(object):
         spec = self.rapier_spec
         result = []
         def add_properties(spec):
-            if 'properties' in spec:
-                for prop_name, property in entity_spec['properties'].iteritems():
-                    if 'relationship' in property:
-                        relationship = as_relationship(prop_name, property['relationship'])
-                        upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
-                        multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
-                        for target_entity_uri in as_list(relationship['entities']):
-                            p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
-                            result.append(p_spec)
-                    else:
-                        add_properties(property)
+            if hasattr(spec, 'keys'):
+                if '$ref' in spec:
+                    add_properties(self.resolve_ref_uri(spec['$ref']))
+                elif 'properties' in spec:
+                    for prop_name, property in spec['properties'].iteritems():
+                        if 'relationship' in property:
+                            relationship = as_relationship(prop_name, property['relationship'])
+                            upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
+                            multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
+                            for target_entity_uri in as_list(relationship['entities']):
+                                p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
+                                result.append(p_spec)
+                        else:
+                            add_properties(property)
+            else:
+                if 'type' in spec and spec['type'] == 'array':
+                    add_properties(spec['type']['items'])
         add_properties(entity_spec)
         return result
         
@@ -690,6 +696,18 @@ class SwaggerGenerator(object):
                 }
             }
                 
+    def resolve_ref_uri(self, ref_uri):
+        if ref_uri.startswith('#/'):
+            parts = ref_uri[2:].split('/')
+            spec = self.rapier_spec
+            for part in parts:
+                if part not in spec:
+                    sys.exit('%s not in %s' % (ref_uri, self.filename))
+                spec = spec[part]
+            return spec
+        else:
+            return self.resolve_entity(ref_uri)
+    
     def resolve_entity(self, uri):
         return self.uri_map[uri]
 
