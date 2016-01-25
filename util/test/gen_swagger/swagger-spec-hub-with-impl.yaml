@@ -19,13 +19,13 @@ definitions:
   ErrorResponse:
     type: string
   Resource:
+    type: object
     properties:
       kind:
         type: string
       self:
         type: string
         readOnly: true
-    type: object
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -54,13 +54,11 @@ definitions:
         type: string
         enum:
         - Hub
-        readOnly: true
       myHub:
         description: URL of a Folder
         format: uri
         type: string
         x-rapier-relationship: '#Folder'
-        readOnly: true
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
@@ -70,7 +68,6 @@ definitions:
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
-        readOnly: true
       things:
         description: URL of a Collection of Specs and Folders
         format: uri
@@ -79,7 +76,7 @@ definitions:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec #Folder'
           multiplicity: O:n
-        readOnly: true
+    readOnly: true
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -108,10 +105,10 @@ definitions:
         type: array
         items:
           properties:
+            action:
+              type: string
             actor:
               format: URL
-              type: string
-            action:
               type: string
   Spec:
     allOf:
@@ -137,12 +134,13 @@ definitions:
         type: array
         items:
           properties:
+            action:
+              type: string
             actor:
               format: URL
               type: string
-            action:
-              type: string
-  Content: {}
+  Content:
+    type: string
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -151,12 +149,11 @@ definitions:
         type: array
         items:
           type: object
-        readOnly: true
       kind:
         type: string
         enum:
         - Collection
-        readOnly: true
+    readOnly: true
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -164,35 +161,31 @@ definitions:
       collection:
         type: string
         format: uri
-        readOnly: true
       item_type:
         type: string
-        readOnly: true
       items:
         type: array
         items:
           type: object
-        readOnly: true
       kind:
         type: string
         enum:
         - Page
-        readOnly: true
       next_page:
         type: string
         format: uri
         x-rapier-relationship:
           entities: '#Page'
           readOnly: true
-        readOnly: true
       previous_page:
         type: string
         format: uri
         x-rapier-relationship:
           entities: '#Page'
           readOnly: true
-        readOnly: true
+    readOnly: true
   MultiValuedRelationshipResource:
+    readOnly: true
     x-oneOf:
     - $ref: '#/definitions/Collection'
     - $ref: '#/definitions/Page'

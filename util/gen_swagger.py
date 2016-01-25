@@ -86,13 +86,6 @@ class SwaggerGenerator(object):
             self.uri_map.update({'#/technical_resources/%s' % name: entity for name, entity in spec.get('technical_resources',{}).iteritems()})
             self.swagger_uri_map.update({'#/technical_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('technical_resources',{}).iterkeys()})
             entities.update(spec.get('technical_resources',{}))
-            for entity_name, entity in entities.iteritems():
-                if 'properties' in entity:
-                    entity['properties'] = entity['properties'].copy()
-                    for prop in entity['properties'].itervalues():
-                        if prop.get('type') == 'array':
-                            if '$ref' in prop['items']:
-                                prop['items']['$ref'] = self.swagger_uri_map[prop['items']['$ref']]
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:
@@ -124,29 +117,7 @@ class SwaggerGenerator(object):
             self.response_sets = self.build_standard_response_sets()
             self.methods = self.build_standard_methods()
             for entity_name, entity_spec in entities.iteritems():
-                definition = PresortedOrderedDict()
-                if 'allOf' in entity_spec:
-                    definition['allOf'] = [{key: self.swagger_uri_map[value] for key, value in ref.iteritems()} for ref in entity_spec['allOf']]
-                if 'oneOf' in entity_spec:
-                    definition['x-oneOf'] = [{key: self.swagger_uri_map[value] for key, value in ref.iteritems()} for ref in entity_spec['oneOf']]
-                if  not 'type' in entity_spec or entity_spec['type'] == 'object': # TODO: maybe need to climb allOf tree to check this more fully
-                    if 'properties' in entity_spec:
-                        immutable_entity = entity_spec.get('readOnly', False)
-                        properties = dict()
-                        for prop_name, prop in entity_spec['properties'].iteritems():
-                             if not prop.get('implementation_private', False):
-                                prop_props = PresortedOrderedDict()
-                                for p_n, p in prop.iteritems():
-                                    prop_props['x-rapier-relationship' if p_n == 'relationship' else p_n] = p 
-                                properties[prop_name] = prop_props
-                        if immutable_entity:
-                            for prop in properties.itervalues():
-                                prop['readOnly'] = True
-                        definition['properties'] = properties
-                    if 'required' in entity_spec:
-                        definition['required'] = entity_spec['required']
-                    if 'type' in entity_spec:
-                        definition['type'] = entity_spec['type']
+                definition = self.to_swagger(entity_spec)
                 self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
@@ -207,9 +178,15 @@ class SwaggerGenerator(object):
                                 result.append(p_spec)
                         else:
                             add_properties(property)
-            else:
-                if 'type' in spec and spec['type'] == 'array':
-                    add_properties(spec['type']['items'])
+                elif 'type' in spec and spec['type'] == 'array':
+                    add_properties(spec['items'])
+                if 'oneOf' in spec:
+                    for o_spec in spec['oneOf']:
+                        add_properties(o_spec)
+                if 'allOf' in spec:
+                    for o_spec in spec['allOf']:
+                        add_properties(o_spec)
+
         add_properties(entity_spec)
         return result
         
@@ -729,6 +706,40 @@ class SwaggerGenerator(object):
                 property = self.resolve_property(entity_ref['$ref'], property_name)
                 if property:
                     return property
+
+    def to_swagger(self, node):
+        if hasattr(node, 'keys'):
+            result = PresortedOrderedDict()
+            for k, v in node.iteritems():
+                if k == 'oneOf':
+                    result['x-oneOf'] = self.to_swagger(v)
+                if k == 'allOf':
+                    result['allOf'] = self.to_swagger(v)
+                elif k == '$ref':
+                    result['$ref'] = self.swagger_uri_map[v]
+                elif k == 'type':
+                    result['type'] = self.to_swagger(v)
+                elif k == 'items':
+                    result['items'] = self.to_swagger(v)
+                elif k == 'format':
+                    result['format'] = self.to_swagger(v)
+                elif k == 'enum':
+                    result['enum'] = v
+                elif k == 'description':
+                    result['description'] = v
+                elif k == 'required':
+                    result['required'] = v
+                elif k == 'readOnly':
+                    result['readOnly'] = v
+                elif k == 'properties':
+                    result['properties'] = {k2: self.to_swagger(v2) for k2,v2 in v.iteritems() if not v2.get('implementation_private', False)} 
+                elif k == 'relationship':
+                    result['x-rapier-relationship'] = v
+            return result
+        elif isinstance(node, list):
+            return [self.to_swagger(i) for i in node]
+        else:
+            return node
 
 class SegmentSpec(object):
             

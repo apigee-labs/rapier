@@ -19,7 +19,6 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Bicycle'
           multiplicity: O:n
-        readOnly: true
       dogs:
         description: URL of a Collection of Dogs
         format: uri
@@ -28,7 +27,6 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
-        readOnly: true
       institutions:
         description: URL of a Collection of Institutions
         format: uri
@@ -37,7 +35,6 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Institution'
           multiplicity: O:n
-        readOnly: true
       people:
         description: URL of a Collection of Persons
         format: uri
@@ -46,7 +43,7 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Person'
           multiplicity: O:n
-        readOnly: true
+    readOnly: true
   Dog:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -112,13 +109,13 @@ definitions:
       name:
         type: string
   Resource:
+    type: object
     properties:
       kind:
         type: string
       self:
         type: string
         readOnly: true
-    type: object
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -147,12 +144,11 @@ definitions:
         type: array
         items:
           type: object
-        readOnly: true
       kind:
         type: string
         enum:
         - Collection
-        readOnly: true
+    readOnly: true
 paths:
   /:
     get:

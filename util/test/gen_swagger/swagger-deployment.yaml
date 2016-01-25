@@ -63,7 +63,7 @@ definitions:
       has:
         format: uri
         type: string
-        reradOnly: true
+        readOnly: true
         x-rapier-relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
@@ -103,13 +103,13 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
   Resource:
+    type: object
     properties:
       kind:
         type: string
       self:
         type: string
         readOnly: true
-    type: object
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -138,12 +138,11 @@ definitions:
         type: array
         items:
           type: object
-        readOnly: true
       kind:
         type: string
         enum:
         - Collection
-        readOnly: true
+    readOnly: true
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -151,17 +150,15 @@ definitions:
       collection:
         type: string
         format: uri
-        readOnly: true
       items:
         type: array
         items:
           type: object
-        readOnly: true
       kind:
         type: string
         enum:
         - Page
-        readOnly: true
+    readOnly: true
 paths: {}
 x-uris:
   '{Application_URL}':

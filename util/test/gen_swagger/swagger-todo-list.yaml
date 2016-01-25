@@ -8,6 +8,7 @@ produces:
 - application/json
 definitions:
   TodoList:
+    readOnly: true
     properties:
       items:
         type: string
@@ -16,7 +17,6 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
-        readOnly: true
   Item:
     properties:
       description:
@@ -32,12 +32,12 @@ definitions:
         format: uri
         readOnly: true
   Collection:
+    readOnly: true
     properties:
       items:
         type: array
         items:
           $ref: '#/definitions/Item'
-        readOnly: true
 paths:
   /to-dos:
     get:

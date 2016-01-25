@@ -52,7 +52,7 @@ entities:
       has:
         format: uri
         type: string
-        reradOnly: true
+        readOnly: true
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
