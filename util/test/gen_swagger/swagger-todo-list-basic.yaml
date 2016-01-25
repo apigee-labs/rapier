@@ -1,20 +1,44 @@
 swagger: '2.0'
 info:
-  title: HelloWorldAPI
+  title: untitled
   version: initial
 consumes:
 - application/json
 produces:
 - application/json
 definitions:
-  HelloMessage:
+  TodoList:
+    readOnly: true
     properties:
-      text:
+      items:
         type: string
+        format: uri
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Item'
+          multiplicity: O:n
+  Item:
+    properties:
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+      self:
+        type: string
+        format: uri
+        readOnly: true
+  Collection:
+    readOnly: true
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Item'
 paths:
-  /message:
+  /to-dos:
     get:
-      description: Retrieve a HelloMessage
+      description: Retrieve a TodoList
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -29,7 +53,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/TodoList'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -38,45 +62,6 @@ paths:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      - application/json-patch+json
-      description: Update a HelloMessage entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the HelloMessage being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/HelloMessage'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/HelloMessage'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
     head:
@@ -109,15 +94,15 @@ paths:
         default:
           $ref: '#/responses/default'
 x-URI-templates:
-  '{HelloMessage_URL}':
+  '{TodoList_URL}':
     parameters:
-    - description: The URL of a HelloMessage entity
+    - description: The URL of a TodoList entity
       in: URL
-      name: HelloMessage_URL
+      name: TodoList_URL
       required: true
       type: string
     get:
-      description: Retrieve a HelloMessage
+      description: Retrieve a TodoList
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -132,7 +117,70 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/TodoList'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Item_URL}':
+    parameters:
+    - description: The URL of an Item entity
+      in: URL
+      name: Item_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve an Item
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Item'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -147,14 +195,14 @@ x-URI-templates:
       consumes:
       - application/merge-patch+json
       - application/json-patch+json
-      description: Update a HelloMessage entity
+      description: Update an Item entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the HelloMessage being updated
+      - description: The subset of properties of the Item being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessage'
+          $ref: '#/definitions/Item'
       responses:
         '200':
           description: successful
@@ -167,7 +215,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/Item'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -180,6 +228,96 @@ x-URI-templates:
           $ref: '#/responses/406'
         '409':
           $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Item
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Item'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Collection_URL}':
+    parameters:
+    - description: The URL of a Collection entity
+      in: URL
+      name: Collection_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Collection
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     head:

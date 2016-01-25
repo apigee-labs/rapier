@@ -1,0 +1,12 @@
+entities:
+  Site:
+    well_known_URLs: /
+    properties:
+      webmaster:
+        type: string
+        format: uri
+        relationship: '#Person'
+  Person:
+    properties:
+      name:
+        type: string

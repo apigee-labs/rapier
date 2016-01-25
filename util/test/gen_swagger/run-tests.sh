@@ -12,3 +12,5 @@ cd $ROOT_DIR
 ./rapier/util/gen_swagger.py -s rapier/util/test/ssl.yaml > rapier/util/test/gen_swagger/swagger-ssl.yaml
 ./rapier/util/gen_swagger.py rapier/util/test/deployment.yaml > rapier/util/test/gen_swagger/swagger-deployment.yaml
 ./rapier/util/gen_swagger.py rapier/util/test/todo-list-with-links.yaml > rapier/util/test/gen_swagger/swagger-links-todo-list.yaml
+./rapier/util/gen_swagger.py rapier/util/test/todo-list-basic.yaml > rapier/util/test/gen_swagger/swagger-todo-list-basic.yaml
+./rapier/util/gen_swagger.py rapier/util/test/site-webmaster.yaml > rapier/util/test/gen_swagger/swagger-site-webmaster.yaml

@@ -1,20 +1,26 @@
 swagger: '2.0'
 info:
-  title: HelloWorldAPI
+  title: untitled
   version: initial
 consumes:
 - application/json
 produces:
 - application/json
 definitions:
-  HelloMessage:
+  Site:
     properties:
-      text:
+      webmaster:
+        type: string
+        format: uri
+        x-rapier-relationship: '#Person'
+  Person:
+    properties:
+      name:
         type: string
 paths:
-  /message:
+  /:
     get:
-      description: Retrieve a HelloMessage
+      description: Retrieve a Site
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -29,7 +35,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/Site'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -44,14 +50,14 @@ paths:
       consumes:
       - application/merge-patch+json
       - application/json-patch+json
-      description: Update a HelloMessage entity
+      description: Update a Site entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the HelloMessage being updated
+      - description: The subset of properties of the Site being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessage'
+          $ref: '#/definitions/Site'
       responses:
         '200':
           description: successful
@@ -64,7 +70,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/Site'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -109,15 +115,15 @@ paths:
         default:
           $ref: '#/responses/default'
 x-URI-templates:
-  '{HelloMessage_URL}':
+  '{Site_URL}':
     parameters:
-    - description: The URL of a HelloMessage entity
+    - description: The URL of a Site entity
       in: URL
-      name: HelloMessage_URL
+      name: Site_URL
       required: true
       type: string
     get:
-      description: Retrieve a HelloMessage
+      description: Retrieve a Site
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -132,7 +138,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/Site'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -147,14 +153,14 @@ x-URI-templates:
       consumes:
       - application/merge-patch+json
       - application/json-patch+json
-      description: Update a HelloMessage entity
+      description: Update a Site entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the HelloMessage being updated
+      - description: The subset of properties of the Site being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/HelloMessage'
+          $ref: '#/definitions/Site'
       responses:
         '200':
           description: successful
@@ -167,7 +173,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/HelloMessage'
+            $ref: '#/definitions/Site'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -180,6 +186,135 @@ x-URI-templates:
           $ref: '#/responses/406'
         '409':
           $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Person_URL}':
+    parameters:
+    - description: The URL of a Person entity
+      in: URL
+      name: Person_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Person
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      - application/json-patch+json
+      description: Update a Person entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Person being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Person'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Person
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
     head:
