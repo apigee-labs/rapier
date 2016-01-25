@@ -406,7 +406,7 @@ Field Name | Type | Description
 relationship | `string` | The name of the relationship for this segment
 discriminators | `array` of [Discriminator](#discriminator) | For multi-valued relationships, defines the properties that will be used to filter the relationship members. May be specified as a simple string, in which case the string is specified as a space-delimited list of property names
 separator | `string` | The string that separates the relationship name from the discriminators in the query URL. Default value is ';'. Popular alternative is '/'.
-discriminator_template | `string` | A [URI Template](https://tools.ietf.org/html/rfc6570) for the discrominators. For example: "`name={},age<{}`"
+discriminator_template | `string` | A [URI Template](https://tools.ietf.org/html/rfc6570) for the discriminators. For example: "`name={},age<{}`"
 
 #### <a name="discriminator"></a>Discriminator
 
