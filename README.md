@@ -413,3 +413,4 @@ Describes one discriminator in a segment. Each discriminator corresponds to a si
 
 Field Name | Type | Description
 ---|:---:|---
+property_name | `string` | the name of the property
