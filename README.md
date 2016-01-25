@@ -14,8 +14,8 @@ You specify an API with Rapier by specifying, in a YAML file, the entities and r
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. In the future we will allow more options for these add-on conventions - for now they are mostly fixed.
 
-Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that Rapier does
-- mostly defined in IETF specifications for HTTP and URL - and was absolutely consistent in applying them.
+Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
+Rapier does - mostly defined in IETF specifications for HTTP and URL - and was absolutely consistent in applying them.
 
 Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
