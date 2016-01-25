@@ -122,12 +122,31 @@ non_entity_resources:
           $ref: '#/entities/Item'
 ```
 
-In this case, the declaration of the relationship property - items - is a bit more complex.
-In addition to declaring the entity type at the end of the relationship, it declares the resource that will be used to hold the list of 
+This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
+called `items`. In this case, the declaration of the relationship property - items - is a bit more complex.
+In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When this property is present, the property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
-relationship - at a very minimum their URLs. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because it is not an entity in the data model - 
-it is a 'technical' resource needed only to represent a collection of entities.
+relationship - at a very minimum their URLs. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
+it is not an entity in the data model - it is a 'technical' resource needed only to represent a collection of entities.
+In JSON, the `To_do_list` at `/to-dos` will actually look like this:
+```json
+    {"items": "http://example.org/xxxxx"}
+```
+The Collection at `http://example.org/xxxxx` will look like this in JSON:
+```json
+    {"items": [{
+         "self": "http://example.org/yyyyy",
+         "id": "10293847",
+         "description": "Get milk on the way home",
+         "due": "2016-10-30T09:30:10Z"
+         }
+      ]
+    }
+``` 
+
+
+
 
 ### To-do List Extended
  
@@ -144,7 +163,7 @@ conventions:
 entities:
   TodoList:
     well_known_URLs: /to-dos
-    query_paths: [items, "items;{id}"]
+    query_paths: [items, "items;{name}"]
     readOnly: true
     properties:
       items:
@@ -160,7 +179,7 @@ entities:
         type: string
         format: uri
         readOnly: true
-      id:
+      name:
         type: string
         readOnly: true
       description:
@@ -177,24 +196,6 @@ non_entity_resources:
         items: 
           $ref: '#/entities/Item'
 ```                
-This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a property
-called `items` that has a property called relationship. That tells you that the value of items represents a relationship to the `Items` of the `To_do_list`. 
-The fact that the realtionship is multi-valued, plus the `relationship_resource` specification tells you that the value of the `items` property will be a URL that points to a Collection
-resource that contains information on the items of the `To_do_list`. In JSON, the `To_do_list` at `/to-dos` will actually look like this:
-```json
-    {"items": "http://example.org/xxxxx"}
-```
-The Collection at `http://example.org/xxxxx` will look like this in JSON:
-```json
-    {"items": [{
-         "self": "http://example.org/yyyyy",
-         "id": "10293847",
-         "description": "Get milk on the way home",
-         "due": "2016-10-30T09:30:10Z"
-         }
-      ]
-    }
-``` 
 
 The format of the resource for multi-valued realtionships is under the control of the Rapier author - this Collection format is used here as an example.
 
