@@ -136,8 +136,6 @@ In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
     {"items": [{
-         "self": "http://example.org/yyyyy",
-         "id": "10293847",
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
          }
