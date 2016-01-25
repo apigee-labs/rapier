@@ -246,23 +246,23 @@ implementation_only:
       - relationship: Zmxk
         discriminators:
         - property: implementation_key
-        relationship_separator: "-"
+        separator: "-"
     - segments: 
       - relationship: Zmxk
         discriminators:
         - property: implementation_key
-        relationship_separator: "-"
+        separator: "-"
       - relationship: contents
     - segments: 
       - relationship: c3Bj
         discriminators:
         - property: implementation_key
-        relationship_separator: "-"
+        separator: "-"
     - segments: 
       - relationship: c3Bj
         discriminators:
         - property: implementation_key
-        relationship_separator: "-"
+        separator: "-"
       - relationship: content
   Folder:
     properties:

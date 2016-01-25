@@ -910,7 +910,7 @@ class QuerySegment(object):
         self.generator = generator
         if hasattr(query_segment, 'keys'):
             self.relationship = query_segment['relationship']
-            self.relationship_separator = query_segment.get('relationship_separator', ';')
+            self.relationship_separator = query_segment.get('separator', generator.relationship_separator)
             self.discriminators = query_segment.get('discriminators',[])[:]
             if 'discriminator_template' in query_segment:
                 self.discriminator_template = query_segment['template']

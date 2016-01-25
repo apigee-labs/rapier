@@ -393,9 +393,17 @@ A `query path` can be represented as a string. Here are some examples with their
 
 Alternatively, you can provide a query path as a structure:
 
-Field Pattern | Type | Description
+Field Name | Type | Description
 ---|:---:|---
-segment | [Query Path Segment](#query_path_segment) | A property name.
+segments | `array` of [Query Path Segment](#query_path_segment) | A segment of a query path.
 
+#### <a name="query_path_segment"></a>Query Path Segment
 
+Describes one segment of a query path. Each segment corresponds to a single relationship being traversed.
+
+Field Name | Type | Description
+---|:---:|---
+relationship | `string` | The name of the relationship for this segment
+discriminators | `array` of [Discriminator](#discriminator) | For multi-valued relationships, defines the properties that will be used to filter the relationship members
+separator | `string` | The string that separates the relationship name from the discriminators in the query URL. Default value is ';'. Popular alternative is '/'.
 
