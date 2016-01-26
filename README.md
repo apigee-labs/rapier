@@ -27,7 +27,7 @@ people who know OAS but not Rapier.
 OAS will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
 
-Rapier also includes SDK generators for Javascripot and Python. In the future we intend to work on test tools, and server implementation frameworks.  
+Rapier also includes SDK generators for Javascript and Python. In the future we intend to work on test tools, and server implementation frameworks.  
 
 
 \[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
@@ -127,7 +127,7 @@ In addition to declaring the entity type at the end of the relationship, it decl
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the entity property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
-it is not an entity in the data model - it is a 'technical' resource needed only to represent a collection of entities.
+it is not an entity in the data model - it is a 'technical' resource needed to represent a collection of entities.
 In JSON, the `To_do_list` at `/to-dos` will actually look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
@@ -379,18 +379,18 @@ view of the API to be generated instead of the client view. It can be found [her
 
 ## Navigating the Repository
 
-- The js directory contains a Node package that is used by the generated Javascript SDK
-- The js directory contains a Python module that is used by the generated Python SDK
-- The test-servers directory contains some simple servers used to test the genenrated SDKs
-- the util directory contains the sdk generators and the OAS generator. This directory is a Python module
-  - gen_swagger.py is the OAS generator
-  - gen_js_sdk.py is the Javascript SDK genenrator
-  - gen_py_sdk.py is the Python SDK genenrator
-  - requirements.txt is the pip file with the python dependencies for these generators
+- js - a directory containing a Node package that is used by the generated Javascript SDK
+- py - a directory contains a Python module that is used by the generated Python SDK
+- test-servers - a directory contains some simple servers used to test the genenrated SDKs
+- util a directory containing the sdk generators and the OAS generator. This directory is a Python module
+  - gen_swagger.py - the OAS generator
+  - gen_js_sdk.py - the Javascript SDK genenrator
+  - gen_py_sdk.py - the Python SDK genenrator
+  - requirements.txt - the pip file with the python dependencies for these generators
   - test is a directory containing tests for the generators. This directory contains numerous samples.
-    - gen_swagger is a directory containing generated swagger files from the samples
-    - gen_js_sdk is a directory containing generated Javascript sdk files from the samples
-    - gen_js_sdk is a directory containing generated Python sdk files from the samples
+    - gen_swagger - a directory containing generated swagger files from the samples
+    - gen_js_sdk - a directory containing generated Javascript sdk files from the samples
+    - gen_js_sdk - a directory containing generated Python sdk files from the samples
 
 ## The Rapier Language Spec
 
