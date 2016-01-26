@@ -36,8 +36,8 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 
 ## Examples
 
-Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on to of the [JSON Schema](http://json-schema.org/) standard,
-so if you have never seen JSON Schema, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
+Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
+so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
 
 ### Hello World
 
@@ -423,7 +423,7 @@ Each entity is a [JSON Schema](http://json-schema.org/). It includes the standar
 
 Field Name | Type | Description
 ---|:---:|---
-id | `string` | The id of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using the URI fragment `#{id}`. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`
+id | `string` | The id of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using the URI fragment `#{id}`. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}` For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
 query_paths | `string` or `array` of [Query Path](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
