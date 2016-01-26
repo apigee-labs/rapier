@@ -7,7 +7,7 @@ produce specifications that describe higher quality APIs. \[1\]
 
 You specify an API with Rapier by specifying, in a YAML file, the entities and relationships of the data model that underlies the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
-that we have added. Once you have defined the Entities and Relationships of your data model, plus some paths that traverse the relationships, your API is fully specified.
+that we have added. With Rapier, your API is fully specified by the Entities and Relationships of your data model, plus some paths that traverse the relationships.
 
 Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
 a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
