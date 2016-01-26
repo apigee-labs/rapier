@@ -388,9 +388,9 @@ view of the API to be generated instead of the client view. It can be found [her
   - gen_py_sdk.py - the Python SDK genenrator
   - requirements.txt - the pip file with the python dependencies for these generators
   - test - a directory containing tests for the generators. This directory contains numerous samples.
-    - gen_openapispec - a directory containing generated openapispec files from the samples
-    - gen_js_sdk - a directory containing generated Javascript sdk files from the samples
-    - gen_js_sdk - a directory containing generated Python sdk files from the samples
+    - gen_openapispec - a directory containing openapispec generated files from the samples
+    - gen_js_sdk - a directory containing Javascript sdk files generated from the samples
+    - gen_js_sdk - a directory containing Python sdk files generated from the samples
 
 ## The Rapier Language Spec
 
