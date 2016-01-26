@@ -1,3 +1,7 @@
+# Some people like to group all URI-valued properties under an array-valued 'links' property, and put
+# the relationship name as the value of a 'rel' property, rather than putting it in a JSON property name.
+# I do not understand the appeal of this pattern, but I wanted to show how you can do it with Rapier 
+# if you want to. 
 title: Todo List API
 version: "0.1"
 conventions:
