@@ -5,21 +5,20 @@
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. \[1\]
 
-Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
-a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
-as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach does not 
-fit with your mental model.
-
 You specify an API with Rapier by specifying, in a YAML file, the entities and relationships that describe the resources of the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
-that we have added. In the future we will allow more options for these add-on conventions - for now they are mostly fixed.
+that we have added. Once you have defined the Entities and Relationships of your data model, plus some paths that traverse the relationships, your API is fully specified.
+
+Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
+a web API is network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
+as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach less appealing.
 
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
 Rapier does - primarily defined in IETF specifications for HTTP and URL - and was absolutely consistent in applying them.
 
 Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
-known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as OAS) 
+known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
 document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
 Once you have seen a few examples of the generated OAS, the conventions will become quickly obvious and you may stop looking at the OAS. 
 You may continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
