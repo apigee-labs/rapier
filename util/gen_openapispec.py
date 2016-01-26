@@ -881,6 +881,7 @@ class WellKnownURLSpec(PathPrefix):
 class QueryPath(object):
 
     def __init__(self, query_path, generator):
+        self.query_path = query_path
         self.query_segments = list()
         segments = query_path['segments'] if hasattr(query_path, 'keys') else query_path.split('/')
         for segment in segments:
@@ -899,7 +900,7 @@ class QueryPath(object):
             return False
             
     def __str__(self):
-        return self.__dict__.str()
+        return str(self.query_path)
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
@@ -911,22 +912,22 @@ class QuerySegment(object):
         if hasattr(query_segment, 'keys'):
             self.relationship = query_segment['relationship']
             self.relationship_separator = query_segment.get('separator', generator.relationship_separator)
-            self.discriminators = as_discriminators(query_segment.get('discriminators', []))
-            if 'discriminator_template' in query_segment:
-                self.discriminator_template = query_segment['template']
+            self.selectors = as_selectors(query_segment.get('selectors', []))
+            if 'selector_template' in query_segment:
+                self.selector_template = query_segment['template']
             else:
-                if len(self.discriminators) == 1:
-                    self.discriminator_template = '{%s}'
-                    self.discriminators[0]['brace_offset'] = 1
-                elif len(self.discriminators) > 1:
+                if len(self.selectors) == 1:
+                    self.selector_template = '{%s}'
+                    self.selectors[0]['brace_offset'] = 1
+                elif len(self.selectors) > 1:
                     brace_offset = 0
                     template = ''
-                    for inx, discriminator in enumerate(self.discriminators):
+                    for inx, selector in enumerate(self.selectors):
                         if inx > 0:
                             template += '&'
-                        template = template + discriminator['property'] + '={%s}'
-                        discriminator['open_brace_offset'] = len(template) -1
-                    self.discriminator_template = template
+                        template = template + selector['property'] + '={%s}'
+                        selector['open_brace_offset'] = len(template) -1
+                    self.selector_template = template
         else:
             parts = query_segment.split(';')
             self.relationship_separator = generator.relationship_separator
@@ -939,13 +940,13 @@ class QuerySegment(object):
                     if '}' in params_part:
                         close_brace_offset = params_part.index('}')
                         if open_brace_offset < close_brace_offset:
-                            discriminator_property_name = params_part[open_brace_offset+1 : close_brace_offset]
-                            self.discriminators = [{
-                                'property': discriminator_property_name,
-                                'openapispec_param': discriminator_property_name,
+                            selector_property_name = params_part[open_brace_offset+1 : close_brace_offset]
+                            self.selectors = [{
+                                'property': selector_property_name,
+                                'openapispec_param': selector_property_name,
                                 'brace_offset': open_brace_offset
                                 }]
-                            self.discriminator_template = '%s'.join([params_part[:open_brace_offset+1], params_part[close_brace_offset:]])
+                            self.selector_template = '%s'.join([params_part[:open_brace_offset+1], params_part[close_brace_offset:]])
                         else:
                             sys.exit('empty path parameter ({}) - %s' % segment_string)
                     else:
@@ -953,27 +954,27 @@ class QuerySegment(object):
                 else:
                     sys.exit('missing path parameter ({xxx}) - %s' % segment_string)
             else:
-                self.discriminator_property_name = None
-                self.discriminators = []
+                self.selector_property_name = None
+                self.selectors = []
             self.relationship = parts[0]
-        for discriminator in self.discriminators:
-            duplicate_count = len([discriminator['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.discriminators])
-            discriminator['openapispec_param'] = '_'.join((discriminator['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else discriminator['property']
-        if len(self.discriminators) > 0:
-            params_part = self.discriminator_template % self.discriminators[0]['openapispec_param'] if len(self.discriminators) == 1 else [disc['openapispec_param'] for disc in self.discriminators]
+        for selector in self.selectors:
+            duplicate_count = len([selector['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.selectors])
+            selector['openapispec_param'] = '_'.join((selector['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else selector['property']
+        if len(self.selectors) > 0:
+            params_part = self.selector_template % self.selectors[0]['openapispec_param'] if len(self.selectors) == 1 else [disc['openapispec_param'] for disc in self.selectors]
             self.openapispec_segment_string = self.relationship_separator.join((self.relationship, params_part))
         else:
             self.openapispec_segment_string = self.relationship
 
     def build_param(self):
-        if len(self.discriminators) > 0:
+        if len(self.selectors) > 0:
             result = []
-            for discriminator in self.discriminators:
-                property = self.generator.resolve_property(self.rel_property_spec.target_entity_uri, discriminator['property'])
+            for selector in self.selectors:
+                property = self.generator.resolve_property(self.rel_property_spec.target_entity_uri, selector['property'])
                 if not property:
-                    sys.exit('Property named %s not found in Entity %s in file %s' % (discriminator['property'], self.rel_property_spec.target_entity_uri, self.generator.filename))
+                    sys.exit('Property named %s not found in Entity %s in file %s' % (selector['property'], self.rel_property_spec.target_entity_uri, self.generator.filename))
                 rslt = {
-                    'name': discriminator['openapispec_param'],
+                    'name': selector['openapispec_param'],
                     'in': 'path',
                     'type': property['type'],
                     'required': True
@@ -986,7 +987,7 @@ class QuerySegment(object):
             return None
             
     def discriminates(self):
-        return len(self.discriminators) > 0
+        return len(self.selectors) > 0
 
     def __str__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
@@ -1043,7 +1044,7 @@ def as_relationship(property_name, input):
             'name': property_name
             }
 
-def as_discriminators(input):
+def as_selectors(input):
     if isinstance(input, list):
         return input[:]
     else:

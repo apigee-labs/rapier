@@ -88,7 +88,7 @@ but if you know the HTTP REST model, you probably know already what it will say.
 
 ### To-do List
 
-The example above shows how easy it is to declare a single-valued realtionship. Here is what it look like if your realtionship is multi-valued:
+The example above shows how easy it is to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
 
 ```yaml
 title: Todo List API
@@ -146,9 +146,9 @@ The format of the resource for multi-valued relationships is under the control o
 
 ### To-do List Extended
  
-So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to design URLs that allow the user to
-'jump' directly to a particular resource? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
-A `Query Path` defines a path though the web of resources across relationships. Each `Query Path` implies a [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
+So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
+quickly locate a particular resource in the web without navigating the web from the beginning to find it? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
+A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources. Each `Query Path` implies a [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
 ```yaml
@@ -198,6 +198,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     /to-dos/items
     /to-dos/items/{id}
     
+[The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been /to-dos/items;{id}]
 These are examples of 'query URLs'. Query URLs are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 In Rapier APIs, query URLs allow clients to navigate along paths defined by the relationships in the Rapier API specification without retrieving intermediate resources. 
@@ -482,13 +483,13 @@ Describes one segment of a query path. Each segment corresponds to a single rela
 Field Name | Type | Description
 ---|:---:|---
 relationship | `string` | The name of the relationship for this segment
-discriminators | `array` of [Discriminator](#discriminator) | For multi-valued relationships, defines the properties that will be used to filter the relationship members. May be specified as a simple string, in which case the string is specified as a space-delimited list of property names
-separator | `string` | The string that separates the relationship name from the discriminators in the query URL. Default value is ';'. Popular alternative is '/'.
-discriminator_template | `string` | A [URI Template](https://tools.ietf.org/html/rfc6570) for the discriminators. For example: "`name={},age<{}`"
+selectors | `array` of [Selector](#selector) | For multi-valued relationships, defines the properties that will be used to filter the relationship members. May be specified as a simple string, in which case the string is specified as a space-delimited list of property names
+separator | `string` | The string that separates the relationship name from the selectors in the query URL. Default value is ';'. Popular alternative is '/'.
+selector_template | `string` | A [URI Template](https://tools.ietf.org/html/rfc6570) for the selectors. For example: "`name={},age<{}`"
 
-#### <a name="discriminator"></a>Discriminator
+#### <a name="selector"></a>Selector
 
-Describes one discriminator in a segment. Each discriminator corresponds to a single property of the elements of a relationship.
+Describes one selector in a segment. Each selector corresponds to a single property of the elements of a relationship.
 
 Field Name | Type | Description
 ---|:---:|---

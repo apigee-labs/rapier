@@ -244,20 +244,20 @@ implementation_only:
     query_paths: 
     - segments:
       - relationship: Zmxk
-        discriminators: implementation_key
+        selectors: implementation_key
         separator: "-"
     - segments: 
       - relationship: Zmxk
-        discriminators: implementation_key
+        selectors: implementation_key
         separator: "-"
       - relationship: contents
     - segments: 
       - relationship: c3Bj
-        discriminators: implementation_key
+        selectors: implementation_key
         separator: "-"
     - segments: 
       - relationship: c3Bj
-        discriminators: implementation_key
+        selectors: implementation_key
         separator: "-"
       - relationship: content
   Folder:
