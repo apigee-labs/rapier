@@ -5,7 +5,7 @@
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. \[1\]
 
-You specify an API with Rapier by specifying, in a YAML file, the entities and relationships that describe the resources of the API. The details of the API's 
+You specify an API with Rapier by specifying, in a YAML file, the entities and relationships of the data model that underlies the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Once you have defined the Entities and Relationships of your data model, plus some paths that traverse the relationships, your API is fully specified.
 
