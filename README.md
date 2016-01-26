@@ -59,7 +59,7 @@ The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-The OAS document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
+The OAS document generated for the 9-line Rapier sample above can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
 
 ### Webmaster
 
@@ -83,7 +83,7 @@ entities:
 
 Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail,
+that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail,
 but if you know the HTTP REST model, you probably know already what it will say.
 
 ### To-do List
@@ -234,7 +234,7 @@ and you can DELETE items to remove them. You can also perform a GET on `http://e
      "due": "2016-10-30T09:30:10Z"
     }
  
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
  
 ### Dog Tracker
  
@@ -361,21 +361,21 @@ From the `well_known_URLs` and `query_paths` properties, you can infer that the 
     /dog-tracker/people;{name}
     /dog-tracker/people;{name}/dogs
 
-Since you know the pattern, you already know what all these mean, but if you want to see a generated OAS document for this API specification, [it is here](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
+Since you know the pattern, you already know what all these mean, but if you want to see a generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
 
 ### Property Tracker
  
 The next example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
-The [source for this example is here](https://github.com/apigee/rapier/blob/master/util/test/property-tracker.yaml). 
-This example strains the expressive power of OAS - you can see a generated [OAS document here](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-property-tracker.yaml).
+The [source for this example is here](https://github.com/apigee-labs/rapier/blob/master/util/test/property-tracker.yaml). 
+This example strains the expressive power of OAS - you can see a generated [OAS document here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-property-tracker.yaml).
 
 ### Spec Repo
 
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
-Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee/rapier/blob/master/util/test/spec-hub.yaml) 
-shows an example of how Rapier handles this case. Here is the [corresponding generated OAS document](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub.yaml).
+Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee-labs/rapier/blob/master/util/test/spec-hub.yaml) 
+shows an example of how Rapier handles this case. Here is the [corresponding generated OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub.yaml).
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OAS generator supports a -i command-line option that allows the implementation
-view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub-with-impl.yaml).
+view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub-with-impl.yaml).
 
 ## Navigating the Repository
 
