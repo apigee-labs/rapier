@@ -408,7 +408,8 @@ Field Name | Type | Description
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
-consumes | `array` of `strings' | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interprested as a space-delimited list
+consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
+produces | `array` of `strings' | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 
 #### <a name="entities"></a>Entities
 
@@ -499,3 +500,11 @@ Describes one selector in a segment. Each selector corresponds to a single prope
 Field Name | Type | Description
 ---|:---:|---
 property_name | `string` | the name of the property
+
+#### <a name="media_type"></a>Media Type
+
+Describes a media type. If a media type is given as a simple string, it applies to all entity types. If the media type is given as a JSON structure, you can say which entity types use it
+
+Field pattern | Type | Description
+---|:---:|---
+{entity_id} | `array` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an array or a space-deliminated list in a single string
