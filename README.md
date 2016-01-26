@@ -144,7 +144,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-### To-do List Extended
+### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
 quickly locate a particular resource in the web without navigating the web from the beginning to find it? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
