@@ -327,7 +327,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -455,7 +454,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -667,7 +665,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -972,7 +969,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Bicycle entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1100,7 +1096,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1312,7 +1307,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1598,7 +1592,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Dog entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1727,7 +1720,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Bicycle entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1856,7 +1848,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1985,7 +1976,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update an Institution entity
       parameters:
       - $ref: '#/parameters/If-Match'

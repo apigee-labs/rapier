@@ -69,7 +69,7 @@ class SwaggerGenerator(object):
         if 'security' in spec:
             self.openapispec['security'] = spec['security']            
         self.definitions = PresortedOrderedDict()
-        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
+        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
         self.openapispec['paths'] = self.openapispec_paths
         self.openapispec['x-URI-templates'] = self.openapispec_uris

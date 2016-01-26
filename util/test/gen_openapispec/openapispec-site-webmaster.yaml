@@ -49,7 +49,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Site entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -152,7 +151,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Site entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -254,7 +252,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Person entity
       parameters:
       - $ref: '#/parameters/If-Match'

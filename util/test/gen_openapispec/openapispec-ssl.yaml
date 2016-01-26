@@ -266,7 +266,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update an Environment entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -468,7 +467,6 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Keystore entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -850,7 +848,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update an Environment entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -952,7 +949,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update a Keystore entity
       parameters:
       - $ref: '#/parameters/If-Match'
@@ -1081,7 +1077,6 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      - application/json-patch+json
       description: Update an Alias entity
       parameters:
       - $ref: '#/parameters/If-Match'
