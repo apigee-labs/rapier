@@ -196,9 +196,9 @@ non_entity_resources:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id}
+    /to-dos/items/{id} \[2\]
     
-[The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been /to-dos/items;{id}]
+
 These are examples of 'query URLs'. Query URLs are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 In Rapier APIs, query URLs allow clients to navigate along paths defined by the relationships in the Rapier API specification without retrieving intermediate resources. 
@@ -236,6 +236,8 @@ and you can DELETE items to remove them. You can also perform a GET on `http://e
     }
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
+
+\[2\] [The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`]
  
 ### Dog Tracker
  
