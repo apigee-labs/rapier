@@ -3,4 +3,4 @@ echo $DIR
 ROOT_DIR=$( cd "$( dirname "$DIR/../../../../../" )" && pwd)
 cd $ROOT_DIR
 echo $ROOT_DIR
-./rapier/util/gen_swagger.py rapier/util/test/deployment.yaml > rapier/util/test/gen_swagger/swagger-deployment.yaml
+./rapier/util/gen_openapispec.py rapier/util/test/deployment.yaml > rapier/util/test/gen_openapispec/openapispec-deployment.yaml

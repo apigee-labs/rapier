@@ -39,7 +39,7 @@ class SwaggerGenerator(object):
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
         self.suppress_annotations = '--suppress-annotations' in self.opts_keys or '-s' in self.opts_keys
 
-    def swagger_from_rapier(self, filename= None):
+    def openapispec_from_rapier(self, filename= None):
         if filename:
             self.set_rapier_spec_from_filename(filename)
         spec = self.rapier_spec 
@@ -51,40 +51,40 @@ class SwaggerGenerator(object):
         else:
             self.relationship_separator = ';'
         patterns = spec.get('patterns')
-        self.swagger = PresortedOrderedDict()
-        self.swagger['swagger'] = '2.0'
-        self.swagger['info'] = dict()
-        self.swagger_paths = PresortedOrderedDict()
-        self.swagger_uris = PresortedOrderedDict()
+        self.openapispec = PresortedOrderedDict()
+        self.openapispec['swagger'] = '2.0'
+        self.openapispec['info'] = dict()
+        self.openapispec_paths = PresortedOrderedDict()
+        self.openapispec_uris = PresortedOrderedDict()
         if 'consumes' in spec:
-            self.swagger['consumes'] = as_list(spec.get('consumes'))
+            self.openapispec['consumes'] = as_list(spec.get('consumes'))
         else:
-            self.swagger['consumes'] = ['application/json']
+            self.openapispec['consumes'] = ['application/json']
         if 'produces' in spec:
-            self.swagger['produces'] = as_list(spec.get('produces'))
+            self.openapispec['produces'] = as_list(spec.get('produces'))
         else:
-            self.swagger['produces'] = ['application/json']
+            self.openapispec['produces'] = ['application/json']
         if 'securityDefinitions' in spec:
-            self.swagger['securityDefinitions'] = spec['securityDefinitions']            
+            self.openapispec['securityDefinitions'] = spec['securityDefinitions']            
         if 'security' in spec:
-            self.swagger['security'] = spec['security']            
+            self.openapispec['security'] = spec['security']            
         self.definitions = PresortedOrderedDict()
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json', 'application/json-patch+json']
-        self.swagger['definitions'] = self.definitions
-        self.swagger['paths'] = self.swagger_paths
-        self.swagger['x-URI-templates'] = self.swagger_uris
+        self.openapispec['definitions'] = self.definitions
+        self.openapispec['paths'] = self.openapispec_paths
+        self.openapispec['x-URI-templates'] = self.openapispec_uris
         self.header_parameters = self.build_standard_header_parameters()
-        self.swagger['parameters'] = self.header_parameters
-        self.swagger['responses'] = dict()
-        self.swagger['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
-        self.swagger['info']['version'] = spec['version'] if 'version' in spec else 'initial'
+        self.openapispec['parameters'] = self.header_parameters
+        self.openapispec['responses'] = dict()
+        self.openapispec['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
+        self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
 
         if 'entities' in spec:
             entities = spec['entities'].copy()
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
-            self.swagger_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
+            self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entity_resources/%s' % name: entity for name, entity in spec.get('non_entity_resources',{}).iteritems()})
-            self.swagger_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
+            self.openapispec_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
             entities.update(spec.get('non_entity_resources',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
@@ -103,13 +103,13 @@ class SwaggerGenerator(object):
                     else:
                         entities[entity_name] = entity
             self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
-            self.swagger_uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: '#/definitions/%s' % name for name, entity in entities.iteritems()})
-            self.swagger['definitions'] = self.definitions
+            self.openapispec_uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: '#/definitions/%s' % name for name, entity in entities.iteritems()})
+            self.openapispec['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 entity_spec['name'] = entity_name
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
-                self.swagger_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
+                self.openapispec_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
                 self.error_response = self.global_definition_ref('#ErrorResponse')
             else:
                 self.error_response = {}
@@ -117,12 +117,12 @@ class SwaggerGenerator(object):
             self.response_sets = self.build_standard_response_sets()
             self.methods = self.build_standard_methods()
             for entity_name, entity_spec in entities.iteritems():
-                definition = self.to_swagger(entity_spec)
+                definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        self.swagger['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, '#%s' % entity_name))
+                        self.openapispec['paths'][well_known_URL] = self.build_entity_interface(WellKnownURLSpec(well_known_URL, '#%s' % entity_name))
                 rel_property_specs = self.get_relationship_property_specs('#%s' % entity_name, entity_spec)
                 if len(rel_property_specs) > 0:
                     definition = self.definitions[entity_name]
@@ -132,10 +132,10 @@ class SwaggerGenerator(object):
                     implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], '#%s' % entity_name)
                     implementation_spec_specs = [ImplementationPathSpec(self.conventions, e_s['implementation'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation') and e_s['implementation']['path'] == entity_spec['implementation']['path']]
                     entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
-                    self.swagger_paths[implementation_spec_spec.path_segment()] = entity_interface
+                    self.openapispec_paths[implementation_spec_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
-                    self.swagger['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
+                    self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
@@ -155,10 +155,10 @@ class SwaggerGenerator(object):
                             entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                             self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
-                        sys.exit('query paths not valid or listed more than once: %s' % [query_path.swagger_path_string for query_path in query_paths] )  
-        if not self.swagger_uris:
-            del self.swagger['x-URI-templates']
-        return self.swagger
+                        sys.exit('query paths not valid or listed more than once: %s' % [query_path.openapispec_path_string for query_path in query_paths] )  
+        if not self.openapispec_uris:
+            del self.openapispec['x-URI-templates']
+        return self.openapispec
 
     def get_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
@@ -211,10 +211,10 @@ class SwaggerGenerator(object):
             if spec.is_multivalued() and not query_path.query_segments[inx].discriminates() and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
         is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].discriminates()
-        path = '/'.join([prefix.path_segment(), query_path.swagger_path_string])
+        path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not (self.include_impl and prefix.is_uri_spec()) and not (is_private and not self.include_impl):
-            paths = self.swagger_uris if prefix.is_uri_spec() else self.swagger_paths 
+            paths = self.openapispec_uris if prefix.is_uri_spec() else self.openapispec_paths 
             if path not in paths:
                 if is_collection_resource:
                     paths[path] = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
@@ -493,12 +493,12 @@ class SwaggerGenerator(object):
         return result
 
     def global_response_ref(self, key):
-        if key not in self.swagger['responses']:
-             self.swagger['responses'][key] = self.responses[key]
+        if key not in self.openapispec['responses']:
+             self.openapispec['responses'][key] = self.responses[key]
         return {'$ref': '#/responses/%s' % key}
 
     def global_definition_ref(self, key):
-        return {'$ref': self.swagger_uri_map[key]}
+        return {'$ref': self.openapispec_uri_map[key]}
         
     def build_parameters(self, prefix, query_path):
         result = []
@@ -602,7 +602,7 @@ class SwaggerGenerator(object):
             'responses': {
                 '200': {
                     'description': 'description',
-                    'schema': json_ref(self.swagger_uri_map[collection_entity_uri]),
+                    'schema': json_ref(self.openapispec_uri_map[collection_entity_uri]),
                     'headers': {
                         'Content-Location': {
                             'type': 'string',
@@ -707,22 +707,22 @@ class SwaggerGenerator(object):
                 if property:
                     return property
 
-    def to_swagger(self, node):
+    def to_openapispec(self, node):
         if hasattr(node, 'keys'):
             result = PresortedOrderedDict()
             for k, v in node.iteritems():
                 if k == 'oneOf':
-                    result['x-oneOf'] = self.to_swagger(v)
+                    result['x-oneOf'] = self.to_openapispec(v)
                 if k == 'allOf':
-                    result['allOf'] = self.to_swagger(v)
+                    result['allOf'] = self.to_openapispec(v)
                 elif k == '$ref':
-                    result['$ref'] = self.swagger_uri_map[v]
+                    result['$ref'] = self.openapispec_uri_map[v]
                 elif k == 'type':
-                    result['type'] = self.to_swagger(v)
+                    result['type'] = self.to_openapispec(v)
                 elif k == 'items':
-                    result['items'] = self.to_swagger(v)
+                    result['items'] = self.to_openapispec(v)
                 elif k == 'format':
-                    result['format'] = self.to_swagger(v)
+                    result['format'] = self.to_openapispec(v)
                 elif k == 'enum':
                     result['enum'] = v
                 elif k == 'description':
@@ -732,12 +732,12 @@ class SwaggerGenerator(object):
                 elif k == 'readOnly':
                     result['readOnly'] = v
                 elif k == 'properties':
-                    result['properties'] = {k2: self.to_swagger(v2) for k2,v2 in v.iteritems() if not v2.get('implementation_private', False)} 
+                    result['properties'] = {k2: self.to_openapispec(v2) for k2,v2 in v.iteritems() if not v2.get('implementation_private', False)} 
                 elif k == 'relationship':
                     result['x-rapier-relationship'] = v
             return result
         elif isinstance(node, list):
-            return [self.to_swagger(i) for i in node]
+            return [self.to_openapispec(i) for i in node]
         else:
             return node
 
@@ -885,7 +885,7 @@ class QueryPath(object):
         segments = query_path['segments'] if hasattr(query_path, 'keys') else query_path.split('/')
         for segment in segments:
             self.query_segments.append(QuerySegment(segment, self.query_segments, generator))
-        self.swagger_path_string = '/'.join([query_segment.swagger_segment_string for query_segment in self.query_segments])
+        self.openapispec_path_string = '/'.join([query_segment.openapispec_segment_string for query_segment in self.query_segments])
             
     def matches(self, rel_stack):
         if len(self.query_segments) == len(rel_stack):
@@ -942,7 +942,7 @@ class QuerySegment(object):
                             discriminator_property_name = params_part[open_brace_offset+1 : close_brace_offset]
                             self.discriminators = [{
                                 'property': discriminator_property_name,
-                                'swagger_param': discriminator_property_name,
+                                'openapispec_param': discriminator_property_name,
                                 'brace_offset': open_brace_offset
                                 }]
                             self.discriminator_template = '%s'.join([params_part[:open_brace_offset+1], params_part[close_brace_offset:]])
@@ -957,13 +957,13 @@ class QuerySegment(object):
                 self.discriminators = []
             self.relationship = parts[0]
         for discriminator in self.discriminators:
-            duplicate_count = len([discriminator['property'] == disc['swagger_param'] for qs in query_segments for disc in qs.discriminators])
-            discriminator['swagger_param'] = '_'.join((discriminator['swagger_param'], str(duplicate_count))) if duplicate_count > 0 else discriminator['property']
+            duplicate_count = len([discriminator['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.discriminators])
+            discriminator['openapispec_param'] = '_'.join((discriminator['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else discriminator['property']
         if len(self.discriminators) > 0:
-            params_part = self.discriminator_template % self.discriminators[0]['swagger_param'] if len(self.discriminators) == 1 else [disc['swagger_param'] for disc in self.discriminators]
-            self.swagger_segment_string = self.relationship_separator.join((self.relationship, params_part))
+            params_part = self.discriminator_template % self.discriminators[0]['openapispec_param'] if len(self.discriminators) == 1 else [disc['openapispec_param'] for disc in self.discriminators]
+            self.openapispec_segment_string = self.relationship_separator.join((self.relationship, params_part))
         else:
-            self.swagger_segment_string = self.relationship
+            self.openapispec_segment_string = self.relationship
 
     def build_param(self):
         if len(self.discriminators) > 0:
@@ -973,7 +973,7 @@ class QuerySegment(object):
                 if not property:
                     sys.exit('Property named %s not found in Entity %s in file %s' % (discriminator['property'], self.rel_property_spec.target_entity_uri, self.generator.filename))
                 rslt = {
-                    'name': discriminator['swagger_param'],
+                    'name': discriminator['openapispec_param'],
                     'in': 'path',
                     'type': property['type'],
                     'required': True
@@ -996,20 +996,20 @@ class QuerySegment(object):
         
 class EntityURLSpec(PathPrefix):
     
-    def __init__(self, target_entity_uri, swagger_generator):
+    def __init__(self, target_entity_uri, openapispec_generator):
         self.target_entity_uri = target_entity_uri
-        self.swagger_generator = swagger_generator
+        self.openapispec_generator = openapispec_generator
 
     def path_segment(self, select_one_of_many = False):
-        return '{%s_URL}' % self.swagger_generator.resolve_entity_name(self.target_entity_uri)
+        return '{%s_URL}' % self.openapispec_generator.resolve_entity_name(self.target_entity_uri)
 
     def build_param(self):
         return {
-            'name': '%s_URL' % self.swagger_generator.resolve_entity_name(self.target_entity_uri),
+            'name': '%s_URL' % self.openapispec_generator.resolve_entity_name(self.target_entity_uri),
             'in': 'URL',
             'type': 'string',
             'description':
-                "The URL of %s entity" % articled(self.swagger_generator.resolve_entity_name(self.target_entity_uri)),
+                "The URL of %s entity" % articled(self.openapispec_generator.resolve_entity_name(self.target_entity_uri)),
             'required': True
             }
             
@@ -1054,7 +1054,7 @@ def main(args):
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'maivs', ['yaml-merge', 'yaml-alias', 'include-impl', 'suppress-annotations'])
     except getopt.GetoptError as err:
-        usage = '\nusage: gen_swagger.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
+        usage = '\nusage: gen_openapispec.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
         sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
@@ -1063,7 +1063,7 @@ def main(args):
     if '--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
-    print str.replace(yaml.dump(generator.swagger_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
+    print str.replace(yaml.dump(generator.openapispec_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
     
 def article(name):
     return 'an' if name[0].lower() in 'aeiou' else 'a'
