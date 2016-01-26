@@ -16,7 +16,7 @@ as a set of 'end-points' with 'parameters' (i.e. a more traditional service-orie
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
 Rapier does and was absolutely consistent in applying them.
 
-Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
+Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to client app developers to 
 implement clients without additional documentation other than the Rapier spec and the HTTP specs themselves. Since the Rapier specification language is not yet widely 
 known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
 document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
