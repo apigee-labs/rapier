@@ -408,6 +408,7 @@ Field Name | Type | Description
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
+consumes | `array` of `strings' | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interprested as a space-delimited list
 
 #### <a name="entities"></a>Entities
 
@@ -472,7 +473,9 @@ A `query path` can be represented as a string. Here are some examples with their
 - `siblings;{name}` - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
 - `siblings;name={name}` - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
 
-Alternatively, you can provide a query path as a structure:
+Multiple query paths may be included in the same string as a space-deliminated list.
+
+Alternatively, you can provide a query path as a JSON object:
 
 Field Name | Type | Description
 ---|:---:|---
