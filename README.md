@@ -21,7 +21,7 @@ implement clients without additional documentation other than the Rapier spec an
 known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
 document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
 Once you have seen a few examples of the generated OAS, the conventions will become quickly obvious and you may stop looking at the OAS. 
-You may continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
+You may wish to continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
 people who know OAS but not Rapier. 
 
 OAS will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
