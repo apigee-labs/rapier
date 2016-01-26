@@ -147,7 +147,7 @@ The format of the resource for multi-valued relationships is under the control o
 ### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
-quickly locate a particular resource in the web without navigating the web from the beginning to find it? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
+quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
 A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources. Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
