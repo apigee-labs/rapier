@@ -36,7 +36,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 
 ## Examples
 
-Rapier is very easy to understand and learn. The easiest way is by example. Rapier build on to of the [JSON Schema](http://json-schema.org/) standard,
+Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on to of the [JSON Schema](http://json-schema.org/) standard,
 so if you have never seen JSON Schema, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
 
 ### Hello World
