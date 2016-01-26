@@ -382,12 +382,12 @@ view of the API to be generated instead of the client view. It can be found [her
 - js - a directory containing a Node package that is used by the generated Javascript SDK
 - py - a directory contains a Python module that is used by the generated Python SDK
 - test-servers - a directory contains some simple servers used to test the genenrated SDKs
-- util a directory containing the sdk generators and the OAS generator. This directory is a Python module
+- util - directory containing the sdk generators and the OAS generator. This directory is a Python module
   - gen_swagger.py - the OAS generator
   - gen_js_sdk.py - the Javascript SDK genenrator
   - gen_py_sdk.py - the Python SDK genenrator
   - requirements.txt - the pip file with the python dependencies for these generators
-  - test is a directory containing tests for the generators. This directory contains numerous samples.
+  - test - a directory containing tests for the generators. This directory contains numerous samples.
     - gen_swagger - a directory containing generated swagger files from the samples
     - gen_js_sdk - a directory containing generated Javascript sdk files from the samples
     - gen_js_sdk - a directory containing generated Python sdk files from the samples
