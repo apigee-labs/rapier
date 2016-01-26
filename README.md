@@ -196,7 +196,7 @@ non_entity_resources:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id} \[2\]
+    /to-dos/items/{id} [2]
     
 
 These are examples of 'query URLs'. Query URLs are URLs whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
