@@ -227,7 +227,7 @@ and the Collection at `http://example.org/xxxxx` will look like this:
 
 ### Hiding the implementation detail
 
-In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API, but we do not consider it a best practice.
+In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation, rather than exposing it in the API. The way to do this while maintaining the full function of the API
 is to have the client of the API use the full URL of the entity as the identifier, rather than an `id` property value. 
 This avoids the need for the client to plug an `id` value into a template to get the URL of an entity - 
