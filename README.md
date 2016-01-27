@@ -152,6 +152,7 @@ So far we have seen examples of APIs that are easy to navigate in a hypertext mo
 quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` - clients are expected to understand their format and compose them.
 `Query URLs` are defined in Rapier using `Query Paths`.
 A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources without having to retrieve all the resources along the path. 
+Each segment of a `query path` corresponds to a relationship declared in the data model.
 Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
