@@ -42,6 +42,22 @@ var exports = function() {
     Bicycle.prototype._className = 'Bicycle';
     Bicycle.prototype.api = api_function;
 
+    function PersistentResource(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
+    }
+    PersistentResource.prototype = Object.create(baseAPI.BaseEntity.prototype);
+    PersistentResource.prototype.constructor = PersistentResource;
+    PersistentResource.prototype._className = 'PersistentResource';
+    PersistentResource.prototype.api = api_function;
+
+    function Resource(url, jso, etag) {
+        baseAPI.BaseEntity.call(this, url, jso, etag)
+    }
+    Resource.prototype = Object.create(baseAPI.BaseEntity.prototype);
+    Resource.prototype.constructor = Resource;
+    Resource.prototype._className = 'Resource';
+    Resource.prototype.api = api_function;
+
     function Dog(url, jso, etag) {
         baseAPI.BaseEntity.call(this, url, jso, etag)
     }
@@ -70,6 +86,8 @@ var exports = function() {
         Person: Person,
         PropertyTracker: PropertyTracker,
         Bicycle: Bicycle,
+        PersistentResource: PersistentResource,
+        Resource: Resource,
         Dog: Dog,
         Institution: Institution,
         Collection: Collection
@@ -80,6 +98,8 @@ var exports = function() {
         Person: Person,
         PropertyTracker: PropertyTracker,
         Bicycle: Bicycle,
+        PersistentResource: PersistentResource,
+        Resource: Resource,
         Dog: Dog,
         Institution: Institution,
         Collection: Collection
