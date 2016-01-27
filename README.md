@@ -10,9 +10,11 @@ HTTP messages are deduced from this specification using the standard patterns de
 that we have added. With Rapier, your API is fully specified by the Entities and Relationships of your data model, plus paths that traverse the relationships that specify queries over the model.
 Rapier eliminates the need to repetitively document individual URLs and methods that vary only in the entity they return or the query they express.
 
-Rapier takes a data-oriented approach to API design, which fits the model of REST and the world-wide-web. If your mental model of
+Rapier takes a data-oriented approach to API design, which fits the model of the world-wide-web. If your mental model of
 a web API is a network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), you may find the Rapier approach less appealing.
+While Rapier APIs conform to the principles of REST, including the use of hypermedia links, Rapier APIs do not require clients to be highly adaptive - 
+most clients of Rapier APIs are quite conventional, and Rapier APIs add incrementally to the patterns used in conventional 'RESTful' APIs.
 
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
 Rapier does and was absolutely consistent in applying them.
