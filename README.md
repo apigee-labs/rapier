@@ -148,6 +148,8 @@ The format of the resource for multi-valued relationships is under the control o
 
 The server may use the string `items` as the value for `xxxxx`, but this is not required by the API, and clients should not count on it.
 
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
+
 ### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
@@ -160,7 +162,6 @@ The following example should make this clearer.
 
 ```yaml
 title: Todo List API
-version: "0.1"
 conventions:
   selector_location: path-segment
 entities:
@@ -207,6 +208,8 @@ hyperlinks in the resources themselves reduces the need for query URLs compared 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the data model. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item`. 
+
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-with-id.yaml)
 
 \[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
@@ -280,134 +283,13 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
  
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
 ### Dog Tracker
  
-Another popular API example is the 'Dog Tracker' example. In Rapier, it looks lke this:
-```yaml 
-title: DogTrackerAPI
-version: "0.1"
-entities:
-  DogTracker:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      dogs:
-        description: URL of a Collection of Dogs
-        format: uri
-        type: string
-        relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog'
-          multiplicity: O:n
-      people:
-        description: URL of a Collection of Persons
-        format: uri
-        type: string
-        relationship:
-          collection_resource: '#Collection'
-          entities: '#Person'
-          multiplicity: O:n
-    well_known_URLs: /
-    query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
-    readOnly: true
-  Dog:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      name:
-        type: string
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      owner:
-        format: uri
-        type: string
-        relationship:
-          entities: '#Person'
-  Person:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      name:
-        type: string
-      birth-date:
-        type: string
-      dogs:
-        format: uri
-        type: string
-        relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog'
-          multiplicity: O:n
-#Boilerplate entities from here
-  Resource:
-    abstract: true
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    abstract: true
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-    abstract: true
-non_entity_resources:
-  Collection:
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    readOnly: true
-```
-This API defines a single resource at the URL `/dog-tracker` whose type is `Dog_tracker`. In the relationships section, you can see that each `Dog_tracker` has properties
-called `dogs` and `people` that point to the Dogs and Persons that are tracked. The value of each of these will be a URL that points to a Collection
-resource that contains information on each Dog or Property. You can POST to either of these Collections to create new \[resources for\] Dogs or Persons. From the `well_known_URLs` and `query_paths` 
-properties of `Dog-tracker` we know that these Collections can also be accessed at `/dog-tracker/dogs` and `/dog-tracker/people` respectively.
-
-The API also defines a relationship between Dogs and Persons, which is called `owner` on one side and `dogs` on the other. The `owner` property is settable on each Dog - this is in fact
-the only way to change which Person owns a Dog. When a Dog is created by POSTing to `/dog-tracker/dogs`, the `owner` property may be set by the client. If a Dog is POSTed to the `dogs` Collection of a specific
-Person, the server would presumably set the `owner` property appropriately.
-
-From the `well_known_URLs` and `query_paths` properties, you can infer that the following URLs and URL templates are part of the API:
-
-    /dog-tracker
-    /dog-tracker/dogs
-    /dog-tracker/dogs;{name}
-    /dog-tracker/dogs;{name}/owner
-    /dog-tracker/people
-    /dog-tracker/people;{name}
-    /dog-tracker/people;{name}/dogs
-
-Since you know the pattern, you already know what all these mean, but if you want to see a generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
+Another popular API example is the 'Dog Tracker' example. The Rapier spec for it [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/dog-tracker.yaml). 
+It shows a more complete example using the techniques we have already seen.
+The generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
 
 ### Property Tracker
  

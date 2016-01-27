@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: Todo List API
-  version: '0.1'
+  version: initial
 consumes:
 - application/json
 produces:
@@ -27,10 +27,6 @@ definitions:
         format: date-time
       id:
         type: string
-        readOnly: true
-      self:
-        type: string
-        format: uri
         readOnly: true
   Collection:
     readOnly: true
