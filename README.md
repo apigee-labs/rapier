@@ -146,6 +146,8 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
+The server may use the string `items` as the value for `xxxxx`, but this is not required by the API, and clients should not count on it.
+
 ### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
