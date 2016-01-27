@@ -130,7 +130,7 @@ entities of the relationship. This is specified in the `collection_resource` pro
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
 it is not an entity in the data model - it is a 'technical' resource needed to represent a collection of entities.
-In JSON, the `To_do_list` at `/to-dos` will actually look like this:
+In JSON, the `To_do_list` at `/to-dos` will look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
 ```
@@ -264,6 +264,21 @@ non_entity_resources:
 
 The changes are to substitute the integer- or string-valued `id` property for a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL is opaque to the API clients,
 and it is a reasonable practice to deliberately obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque to clients.
+
+In JSON, the `To_do_list` at `/to-dos` will look like this:
+```json
+    {"items": "http://example.org/xxxxx"}
+```
+The Collection at `http://example.org/xxxxx` will look like this in JSON:
+```json
+    {"items": [{
+         "self": "http://example.org/yyyyy",
+         "description": "Get milk on the way home",
+         "due": "2016-10-30T09:30:10Z"
+         }
+      ]
+    }
+``` 
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
  
