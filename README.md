@@ -208,21 +208,6 @@ The meaning of the first URL is "the resource that is referenced by the items pr
 and following the `items` relationship declared in the data model. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item`. 
 
-In this example, in JSON, the `To_do_list` at `/to-dos` will look like this:
-```json
-    {"items": "http://example.org/xxxxx"}
-```
-and the Collection at `http://example.org/xxxxx` will look like this:
-```json
-    {"items": [{
-         "id": "10293847",
-         "description": "Get milk on the way home",
-         "due": "2016-10-30T09:30:10Z"
-         }
-      ]
-    }
-``` 
-
 \[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
 ### Hiding the implementation detail
