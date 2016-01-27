@@ -214,9 +214,10 @@ of the URL `todos/items` to form a URL that will identify a single `Item`.
 
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation, rather than exposing it in the API. The way to do this while maintaining the full function of the API
-is to have the client of the API use the full URL of the entity as the identifier, rather than an `id` property value. 
+is to have the client of the API use the URL of the entity as the identifier, rather than an `id` property value. 
 This avoids the need for the client to plug an `id` value into a template to get the URL of an entity - 
-this job has already been done by the server. The full entity URL can also be used in other URL templates, so there is no loss of function in the API.
+this job has already been done by the server. The entity URL can also be used in other URL templates, in the same maner that an `id` value can be used,
+so there is no loss of function in the API.
 The URL of each entity is already available to the API client
 in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
 when entities appear nested in collection resources, no header value is available to identify the nested resources, so it's useful to
