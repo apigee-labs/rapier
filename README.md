@@ -37,7 +37,7 @@ Rapier also includes SDK generators for Javascript and Python. In the future we 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
 
-## Examples
+## Tutorial
 
 Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
 so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
@@ -176,10 +176,6 @@ entities:
           multiplicity: O:n
   Item:
     properties:
-      self:
-        type: string
-        format: uri
-        readOnly: true
       id:
         type: string
         readOnly: true
@@ -207,14 +203,16 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
 These are examples of 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
-and following the `items` relationship declared in the data model. From this, we know that `http://example.org/xxxxx`
-and `http://example.org/todos/items` must be URLs for the same resource. An implementation may use the 
-same URL for both the perma-link and the query URL in this case, but the API does not require this and clients should not count on it.
+and following the `items` relationship declared in the data model. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
+of the URL `todos/items` to form a URL that will identify a single `Item`. 
 
-In this example, the Collection at `http://example.org/xxxxx` will look like this in JSON:
+In this example, in JSON, the `To_do_list` at `/to-dos` will look like this:
+```json
+    {"items": "http://example.org/xxxxx"}
+```
+and the Collection at `http://example.org/xxxxx` will look like this:
 ```json
     {"items": [{
-         "self": "http://example.org/yyyyy",
          "id": "10293847",
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
@@ -223,25 +221,63 @@ In this example, the Collection at `http://example.org/xxxxx` will look like thi
     }
 ``` 
 
-The second URL template indicates that we can form a query URL by tacking the value of the `id` property of an `Item` on to the end 
-of `todos/items/` to form a URL that will identify a single `Item`. We know from this and the example above that
-`http://example.org/yyyyy` and `http://example.org/todos/items/10293847` must be URLs for the same resource. Since the `id` value is immutable, an implementation may use the 
-same URL for both the hyperlink and the query URL in this case, but the API does not require this and clients should not count on it. If the
-query URL were based on a mutable property like `name` rather than `id`, the hyperlink and the query URL should be different - hyperlinks should be 'perma-links'.
-  
-You can POST items to `http://example.org/to-dos/items` to create new items, you can PATCH items to change them, 
-and you can DELETE items to remove them. You can also perform a GET on `http://example.org/yyyyy`, which will yield:
- 
-    {
-     "self": "http://example.org/yyyyy",
-     "id": "10293847",
-     "description": "Get milk on the way home",
-     "due": "2016-10-30T09:30:10Z"
-    }
+\[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
+
+### Hiding the implementation detail
+
+In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API, but we do not consider it a best practice.
+A better practice is to keep the `id` private to the implementation, rather than exposing it in the API. The way to do this while maintaining the full function of the API
+is to have the client of the API use the full URL of the entity as the identifier, rather than an `id` property value. 
+This avoids the need for the client to plug an `id` value into a template to get the URL of an entity - 
+this job has already been done by the server. The full entity URL can also be used in other URL templates, so there is no loss of function in the API.
+The URL of each entity is already available to the API client
+in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
+when entities appear nested in collection resources, no header value is available to identify the nested resources, so it's useful to
+also put the resource URL in a property, as follows:
+
+```yaml
+title: Todo List API
+version: "0.1"
+conventions:
+  selector_location: path-segment
+entities:
+  TodoList:
+    well_known_URLs: /to-dos
+    query_paths: [items]
+    readOnly: true
+    properties:
+      items:
+        type: string
+        format: uri
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Item'
+          multiplicity: O:n
+  Item:
+    properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+non_entity_resources:
+  Collection:
+    readOnly: true
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/entities/Item'
+```                
+
+The changes are to substitute the integer- or string-valued `id` property for a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL is opaque to the API clients,
+and it is a reasonable practice to deliberately obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque to clients.
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list.yaml)
-
-\[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
  
 ### Dog Tracker
  
