@@ -1,6 +1,12 @@
 # Welcome to Rapier - REST APIs from Entities and Relationships.
 
-## Introduction
+## Table of Contents
+- [Introduction](#introduction)
+- [Tutorial](#tutorial)
+- [Navigating the Repository](#navigating)
+- [Specification](#specification)
+
+## <a name="introduction">Introduction
 
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. \[1\]
@@ -37,7 +43,7 @@ Rapier also includes SDK generators for Javascript and Python. In the future we 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
 
-## Tutorial
+## <a name="tutorial">Tutorial
 
 Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
 so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
@@ -305,7 +311,7 @@ shows an example of how Rapier handles this case. Here is the [corresponding gen
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OAS generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub-with-impl.yaml).
 
-## Navigating the Repository
+## <a name="navigating"></a>Navigating the Repository
 
 - js - a directory containing a Node package that is used by the generated Javascript SDK
 - py - a directory contains a Python module that is used by the generated Python SDK
@@ -320,7 +326,7 @@ view of the API to be generated instead of the client view. It can be found [her
     - gen_js_sdk - a directory containing Javascript sdk files generated from the samples
     - gen_js_sdk - a directory containing Python sdk files generated from the samples
 
-## The Rapier Language Spec
+## <a name="specification"></a>The Rapier Language Spec
 
 ### Schema
 
