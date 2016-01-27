@@ -27,10 +27,10 @@ you to learn the precise details of the HTTP messages implied by a Rapier specif
 Generating OAS documents is also useful for integrating with tools that are OAS-based, or for communicating with
 people who know OAS but not Rapier. 
 
-OAS will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
-or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. 
+OAS remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
+or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OAS.
 
-Rapier also includes SDK generators for Javascript and Python. In the future we intend to work on test tools, and server implementation frameworks.  
+Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
 
 
 \[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
