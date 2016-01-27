@@ -63,7 +63,7 @@ class SwaggerGenerator(object):
         if 'produces' in spec:
             self.openapispec['produces'] = as_list(spec.get('produces'))
         else:
-            self.openapispec['produces'] = ['application/json']
+            self.openapispec['produces'] = ['application/json', 'text/html']
         if 'securityDefinitions' in spec:
             self.openapispec['securityDefinitions'] = spec['securityDefinitions']            
         if 'security' in spec:

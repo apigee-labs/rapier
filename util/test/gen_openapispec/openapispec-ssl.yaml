@@ -6,6 +6,7 @@ consumes:
 - application/json
 produces:
 - application/json
+- text/html
 definitions:
   Environment:
     allOf:
