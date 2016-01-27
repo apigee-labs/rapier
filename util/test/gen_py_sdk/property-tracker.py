@@ -22,6 +22,12 @@ class PropertyTracker(BaseEntity, APIClass):
 class Bicycle(BaseEntity, APIClass):            
     pass
 
+class PersistentResource(BaseEntity, APIClass):            
+    pass
+
+class Resource(BaseEntity, APIClass):            
+    pass
+
 class Dog(BaseEntity, APIClass):            
     pass
 
@@ -35,6 +41,8 @@ classToKindMap = {
     'Person': Person,
     'PropertyTracker': PropertyTracker,
     'Bicycle': Bicycle,
+    'PersistentResource': PersistentResource,
+    'Resource': Resource,
     'Dog': Dog,
     'Institution': Institution,
     'Collection': Collection
