@@ -86,8 +86,7 @@ entities:
 
 Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail,
-but if you know the HTTP REST model, you probably know already what it will say.
+that supports methods like GET, PATCH, DELETE, OPTIONS, HEAD etc. The [OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
 
 ### To-do List
 
@@ -150,8 +149,10 @@ The format of the resource for multi-valued relationships is under the control o
 ### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
-quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` and they are declared using `Query Paths`.
-A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources. Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
+quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` - clients are expected to understand their format and compose them.
+`Query URLs` are defined in Rapier using `Query Paths`.
+A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources without having to retrieve all the resources along the path. 
+Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
 ```yaml
@@ -202,7 +203,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     /to-dos/items/{id} [2]
     
 
-These are examples of 'query URLs'. Query URLs are URLs and URL templates whose format is published by the server as part of the API, and clients are expected to understand their format and compose them. The provision of
+These are examples of 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 In Rapier APIs, query URLs allow clients to navigate along paths defined by the relationships in the Rapier API specification without retrieving intermediate resources. 
 The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
