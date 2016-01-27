@@ -23,7 +23,7 @@ Rapier does and was absolutely consistent in applying them.
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
 document from a Rapier specification. The generated OAS documents spell out the conventions used by Rapier in a way that is familiar to many, and allows 
-you to learn the precise details of the HTTP messages implied by a Rapier specification, HTTP specifications and additional conventions.
+you to learn the precise details of the HTTP messages implied by a Rapier specification, the HTTP specifications and our additional conventions.
 Generating OAS documents is also useful for integrating with tools that are OAS-based, or for communicating with
 people who know OAS but not Rapier. 
 
