@@ -20,12 +20,11 @@ Most clients of Rapier APIs are quite conventional, and Rapier APIs add incremen
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
 Rapier does and was absolutely consistent in applying them.
 
-Rapier documents are complete API specifications — you can give them directly to API developers to implement servers and to app developers to 
-implement clients without additional documentation other than the HTTP specs themselves. Since the Rapier specification language is not yet widely 
-known and understood, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
-document from a Rapier specification. The OAS documents spell out the conventions used by Rapier in a way that is familiar to many.
-Once you have seen a few examples of the generated OAS, the conventions will become quickly obvious and you may stop looking at the OAS. 
-You may wish to continue to generate OAS documents for integrating with tools that are OAS-based, or for communicating with
+Since the Rapier specification language is not yet widely 
+known and adopted, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
+document from a Rapier specification. The generated OAS documents spell out the conventions used by Rapier in a way that is familiar to many, and allows 
+you to learn the precise details of the HTTP messages implied by a Rapier specification, HTTP specifications and additional conventions.
+Generating OAS documents is also useful for integrating with tools that are OAS-based, or for communicating with
 people who know OAS but not Rapier. 
 
 OAS will likely remain important to you for documenting APIs that which follow a service-oriented rather than a data-oriented design pattern, 
