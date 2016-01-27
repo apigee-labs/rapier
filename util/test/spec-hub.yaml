@@ -302,7 +302,7 @@ implementation_only:
         selectors: implementation_key
         separator: "-"
     - segments: 
-      - relationship: Zmxk
+      - relationship: Zmxk #b64 for spc
         selectors: implementation_key
         separator: "-"
       - relationship: contents
@@ -311,7 +311,7 @@ implementation_only:
         selectors: implementation_key
         separator: "-"
     - segments: 
-      - relationship: c3Bj
+      - relationship: c3Bj #b64 for spc
         selectors: implementation_key
         separator: "-"
       - relationship: content
