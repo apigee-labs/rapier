@@ -50,6 +50,22 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
+      folders:
+        description: URL of a Collection of Folders
+        format: uri
+        type: string
+        x-rapier-relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Folder'
+          multiplicity: O:n
+      groups:
+        description: URL of a Collection of Groups
+        format: uri
+        type: string
+        x-rapier-relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Group'
+          multiplicity: O:n
       kind:
         type: string
         enum:
@@ -68,13 +84,13 @@ definitions:
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
-      things:
-        description: URL of a Collection of Specs and Folders
+      specs:
+        description: URL of a Collection of Specs
         format: uri
         type: string
         x-rapier-relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
+          entities: '#Spec'
           multiplicity: O:n
     readOnly: true
   Folder:
@@ -128,6 +144,36 @@ definitions:
         type: string
         enum:
         - Spec
+      name:
+        type: string
+      permissions:
+        type: array
+        items:
+          properties:
+            action:
+              type: string
+            actor:
+              format: URL
+              type: string
+  Group:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
+      kind:
+        type: string
+        enum:
+        - Group
+      members:
+        description: Array of URLs of Users
+        type: array
+        items:
+          type: string
+          format: uri
       name:
         type: string
       permissions:
@@ -444,7 +490,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /things:
+  /specs:
     get:
       parameters:
       - in: query
@@ -491,29 +537,239 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Spec or Folder
+      description: Create a new Spec
       parameters:
-      - description: The representation of the new Spec or Folder being created
+      - description: The representation of the new Spec being created
         in: body
         name: body
         schema:
-          x-oneOf:
-          - $ref: '#/definitions/Spec'
-          - $ref: '#/definitions/Folder'
+          $ref: '#/definitions/Spec'
       responses:
         '201':
-          description: Created new Spec or Folder
+          description: Created new Spec
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Spec or Folder
+              description: perma-link URL of newly-created Spec
               type: string
           schema:
-            x-oneOf:
-            - $ref: '#/definitions/Spec'
-            - $ref: '#/definitions/Folder'
+            $ref: '#/definitions/Spec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /folders:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Folder
+      parameters:
+      - description: The representation of the new Folder being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Folder'
+      responses:
+        '201':
+          description: Created new Folder
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Folder
+              type: string
+          schema:
+            $ref: '#/definitions/Folder'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  /groups:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Group
+      parameters:
+      - description: The representation of the new Group being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Group'
+      responses:
+        '201':
+          description: Created new Group
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Group
+              type: string
+          schema:
+            $ref: '#/definitions/Group'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1105,6 +1361,134 @@ x-URI-templates:
               type: string
           schema:
             $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Group_URL}':
+    parameters:
+    - description: The URL of a Group entity
+      in: URL
+      name: Group_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Group
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Group'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Group entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Group being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Group'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Group'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Group
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Group'
         '400':
           $ref: '#/responses/400'
         '401':

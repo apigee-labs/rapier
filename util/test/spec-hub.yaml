@@ -67,19 +67,37 @@ entities:
           entities: '#Folder #Spec'
           multiplicity: O:n
           readOnly: true
-      things:
-        description: URL of a Collection of Specs and Folders
+      specs:
+        description: URL of a Collection of Specs
         format: uri
         type: string        
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
+          entities: '#Spec'
+          multiplicity: O:n
+      folders:
+        description: URL of a Collection of Folders
+        format: uri
+        type: string        
+        relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Folder'
+          multiplicity: O:n
+      groups:
+        description: URL of a Collection of Groups
+        format: uri
+        type: string        
+        relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Group'
           multiplicity: O:n
     well_known_URLs: /
     query_paths: 
     - myHub
     - sharedWithMe
-    - things
+    - specs
+    - folders
+    - groups
     readOnly: true
   Folder:
     allOf:
@@ -132,6 +150,35 @@ entities:
       kind:
         type: string
         enum: [Spec]
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+  Group:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      members:
+        description: Array of URLs of Users
+        type: array
+        items:
+          type: string
+          format: uri
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        relationship: '#Folder'
+      kind:
+        type: string
+        enum: [Group]
       name:
         type: string
       permissions:
@@ -241,9 +288,17 @@ implementation_only:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Spec'
           multiplicity: O:n
+      Z3Jw:
+        description: URL of a Collection of Groups
+        format: uri
+        type: string        
+        relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Group'
+          multiplicity: O:n
     query_paths: 
     - segments:
-      - relationship: Zmxk
+      - relationship: Zmxk #b64 for fld
         selectors: implementation_key
         separator: "-"
     - segments: 
@@ -252,7 +307,7 @@ implementation_only:
         separator: "-"
       - relationship: contents
     - segments: 
-      - relationship: c3Bj
+      - relationship: c3Bj #b64 for spc
         selectors: implementation_key
         separator: "-"
     - segments: 
@@ -260,11 +315,19 @@ implementation_only:
         selectors: implementation_key
         separator: "-"
       - relationship: content
+    - segments: 
+      - relationship: Z3Jw #b64 for grp
+        selectors: implementation_key
+        separator: "-"
   Folder:
     properties:
       implementation_key:
         type: integer  
   Spec:
+    properties:
+      implementation_key:
+        type: integer  
+  Group:
     properties:
       implementation_key:
         type: integer  
