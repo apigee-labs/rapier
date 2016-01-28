@@ -2,6 +2,7 @@ title: Spec Hub API
 version: "0.1"
 consumes: application/json
 produces: application/json text/html
+base_path: /hub
 conventions:
   patch_consumes: application/merge-patch+json
   error_response:

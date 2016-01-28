@@ -236,7 +236,7 @@ definitions:
     - $ref: '#/definitions/Collection'
     - $ref: '#/definitions/Page'
 paths:
-  /:
+  /hub:
     get:
       description: Retrieve a Hub
       parameters:
@@ -293,7 +293,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /myHub:
+  /hub/myHub:
     get:
       description: Retrieve a Folder
       parameters:
@@ -415,7 +415,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /sharedWithMe:
+  /hub/sharedWithMe:
     get:
       parameters:
       - in: query
@@ -490,7 +490,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /specs:
+  /hub/specs:
     get:
       parameters:
       - in: query
@@ -597,7 +597,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /folders:
+  /hub/folders:
     get:
       parameters:
       - in: query
@@ -704,7 +704,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /groups:
+  /hub/groups:
     get:
       parameters:
       - in: query
