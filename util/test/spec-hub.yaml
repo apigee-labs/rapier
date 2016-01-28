@@ -2,7 +2,6 @@ title: Spec Hub API
 version: "0.1"
 consumes: application/json
 produces: application/json text/html
-base_path: /hub
 conventions:
   patch_consumes: application/merge-patch+json
   error_response:
@@ -92,7 +91,7 @@ entities:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
-    well_known_URLs: /
+    well_known_URLs: /hub
     query_paths: 
     - myHub
     - sharedWithMe

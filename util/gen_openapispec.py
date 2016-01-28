@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import yaml, sys, getopt, itertools, urlparse
+import yaml, sys, getopt, itertools
 from collections import OrderedDict
 
 class PresortedList(list):
@@ -66,11 +66,6 @@ class SwaggerGenerator(object):
             self.openapispec['produces'] = ['application/json', 'text/html']
         if 'securityDefinitions' in spec:
             self.openapispec['securityDefinitions'] = spec['securityDefinitions']            
-        self.base_path = spec.get('base_path', '')
-        if self.base_path:
-            split = urlparse.urlsplit(self.base_path)
-            if split.scheme or split.netloc or split.query or split.fragment:
-                sys.exit('base_path should only contain path segments %s' % self.base_path)
         if 'security' in spec:
             self.openapispec['security'] = spec['security']            
         self.definitions = PresortedOrderedDict()
@@ -127,7 +122,7 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 if 'well_known_URLs' in entity_spec:
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        path_spec = WellKnownURLSpec(self.base_path + well_known_URL, '#%s' % entity_name)
+                        path_spec = WellKnownURLSpec(well_known_URL, '#%s' % entity_name)
                         self.openapispec['paths'][path_spec.path_segment() if len(path_spec.path_segment()) > 0 else '/'] = self.build_entity_interface(path_spec)
                 rel_property_specs = self.get_relationship_property_specs('#%s' % entity_name, entity_spec)
                 if len(rel_property_specs) > 0:
@@ -154,7 +149,7 @@ class SwaggerGenerator(object):
                             leftover_query_paths = query_paths
                             for well_known_URL in well_known_URLs:
                                 leftover_query_paths = query_paths[:]
-                                baseURL_spec = WellKnownURLSpec(self.base_path + well_known_URL, entity_name)
+                                baseURL_spec = WellKnownURLSpec(well_known_URL, entity_name)
                                 self.add_query_paths(leftover_query_paths, baseURL_spec, rel_property_spec_stack, rel_property_specs)
                             query_paths = leftover_query_paths
                         else:
