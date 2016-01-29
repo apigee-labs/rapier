@@ -20,7 +20,7 @@ definitions:
     type: string
   Application:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
     properties:
       comprises:
         format: uri
@@ -30,7 +30,7 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Microservice'
-      environments:
+      has_environments:
         format: uri
         type: string
         readOnly: true
@@ -38,29 +38,60 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
+      kind:
+        type: string
+        enum:
+        - Application
   Environment:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
     properties:
-      deploys:
-        format: uri
-        type: string
-        x-rapier-relationship: '#Application'
       hosts:
         format: uri
         type: string
         x-rapier-relationship:
           multiplicity: 0:n
           entities: '#Deployment'
-  Microservice:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      belongsIn:
+      kind:
+        type: string
+        enum:
+        - Environment
+      realizes:
         format: uri
         type: string
         x-rapier-relationship: '#Application'
-      has:
+      requested_state:
+        type: string
+        readOnly: true
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStartRequest'
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStopRequest'
+  Microservice:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      is_component_of:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Application'
+      kind:
+        type: string
+        enum:
+        - Microservice
+      produced:
         format: uri
         type: string
         readOnly: true
@@ -70,38 +101,121 @@ definitions:
           entities: '#Revision'
   Revision:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
     properties:
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Deployment'
+      kind:
+        type: string
+        enum:
+        - Revision
       revises:
         format: uri
         type: string
         x-rapier-relationship: '#Microservice'
   Deployment:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
     properties:
-      runsIn:
+      go_live_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOnlineRequest'
+      go_offline_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOfflineRequest'
+      kind:
+        type: string
+        enum:
+        - Deployment
+      requested_state:
+        type: string
+        readOnly: true
+      runs_in:
         format: uri
         type: string
         x-rapier-relationship: '#Environment'
-  EnvironmentStartCommand:
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStartRequest'
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStopRequest'
+  EnvironmentStartRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
-  EnvironmentStopCommand:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - EnvironmentStartRequest
+  EnvironmentStopRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
-  DeploymentStartCommand:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - EnvironmentStopRequest
+  DeploymentStartRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
-  DeploymentStopCommand:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentStartRequest
+      replicas:
+        type: integer
+  DeploymentStopRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
-  DeploymentOfflineCommand:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentStopRequest
+  DeploymentOfflineRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
-  DeploymentOnlineCommand:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentOfflineRequest
+  DeploymentOnlineRequest:
     allOf:
-    - $ref: '#/definitions/Resource'
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentOnlineRequest
   Resource:
     type: object
     properties:
@@ -801,15 +915,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{EnvironmentStartCommand_URL}':
+  '{EnvironmentStartRequest_URL}':
     parameters:
-    - description: The URL of an EnvironmentStartCommand entity
+    - description: The URL of an EnvironmentStartRequest entity
       in: URL
-      name: EnvironmentStartCommand_URL
+      name: EnvironmentStartRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve an EnvironmentStartCommand
+      description: Retrieve an EnvironmentStartRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -824,7 +938,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStartCommand'
+            $ref: '#/definitions/EnvironmentStartRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -838,15 +952,15 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an EnvironmentStartCommand entity
+      description: Update an EnvironmentStartRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the EnvironmentStartCommand being
+      - description: The subset of properties of the EnvironmentStartRequest being
           updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentStartCommand'
+          $ref: '#/definitions/EnvironmentStartRequest'
       responses:
         '200':
           description: successful
@@ -859,7 +973,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStartCommand'
+            $ref: '#/definitions/EnvironmentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -875,7 +989,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an EnvironmentStartCommand
+      description: Delete an EnvironmentStartRequest
       responses:
         '200':
           description: successful
@@ -888,7 +1002,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStartCommand'
+            $ref: '#/definitions/EnvironmentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -930,15 +1044,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{EnvironmentStopCommand_URL}':
+  '{EnvironmentStopRequest_URL}':
     parameters:
-    - description: The URL of an EnvironmentStopCommand entity
+    - description: The URL of an EnvironmentStopRequest entity
       in: URL
-      name: EnvironmentStopCommand_URL
+      name: EnvironmentStopRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve an EnvironmentStopCommand
+      description: Retrieve an EnvironmentStopRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -953,7 +1067,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStopCommand'
+            $ref: '#/definitions/EnvironmentStopRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -967,15 +1081,15 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an EnvironmentStopCommand entity
+      description: Update an EnvironmentStopRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the EnvironmentStopCommand being
+      - description: The subset of properties of the EnvironmentStopRequest being
           updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentStopCommand'
+          $ref: '#/definitions/EnvironmentStopRequest'
       responses:
         '200':
           description: successful
@@ -988,7 +1102,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStopCommand'
+            $ref: '#/definitions/EnvironmentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1004,7 +1118,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an EnvironmentStopCommand
+      description: Delete an EnvironmentStopRequest
       responses:
         '200':
           description: successful
@@ -1017,7 +1131,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStopCommand'
+            $ref: '#/definitions/EnvironmentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1059,15 +1173,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{DeploymentStartCommand_URL}':
+  '{DeploymentStartRequest_URL}':
     parameters:
-    - description: The URL of a DeploymentStartCommand entity
+    - description: The URL of a DeploymentStartRequest entity
       in: URL
-      name: DeploymentStartCommand_URL
+      name: DeploymentStartRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve a DeploymentStartCommand
+      description: Retrieve a DeploymentStartRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1082,7 +1196,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartCommand'
+            $ref: '#/definitions/DeploymentStartRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1096,15 +1210,15 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentStartCommand entity
+      description: Update a DeploymentStartRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStartCommand being
+      - description: The subset of properties of the DeploymentStartRequest being
           updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStartCommand'
+          $ref: '#/definitions/DeploymentStartRequest'
       responses:
         '200':
           description: successful
@@ -1117,7 +1231,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartCommand'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1133,7 +1247,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentStartCommand
+      description: Delete a DeploymentStartRequest
       responses:
         '200':
           description: successful
@@ -1146,7 +1260,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartCommand'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1188,15 +1302,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{DeploymentStopCommand_URL}':
+  '{DeploymentStopRequest_URL}':
     parameters:
-    - description: The URL of a DeploymentStopCommand entity
+    - description: The URL of a DeploymentStopRequest entity
       in: URL
-      name: DeploymentStopCommand_URL
+      name: DeploymentStopRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve a DeploymentStopCommand
+      description: Retrieve a DeploymentStopRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1211,7 +1325,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopCommand'
+            $ref: '#/definitions/DeploymentStopRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1225,14 +1339,14 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentStopCommand entity
+      description: Update a DeploymentStopRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStopCommand being updated
+      - description: The subset of properties of the DeploymentStopRequest being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStopCommand'
+          $ref: '#/definitions/DeploymentStopRequest'
       responses:
         '200':
           description: successful
@@ -1245,7 +1359,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopCommand'
+            $ref: '#/definitions/DeploymentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1261,7 +1375,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentStopCommand
+      description: Delete a DeploymentStopRequest
       responses:
         '200':
           description: successful
@@ -1274,7 +1388,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopCommand'
+            $ref: '#/definitions/DeploymentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1316,15 +1430,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{DeploymentOfflineCommand_URL}':
+  '{DeploymentOfflineRequest_URL}':
     parameters:
-    - description: The URL of a DeploymentOfflineCommand entity
+    - description: The URL of a DeploymentOfflineRequest entity
       in: URL
-      name: DeploymentOfflineCommand_URL
+      name: DeploymentOfflineRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve a DeploymentOfflineCommand
+      description: Retrieve a DeploymentOfflineRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1339,7 +1453,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineCommand'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1353,15 +1467,15 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentOfflineCommand entity
+      description: Update a DeploymentOfflineRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOfflineCommand being
+      - description: The subset of properties of the DeploymentOfflineRequest being
           updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOfflineCommand'
+          $ref: '#/definitions/DeploymentOfflineRequest'
       responses:
         '200':
           description: successful
@@ -1374,7 +1488,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineCommand'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1390,7 +1504,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentOfflineCommand
+      description: Delete a DeploymentOfflineRequest
       responses:
         '200':
           description: successful
@@ -1403,7 +1517,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineCommand'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1445,15 +1559,15 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{DeploymentOnlineCommand_URL}':
+  '{DeploymentOnlineRequest_URL}':
     parameters:
-    - description: The URL of a DeploymentOnlineCommand entity
+    - description: The URL of a DeploymentOnlineRequest entity
       in: URL
-      name: DeploymentOnlineCommand_URL
+      name: DeploymentOnlineRequest_URL
       required: true
       type: string
     get:
-      description: Retrieve a DeploymentOnlineCommand
+      description: Retrieve a DeploymentOnlineRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1468,7 +1582,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineCommand'
+            $ref: '#/definitions/DeploymentOnlineRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1482,15 +1596,15 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentOnlineCommand entity
+      description: Update a DeploymentOnlineRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOnlineCommand being
+      - description: The subset of properties of the DeploymentOnlineRequest being
           updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOnlineCommand'
+          $ref: '#/definitions/DeploymentOnlineRequest'
       responses:
         '200':
           description: successful
@@ -1503,7 +1617,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineCommand'
+            $ref: '#/definitions/DeploymentOnlineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1519,7 +1633,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentOnlineCommand
+      description: Delete a DeploymentOnlineRequest
       responses:
         '200':
           description: successful
@@ -1532,7 +1646,269 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineCommand'
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{Resource_URL}':
+    parameters:
+    - description: The URL of a Resource entity
+      in: URL
+      name: Resource_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a Resource
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Resource'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update a Resource entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Resource being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Resource'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Resource'
+        '201':
+          description: Created new Resource
+          headers:
+            Location:
+              description: perma-link URL of newly-created Resource
+              type: string
+          schema:
+            $ref: '#/definitions/Resource'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Resource
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Resource'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{PersistentResource_URL}':
+    parameters:
+    - description: The URL of a PersistentResource entity
+      in: URL
+      name: PersistentResource_URL
+      required: true
+      type: string
+    get:
+      description: Retrieve a PersistentResource
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PersistentResource'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a PersistentResource entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the PersistentResource being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/PersistentResource'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PersistentResource'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a PersistentResource
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PersistentResource'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1756,6 +2132,12 @@ parameters:
     in: header
     name: If-Match
     required: true
+    type: string
+  Put-If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: false
     type: string
 responses:
   '400':

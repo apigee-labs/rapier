@@ -9,9 +9,12 @@ conventions:
 entities:
   Application:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
-      environments:
+      kind:
+        type: string
+        enum: [Application]
+      has_environments:
         format: uri
         type: string
         readOnly: true
@@ -29,9 +32,12 @@ entities:
           entities: '#Microservice'
   Environment:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
-      deploys:
+      kind:
+        type: string
+        enum: [Environment]
+      realizes:
         format: uri
         type: string
         relationship: '#Application'
@@ -41,15 +47,37 @@ entities:
         relationship:
           multiplicity: 0:n
           entities: '#Deployment'
+      requested_state:
+        type: string
+        readOnly: true
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStartRequest'        
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStopRequest'              
   Microservice:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
-      belongsIn:
+      kind:
+        type: string
+        enum: [Microservice]
+      is_component_of:
         format: uri
         type: string
         relationship: '#Application'
-      has:
+      produced:
         format: uri
         type: string
         readOnly: true
@@ -59,40 +87,115 @@ entities:
           entities: '#Revision'
   Revision:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
+      kind:
+        type: string
+        enum: [Revision]
       revises:
         format: uri
         type: string
         relationship: '#Microservice'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Deployment'        
   Deployment:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
-      runsIn:
+      kind:
+        type: string
+        enum: [Deployment]
+      runs_in:
         format: uri
         type: string
         relationship: '#Environment'
-  EnvironmentStartCommand:
+      requested_state:
+        type: string
+        readOnly: true
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStartRequest'        
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStopRequest'        
+      go_live_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOnlineRequest'        
+      go_offline_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOfflineRequest'        
+  EnvironmentStartRequest:
     allOf:
-    - $ref: '#/entities/Resource'
-  EnvironmentStopCommand:
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStartRequest]    
+  EnvironmentStopRequest:
     allOf:
-    - $ref: '#/entities/Resource'
-  DeploymentStartCommand:
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStopRequest]    
+  DeploymentStartRequest:
     allOf:
-    - $ref: '#/entities/Resource'
-  DeploymentStopCommand:
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentStartRequest]    
+      replicas:
+        type: integer
+  DeploymentStopRequest:
     allOf:
-    - $ref: '#/entities/Resource'
-  DeploymentOfflineCommand:
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentStopRequest]    
+  DeploymentOfflineRequest:
     allOf:
-    - $ref: '#/entities/Resource'
-  DeploymentOnlineCommand:
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOfflineRequest]    
+  DeploymentOnlineRequest:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOnlineRequest]    
+non_entity_resources:
   Resource:
-    abstract: true
     type: object
     properties:
       self:
@@ -102,8 +205,7 @@ entities:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/entities/Resource'
-    abstract: true
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       created:
         type: string
@@ -121,11 +223,9 @@ entities:
         type: string
         format: date-time
         readOnly: true
-    abstract: true
-non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
@@ -154,7 +254,7 @@ non_entity_resources:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
