@@ -890,9 +890,7 @@ class ImplementationPathSpec(PathPrefix):
 
     def path_segment(self, select_one_of_many = False):
         template = self.instance_url['template']
-        template = template.replace('{', '{{{')
-        template = template.replace('}', '}}}')
-        return template.format(self.instance_url['key']['name'])
+        return template.format(self.instance_url['key']['name'].join('{}'))
 
     def build_param(self):
         result = {
