@@ -197,6 +197,7 @@ entities:
 non_entity_resources:
   Resource:
     type: object
+    abstract: true
     properties:
       self:
         type: string
@@ -206,6 +207,7 @@ non_entity_resources:
   PersistentResource:
     allOf:
     - $ref: '#/non_entity_resources/Resource'
+    abstract: true
     properties:
       created:
         type: string
