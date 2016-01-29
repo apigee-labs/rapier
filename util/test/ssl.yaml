@@ -12,7 +12,7 @@ entities:
     - keystores;{name}/aliases;{name}/csr 
     - keystores;{name}/aliases;{name}/certificate
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -27,7 +27,7 @@ entities:
           multiplicity: 0:n
   Keystore:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       name:
         type: string
@@ -47,7 +47,7 @@ entities:
             application/json: '#SelfSignedCertAlias'
   Alias:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -95,9 +95,9 @@ entities:
   CSR:
     readOnly: true
     type: string
+non_resources:
   Pkcs12Alias:
     type: object
-    resource: false
     properties:
       kind:
         type: string
@@ -113,7 +113,6 @@ entities:
         format: file
   SelfSignedCertAlias:
     type: object
-    resource: false
     properties:
       kind:
         type: string
@@ -127,16 +126,15 @@ entities:
       sigAlg:
         type: string
       issuer:
-        $ref: '#/entities/X500Name'
+        $ref: '#/non_resources/X500Name'
       subject:
-        $ref: '#/entities/X500Name'
+        $ref: '#/non_resources/X500Name'
       subjectAlternativeDNSNames:
         type: array
         items:
           type: string
   KeyCertFileAlias:
     type: object
-    resource: false
     properties:
       kind:
         type: string
@@ -155,7 +153,6 @@ entities:
         format: file
   KeyCertJarAlias:
     type: object
-    resource: false
     properties:
       kind:
         type: string
@@ -171,7 +168,6 @@ entities:
         format: file
   X500Name:
     type: object
-    resource: false
     properties:
       countryCode:
         type: string
@@ -185,10 +181,10 @@ entities:
         type: string
       email:
         type: string
-# Boilerplate schemas from here
+non_entity_resources:
   PersistentResource:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     abstract: true
     type: object
     properties:
@@ -217,10 +213,9 @@ entities:
         type: string
       kind:
         type: string
-non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string

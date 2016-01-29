@@ -85,13 +85,19 @@ class SwaggerGenerator(object):
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entity_resources/%s' % name: entity for name, entity in spec.get('non_entity_resources',{}).iteritems()})
             self.openapispec_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
+            self.uri_map.update({'#/non_resources/%s' % name: entity for name, entity in spec.get('non_resources',{}).iteritems()})
+            self.openapispec_uri_map.update({'#/non_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_resources',{}).iterkeys()})
             for entity in entities.itervalues():
                 if 'kind' not in entity:
                     entity['kind'] = 'Entity'
             for entity in spec.get('non_entity_resources',{}).itervalues():
                 if 'kind' not in entity:
-                    entity['kind'] = 'Non_entity_resource'                
+                    entity['kind'] = 'NonEntityResource'                
+            for entity in spec.get('non_resources',{}).itervalues():
+                if 'kind' not in entity:
+                    entity['kind'] = 'NonResource'                
             entities.update(spec.get('non_entity_resources',{}))
+            entities.update(spec.get('non_resources',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:
@@ -141,9 +147,9 @@ class SwaggerGenerator(object):
                         definition['type'] = entity_spec['type']
                 if self.include_impl and 'instance_url' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
-                    entity_interface =  self.build_entity_interface(implementation_spec)
+                    entity_interface = self.build_entity_interface(implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
-                elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
+                elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec['kind'] in ['Entity', 'NonEntityResource']: 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                     self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:

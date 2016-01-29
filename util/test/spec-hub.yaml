@@ -15,40 +15,9 @@ securityDefinitions:
 security:
 - sso: []
 entities:
-  Resource:
-    abstract: true
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    abstract: true
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-    abstract: true
   Hub:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_resources/Resource'
     properties:
       kind:
         type: string
@@ -101,7 +70,7 @@ entities:
     readOnly: true
   Folder:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     query_paths: [contents]
     properties:
       contents:
@@ -134,7 +103,7 @@ entities:
               type: string
   Spec:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     query_paths: [content]
     properties:
       content:
@@ -163,7 +132,7 @@ entities:
               type: string
   Group:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       members:
         description: Array of URLs of Users
@@ -197,7 +166,7 @@ entities:
 non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_resources/Resource'
     properties:
       kind:
         type: string
@@ -226,7 +195,7 @@ non_entity_resources:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_resources/Resource'
     properties:
       kind:
         type: string
@@ -269,6 +238,38 @@ non_entity_resources:
     oneOf:
       - $ref: '#/non_entity_resources/Collection'
       - $ref: '#/non_entity_resources/Page'
+non_resources:
+  Resource:
+    abstract: true
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_resources/Resource'
+    abstract: true
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+    abstract: true
 implementation_only:
   Group:
     instance_url:
