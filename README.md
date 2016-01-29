@@ -360,7 +360,8 @@ id | `string` | The id of the entity. The default value is the name of the entit
 query_paths | `string` or `array` of [Query Path](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
-readOnly | `string` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
+readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
+abstract | `boolean` | indicates that the entity (or non-resource-entity) will never actually be seen in the API. The definition may used in the definition of other entities
 
 #### <a name="properties"></a>Properties
 
