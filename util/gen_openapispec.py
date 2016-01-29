@@ -93,13 +93,17 @@ class SwaggerGenerator(object):
                         entity = entity.copy()
                         entity['properties'] = properties
                     if entity_name in entities:
-                        if 'properties' in entities[entity_name]:
-                            entities[entity_name]['properties'].update(properties)
-                        else:
-                            entities[entity_name]['properties'] = properties
+                        if 'properties' in entity:
+                            properties = entity['properties']
+                            if 'properties' in entities[entity_name]:
+                                entities[entity_name]['properties'].update(properties)
+                            else:
+                                entities[entity_name]['properties'] = properties
                         if 'query_paths' in entity:
                             entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
                             entities[entity_name]['query_paths'].extend(entity['query_paths'])
+                        if 'instance_url' in entity:
+                            entities[entity_name]['instance_url'] = entity['instance_url']
                     else:
                         entities[entity_name] = entity
             self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
@@ -129,11 +133,10 @@ class SwaggerGenerator(object):
                     definition = self.definitions[entity_name]
                     if 'type' in entity_spec:
                         definition['type'] = entity_spec['type']
-                if self.include_impl and 'implementation' in entity_spec:
-                    implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], '#%s' % entity_name)
-                    implementation_spec_specs = [ImplementationPathSpec(self.conventions, e_s['implementation'], e_n) for e_n, e_s in entities.iteritems() if e_s.get('implementation') and e_s['implementation']['path'] == entity_spec['implementation']['path']]
-                    entity_interface =  self.build_entity_interface(implementation_spec_spec, None, None, implementation_spec_specs)
-                    self.openapispec_paths[implementation_spec_spec.path_segment()] = entity_interface
+                if self.include_impl and 'instance_url' in entity_spec:
+                    implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
+                    entity_interface =  self.build_entity_interface(implementation_spec)
+                    self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
                 elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec.get('resource', True): 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                     self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
@@ -141,9 +144,9 @@ class SwaggerGenerator(object):
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
-                        if self.include_impl and 'implementation' in entity_spec:
-                            implementation_spec_spec = ImplementationPathSpec(self.conventions, entity_spec['implementation'], entity_name)
-                            self.add_query_paths(query_paths[:], implementation_spec_spec, rel_property_spec_stack, rel_property_specs)
+                        if self.include_impl and 'instance_url' in entity_spec:
+                            implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
+                            self.add_query_paths(query_paths[:], implementation_spec, rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
                             leftover_query_paths = query_paths
@@ -239,7 +242,7 @@ class SwaggerGenerator(object):
         else:
             response_200['<<'] = self.responses.get('standard_200')
         path_spec = PresortedOrderedDict()
-        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
+        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
         if is_private:
             path_spec['x-private'] = True
             x_description = 'This path is NOT part of the API. It is used in the implementaton and may be ' \
@@ -353,7 +356,7 @@ class SwaggerGenerator(object):
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
         path_spec = PresortedOrderedDict()
-        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
+        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
         if is_private:
             path_spec['x-private'] = True            
         parameters = self.build_parameters(prefix, query_path) 
@@ -878,6 +881,31 @@ class WellKnownURLSpec(PathPrefix):
                 })
                 input_string = input_string[next_start:]
         return params
+
+class ImplementationPathSpec(PathPrefix):
+    
+    def __init__(self, instance_url, target_entity_uri):
+        self.instance_url = instance_url 
+        self.target_entity_uri = target_entity_uri
+
+    def path_segment(self, select_one_of_many = False):
+        template = self.instance_url['template']
+        template = template.replace('{', '{{{')
+        template = template.replace('}', '}}}')
+        return template.format(self.instance_url['key']['name'])
+
+    def build_param(self):
+        result = {
+            'name': self.instance_url['key']['name'],
+            'description': 'This parameter is a private part of the implementation. It is not part of the API',
+            'in': 'path',
+            'type': self.instance_url['key'].get('type', 'string'),
+            'required': True
+            }
+        return result
+        
+    def is_private(self):
+        return True
 
 class QueryPath(object):
 

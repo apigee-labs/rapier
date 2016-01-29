@@ -270,64 +270,21 @@ non_entity_resources:
       - $ref: '#/non_entity_resources/Collection'
       - $ref: '#/non_entity_resources/Page'
 implementation_only:
-  Hub:
-    properties:
-      Zmxk:
-        description: URL of a Collection of Folders
-        format: uri
-        type: string        
-        relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder'
-          multiplicity: O:n
-      c3Bj:
-        description: URL of a Collection of Specs
-        format: uri
-        type: string        
-        relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec'
-          multiplicity: O:n
-      Z3Jw:
-        description: URL of a Collection of Groups
-        format: uri
-        type: string        
-        relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Group'
-          multiplicity: O:n
-    query_paths: 
-    - segments:
-      - relationship: Zmxk #b64 for fld
-        selectors: implementation_key
-        separator: "-"
-    - segments: 
-      - relationship: Zmxk #b64 for spc
-        selectors: implementation_key
-        separator: "-"
-      - relationship: contents
-    - segments: 
-      - relationship: c3Bj #b64 for spc
-        selectors: implementation_key
-        separator: "-"
-    - segments: 
-      - relationship: c3Bj #b64 for spc
-        selectors: implementation_key
-        separator: "-"
-      - relationship: content
-    - segments: 
-      - relationship: Z3Jw #b64 for grp
-        selectors: implementation_key
-        separator: "-"
-  Folder:
-    properties:
-      implementation_key:
-        type: integer  
-  Spec:
-    properties:
-      implementation_key:
-        type: integer  
   Group:
-    properties:
-      implementation_key:
+    instance_url:
+      template: /aHVi-Z3Jw-{} 
+      key:
+        name: implementation_key
+        type: integer
+  Spec:
+    instance_url:
+      template: /aHVi-c3Bj-{} 
+      key:
+        name: implementation_key
+        type: integer
+  Folder:
+    instance_url:
+      template: /aHVi-Zmxk-{} 
+      key:
+        name: implementation_key
         type: integer  
