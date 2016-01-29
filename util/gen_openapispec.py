@@ -80,11 +80,17 @@ class SwaggerGenerator(object):
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
 
         if 'entities' in spec:
-            entities = spec['entities'].copy()
+            entities = spec['entities']
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entity_resources/%s' % name: entity for name, entity in spec.get('non_entity_resources',{}).iteritems()})
             self.openapispec_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
+            for entity in entities.itervalues():
+                if 'kind' not in entity:
+                    entity['kind'] = 'Entity'
+            for entity in spec.get('non_entity_resources',{}).itervalues():
+                if 'kind' not in entity:
+                    entity['kind'] = 'Non_entity_resource'                
             entities.update(spec.get('non_entity_resources',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
