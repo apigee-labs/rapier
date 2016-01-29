@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import yaml, sys, getopt, itertools
+import yaml, sys, getopt, itertools, string
 from collections import OrderedDict
 
 class PresortedList(list):
@@ -867,20 +867,14 @@ class WellKnownURLSpec(PathPrefix):
         return self.base_URL[:-1] if self.base_URL.endswith('/') and len(self.base_URL) > 0 else self.base_URL
 
     def build_param(self):
-        input_string = self.base_URL
-        param_name = ''
-        params = []
-        while param_name is not None:
-            param_name, next_start = get_param_name(input_string)
-            if param_name:
-                params.append({
+        formatter = string.Formatter()
+        param_names = [part[1] for part in formatter.parse(self.base_URL) if part[1] is not None]
+        return [{
                 'name': param_name,
                 'in': 'path',
                 'type': 'string',
                 'required': True
-                })
-                input_string = input_string[next_start:]
-        return params
+                } for param_name in param_names]
 
 class ImplementationPathSpec(PathPrefix):
     
@@ -958,37 +952,26 @@ class QuerySegment(object):
         else:
             parts = query_segment.split(';')
             self.relationship_separator = generator.relationship_separator
-            if len(parts) > 2:
-                sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
+            if len(parts) == 1:
+                self.selector_property_name = None
+                self.selectors = []    
             elif len(parts) == 2:
                 params_part = parts[1]
-                if '{' in params_part:
-                    open_brace_offset = params_part.index('{')
-                    if '}' in params_part:
-                        close_brace_offset = params_part.index('}')
-                        if open_brace_offset < close_brace_offset:
-                            selector_property_name = params_part[open_brace_offset+1 : close_brace_offset]
-                            self.selectors = [{
-                                'property': selector_property_name,
-                                'openapispec_param': selector_property_name,
-                                'brace_offset': open_brace_offset
-                                }]
-                            self.selector_template = '%s'.join([params_part[:open_brace_offset+1], params_part[close_brace_offset:]])
-                        else:
-                            sys.exit('empty path parameter ({}) - %s' % segment_string)
-                    else:
-                        sys.exit('no closing { for path paramter - %s' % segment_string)
-                else:
-                    sys.exit('missing path parameter ({xxx}) - %s' % segment_string)
+                formatter = string.Formatter()
+                parsed_format = list(formatter.parse(params_part))
+                self.selectors = [{
+                    'property': parsed_format_part[1],
+                    'openapispec_param': parsed_format_part[1]
+                    } for parsed_format_part in parsed_format if parsed_format_part[1] is not None] 
+                self.selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
             else:
-                self.selector_property_name = None
-                self.selectors = []
+                sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
             self.relationship = parts[0]
         for selector in self.selectors:
             duplicate_count = len([selector['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.selectors])
             selector['openapispec_param'] = '_'.join((selector['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else selector['property']
         if len(self.selectors) > 0:
-            params_part = self.selector_template % self.selectors[0]['openapispec_param'] if len(self.selectors) == 1 else [disc['openapispec_param'] for disc in self.selectors]
+            params_part = self.selector_template.format(*['{%s}'%disc['openapispec_param'] for disc in self.selectors])
             self.openapispec_segment_string = self.relationship_separator.join((self.relationship, params_part))
         else:
             self.openapispec_segment_string = self.relationship
@@ -1098,23 +1081,7 @@ def article(name):
         
 def articled(name):
     return '%s %s' % (article(name), name)
-    
-def get_param_name(input_string):
-    if '{' in input_string:
-        open_brace_offset = input_string.index('{')
-        if '}' in input_string:
-            close_brace_offset = input_string.index('}')
-            if open_brace_offset < close_brace_offset:
-                param = input_string[open_brace_offset+1 : close_brace_offset]
-            else:
-                sys.exit('empty path parameter ({}) - %s' % segment_string)
-        else:
-            sys.exit('no closing { for path paramter - %s' % segment_string)
-    else:
-        param = None
-        close_brace_offset = -1
-    return param, close_brace_offset + 1
-                
+                    
 def json_ref(key):
     return {'$ref': key}
         
