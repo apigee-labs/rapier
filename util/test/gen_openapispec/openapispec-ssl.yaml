@@ -96,34 +96,6 @@ definitions:
   CSR:
     readOnly: true
     type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Resource:
-    type: object
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -225,6 +197,34 @@ definitions:
       orgUnitName:
         type: string
       state:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      kind:
+        type: string
+      self:
         type: string
 paths:
   /v1/o/{org}/e/{env}:

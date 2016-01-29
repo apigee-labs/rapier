@@ -3,7 +3,7 @@ version: "0.1"
 entities:
   DogTracker:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       dogs:
         description: URL of a Collection of Dogs
@@ -26,7 +26,7 @@ entities:
     readOnly: true
   Dog:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       name:
         type: string
@@ -41,7 +41,7 @@ entities:
           entities: '#Person'
   Person:
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       name:
         type: string
@@ -54,7 +54,7 @@ entities:
           collection_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
-#Boilerplate entities from here
+non_resources:
   Resource:
     abstract: true
     type: object
@@ -66,7 +66,7 @@ entities:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_resources/Resource'
     abstract: true
     properties:
       created:
@@ -89,7 +89,7 @@ entities:
 non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/entities/Resource'
+    - $ref: '#/non_resources/Resource'
     properties:
       kind:
         type: string

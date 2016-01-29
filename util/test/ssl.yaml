@@ -12,7 +12,7 @@ entities:
     - keystores;{name}/aliases;{name}/csr 
     - keystores;{name}/aliases;{name}/certificate
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -27,7 +27,7 @@ entities:
           multiplicity: 0:n
   Keystore:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       name:
         type: string
@@ -47,7 +47,7 @@ entities:
             application/json: '#SelfSignedCertAlias'
   Alias:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -181,10 +181,9 @@ non_resources:
         type: string
       email:
         type: string
-non_entity_resources:
   PersistentResource:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_resources/Resource'
     abstract: true
     type: object
     properties:
@@ -213,9 +212,10 @@ non_entity_resources:
         type: string
       kind:
         type: string
+non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_resources/Resource'
     properties:
       kind:
         type: string

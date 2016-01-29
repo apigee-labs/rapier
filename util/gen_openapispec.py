@@ -149,7 +149,7 @@ class SwaggerGenerator(object):
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
                     entity_interface = self.build_entity_interface(implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
-                elif not self.include_impl and not entity_spec.get('abstract', False) and entity_spec['kind'] in ['Entity', 'NonEntityResource']: 
+                elif not self.include_impl and entity_spec['kind'] in ['Entity', 'NonEntityResource']: 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                     self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:

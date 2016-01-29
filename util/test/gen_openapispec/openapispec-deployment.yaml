@@ -216,34 +216,6 @@ definitions:
         type: string
         enum:
         - DeploymentOnlineRequest
-  Resource:
-    type: object
-    properties:
-      kind:
-        type: string
-      self:
-        type: string
-        readOnly: true
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -273,6 +245,34 @@ definitions:
         enum:
         - Page
     readOnly: true
+  Resource:
+    type: object
+    properties:
+      kind:
+        type: string
+      self:
+        type: string
+        readOnly: true
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
 paths: {}
 x-URI-templates:
   '{Application_URL}':
