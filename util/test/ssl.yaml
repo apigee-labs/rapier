@@ -184,7 +184,6 @@ non_resources:
   PersistentResource:
     allOf:
     - $ref: '#/non_resources/Resource'
-    abstract: true
     type: object
     properties:
       created:
@@ -203,9 +202,7 @@ non_resources:
         type: string
         format: date-time
         readOnly: true
-    abstract: true
   Resource:
-    abstract: true
     type: object
     properties:
       self:

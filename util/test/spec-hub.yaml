@@ -240,7 +240,6 @@ non_entity_resources:
       - $ref: '#/non_entity_resources/Page'
 non_resources:
   Resource:
-    abstract: true
     type: object
     properties:
       self:
@@ -251,7 +250,6 @@ non_resources:
   PersistentResource:
     allOf:
     - $ref: '#/non_resources/Resource'
-    abstract: true
     properties:
       created:
         type: string
@@ -269,7 +267,6 @@ non_resources:
         type: string
         format: date-time
         readOnly: true
-    abstract: true
 implementation_only:
   Group:
     instance_url:

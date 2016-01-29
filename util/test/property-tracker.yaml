@@ -118,7 +118,6 @@ entities:
           multiplicity: 0:n
 non_resources:
   Resource:
-    abstract: true
     type: object
     properties:
       self:
@@ -129,7 +128,6 @@ non_resources:
   PersistentResource:
     allOf:
     - $ref: '#/non_resources/Resource'
-    abstract: true
     properties:
       created:
         type: string
@@ -147,7 +145,6 @@ non_resources:
         type: string
         format: date-time
         readOnly: true
-    abstract: true
 non_entity_resources:
   Collection:
     allOf:
