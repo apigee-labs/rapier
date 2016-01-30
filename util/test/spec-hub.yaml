@@ -22,8 +22,8 @@ entities:
       kind:
         type: string
         enum: [Hub]
-      myHub:
-        description: URL of a Folder
+      home:
+        description: URL of the current user's 'home' Folder
         format: uri
         type: string
         relationship: '#Folder'
@@ -62,7 +62,7 @@ entities:
           multiplicity: O:n
     well_known_URLs: /hub
     query_paths: 
-    - myHub
+    - home
     - sharedWithMe
     - specs
     - folders
@@ -269,19 +269,19 @@ non_entity_resources:
 implementation_only:
   Group:
     instance_url:
-      template: /aHVi-Z3Jw-{} 
+      template: /ZG9j-Z3Jw-{} 
       key:
         name: implementation_key
         type: integer
   Spec:
     instance_url:
-      template: /aHVi-c3Bj-{} 
+      template: /ZG9j-c3Bj-{} 
       key:
         name: implementation_key
         type: integer
   Folder:
     instance_url:
-      template: /aHVi-Zmxk-{} 
+      template: /ZG9j-Zmxk-{} 
       key:
         name: implementation_key
         type: integer  

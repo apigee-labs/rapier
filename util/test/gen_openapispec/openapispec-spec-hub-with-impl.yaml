@@ -38,15 +38,15 @@ definitions:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
+      home:
+        description: URL of the current user's 'home' Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum:
         - Hub
-      myHub:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
@@ -238,7 +238,7 @@ definitions:
 paths:
   /hub:
     $ref: '#/x-URI-templates/{Hub_URL}'
-  /hub/myHub:
+  /hub/home:
     $ref: '#/x-URI-templates/{Folder_URL}'
   /hub/sharedWithMe:
     get:
@@ -636,7 +636,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /aHVi-Zmxk-{implementation_key}:
+  /ZG9j-Zmxk-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -769,7 +769,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /aHVi-Zmxk-{implementation_key}/contents:
+  /ZG9j-Zmxk-{implementation_key}/contents:
     x-private: true
     parameters:
     - description: This parameter is a private part of the implementation. It is not
@@ -888,7 +888,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /aHVi-c3Bj-{implementation_key}:
+  /ZG9j-c3Bj-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -1021,7 +1021,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /aHVi-c3Bj-{implementation_key}/content:
+  /ZG9j-c3Bj-{implementation_key}/content:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -1180,7 +1180,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /aHVi-Z3Jw-{implementation_key}:
+  /ZG9j-Z3Jw-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven

@@ -38,15 +38,15 @@ definitions:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
+      home:
+        description: URL of the current user's 'home' Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
       kind:
         type: string
         enum:
         - Hub
-      myHub:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
       sharedWithMe:
         description: URL of a Collection of Folders and Specs
         format: uri
@@ -238,7 +238,7 @@ definitions:
 paths:
   /hub:
     $ref: '#/x-URI-templates/{Hub_URL}'
-  /hub/myHub:
+  /hub/home:
     $ref: '#/x-URI-templates/{Folder_URL}'
   /hub/sharedWithMe:
     get:
