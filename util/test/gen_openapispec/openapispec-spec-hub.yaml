@@ -236,11 +236,11 @@ definitions:
         format: date-time
         readOnly: true
 paths:
-  /hub:
+  /doc:
     $ref: '#/x-URI-templates/{Hub_URL}'
-  /hub/home:
+  /doc/home:
     $ref: '#/x-URI-templates/{Folder_URL}'
-  /hub/sharedWithMe:
+  /doc/sharedWithMe:
     get:
       parameters:
       - in: query
@@ -315,7 +315,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /hub/specs:
+  /doc/specs:
     get:
       parameters:
       - in: query
@@ -422,7 +422,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /hub/folders:
+  /doc/folders:
     get:
       parameters:
       - in: query
@@ -529,7 +529,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /hub/groups:
+  /doc/groups:
     get:
       parameters:
       - in: query

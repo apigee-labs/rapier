@@ -60,7 +60,7 @@ entities:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
-    well_known_URLs: /hub
+    well_known_URLs: /doc
     query_paths: 
     - home
     - sharedWithMe
