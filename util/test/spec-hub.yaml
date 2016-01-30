@@ -17,7 +17,7 @@ security:
 entities:
   Store:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       kind:
         type: string
@@ -70,7 +70,7 @@ entities:
     readOnly: true
   Folder:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     query_paths: [contents]
     properties:
       contents:
@@ -103,7 +103,7 @@ entities:
               type: string
   Doc:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     query_paths: [content]
     properties:
       content:
@@ -132,7 +132,7 @@ entities:
               type: string
   Group:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       members:
         description: Array of URLs of Users
@@ -163,10 +163,10 @@ entities:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
     produces: application/x-yaml text/yaml text/html text/plain
-non_entity_resources:
+non_entities:
   Collection:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       kind:
         type: string
@@ -195,7 +195,7 @@ non_entity_resources:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       kind:
         type: string
@@ -236,8 +236,8 @@ non_entity_resources:
   MultiValuedRelationshipResource:
     readOnly: true
     oneOf:
-      - $ref: '#/non_entity_resources/Collection'
-      - $ref: '#/non_entity_resources/Page'
+      - $ref: '#/non_entities/Collection'
+      - $ref: '#/non_entities/Page'
   Resource:
     type: object
     properties:
@@ -248,7 +248,7 @@ non_entity_resources:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       created:
         type: string

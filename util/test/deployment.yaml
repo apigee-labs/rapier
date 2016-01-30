@@ -9,7 +9,7 @@ conventions:
 entities:
   Application:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -32,7 +32,7 @@ entities:
           entities: '#Microservice'
   Environment:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -68,7 +68,7 @@ entities:
           entities: '#EnvironmentStopRequest'              
   Microservice:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -87,7 +87,7 @@ entities:
           entities: '#Revision'
   Revision:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -106,7 +106,7 @@ entities:
           entities: '#Deployment'        
   Deployment:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -152,21 +152,21 @@ entities:
           entities: '#DeploymentOfflineRequest'        
   EnvironmentStartRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [EnvironmentStartRequest]    
   EnvironmentStopRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [EnvironmentStopRequest]    
   DeploymentStartRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -175,29 +175,29 @@ entities:
         type: integer
   DeploymentStopRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [DeploymentStopRequest]    
   DeploymentOfflineRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [DeploymentOfflineRequest]    
   DeploymentOnlineRequest:
     allOf:
-    - $ref: '#/non_entity_resources/PersistentResource'
+    - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
         enum: [DeploymentOnlineRequest]    
-non_entity_resources:
+non_entities:
   Collection:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       kind:
         type: string
@@ -226,7 +226,7 @@ non_entity_resources:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       kind:
         type: string
@@ -260,7 +260,7 @@ non_entity_resources:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_entity_resources/Resource'
+    - $ref: '#/non_entities/Resource'
     properties:
       created:
         type: string

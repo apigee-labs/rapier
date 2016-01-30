@@ -83,15 +83,15 @@ class SwaggerGenerator(object):
             entities = spec['entities']
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
-            self.uri_map.update({'#/non_entity_resources/%s' % name: entity for name, entity in spec.get('non_entity_resources',{}).iteritems()})
-            self.openapispec_uri_map.update({'#/non_entity_resources/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entity_resources',{}).iterkeys()})
+            self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
+            self.openapispec_uri_map.update({'#/non_entities/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entities',{}).iterkeys()})
             for entity in entities.itervalues():
                 if 'kind' not in entity:
                     entity['kind'] = 'Entity'
-            for entity in spec.get('non_entity_resources',{}).itervalues():
+            for entity in spec.get('non_entities',{}).itervalues():
                 if 'kind' not in entity:
                     entity['kind'] = 'NonEntityResource'                
-            entities.update(spec.get('non_entity_resources',{}))
+            entities.update(spec.get('non_entities',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:
