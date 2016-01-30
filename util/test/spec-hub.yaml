@@ -275,7 +275,7 @@ implementation_only:
         type: integer
   Doc:
     instance_url:
-      template: /ZG9j-c3Bj-{} 
+      template: /ZG9j-ZG9j-{} 
       key:
         name: implementation_key
         type: integer
