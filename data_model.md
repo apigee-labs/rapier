@@ -43,14 +43,15 @@ entities:
         relationship: '#Child'
 implementation_only:
   Child:
-    properties:
-      database_primary_key:
+    instance_url:
+      template: /aHVi-Z3Jw-{} 
+      key:
+        name: implementation_key
         type: integer
 ``` 
 
 `#/entities/Child` and `#/implementation_only/Child` are two different JSON objects, but they both describe the same entity, whose URI reference is `#Child`.
-This means that `#/implementation_only/Child` is providing additional information about the same entity that was described by `#/entities/Child`. In this case,
-it is telling us about a new property of `#Child` that we didn't know about before. This new property is private to the implementation; it is not part of the API.
+This means that `#/implementation_only/Child` is providing additional information about the same entity that was described by `#/entities/Child`. 
 The API could also have been described as follows, although Rapier does not currently allow this syntax (maybe it should):
 
 ```yaml
@@ -61,9 +62,11 @@ The API could also have been described as follows, although Rapier does not curr
       type: string
       format: uri
       relationship: '#Child'
-    - name: database_primary_key
-      implementation_only: True
-      type: integer
+  instance_url:
+    template: /aHVi-Z3Jw-{} 
+    key:
+      name: implementation_key
+      type: integer    
 - kind: 'https://github.com/apigee/rapier#Entity'
   id: '#Mother'
 ``` 
