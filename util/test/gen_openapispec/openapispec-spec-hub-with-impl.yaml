@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: Spec Hub API
+  title: Doc Store API
   version: '0.1'
 consumes:
 - application/json
@@ -18,10 +18,18 @@ security:
 definitions:
   ErrorResponse:
     type: string
-  Hub:
+  Store:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
+      docs:
+        description: URL of a Collection of Docs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Doc'
+          multiplicity: O:n
       folders:
         description: URL of a Collection of Folders
         format: uri
@@ -46,37 +54,29 @@ definitions:
       kind:
         type: string
         enum:
-        - Hub
+        - Store
       sharedWithMe:
-        description: URL of a Collection of Folders and Specs
+        description: URL of a Collection of Folders and Docs
         format: uri
         type: string
         x-rapier-relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder #Spec'
+          entities: '#Folder #Doc'
           multiplicity: O:n
           readOnly: true
-      specs:
-        description: URL of a Collection of Specs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec'
-          multiplicity: O:n
     readOnly: true
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       contents:
-        description: URL of a Collection of Specs and Folders
+        description: URL of a Collection of Docs and Folders
         format: uri
         readOnly: true
         type: string
         x-rapier-relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
+          entities: '#Doc #Folder'
           multiplicity: O:n
       folder:
         description: URL of a Folder
@@ -98,7 +98,7 @@ definitions:
             actor:
               format: URL
               type: string
-  Spec:
+  Doc:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -115,7 +115,7 @@ definitions:
       kind:
         type: string
         enum:
-        - Spec
+        - Doc
       name:
         type: string
       permissions:
@@ -237,7 +237,7 @@ definitions:
         readOnly: true
 paths:
   /doc:
-    $ref: '#/x-URI-templates/{Hub_URL}'
+    $ref: '#/x-URI-templates/{Store_URL}'
   /doc/home:
     $ref: '#/x-URI-templates/{Folder_URL}'
   /doc/sharedWithMe:
@@ -315,7 +315,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /doc/specs:
+  /doc/docs:
     get:
       parameters:
       - in: query
@@ -362,25 +362,25 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Spec
+      description: Create a new Doc
       parameters:
-      - description: The representation of the new Spec being created
+      - description: The representation of the new Doc being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Spec'
+          $ref: '#/definitions/Doc'
       responses:
         '201':
-          description: Created new Spec
+          description: Created new Doc
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Spec
+              description: perma-link URL of newly-created Doc
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -824,28 +824,28 @@ paths:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Spec or Folder
+      description: Create a new Doc or Folder
       parameters:
-      - description: The representation of the new Spec or Folder being created
+      - description: The representation of the new Doc or Folder being created
         in: body
         name: body
         schema:
           x-oneOf:
-          - $ref: '#/definitions/Spec'
+          - $ref: '#/definitions/Doc'
           - $ref: '#/definitions/Folder'
       responses:
         '201':
-          description: Created new Spec or Folder
+          description: Created new Doc or Folder
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Spec or Folder
+              description: perma-link URL of newly-created Doc or Folder
               type: string
           schema:
             x-oneOf:
-            - $ref: '#/definitions/Spec'
+            - $ref: '#/definitions/Doc'
             - $ref: '#/definitions/Folder'
         '400':
           $ref: '#/responses/400'
@@ -901,7 +901,7 @@ paths:
       required: true
       type: integer
     get:
-      description: Retrieve a Spec
+      description: Retrieve a Doc
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -916,7 +916,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -930,14 +930,14 @@ paths:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Spec entity
+      description: Update a Doc entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Spec being updated
+      - description: The subset of properties of the Doc being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Spec'
+          $ref: '#/definitions/Doc'
       responses:
         '200':
           description: successful
@@ -950,7 +950,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -966,7 +966,7 @@ paths:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Spec
+      description: Delete a Doc
       responses:
         '200':
           description: successful
@@ -979,7 +979,7 @@ paths:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1314,9 +1314,9 @@ paths:
         default:
           $ref: '#/responses/default'
 x-URI-templates:
-  '{Hub_URL}':
+  '{Store_URL}':
     get:
-      description: Retrieve a Hub
+      description: Retrieve a Store
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1331,7 +1331,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Hub'
+            $ref: '#/definitions/Store'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1493,9 +1493,9 @@ x-URI-templates:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Spec_URL}':
+  '{Doc_URL}':
     get:
-      description: Retrieve a Spec
+      description: Retrieve a Doc
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1510,7 +1510,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1524,14 +1524,14 @@ x-URI-templates:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Spec entity
+      description: Update a Doc entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Spec being updated
+      - description: The subset of properties of the Doc being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Spec'
+          $ref: '#/definitions/Doc'
       responses:
         '200':
           description: successful
@@ -1544,7 +1544,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1560,7 +1560,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Spec
+      description: Delete a Doc
       responses:
         '200':
           description: successful
@@ -1573,7 +1573,7 @@ x-URI-templates:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Spec'
+            $ref: '#/definitions/Doc'
         '400':
           $ref: '#/responses/400'
         '401':

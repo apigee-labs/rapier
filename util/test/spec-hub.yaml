@@ -1,4 +1,4 @@
-title: Spec Hub API
+title: Doc Store API
 version: "0.1"
 consumes: application/json
 produces: application/json text/html
@@ -15,34 +15,34 @@ securityDefinitions:
 security:
 - sso: []
 entities:
-  Hub:
+  Store:
     allOf:
     - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
-        enum: [Hub]
+        enum: [Store]
       home:
         description: URL of the current user's 'home' Folder
         format: uri
         type: string
         relationship: '#Folder'
       sharedWithMe:
-        description: URL of a Collection of Folders and Specs
+        description: URL of a Collection of Folders and Docs
         format: uri
         type: string
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder #Spec'
+          entities: '#Folder #Doc'
           multiplicity: O:n
           readOnly: true
-      specs:
-        description: URL of a Collection of Specs
+      docs:
+        description: URL of a Collection of Docs
         format: uri
         type: string        
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec'
+          entities: '#Doc'
           multiplicity: O:n
       folders:
         description: URL of a Collection of Folders
@@ -64,7 +64,7 @@ entities:
     query_paths: 
     - home
     - sharedWithMe
-    - specs
+    - docs
     - folders
     - groups
     readOnly: true
@@ -74,13 +74,13 @@ entities:
     query_paths: [contents]
     properties:
       contents:
-        description: URL of a Collection of Specs and Folders
+        description: URL of a Collection of Docs and Folders
         format: uri
         readOnly: true
         type: string
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Spec #Folder'
+          entities: '#Doc #Folder'
           multiplicity: O:n
       folder:
         description: URL of a Folder
@@ -101,7 +101,7 @@ entities:
               type: string
             action:
               type: string
-  Spec:
+  Doc:
     allOf:
     - $ref: '#/non_entity_resources/PersistentResource'
     query_paths: [content]
@@ -118,7 +118,7 @@ entities:
         relationship: '#Folder'
       kind:
         type: string
-        enum: [Spec]
+        enum: [Doc]
       name:
         type: string
       permissions:
@@ -273,7 +273,7 @@ implementation_only:
       key:
         name: implementation_key
         type: integer
-  Spec:
+  Doc:
     instance_url:
       template: /ZG9j-c3Bj-{} 
       key:
