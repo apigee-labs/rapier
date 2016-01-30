@@ -22,6 +22,24 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
+      kind:
+        type: string
+        enum:
+        - Store
+      home:
+        description: URL of the current user's 'home' Folder
+        format: uri
+        type: string
+        x-rapier-relationship: '#Folder'
+      sharedWithMe:
+        description: URL of a Collection of Folders and Docs
+        format: uri
+        type: string
+        x-rapier-relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Folder #Doc'
+          multiplicity: O:n
+          readOnly: true
       docs:
         description: URL of a Collection of Docs
         format: uri
@@ -46,24 +64,6 @@ definitions:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
-      home:
-        description: URL of the current user's 'home' Folder
-        format: uri
-        type: string
-        x-rapier-relationship: '#Folder'
-      kind:
-        type: string
-        enum:
-        - Store
-      sharedWithMe:
-        description: URL of a Collection of Folders and Docs
-        format: uri
-        type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder #Doc'
-          multiplicity: O:n
-          readOnly: true
     readOnly: true
   Folder:
     allOf:
@@ -93,10 +93,10 @@ definitions:
         type: array
         items:
           properties:
-            action:
-              type: string
             actor:
               format: URL
+              type: string
+            action:
               type: string
   Doc:
     allOf:
@@ -122,15 +122,21 @@ definitions:
         type: array
         items:
           properties:
-            action:
-              type: string
             actor:
               format: URL
+              type: string
+            action:
               type: string
   Group:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      members:
+        description: Array of URLs of Users
+        type: array
+        items:
+          type: string
+          format: uri
       folder:
         description: URL of a Folder
         format: uri
@@ -140,22 +146,16 @@ definitions:
         type: string
         enum:
         - Group
-      members:
-        description: Array of URLs of Users
-        type: array
-        items:
-          type: string
-          format: uri
       name:
         type: string
       permissions:
         type: array
         items:
           properties:
-            action:
-              type: string
             actor:
               format: URL
+              type: string
+            action:
               type: string
   Content:
     type: string
@@ -163,32 +163,32 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      items:
-        type: array
-        items:
-          type: object
       kind:
         type: string
         enum:
         - Collection
+      items:
+        type: array
+        items:
+          type: object
     readOnly: true
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      collection:
+      kind:
         type: string
-        format: uri
+        enum:
+        - Page
       item_type:
         type: string
       items:
         type: array
         items:
           type: object
-      kind:
+      collection:
         type: string
-        enum:
-        - Page
+        format: uri
       next_page:
         type: string
         format: uri
@@ -210,11 +210,11 @@ definitions:
   Resource:
     type: object
     properties:
-      kind:
-        type: string
       self:
         type: string
         readOnly: true
+      kind:
+        type: string
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'

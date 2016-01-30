@@ -12,6 +12,10 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      kind:
+        type: string
+        enum:
+        - Environment
       keystores:
         format: uri
         type: string
@@ -20,14 +24,16 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
-      kind:
-        type: string
-        enum:
-        - Environment
   Keystore:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Keystore
       aliases:
         format: uri
         type: string
@@ -39,26 +45,26 @@ definitions:
           consumes:
             multi-part/form-data: '#Pkcs12Alias #KeyCertFileAlias #KeyCertJarAlias'
             application/json: '#SelfSignedCertAlias'
-      kind:
-        type: string
-        enum:
-        - Keystore
-      name:
-        type: string
   Alias:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      certificate:
-        format: uri
+      kind:
         type: string
-        x-rapier-relationship: '#Certificate'
+        enum:
+        - Alias
+      name:
+        type: string
+      key:
+        type: string
       certsInfo:
         readOnly: true
         type: array
         items:
           type: object
           properties:
+            version:
+              type: integer
             expiryDate:
               type: string
               format: date
@@ -66,22 +72,16 @@ definitions:
               type: string
             subject:
               type: string
-            version:
-              type: integer
+      certificate:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Certificate'
       csr:
         format: uri
         type: string
         x-rapier-relationship:
           readOnly: true
           entities: '#CSR'
-      key:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Alias
-      name:
-        type: string
       selfSignedCertificate:
         format: uri
         type: string
@@ -99,8 +99,6 @@ definitions:
   Pkcs12Alias:
     type: object
     properties:
-      ignoreExpiryValidation:
-        type: boolean
       kind:
         type: string
         enum:
@@ -109,26 +107,28 @@ definitions:
         type: string
       password:
         type: string
+      ignoreExpiryValidation:
+        type: boolean
       pkcs12File:
         type: string
         format: file
   SelfSignedCertAlias:
     type: object
     properties:
-      alias:
-        type: string
-      certValidityInDays:
-        type: integer
-      issuer:
-        $ref: '#/definitions/X500Name'
-      keySize:
-        type: string
       kind:
         type: string
         enum:
         - SelfSignedCertAlias
+      alias:
+        type: string
+      keySize:
+        type: string
+      certValidityInDays:
+        type: integer
       sigAlg:
         type: string
+      issuer:
+        $ref: '#/definitions/X500Name'
       subject:
         $ref: '#/definitions/X500Name'
       subjectAlternativeDNSNames:
@@ -138,14 +138,25 @@ definitions:
   KeyCertFileAlias:
     type: object
     properties:
-      certFile:
+      kind:
         type: string
-        format: file
+        enum:
+        - KeyFileCertFileAlias
+      name:
+        type: string
+      password:
+        type: string
       ignoreExpiryValidation:
         type: boolean
       keyFile:
         type: string
         format: file
+      certFile:
+        type: string
+        format: file
+  KeyCertJarAlias:
+    type: object
+    properties:
       kind:
         type: string
         enum:
@@ -154,28 +165,17 @@ definitions:
         type: string
       password:
         type: string
-  KeyCertJarAlias:
-    type: object
-    properties:
       ignoreExpiryValidation:
         type: boolean
       keyCertJar:
         type: string
         format: file
-      kind:
-        type: string
-        enum:
-        - KeyFileCertFileAlias
-      name:
-        type: string
-      password:
-        type: string
   X500Name:
     type: object
     properties:
       countryCode:
         type: string
-      email:
+      state:
         type: string
       locality:
         type: string
@@ -183,7 +183,7 @@ definitions:
         type: string
       orgUnitName:
         type: string
-      state:
+      email:
         type: string
   PersistentResource:
     allOf:
@@ -209,22 +209,22 @@ definitions:
   Resource:
     type: object
     properties:
-      kind:
-        type: string
       self:
+        type: string
+      kind:
         type: string
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      items:
-        type: array
-        items:
-          type: object
       kind:
         type: string
         enum:
         - Collection
+      items:
+        type: array
+        items:
+          type: object
     readOnly: true
 paths:
   /v1/o/{org}/e/{env}:

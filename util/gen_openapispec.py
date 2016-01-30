@@ -743,7 +743,11 @@ class SwaggerGenerator(object):
                 elif k == 'readOnly':
                     result['readOnly'] = v
                 elif k == 'properties':
-                    result['properties'] = {k2: self.to_openapispec(v2) for k2,v2 in v.iteritems() if not v2.get('implementation_private', False)} 
+                    oas_properties = PresortedOrderedDict()
+                    for k2, v2 in v.iteritems():
+                        if not v2.get('implementation_private', False):
+                            oas_properties[k2] = self.to_openapispec(v2)
+                    result['properties'] = oas_properties 
                 elif k == 'relationship':
                     result['x-rapier-relationship'] = v
             return result

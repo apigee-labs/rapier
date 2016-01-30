@@ -17,6 +17,10 @@ definitions:
           x-oneOf:
           - type: object
             properties:
+              rel:
+                type: string
+                enum:
+                - items
               href:
                 type: string
                 format: uri
@@ -25,19 +29,15 @@ definitions:
                   collection_resource: '#Collection'
                   entities: '#Item'
                   multiplicity: O:n
-              rel:
-                type: string
-                enum:
-                - items
   Item:
     properties:
-      due:
-        type: string
-        format: date-time
       self:
         type: string
         format: uri
         readOnly: true
+      due:
+        type: string
+        format: date-time
   Collection:
     readOnly: true
     properties:

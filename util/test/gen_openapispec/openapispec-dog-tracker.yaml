@@ -33,11 +33,11 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      name:
+        type: string
       birth_date:
         type: string
       fur_color:
-        type: string
-      name:
         type: string
       owner:
         format: uri
@@ -48,6 +48,8 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      name:
+        type: string
       birth-date:
         type: string
       dogs:
@@ -57,16 +59,14 @@ definitions:
           collection_resource: '#Collection'
           entities: '#Dog'
           multiplicity: O:n
-      name:
-        type: string
   Resource:
     type: object
     properties:
-      kind:
-        type: string
       self:
         type: string
         readOnly: true
+      kind:
+        type: string
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -91,14 +91,14 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      items:
-        type: array
-        items:
-          type: object
       kind:
         type: string
         enum:
         - Collection
+      items:
+        type: array
+        items:
+          type: object
     readOnly: true
 paths:
   /:

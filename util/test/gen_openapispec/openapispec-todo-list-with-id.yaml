@@ -20,14 +20,14 @@ definitions:
           multiplicity: O:n
   Item:
     properties:
+      id:
+        type: string
+        readOnly: true
       description:
         type: string
       due:
         type: string
         format: date-time
-      id:
-        type: string
-        readOnly: true
   Collection:
     readOnly: true
     properties:

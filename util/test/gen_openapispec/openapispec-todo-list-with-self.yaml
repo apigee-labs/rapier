@@ -20,15 +20,15 @@ definitions:
           multiplicity: O:n
   Item:
     properties:
+      self:
+        type: string
+        format: uri
+        readOnly: true
       description:
         type: string
       due:
         type: string
         format: date-time
-      self:
-        type: string
-        format: uri
-        readOnly: true
   Collection:
     readOnly: true
     properties:

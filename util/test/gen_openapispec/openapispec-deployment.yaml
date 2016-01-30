@@ -22,14 +22,10 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      comprises:
-        format: uri
+      kind:
         type: string
-        readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Microservice'
+        enum:
+        - Application
       has_environments:
         format: uri
         type: string
@@ -38,20 +34,18 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
-      kind:
+      comprises:
+        format: uri
         type: string
-        enum:
-        - Application
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Microservice'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      hosts:
-        format: uri
-        type: string
-        x-rapier-relationship:
-          multiplicity: 0:n
-          entities: '#Deployment'
       kind:
         type: string
         enum:
@@ -60,6 +54,12 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship: '#Application'
+      hosts:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          multiplicity: 0:n
+          entities: '#Deployment'
       requested_state:
         type: string
         readOnly: true
@@ -83,14 +83,14 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      is_component_of:
-        format: uri
-        type: string
-        x-rapier-relationship: '#Application'
       kind:
         type: string
         enum:
         - Microservice
+      is_component_of:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Application'
       produced:
         format: uri
         type: string
@@ -103,14 +103,6 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      has_deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Deployment'
       kind:
         type: string
         enum:
@@ -119,37 +111,29 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship: '#Microservice'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Deployment'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      go_live_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentOnlineRequest'
-      go_offline_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentOfflineRequest'
       kind:
         type: string
         enum:
         - Deployment
-      requested_state:
-        type: string
-        readOnly: true
       runs_in:
         format: uri
         type: string
         x-rapier-relationship: '#Environment'
+      requested_state:
+        type: string
+        readOnly: true
       start_requests:
         format: uri
         type: string
@@ -166,6 +150,22 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#DeploymentStopRequest'
+      go_live_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOnlineRequest'
+      go_offline_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOfflineRequest'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -220,39 +220,39 @@ definitions:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      items:
-        type: array
-        items:
-          type: object
       kind:
         type: string
         enum:
         - Collection
+      items:
+        type: array
+        items:
+          type: object
     readOnly: true
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
-      collection:
-        type: string
-        format: uri
-      items:
-        type: array
-        items:
-          type: object
       kind:
         type: string
         enum:
         - Page
+      items:
+        type: array
+        items:
+          type: object
+      collection:
+        type: string
+        format: uri
     readOnly: true
   Resource:
     type: object
     properties:
-      kind:
-        type: string
       self:
         type: string
         readOnly: true
+      kind:
+        type: string
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
