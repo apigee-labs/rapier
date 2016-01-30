@@ -237,588 +237,19 @@ definitions:
         readOnly: true
 paths:
   /hub:
-    get:
-      description: Retrieve a Hub
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Hub'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{Hub_URL}'
   /hub/myHub:
-    get:
-      description: Retrieve a Folder
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Folder'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a Folder entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Folder being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Folder'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Folder'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Folder
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Folder'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{Folder_URL}'
   /hub/sharedWithMe:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{MultiValuedRelationshipResource_URL}'
   /hub/specs:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Spec
-      parameters:
-      - description: The representation of the new Spec being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Spec'
-      responses:
-        '201':
-          description: Created new Spec
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Spec
-              type: string
-          schema:
-            $ref: '#/definitions/Spec'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{MultiValuedRelationshipResource_URL}'
   /hub/folders:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Folder
-      parameters:
-      - description: The representation of the new Folder being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Folder'
-      responses:
-        '201':
-          description: Created new Folder
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Folder
-              type: string
-          schema:
-            $ref: '#/definitions/Folder'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{MultiValuedRelationshipResource_URL}'
   /hub/groups:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Group
-      parameters:
-      - description: The representation of the new Group being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Group'
-      responses:
-        '201':
-          description: Created new Group
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Group
-              type: string
-          schema:
-            $ref: '#/definitions/Group'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    $ref: '#/x-URI-templates/{MultiValuedRelationshipResource_URL}'
 x-URI-templates:
   '{Hub_URL}':
-    parameters:
-    - description: The URL of a Hub entity
-      in: URL
-      name: Hub_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Hub
       parameters:
@@ -876,12 +307,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Folder_URL}':
-    parameters:
-    - description: The URL of a Folder entity
-      in: URL
-      name: Folder_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Folder
       parameters:
@@ -1004,12 +429,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Folder_URL}/contents':
-    parameters:
-    - description: The URL of a Folder entity
-      in: URL
-      name: Folder_URL
-      required: true
-      type: string
     get:
       parameters:
       - in: query
@@ -1121,12 +540,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Spec_URL}':
-    parameters:
-    - description: The URL of a Spec entity
-      in: URL
-      name: Spec_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Spec
       parameters:
@@ -1249,12 +662,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Spec_URL}/content':
-    parameters:
-    - description: The URL of a Spec entity
-      in: URL
-      name: Spec_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Content
       parameters:
@@ -1403,12 +810,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Group_URL}':
-    parameters:
-    - description: The URL of a Group entity
-      in: URL
-      name: Group_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Group
       parameters:
@@ -1531,12 +932,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Content_URL}':
-    parameters:
-    - description: The URL of a Content entity
-      in: URL
-      name: Content_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Content
       parameters:
@@ -1685,12 +1080,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Collection_URL}':
-    parameters:
-    - description: The URL of a Collection entity
-      in: URL
-      name: Collection_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Collection
       parameters:
@@ -1769,12 +1158,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Page_URL}':
-    parameters:
-    - description: The URL of a Page entity
-      in: URL
-      name: Page_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Page
       parameters:
@@ -1843,12 +1226,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{MultiValuedRelationshipResource_URL}':
-    parameters:
-    - description: The URL of a MultiValuedRelationshipResource entity
-      in: URL
-      name: MultiValuedRelationshipResource_URL
-      required: true
-      type: string
     get:
       description: Retrieve a MultiValuedRelationshipResource
       parameters:

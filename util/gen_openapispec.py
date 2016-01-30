@@ -149,7 +149,7 @@ class SwaggerGenerator(object):
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
                     entity_interface = self.build_entity_interface(implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
-                elif not self.include_impl and entity_spec['kind'] in ['Entity', 'NonEntityResource']: 
+                if entity_spec['kind'] in ['Entity', 'NonEntityResource']: 
                     entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
                     self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
@@ -240,6 +240,9 @@ class SwaggerGenerator(object):
     def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
         entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
+        parameters = self.build_parameters(prefix, query_path)
+        if not parameters and not prefix.is_uri_spec():
+                return {'$ref': '#/x-URI-templates/{%s_URL}' % self.resolve_entity_name(entity_uri)}            
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
@@ -263,7 +266,6 @@ class SwaggerGenerator(object):
             x_description = prefix.x_description()
         if x_description:
             path_spec['x-description'] = x_description
-        parameters = self.build_parameters(prefix, query_path)
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = {
@@ -364,6 +366,10 @@ class SwaggerGenerator(object):
 
     def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
+        parameters = self.build_parameters(prefix, query_path) 
+        if not parameters and not prefix.is_uri_spec():
+            collection_entity_uri = rel_property_spec.collection_resource
+            return {'$ref': '#/x-URI-templates/{%s_URL}' % self.resolve_entity_name(collection_entity_uri)}            
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
@@ -371,7 +377,6 @@ class SwaggerGenerator(object):
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
         if is_private:
             path_spec['x-private'] = True            
-        parameters = self.build_parameters(prefix, query_path) 
         if parameters:
             path_spec['parameters'] = parameters
         path_spec['get'] = self.build_collection_get(rel_property_spec)
@@ -1027,14 +1032,7 @@ class EntityURLSpec(PathPrefix):
         return '{%s_URL}' % self.openapispec_generator.resolve_entity_name(self.target_entity_uri)
 
     def build_param(self):
-        return {
-            'name': '%s_URL' % self.openapispec_generator.resolve_entity_name(self.target_entity_uri),
-            'in': 'URL',
-            'type': 'string',
-            'description':
-                "The URL of %s entity" % articled(self.openapispec_generator.resolve_entity_name(self.target_entity_uri)),
-            'required': True
-            }
+        return None
             
     def is_uri_spec(self):
         return True

@@ -813,12 +813,6 @@ paths:
           $ref: '#/responses/default'
 x-URI-templates:
   '{Environment_URL}':
-    parameters:
-    - description: The URL of an Environment entity
-      in: URL
-      name: Environment_URL
-      required: true
-      type: string
     get:
       description: Retrieve an Environment
       parameters:
@@ -914,12 +908,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Keystore_URL}':
-    parameters:
-    - description: The URL of a Keystore entity
-      in: URL
-      name: Keystore_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Keystore
       parameters:
@@ -1042,12 +1030,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Alias_URL}':
-    parameters:
-    - description: The URL of an Alias entity
-      in: URL
-      name: Alias_URL
-      required: true
-      type: string
     get:
       description: Retrieve an Alias
       parameters:
@@ -1170,12 +1152,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Certificate_URL}':
-    parameters:
-    - description: The URL of a Certificate entity
-      in: URL
-      name: Certificate_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Certificate
       parameters:
@@ -1233,12 +1209,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{CSR_URL}':
-    parameters:
-    - description: The URL of a CSR entity
-      in: URL
-      name: CSR_URL
-      required: true
-      type: string
     get:
       description: Retrieve a CSR
       parameters:
@@ -1296,12 +1266,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Collection_URL}':
-    parameters:
-    - description: The URL of a Collection entity
-      in: URL
-      name: Collection_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Collection
       parameters:

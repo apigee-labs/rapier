@@ -276,12 +276,6 @@ definitions:
 paths: {}
 x-URI-templates:
   '{Application_URL}':
-    parameters:
-    - description: The URL of an Application entity
-      in: URL
-      name: Application_URL
-      required: true
-      type: string
     get:
       description: Retrieve an Application
       parameters:
@@ -404,12 +398,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Environment_URL}':
-    parameters:
-    - description: The URL of an Environment entity
-      in: URL
-      name: Environment_URL
-      required: true
-      type: string
     get:
       description: Retrieve an Environment
       parameters:
@@ -532,12 +520,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Microservice_URL}':
-    parameters:
-    - description: The URL of a Microservice entity
-      in: URL
-      name: Microservice_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Microservice
       parameters:
@@ -660,12 +642,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Revision_URL}':
-    parameters:
-    - description: The URL of a Revision entity
-      in: URL
-      name: Revision_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Revision
       parameters:
@@ -788,12 +764,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Deployment_URL}':
-    parameters:
-    - description: The URL of a Deployment entity
-      in: URL
-      name: Deployment_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Deployment
       parameters:
@@ -916,12 +886,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{EnvironmentStartRequest_URL}':
-    parameters:
-    - description: The URL of an EnvironmentStartRequest entity
-      in: URL
-      name: EnvironmentStartRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve an EnvironmentStartRequest
       parameters:
@@ -1045,12 +1009,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{EnvironmentStopRequest_URL}':
-    parameters:
-    - description: The URL of an EnvironmentStopRequest entity
-      in: URL
-      name: EnvironmentStopRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve an EnvironmentStopRequest
       parameters:
@@ -1174,12 +1132,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{DeploymentStartRequest_URL}':
-    parameters:
-    - description: The URL of a DeploymentStartRequest entity
-      in: URL
-      name: DeploymentStartRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve a DeploymentStartRequest
       parameters:
@@ -1303,12 +1255,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{DeploymentStopRequest_URL}':
-    parameters:
-    - description: The URL of a DeploymentStopRequest entity
-      in: URL
-      name: DeploymentStopRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve a DeploymentStopRequest
       parameters:
@@ -1431,12 +1377,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{DeploymentOfflineRequest_URL}':
-    parameters:
-    - description: The URL of a DeploymentOfflineRequest entity
-      in: URL
-      name: DeploymentOfflineRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve a DeploymentOfflineRequest
       parameters:
@@ -1560,12 +1500,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{DeploymentOnlineRequest_URL}':
-    parameters:
-    - description: The URL of a DeploymentOnlineRequest entity
-      in: URL
-      name: DeploymentOnlineRequest_URL
-      required: true
-      type: string
     get:
       description: Retrieve a DeploymentOnlineRequest
       parameters:
@@ -1689,12 +1623,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Collection_URL}':
-    parameters:
-    - description: The URL of a Collection entity
-      in: URL
-      name: Collection_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Collection
       parameters:
@@ -1773,12 +1701,6 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Page_URL}':
-    parameters:
-    - description: The URL of a Page entity
-      in: URL
-      name: Page_URL
-      required: true
-      type: string
     get:
       description: Retrieve a Page
       parameters:
