@@ -9,7 +9,7 @@ conventions:
 entities:
   TodoList:
     well_known_URLs: /to-dos
-    query_paths: [items, "items;{id}"]
+    query_paths: [items]
     readOnly: true
     properties:
       links:
@@ -35,11 +35,6 @@ entities:
         type: string
         format: uri
         readOnly: true
-      id:
-        type: string
-        readOnly: true
-      description:
-        type: string
       due:
         type: string
         format: date-time

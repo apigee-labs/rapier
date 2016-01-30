@@ -367,9 +367,6 @@ class SwaggerGenerator(object):
     def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
         parameters = self.build_parameters(prefix, query_path) 
-        if not parameters and not prefix.is_uri_spec():
-            collection_entity_uri = rel_property_spec.collection_resource
-            return {'$ref': '#/x-URI-templates/{%s_URL}' % self.resolve_entity_name(collection_entity_uri)}            
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)

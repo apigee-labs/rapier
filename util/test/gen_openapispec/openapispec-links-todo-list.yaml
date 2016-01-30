@@ -31,14 +31,9 @@ definitions:
                 - items
   Item:
     properties:
-      description:
-        type: string
       due:
         type: string
         format: date-time
-      id:
-        type: string
-        readOnly: true
       self:
         type: string
         format: uri
@@ -54,30 +49,18 @@ paths:
   /to-dos:
     $ref: '#/x-URI-templates/{TodoList_URL}'
   /to-dos/items:
-    $ref: '#/x-URI-templates/{Collection_URL}'
-  /to-dos/items/{id}:
-    parameters:
-    - in: path
-      name: id
-      required: true
-      type: string
     get:
-      description: Retrieve an Item
-      parameters:
-      - $ref: '#/parameters/Accept'
       responses:
         '200':
-          description: successful
+          description: description
           headers:
             Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: perma-link URL of collection
               type: string
           schema:
-            $ref: '#/definitions/Item'
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -88,56 +71,23 @@ paths:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update an Item entity
+    post:
+      description: Create a new Item
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Item being updated
+      - description: The representation of the new Item being created
         in: body
         name: body
         schema:
           $ref: '#/definitions/Item'
       responses:
-        '200':
-          description: successful
+        '201':
+          description: Created new Item
           headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
             ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: Value of ETag required for subsequent updates
               type: string
-          schema:
-            $ref: '#/definitions/Item'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete an Item
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+            Location:
+              description: perma-link URL of newly-created Item
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -154,7 +104,7 @@ paths:
         default:
           $ref: '#/responses/default'
     head:
-      description: retrieve HEAD
+      description: Retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -445,6 +395,12 @@ parameters:
     required: true
     type: string
 responses:
+  '303':
+    description: See other. Server is redirecting client to a different resource
+    headers:
+      Location:
+        description: URL of other resource
+        type: string
   '400':
     description: Bad Request. Client request in error
     schema: {}
