@@ -95,9 +95,8 @@ class SwaggerGenerator(object):
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
                     if 'properties' in entity:
-                        properties = {prop_name: {k: v for d in [{'implementation_private': True}, prop] for k, v in d.iteritems()} for prop_name, prop in entity['properties'].iteritems()}
-                        entity = entity.copy()
-                        entity['properties'] = properties
+                        for property in entity['properties'].itervalues():
+                            property['implementation_private'] = True
                     if entity_name in entities:
                         if 'properties' in entity:
                             properties = entity['properties']
