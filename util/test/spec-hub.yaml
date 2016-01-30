@@ -17,7 +17,7 @@ security:
 entities:
   Hub:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
@@ -70,7 +70,7 @@ entities:
     readOnly: true
   Folder:
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     query_paths: [contents]
     properties:
       contents:
@@ -103,7 +103,7 @@ entities:
               type: string
   Spec:
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     query_paths: [content]
     properties:
       content:
@@ -132,7 +132,7 @@ entities:
               type: string
   Group:
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       members:
         description: Array of URLs of Users
@@ -166,7 +166,7 @@ entities:
 non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
@@ -195,7 +195,7 @@ non_entity_resources:
     readOnly: true
   Page:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string
@@ -238,7 +238,6 @@ non_entity_resources:
     oneOf:
       - $ref: '#/non_entity_resources/Collection'
       - $ref: '#/non_entity_resources/Page'
-non_resources:
   Resource:
     type: object
     properties:
@@ -249,7 +248,7 @@ non_resources:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       created:
         type: string

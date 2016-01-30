@@ -59,19 +59,6 @@ definitions:
           multiplicity: O:n
       name:
         type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-      kind:
-        type: string
-        enum:
-        - Collection
-    readOnly: true
   Resource:
     type: object
     properties:
@@ -100,6 +87,19 @@ definitions:
         type: string
         format: date-time
         readOnly: true
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+      kind:
+        type: string
+        enum:
+        - Collection
+    readOnly: true
 paths:
   /:
     $ref: '#/x-URI-templates/{DogTracker_URL}'

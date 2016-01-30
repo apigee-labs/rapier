@@ -12,7 +12,7 @@ entities:
     - keystores;{name}/aliases;{name}/csr 
     - keystores;{name}/aliases;{name}/certificate
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -27,7 +27,7 @@ entities:
           multiplicity: 0:n
   Keystore:
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       name:
         type: string
@@ -47,7 +47,7 @@ entities:
             application/json: '#SelfSignedCertAlias'
   Alias:
     allOf:
-    - $ref: '#/non_resources/PersistentResource'
+    - $ref: '#/non_entity_resources/PersistentResource'
     properties:
       kind:
         type: string
@@ -95,7 +95,7 @@ entities:
   CSR:
     readOnly: true
     type: string
-non_resources:
+non_entity_resources:
   Pkcs12Alias:
     type: object
     properties:
@@ -126,9 +126,9 @@ non_resources:
       sigAlg:
         type: string
       issuer:
-        $ref: '#/non_resources/X500Name'
+        $ref: '#/non_entity_resources/X500Name'
       subject:
-        $ref: '#/non_resources/X500Name'
+        $ref: '#/non_entity_resources/X500Name'
       subjectAlternativeDNSNames:
         type: array
         items:
@@ -183,7 +183,7 @@ non_resources:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     type: object
     properties:
       created:
@@ -209,10 +209,9 @@ non_resources:
         type: string
       kind:
         type: string
-non_entity_resources:
   Collection:
     allOf:
-    - $ref: '#/non_resources/Resource'
+    - $ref: '#/non_entity_resources/Resource'
     properties:
       kind:
         type: string

@@ -96,19 +96,6 @@ definitions:
   CSR:
     readOnly: true
     type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      items:
-        type: array
-        items:
-          type: object
-      kind:
-        type: string
-        enum:
-        - Collection
-    readOnly: true
   Pkcs12Alias:
     type: object
     properties:
@@ -226,6 +213,19 @@ definitions:
         type: string
       self:
         type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+      kind:
+        type: string
+        enum:
+        - Collection
+    readOnly: true
 paths:
   /v1/o/{org}/e/{env}:
     parameters:
