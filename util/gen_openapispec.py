@@ -116,6 +116,8 @@ class SwaggerGenerator(object):
             self.openapispec['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 entity_spec['name'] = entity_name
+                if not 'id' in entity_spec:
+                    entity_spec['id'] = '#%s' % entity_name
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
                 self.openapispec_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
@@ -128,41 +130,36 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
-            for entity_name, entity_spec in entities.iteritems():
-                if 'well_known_URLs' in entity_spec:
-                    for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                        path_spec = WellKnownURLSpec(well_known_URL, '#%s' % entity_name)
-                        self.openapispec['paths'][path_spec.path_segment() if len(path_spec.path_segment()) > 0 else '/'] = self.build_entity_interface(path_spec)
-                rel_property_specs = self.get_relationship_property_specs('#%s' % entity_name, entity_spec)
-                if len(rel_property_specs) > 0:
-                    definition = self.definitions[entity_name]
-                    if 'type' in entity_spec:
-                        definition['type'] = entity_spec['type']
+            for entity_spec in entities.itervalues():
+                entity_uri = entity_spec['id']
+                if entity_spec['kind'] == 'Entity': 
+                    entity_url_spec = EntityURLSpec(entity_uri, self)
+                    self.openapispec['x-URI-templates'][entity_url_spec.path_segment()] = self.build_entity_interface(entity_url_spec)
+                    if 'well_known_URLs' in entity_spec:
+                        if entity_spec['kind'] == 'Entity': 
+                            for well_known_URL in as_list(entity_spec['well_known_URLs']):
+                                path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 0 else well_known_URL
+                                self.openapispec['paths'][path] = self.build_template_reference(entity_url_spec)
+                rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
-                    implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
+                    implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
                     entity_interface = self.build_entity_interface(implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
-                if entity_spec['kind'] in ['Entity']: 
-                    entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
-                    self.openapispec['x-URI-templates'][entity_url_property_spec.path_segment()] = self.build_entity_interface(entity_url_property_spec)
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
                         if self.include_impl and 'instance_url' in entity_spec:
-                            implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], '#%s' % entity_name)
+                            implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
                             self.add_query_paths(query_paths[:], implementation_spec, rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
+                            qps = query_paths[:]
                             well_known_URLs = as_list(entity_spec['well_known_URLs'])
-                            leftover_query_paths = query_paths
                             for well_known_URL in well_known_URLs:
-                                leftover_query_paths = query_paths[:]
-                                baseURL_spec = WellKnownURLSpec(well_known_URL, entity_name)
-                                self.add_query_paths(leftover_query_paths, baseURL_spec, rel_property_spec_stack, rel_property_specs)
-                            query_paths = leftover_query_paths
-                        else:
-                            entity_url_property_spec = EntityURLSpec('#%s' % entity_name, self)
-                            self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
+                                baseURL_spec = WellKnownURLSpec(well_known_URL, entity_uri, self)
+                                self.add_query_paths(qps, baseURL_spec, rel_property_spec_stack, rel_property_specs)
+                        entity_url_property_spec = EntityURLSpec(entity_uri, self)
+                        self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_path.openapispec_path_string for query_path in query_paths] )  
         if not self.openapispec_uris:
@@ -222,20 +219,35 @@ class SwaggerGenerator(object):
         is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].discriminates()
         path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
-        if not (self.include_impl and prefix.is_uri_spec()) and not (is_private and not self.include_impl):
+        if not is_private or self.include_impl:
             paths = self.openapispec_uris if prefix.is_uri_spec() else self.openapispec_paths 
             if path not in paths:
-                if is_collection_resource:
-                    paths[path] = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                if prefix.is_uri_spec() or prefix.is_impl_spec():
+                    if is_collection_resource:
+                        interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                    else:
+                        interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                 else:
-                    paths[path] = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
-                    
+                    if is_collection_resource:
+                        entity_uri = rel_property_spec_stack[-2].target_entity_uri if len(rel_property_spec_stack) > 1 else prefix.entity_uri
+                        interface = self.build_template_reference(EntityURLSpec(entity_uri, self), rel_property_spec_stack[-1].relationship_name)                        
+                    else:
+                        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri
+                        interface = self.build_template_reference(EntityURLSpec(entity_uri, self))
+                paths[path] = interface
+
+    def build_template_reference(self, prefix, relationship_name=None):
+        path = prefix.uri_template()
+        if relationship_name:
+            path = '/'.join([path, relationship_name])
+        path = path.replace('~', '~0')
+        path = path.replace('/', '~1')
+        return {'$ref': '#/x-URI-templates/%s' % path}            
+
     def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
-        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.target_entity_uri
+        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri
         entity_spec = self.resolve_entity(entity_uri)
         parameters = self.build_parameters(prefix, query_path)
-        if not parameters and not prefix.is_uri_spec():
-                return {'$ref': '#/x-URI-templates/{%s_URL}' % self.resolve_entity_name(entity_uri)}            
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
@@ -750,6 +762,8 @@ class SwaggerGenerator(object):
                     result['properties'] = oas_properties 
                 elif k == 'relationship':
                     result['x-rapier-relationship'] = v
+                elif k == 'type':
+                    result['type'] = v
             return result
         elif isinstance(node, list):
             return [self.to_openapispec(i) for i in node]
@@ -777,6 +791,10 @@ class SegmentSpec(object):
         
 class PathPrefix(object):
             
+    def __init__(self, entity_uri, generator):
+        self.entity_uri = entity_uri
+        slef.generator = generator
+
     def build_param(self):
         return None  
         
@@ -792,7 +810,7 @@ class PathPrefix(object):
         return self.__dict__.hash()
 
     def __str__(self):
-        return self.__dict__.str()
+        return str(self.__dict__)
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
@@ -805,6 +823,12 @@ class PathPrefix(object):
         
     def is_uri_spec(self):
         return False
+        
+    def is_impl_spec(self):
+        return False
+        
+    def uri_template(self):
+        return EntityURLSpec(self.entity_uri, self.generator).uri_template()
       
 class RelSVPropertySpec(SegmentSpec):
     
@@ -870,9 +894,10 @@ class RelMVPropertySpec(SegmentSpec):
         
 class WellKnownURLSpec(PathPrefix):
     
-    def __init__(self, base_URL, target_entity_uri):
+    def __init__(self, base_URL, entity_uri, generator):
         self.base_URL = base_URL 
-        self.target_entity_uri = target_entity_uri
+        self.entity_uri = entity_uri
+        self.generator = generator
 
     def path_segment(self, select_one_of_many = False):
         return self.base_URL[:-1] if self.base_URL.endswith('/') and len(self.base_URL) > 0 else self.base_URL
@@ -889,9 +914,10 @@ class WellKnownURLSpec(PathPrefix):
 
 class ImplementationPathSpec(PathPrefix):
     
-    def __init__(self, instance_url, target_entity_uri):
+    def __init__(self, instance_url, entity_uri, generator):
         self.instance_url = instance_url 
-        self.target_entity_uri = target_entity_uri
+        self.entity_uri = entity_uri
+        self.generator = generator
 
     def path_segment(self, select_one_of_many = False):
         template = self.instance_url['template']
@@ -910,6 +936,9 @@ class ImplementationPathSpec(PathPrefix):
     def is_private(self):
         return True
 
+    def is_impl_spec(self):
+        return True
+        
 class QueryPath(object):
 
     def __init__(self, query_path, generator):
@@ -1018,12 +1047,15 @@ class QuerySegment(object):
         
 class EntityURLSpec(PathPrefix):
     
-    def __init__(self, target_entity_uri, openapispec_generator):
-        self.target_entity_uri = target_entity_uri
+    def __init__(self, entity_uri, openapispec_generator):
+        self.entity_uri = entity_uri
         self.openapispec_generator = openapispec_generator
 
     def path_segment(self, select_one_of_many = False):
-        return '{%s_URL}' % self.openapispec_generator.resolve_entity_name(self.target_entity_uri)
+        return '{%s_URL}' % self.openapispec_generator.resolve_entity_name(self.entity_uri)
+
+    def uri_template(self):
+        return '{%s_URL}' % self.openapispec_generator.resolve_entity_name(self.entity_uri)
 
     def build_param(self):
         return None

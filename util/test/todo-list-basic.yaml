@@ -11,6 +11,7 @@ entities:
           collection_resource: '#Collection'
           entities: '#Item'
           multiplicity: O:n
+    query_paths: items
   Item:
     properties:
       description:
