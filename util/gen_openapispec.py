@@ -138,7 +138,7 @@ class SwaggerGenerator(object):
                     if 'well_known_URLs' in entity_spec:
                         if entity_spec['kind'] == 'Entity': 
                             for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                                path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 0 else well_known_URL
+                                path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
                                 self.openapispec['paths'][path] = self.build_template_reference(entity_url_spec)
                 rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
@@ -230,16 +230,16 @@ class SwaggerGenerator(object):
                 else:
                     if is_collection_resource:
                         entity_uri = rel_property_spec_stack[-2].target_entity_uri if len(rel_property_spec_stack) > 1 else prefix.entity_uri
-                        interface = self.build_template_reference(EntityURLSpec(entity_uri, self), rel_property_spec_stack[-1].relationship_name)                        
+                        interface = self.build_template_reference(prefix, query_path)                        
                     else:
                         entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri
-                        interface = self.build_template_reference(EntityURLSpec(entity_uri, self))
+                        interface = self.build_template_reference(prefix, query_path)
                 paths[path] = interface
 
-    def build_template_reference(self, prefix, relationship_name=None):
+    def build_template_reference(self, prefix, query_path=None):
         path = prefix.uri_template()
-        if relationship_name:
-            path = '/'.join([path, relationship_name])
+        if query_path:
+            path = '/'.join([path, query_path.openapispec_path_string])
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
         return {'$ref': '#/x-URI-templates/%s' % path}            

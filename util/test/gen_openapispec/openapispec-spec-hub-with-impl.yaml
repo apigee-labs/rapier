@@ -239,7 +239,7 @@ paths:
   /doc:
     $ref: '#/x-URI-templates/{Store_URL}'
   /doc/home:
-    $ref: '#/x-URI-templates/{Folder_URL}'
+    $ref: '#/x-URI-templates/{Store_URL}~1home'
   /doc/sharedWithMe:
     $ref: '#/x-URI-templates/{Store_URL}~1sharedWithMe'
   /doc/docs:

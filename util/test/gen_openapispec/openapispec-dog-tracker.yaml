@@ -104,6 +104,76 @@ paths:
   /:
     $ref: '#/x-URI-templates/{DogTracker_URL}'
   /dogs:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1dogs'
+  /dogs;{name}:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1dogs;{name}'
+  /dogs;{name}/owner:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1dogs;{name}~1owner'
+  /people:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1people'
+  /people;{name}:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1people;{name}'
+  /people;{name}/dogs:
+    $ref: '#/x-URI-templates/{DogTracker_URL}~1people;{name}~1dogs'
+x-URI-templates:
+  '{DogTracker_URL}':
+    get:
+      description: Retrieve a DogTracker
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DogTracker'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{DogTracker_URL}/dogs':
     get:
       responses:
         '200':
@@ -187,7 +257,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{name}:
+  '{DogTracker_URL}/dogs;{name}':
     parameters:
     - in: path
       name: name
@@ -314,7 +384,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{name}/owner:
+  '{DogTracker_URL}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
@@ -441,7 +511,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people:
+  '{DogTracker_URL}/people':
     get:
       responses:
         '200':
@@ -525,7 +595,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{name}:
+  '{DogTracker_URL}/people;{name}':
     parameters:
     - in: path
       name: name
@@ -652,7 +722,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{name}/dogs:
+  '{DogTracker_URL}/people;{name}/dogs':
     parameters:
     - in: path
       name: name
@@ -714,64 +784,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-x-URI-templates:
-  '{DogTracker_URL}':
-    get:
-      description: Retrieve a DogTracker
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DogTracker'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'

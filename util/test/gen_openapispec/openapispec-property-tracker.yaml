@@ -154,6 +154,88 @@ paths:
   /:
     $ref: '#/x-URI-templates/{PropertyTracker_URL}'
   /dogs:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs'
+  /dogs;{name}:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs;{name}'
+  /dogs;{name}/owner:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs;{name}~1owner'
+  /people:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people'
+  /people;{name}:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people;{name}'
+  /people;{name}/possessions:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people;{name}~1possessions'
+  /bicycles:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles'
+  /bicycles;{name}:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles;{name}'
+  /bicycles;{name}/owner:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles;{name}~1owner'
+  /institutions:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions'
+  /institutions;{name}:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions;{name}'
+  /institutions;{name}/assets:
+    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions;{name}~1assets'
+x-URI-templates:
+  '{PropertyTracker_URL}':
+    get:
+      description: Retrieve a PropertyTracker
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PropertyTracker'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+  '{PropertyTracker_URL}/dogs':
     get:
       responses:
         '200':
@@ -237,7 +319,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{name}:
+  '{PropertyTracker_URL}/dogs;{name}':
     parameters:
     - in: path
       name: name
@@ -364,7 +446,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /dogs;{name}/owner:
+  '{PropertyTracker_URL}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
@@ -491,7 +573,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people:
+  '{PropertyTracker_URL}/people':
     get:
       responses:
         '200':
@@ -575,7 +657,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{name}:
+  '{PropertyTracker_URL}/people;{name}':
     parameters:
     - in: path
       name: name
@@ -702,7 +784,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /people;{name}/possessions:
+  '{PropertyTracker_URL}/people;{name}/possessions':
     parameters:
     - in: path
       name: name
@@ -795,7 +877,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /bicycles:
+  '{PropertyTracker_URL}/bicycles':
     get:
       responses:
         '200':
@@ -879,7 +961,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /bicycles;{name}:
+  '{PropertyTracker_URL}/bicycles;{name}':
     parameters:
     - in: path
       name: name
@@ -1006,7 +1088,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /bicycles;{name}/owner:
+  '{PropertyTracker_URL}/bicycles;{name}/owner':
     parameters:
     - in: path
       name: name
@@ -1133,7 +1215,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /institutions:
+  '{PropertyTracker_URL}/institutions':
     get:
       responses:
         '200':
@@ -1217,7 +1299,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /institutions;{name}:
+  '{PropertyTracker_URL}/institutions;{name}':
     parameters:
     - in: path
       name: name
@@ -1344,7 +1426,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /institutions;{name}/assets:
+  '{PropertyTracker_URL}/institutions;{name}/assets':
     parameters:
     - in: path
       name: name
@@ -1410,64 +1492,6 @@ paths:
           $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-x-URI-templates:
-  '{PropertyTracker_URL}':
-    get:
-      description: Retrieve a PropertyTracker
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/PropertyTracker'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'
