@@ -1,0 +1,159 @@
+title: PropertyTrackerAPI
+version: "0.1"
+entities:
+  PropertyTracker:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Dog'
+          multiplicity: O:n
+      people:
+        description: URL of a Collection of Persons
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Person'
+          multiplicity: O:n
+      bicycles:
+        description: URL of a Collection of Bicycles
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Bicycle'
+          multiplicity: O:n
+      institutions:
+        description: URL of a Collection of Institutions
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Institution'
+          multiplicity: O:n
+    well_known_URLs: /
+    query_paths: 
+    - dogs
+    - "dogs;{name}"
+    - bicycles
+    - "bicycles;{name}"
+    - people
+    - "people;{name}"
+    - institutions
+    - "institutions;{name}"
+    - "dogs;{name}/owner"
+    - "bicycles;{name}/owner"
+    - "institutions;{name}/assets"
+    - "people;{name}/possessions"
+    readOnly: true
+  Dog:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        relationship:
+          entities: '#Person #Institution'
+  Bicycle:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      purchase_date:
+        type: string
+      paint_color: 
+        type: string
+      owner:
+        description: URL of a Person or Institution
+        format: uri
+        type: string
+        relationship:
+          entities: '#Person #Institution'
+  Person:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      birth-date:
+        type: string
+      possessions:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Dog #Bicycle'
+          multiplicity: 0:n
+  Institution:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      foundation-date:
+        type: string
+      assets:
+        description: URL of a Collection of Dogs and Bicycles
+        format: uri
+        type: string
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Dog #Bicycle'
+          multiplicity: 0:n
+non_entities:
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
