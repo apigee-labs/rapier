@@ -1,7 +1,0 @@
-title: HelloWorldAPI
-entities:
-  HelloMessage:
-    well_known_URLs: /message
-    properties:
-      text:
-        type: string
