@@ -221,7 +221,7 @@ More generally, these URL templates are valid
     
 The previous two are valid because there is a TodoList at `\items`, but the template is valid for any TodoList URL.
 
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-with-id.yaml)
+If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
 \[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
