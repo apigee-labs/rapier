@@ -274,7 +274,7 @@ definitions:
         format: date-time
         readOnly: true
 paths: {}
-x-URI-templates:
+x-interfaces:
   '{Application_URL}':
     get:
       description: Retrieve an Application

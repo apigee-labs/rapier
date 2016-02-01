@@ -47,10 +47,10 @@ definitions:
           $ref: '#/definitions/Item'
 paths:
   /to-dos:
-    $ref: '#/x-URI-templates/{TodoList_URL}'
+    $ref: '#/x-interfaces/{TodoList_URL}'
   /to-dos/items:
-    $ref: '#/x-URI-templates/{TodoList_URL}~1items'
-x-URI-templates:
+    $ref: '#/x-interfaces/{TodoList_URL}~1items'
+x-interfaces:
   '{TodoList_URL}':
     get:
       description: Retrieve a TodoList

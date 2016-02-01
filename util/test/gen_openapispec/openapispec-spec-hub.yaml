@@ -237,18 +237,18 @@ definitions:
         readOnly: true
 paths:
   /doc:
-    $ref: '#/x-URI-templates/{Store_URL}'
+    $ref: '#/x-interfaces/{Store_URL}'
   /doc/home:
-    $ref: '#/x-URI-templates/{Store_URL}~1home'
+    $ref: '#/x-interfaces/{Store_URL}~1home'
   /doc/sharedWithMe:
-    $ref: '#/x-URI-templates/{Store_URL}~1sharedWithMe'
+    $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
   /doc/docs:
-    $ref: '#/x-URI-templates/{Store_URL}~1docs'
+    $ref: '#/x-interfaces/{Store_URL}~1docs'
   /doc/folders:
-    $ref: '#/x-URI-templates/{Store_URL}~1folders'
+    $ref: '#/x-interfaces/{Store_URL}~1folders'
   /doc/groups:
-    $ref: '#/x-URI-templates/{Store_URL}~1groups'
-x-URI-templates:
+    $ref: '#/x-interfaces/{Store_URL}~1groups'
+x-interfaces:
   '{Store_URL}':
     get:
       description: Retrieve a Store
@@ -821,7 +821,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Store_URL}/home':
-    $ref: '#/x-URI-templates/{Folder_URL}'
+    $ref: '#/x-interfaces/{Folder_URL}'
   '{Store_URL}/sharedWithMe':
     get:
       parameters:
@@ -1330,7 +1330,7 @@ x-URI-templates:
         default:
           $ref: '#/responses/default'
   '{Doc_URL}/content':
-    $ref: '#/x-URI-templates/{Content_URL}'
+    $ref: '#/x-interfaces/{Content_URL}'
 parameters:
   Accept:
     description: specifies the requested media type - required

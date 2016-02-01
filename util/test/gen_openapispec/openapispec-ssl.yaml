@@ -228,18 +228,18 @@ definitions:
     readOnly: true
 paths:
   /v1/o/{org}/e/{env}:
-    $ref: '#/x-URI-templates/{Environment_URL}'
+    $ref: '#/x-interfaces/{Environment_URL}'
   /v1/o/{org}/e/{env}/keystores:
-    $ref: '#/x-URI-templates/{Environment_URL}~1keystores'
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores'
   /v1/o/{org}/e/{env}/keystores/{name}:
-    $ref: '#/x-URI-templates/{Environment_URL}~1keystores~1{name}'
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    $ref: '#/x-URI-templates/{Environment_URL}~1keystores~1{name}~1aliases'
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    $ref: '#/x-URI-templates/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    $ref: '#/x-URI-templates/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1csr'
-x-URI-templates:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1csr'
+x-interfaces:
   '{Environment_URL}':
     get:
       description: Retrieve an Environment

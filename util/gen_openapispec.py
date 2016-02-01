@@ -72,7 +72,7 @@ class SwaggerGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
         self.openapispec['paths'] = self.openapispec_paths
-        self.openapispec['x-URI-templates'] = self.openapispec_uris
+        self.openapispec['x-interfaces'] = self.openapispec_uris
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()
@@ -137,7 +137,7 @@ class SwaggerGenerator(object):
                     entity_url_spec = EntityURLSpec(entity_uri, self)
                     interface = self.build_entity_interface(entity_url_spec)
                     self.uri_templates[entity_uri] = interface
-                    self.openapispec['x-URI-templates'][entity_url_spec.path_segment()] = interface
+                    self.openapispec['x-interfaces'][entity_url_spec.path_segment()] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
@@ -170,7 +170,7 @@ class SwaggerGenerator(object):
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_path.openapispec_path_string for query_path in query_paths] )  
         if not self.openapispec_uris:
-            del self.openapispec['x-URI-templates']
+            del self.openapispec['x-interfaces']
         return self.openapispec
 
     def get_relationship_property_specs(self, entity_uri, entity_spec):
@@ -259,7 +259,7 @@ class SwaggerGenerator(object):
             path = '/'.join([path, query_path.openapispec_path_string])
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
-        return {'$ref': '#/x-URI-templates/%s' % path}            
+        return {'$ref': '#/x-interfaces/%s' % path}            
 
     def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
         entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri

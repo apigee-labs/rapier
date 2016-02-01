@@ -152,32 +152,32 @@ definitions:
     readOnly: true
 paths:
   /:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}'
   /dogs:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs'
   /dogs;{name}:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs;{name}'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}'
   /dogs;{name}/owner:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1dogs;{name}~1owner'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}~1owner'
   /people:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people'
   /people;{name}:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people;{name}'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}'
   /people;{name}/possessions:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1people;{name}~1possessions'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}~1possessions'
   /bicycles:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles'
   /bicycles;{name}:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles;{name}'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}'
   /bicycles;{name}/owner:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1bicycles;{name}~1owner'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}~1owner'
   /institutions:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions'
   /institutions;{name}:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions;{name}'
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}'
   /institutions;{name}/assets:
-    $ref: '#/x-URI-templates/{PropertyTracker_URL}~1institutions;{name}~1assets'
-x-URI-templates:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}~1assets'
+x-interfaces:
   '{PropertyTracker_URL}':
     get:
       description: Retrieve a PropertyTracker

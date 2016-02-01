@@ -20,8 +20,8 @@ definitions:
         type: string
 paths:
   /:
-    $ref: '#/x-URI-templates/{Site_URL}'
-x-URI-templates:
+    $ref: '#/x-interfaces/{Site_URL}'
+x-interfaces:
   '{Site_URL}':
     get:
       description: Retrieve a Site
