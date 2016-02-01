@@ -5,6 +5,7 @@
 - [Tutorial](#tutorial)
 - [Navigating the Repository](#navigating)
 - [Specification](#specification)
+- [OAS Generator](#oas_generator)
 
 ## <a name="introduction">Introduction
 
@@ -446,3 +447,6 @@ Describes a media type. If a media type is given as a simple string, it applies 
 Field pattern | Type | Description
 ---|:---:|---
 {entity_id} | `array` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an array or a space-deliminated list in a single string
+
+ ## <a name="oas_generator">OAS Generator
+
