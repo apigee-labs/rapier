@@ -81,6 +81,7 @@ class SwaggerGenerator(object):
 
         if 'entities' in spec:
             entities = spec['entities']
+            self.uri_templates = dict()
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
@@ -134,7 +135,13 @@ class SwaggerGenerator(object):
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
                     entity_url_spec = EntityURLSpec(entity_uri, self)
-                    self.openapispec['x-URI-templates'][entity_url_spec.path_segment()] = self.build_entity_interface(entity_url_spec)
+                    interface = self.build_entity_interface(entity_url_spec)
+                    self.uri_templates[entity_uri] = interface
+                    self.openapispec['x-URI-templates'][entity_url_spec.path_segment()] = interface
+            for entity_spec in entities.itervalues():
+                entity_uri = entity_spec['id']
+                if entity_spec['kind'] == 'Entity': 
+                    entity_url_spec = EntityURLSpec(entity_uri, self)
                     if 'well_known_URLs' in entity_spec:
                         if entity_spec['kind'] == 'Entity': 
                             for well_known_URL in as_list(entity_spec['well_known_URLs']):
@@ -222,18 +229,28 @@ class SwaggerGenerator(object):
         if not is_private or self.include_impl:
             paths = self.openapispec_uris if prefix.is_uri_spec() else self.openapispec_paths 
             if path not in paths:
-                if prefix.is_uri_spec() or prefix.is_impl_spec():
+                if prefix.is_uri_spec():
+                    if is_collection_resource:
+                        interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                    else:
+                        if query_path:
+                            parameters = self.build_parameters(prefix, query_path)
+                            if parameters:
+                                path_spec = PresortedOrderedDict()
+                                path_spec['parameters'] = parameters
+                                path_spec['<<'] = self.uri_templates[rel_property_spec_stack[-1].target_entity_uri]
+                                interface = path_spec
+                            else:
+                                interface = self.build_template_reference(EntityURLSpec(rel_property_spec_stack[-1].target_entity_uri, self))        
+                        else:
+                            interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
+                elif prefix.is_impl_spec():
                     if is_collection_resource:
                         interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
                     else:
                         interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                 else:
-                    if is_collection_resource:
-                        entity_uri = rel_property_spec_stack[-2].target_entity_uri if len(rel_property_spec_stack) > 1 else prefix.entity_uri
-                        interface = self.build_template_reference(prefix, query_path)                        
-                    else:
-                        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri
-                        interface = self.build_template_reference(prefix, query_path)
+                    interface = self.build_template_reference(prefix, query_path)
                 paths[path] = interface
 
     def build_template_reference(self, prefix, query_path=None):
@@ -252,15 +269,18 @@ class SwaggerGenerator(object):
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
         structured = 'type' not in entity_spec
-        response_200 = {
-            'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_uri)
-            }
-        if len(rel_property_specs) > 1:
-            response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
-        if not self.yaml_merge:
-            response_200.update(self.responses.get('standard_200'))
-        else:
-            response_200['<<'] = self.responses.get('standard_200')
+        def build_response_200():
+            response_200 = {
+                'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_uri)
+                }
+            if len(rel_property_specs) > 1:
+                response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
+            if not self.yaml_merge:
+                response_200.update(self.build_standard_200())
+            else:
+                response_200['<<'] = self.responses.get('standard_200')
+            return response_200  
+        response_200 = build_response_200()
         path_spec = PresortedOrderedDict()
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
         if is_private:
@@ -277,15 +297,15 @@ class SwaggerGenerator(object):
                 'description': 'Retrieve %s' % articled(self.resolve_entity_name(entity_uri)),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
-                    '200': response_200, 
+                    '200': build_response_200(), 
                     }
                 }
         if produces:
-            path_spec['get']['produces'] = produces
+            path_spec['get']['produces'] = produces if self.yaml_merge else produces[:]
         if query_parameters:
             path_spec['get']['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
         if not self.yaml_merge:
-            path_spec['get']['responses'].update(self.response_sets['entity_get_responses'])
+            path_spec['get']['responses'].update(self.build_entity_get_responses())
         else:
             path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         immutable = entity_spec.get('readOnly', False)
@@ -314,15 +334,15 @@ class SwaggerGenerator(object):
                     }
                     ],
                 'responses': { 
-                    '200': response_200
+                    '200': response_200 if self.yaml_merge else build_response_200()
                     }
                 }
             if not self.yaml_merge:
-                path_spec[update_verb]['responses'].update(self.response_sets['put_patch_responses'])
+                path_spec[update_verb]['responses'].update(self.build_put_patch_responses())
             else:
                 path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
             if structured:
-                path_spec['patch']['consumes'] = self.patch_consumes
+                path_spec['patch']['consumes'] = self.patch_consumes if self.yaml_merge else self.patch_consumes[:]
             else:
                 path_spec['put']['responses']['201'] = {
                     'description': 'Created new %s' % self.resolve_entity_name(entity_uri),
@@ -338,7 +358,7 @@ class SwaggerGenerator(object):
                     path_spec[update_verb]['consumes'] = consumes
 
             if produces:
-                path_spec[update_verb]['produces'] = produces
+                path_spec[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
         well_known = entity_spec.get('well_known_URLs')
         if not well_known and not immutable:        
             path_spec['delete'] = {
@@ -348,23 +368,23 @@ class SwaggerGenerator(object):
                     }
                 }
             if produces:
-                path_spec['delete']['produces'] = produces
+                path_spec['delete']['produces'] = produces if self.yaml_merge else produces[:]
             if not self.yaml_merge:
-                path_spec['delete']['responses'].update(self.response_sets['delete_responses'])
+                path_spec['delete']['responses'].update(self.build_delete_responses())
             else:
                 path_spec['delete']['responses']['<<'] = self.response_sets['delete_responses']
         path_spec['head'] = {
                 'description': 'retrieve HEAD'
                 }
         if not self.yaml_merge:
-            path_spec['head'].update(self.methods['head'])
+            path_spec['head'].update(self.build_head_method())
         else:
             path_spec['head']['<<'] = self.methods['head']
         path_spec['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
         if not self.yaml_merge:
-            path_spec['options'].update(self.methods['options'])
+            path_spec['options'].update(self.build_options_method())
         else:
             path_spec['options']['<<'] = self.methods['options']        
         return path_spec
@@ -433,35 +453,36 @@ class SwaggerGenerator(object):
             if consumes_media_types:
                 path_spec['post']['consumes'] = consumes_media_types
             if not self.yaml_merge:
-                path_spec['post']['responses'].update(self.response_sets['post_responses'])
+                path_spec['post']['responses'].update(self.build_post_responses())
             else:
                 path_spec['post']['responses']['<<'] = self.response_sets['post_responses']
         path_spec['head'] = {
                 'description': 'Retrieve HEAD'
                 }
         if not self.yaml_merge:
-            path_spec['head'].update(self.methods['head'])
+            path_spec['head'].update(self.build_head_method())
         else:
             path_spec['head']['<<'] = self.methods['head']
         path_spec['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
         if not self.yaml_merge:
-            path_spec['options'].update(self.methods['options'])
+            path_spec['options'].update(self.build_options_method())
         else:
             path_spec['options']['<<'] = self.methods['options']            
         return path_spec
-        
-    def build_standard_response_sets(self):
-        result = dict()
-        result['entity_get_responses'] = {
+
+    def build_entity_get_responses(self):
+        return  {
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
             '404': self.global_response_ref('404'), 
             '406': self.global_response_ref('406'), 
             'default': self.global_response_ref('default')
             }
-        result['put_patch_responses'] = {
+                    
+    def build_put_patch_responses(self):
+        return  {
             '400': self.global_response_ref('400'),
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
@@ -470,7 +491,9 @@ class SwaggerGenerator(object):
             '409': self.global_response_ref('409'),
             'default': self.global_response_ref('default')
             }  
-        result['delete_responses'] = {
+
+    def build_delete_responses(self):
+        return  {
             '400': self.global_response_ref('400'),
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
@@ -478,7 +501,9 @@ class SwaggerGenerator(object):
             '406': self.global_response_ref('406'), 
             'default': self.global_response_ref('default')
             }
-        result['post_responses'] = {        
+
+    def build_post_responses(self):
+        return  {
             '400': self.global_response_ref('400'),
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
@@ -486,11 +511,17 @@ class SwaggerGenerator(object):
             '406': self.global_response_ref('406'), 
             'default': self.global_response_ref('default')
             }
+
+    def build_standard_response_sets(self):
+        result = dict()
+        result['entity_get_responses'] = self.build_entity_get_responses
+        result['put_patch_responses'] = self.build_put_patch_responses()
+        result['delete_responses'] = self.build_delete_responses()
+        result['post_responses'] = self.build_post_responses()
         return result
 
-    def build_standard_methods(self):
-        result = dict()
-        result['head'] = {
+    def build_head_method(self):
+        return {            
             'responses': {
                 '200': self.global_response_ref('standard_200'), 
                 '401': self.global_response_ref('401'), 
@@ -499,7 +530,9 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-        result['options'] = {
+        
+    def build_options_method(self):
+        return {            
             'parameters': [ 
                 {'$ref': '#/parameters/Access-Control-Request-Method'}, 
                 {'$ref': '#/parameters/Access-Control-Request-Headers'} 
@@ -512,7 +545,11 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
-
+        
+    def build_standard_methods(self):
+        result = dict()
+        result['head'] = self.build_head_method()
+        result['options'] = self.build_options_method()
         return result
 
     def global_response_ref(self, key):
@@ -538,21 +575,24 @@ class SwaggerGenerator(object):
                     result.append(param)
         return result
           
+    def build_standard_200(self):
+        return {
+            'description': 'successful',
+            'headers': {
+                'Content-Location': {
+                    'type': 'string',
+                    'description': 'perma-link URL of resource'
+                    },
+                'ETag': {
+                    'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
+                    'type': 'string'
+                    }
+                }
+            }
+
     def build_standard_responses(self):
         return {
-            'standard_200': {
-                'description': 'successful',
-                'headers': {
-                    'Content-Location': {
-                        'type': 'string',
-                        'description': 'perma-link URL of resource'
-                        },
-                    'ETag': {
-                        'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
-                        'type': 'string'
-                        }
-                    }
-                },
+            'standard_200': self.build_standard_200(),
             'options_200': {
                 'description': 'successful',
                 'headers': {
@@ -585,31 +625,31 @@ class SwaggerGenerator(object):
                 },
             '400': {
                 'description': 'Bad Request. Client request in error',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy() 
                 },
             '401': {
                 'description': 'Unauthorized. Client authentication token missing from request',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
             '403': {
                 'description': 'Forbidden. Client authentication token does not permit this method on this resource',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
             '404': {
                 'description': 'Not Found. Resource not found',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
             '406': {
                 'description': 'Not Acceptable. Requested media type not available',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
             '409': {
                 'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
             'default': {
                 'description': '5xx errors and other stuff',
-                'schema': self.error_response
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }
             }
         
@@ -643,6 +683,15 @@ class SwaggerGenerator(object):
             }
         def add_query_parameters(entity, query_params):
             if 'query_parameters' in entity:
+                params = entity['query_parameters']
+                if not self.yaml_merge:
+                    new_params = []
+                    for param in params:
+                        new_param = param.copy()
+                        if 'enum' in param:
+                            param['enum'] = param['enum'][:]
+                        if 'items' in param:
+                            param['items'] = param['items'].copy()
                 query_params.extend(entity['query_parameters'])
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
@@ -1107,7 +1156,7 @@ def main(args):
     generator.set_opts(opts)
     Dumper = yaml.SafeDumper
     opts_keys = [k for k,v in opts]
-    if '--yaml-alias' not in opts_keys and '-m' not in opts_keys:
+    if False: #'--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
     print str.replace(yaml.dump(generator.openapispec_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
