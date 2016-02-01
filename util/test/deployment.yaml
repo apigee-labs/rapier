@@ -1,0 +1,288 @@
+title: Deployment Service API
+version: "0.1"
+consumes: application/json
+produces: application/json text/html
+conventions:
+  patch_consumes: application/merge-patch+json
+  error_response:
+    type: string
+entities:
+  Application:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Application]
+      has_environments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Environment'
+      comprises:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Microservice'
+  Environment:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Environment]
+      realizes:
+        format: uri
+        type: string
+        relationship: '#Application'
+      hosts:
+        format: uri
+        type: string
+        relationship:
+          multiplicity: 0:n
+          entities: '#Deployment'
+      requested_state:
+        type: string
+        readOnly: true
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStartRequest'        
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#EnvironmentStopRequest'              
+  Microservice:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Microservice]
+      is_component_of:
+        format: uri
+        type: string
+        relationship: '#Application'
+      produced:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Revision'
+  Revision:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Revision]
+      revises:
+        format: uri
+        type: string
+        relationship: '#Microservice'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Deployment'        
+  Deployment:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Deployment]
+      runs_in:
+        format: uri
+        type: string
+        relationship: '#Environment'
+      requested_state:
+        type: string
+        readOnly: true
+      start_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStartRequest'        
+      stop_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentStopRequest'        
+      go_live_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOnlineRequest'        
+      go_offline_requests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentOfflineRequest'        
+  EnvironmentStartRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStartRequest]    
+  EnvironmentStopRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStopRequest]    
+  DeploymentStartRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentStartRequest]    
+      replicas:
+        type: integer
+  DeploymentStopRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentStopRequest]    
+  DeploymentOfflineRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOfflineRequest]    
+  DeploymentOnlineRequest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOnlineRequest]    
+non_entities:
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderby
+      type: string
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
+  Page:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Page]
+      items:
+        type: array
+        items: 
+          type: object
+      collection:
+        type: string
+        format: uri
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+- sso: []

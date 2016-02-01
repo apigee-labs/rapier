@@ -1,0 +1,223 @@
+title: SSL API
+version: "0.1"
+conventions:
+  selector_location: path-segment
+entities:
+  Environment:
+    well_known_URLs: /v1/o/{org}/e/{env}
+    query_paths: 
+    - keystores 
+    - keystores;{name} 
+    - keystores;{name}/aliases 
+    - keystores;{name}/aliases;{name}/csr 
+    - keystores;{name}/aliases;{name}/certificate
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Environment]
+      keystores:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Keystore'
+          multiplicity: 0:n
+  Keystore:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum: [Keystore]
+      aliases:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Alias'
+          multiplicity: 0:n
+          consumes: 
+            multi-part/form-data: '#Pkcs12Alias #KeyCertFileAlias #KeyCertJarAlias'
+            application/json: '#SelfSignedCertAlias'
+  Alias:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Alias]
+      name:
+        type: string
+      key:
+        type: string
+      certsInfo:
+        readOnly: true
+        type: array
+        items: 
+          type: object
+          properties:
+            version:
+              type: integer
+            expiryDate:
+              type: string
+              format: date
+            issuer:
+              type: string
+            subject:
+              type: string
+      certificate:
+        format: uri
+        type: string
+        relationship: '#Certificate'
+      csr:
+        format: uri
+        type: string
+        relationship:
+          readOnly: true
+          entities: '#CSR'
+      selfSignedCertificate:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#SelfSignedCertAlias'
+  Certificate:
+    readOnly: true
+    type: string
+  CSR:
+    readOnly: true
+    type: string
+non_entities:
+  Pkcs12Alias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [Pkcs12Alias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      pkcs12File:
+        type: string
+        format: file
+  SelfSignedCertAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [SelfSignedCertAlias]
+      alias:
+        type: string
+      keySize:
+        type: string
+      certValidityInDays:
+        type: integer
+      sigAlg:
+        type: string
+      issuer:
+        $ref: '#/non_entities/X500Name'
+      subject:
+        $ref: '#/non_entities/X500Name'
+      subjectAlternativeDNSNames:
+        type: array
+        items:
+          type: string
+  KeyCertFileAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [KeyFileCertFileAlias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        type: string
+        format: file
+      certFile:
+        type: string
+        format: file
+  KeyCertJarAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum: [KeyFileCertFileAlias]
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyCertJar:
+        type: string
+        format: file
+  X500Name:
+    type: object
+    properties:
+      countryCode:
+        type: string
+      state: 
+        type: string
+      locality:
+        type: string
+      orgName:
+        type: string
+      orgUnitName:
+        type: string
+      email:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true

@@ -1,0 +1,29 @@
+title: Todo List API
+entities:
+  TodoList:
+    well_known_URLs: /to-dos
+    readOnly: true
+    properties:
+      items:
+        type: string
+        format: uri
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Item'
+          multiplicity: O:n
+    query_paths: items
+  Item:
+    properties:
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+non_entities:
+  Collection:
+    readOnly: true
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/entities/Item'
