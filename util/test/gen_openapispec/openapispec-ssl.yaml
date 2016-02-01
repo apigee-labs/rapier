@@ -335,7 +335,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Keystore_URL}': &id001
+    x-id: Environment-interface
+  '{Keystore_URL}': &Keystore-interface
     get:
       description: Retrieve a Keystore
       parameters:
@@ -457,6 +458,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Keystore-interface
   '{Alias_URL}':
     get:
       description: Retrieve an Alias
@@ -579,7 +581,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Certificate_URL}': &id002
+    x-id: Alias-interface
+  '{Certificate_URL}': &Certificate-interface
     get:
       description: Retrieve a Certificate
       parameters:
@@ -636,7 +639,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{CSR_URL}': &id003
+    x-id: Certificate-interface
+  '{CSR_URL}': &CSR-interface
     get:
       description: Retrieve a CSR
       parameters:
@@ -693,6 +697,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: CSR-interface
   '{Environment_URL}/keystores':
     get:
       responses:
@@ -783,7 +788,7 @@ x-interfaces:
       name: name
       required: true
       type: string
-    <<: *id001
+    <<: *Keystore-interface
   '{Environment_URL}/keystores/{name}/aliases':
     parameters:
     - in: path
@@ -890,7 +895,7 @@ x-interfaces:
       name: name_1
       required: true
       type: string
-    <<: *id002
+    <<: *Certificate-interface
   '{Environment_URL}/keystores/{name}/aliases/{name_1}/csr':
     parameters:
     - in: path
@@ -901,7 +906,7 @@ x-interfaces:
       name: name_1
       required: true
       type: string
-    <<: *id003
+    <<: *CSR-interface
 parameters:
   Accept:
     description: specifies the requested media type - required

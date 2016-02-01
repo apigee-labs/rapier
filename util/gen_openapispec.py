@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import yaml, sys, getopt, itertools, string
+import yaml, sys, getopt, itertools, string, re
 from collections import OrderedDict
 
 class PresortedList(list):
@@ -131,13 +131,15 @@ class SwaggerGenerator(object):
             for entity_name, entity_spec in entities.iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
-            for entity_spec in entities.itervalues():
+            for entity_name, entity_spec in entities.iteritems():
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
                     entity_url_spec = EntityURLSpec(entity_uri, self)
+                    path = entity_url_spec.path_segment()
                     interface = self.build_entity_interface(entity_url_spec)
+                    interface['x-id'] = '%s-interface' % entity_name
                     self.uri_templates[entity_uri] = interface
-                    self.openapispec['x-interfaces'][entity_url_spec.path_segment()] = interface
+                    self.openapispec['x-interfaces'][path] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
@@ -1145,6 +1147,17 @@ def as_selectors(input):
     else:
         return [{'property': property_name} for property_name in as_list(input)]       
         
+class CustomAnchorDumper(yaml.SafeDumper):
+
+    def generate_anchor(self, node):
+        if node.__class__.id == 'mapping':
+            d = {item[0].value: item[1].value for item in node.value \
+                if  item[0].__class__.id == 'scalar' and item[1].__class__.id == 'scalar'} 
+            if 'x-id' in d:
+                return re.sub('[^a-zA-Z0-9\n\.]', '-', d['x-id'])
+        anchor =  super(yaml.Dumper, self).generate_anchor(node)
+        return anchor
+
 def main(args):
     generator = SwaggerGenerator()
     try:
@@ -1154,7 +1167,7 @@ def main(args):
         sys.exit(str(err) + usage)
     generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
-    Dumper = yaml.SafeDumper
+    Dumper = CustomAnchorDumper
     opts_keys = [k for k,v in opts]
     if False: #'--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True

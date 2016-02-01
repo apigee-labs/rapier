@@ -235,7 +235,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Dog_URL}': &id001
+    x-id: PropertyTracker-interface
+  '{Dog_URL}': &Dog-interface
     get:
       description: Retrieve a Dog
       parameters:
@@ -357,7 +358,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Bicycle_URL}': &id003
+    x-id: Dog-interface
+  '{Bicycle_URL}': &Bicycle-interface
     get:
       description: Retrieve a Bicycle
       parameters:
@@ -479,7 +481,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Person_URL}': &id002
+    x-id: Bicycle-interface
+  '{Person_URL}': &Person-interface
     get:
       description: Retrieve a Person
       parameters:
@@ -601,7 +604,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Institution_URL}': &id004
+    x-id: Person-interface
+  '{Institution_URL}': &Institution-interface
     get:
       description: Retrieve an Institution
       parameters:
@@ -723,6 +727,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Institution-interface
   '{PropertyTracker_URL}/dogs':
     get:
       responses:
@@ -813,14 +818,14 @@ x-interfaces:
       name: name
       required: true
       type: string
-    <<: *id001
+    <<: *Dog-interface
   '{PropertyTracker_URL}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *id002
+    <<: *Person-interface
   '{PropertyTracker_URL}/people':
     get:
       responses:
@@ -911,7 +916,7 @@ x-interfaces:
       name: name
       required: true
       type: string
-    <<: *id002
+    <<: *Person-interface
   '{PropertyTracker_URL}/people;{name}/possessions':
     parameters:
     - in: path
@@ -1095,14 +1100,14 @@ x-interfaces:
       name: name
       required: true
       type: string
-    <<: *id003
+    <<: *Bicycle-interface
   '{PropertyTracker_URL}/bicycles;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *id002
+    <<: *Person-interface
   '{PropertyTracker_URL}/institutions':
     get:
       responses:
@@ -1193,7 +1198,7 @@ x-interfaces:
       name: name
       required: true
       type: string
-    <<: *id004
+    <<: *Institution-interface
   '{PropertyTracker_URL}/institutions;{name}/assets':
     parameters:
     - in: path

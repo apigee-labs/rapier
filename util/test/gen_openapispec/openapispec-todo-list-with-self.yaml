@@ -99,6 +99,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: TodoList-interface
   '{Item_URL}':
     get:
       description: Retrieve an Item
@@ -221,6 +222,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Item-interface
   '{TodoList_URL}/items':
     get:
       responses:

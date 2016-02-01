@@ -111,6 +111,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: HelloMessage-interface
 parameters:
   Accept:
     description: specifies the requested media type - required

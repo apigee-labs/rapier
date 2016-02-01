@@ -100,7 +100,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{Item_URL}': &id001
+    x-id: TodoList-interface
+  '{Item_URL}': &Item-interface
     get:
       description: Retrieve an Item
       parameters:
@@ -222,6 +223,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Item-interface
   '{TodoList_URL}/items':
     get:
       responses:
@@ -312,7 +314,7 @@ x-interfaces:
       name: id
       required: true
       type: string
-    <<: *id001
+    <<: *Item-interface
 parameters:
   Accept:
     description: specifies the requested media type - required

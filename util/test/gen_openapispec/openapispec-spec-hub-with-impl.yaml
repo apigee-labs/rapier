@@ -983,6 +983,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Store-interface
   '{Folder_URL}':
     get:
       description: Retrieve a Folder
@@ -1105,6 +1106,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Folder-interface
   '{Doc_URL}':
     get:
       description: Retrieve a Doc
@@ -1227,6 +1229,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Doc-interface
   '{Group_URL}':
     get:
       description: Retrieve a Group
@@ -1349,6 +1352,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Group-interface
   '{Content_URL}':
     get:
       description: Retrieve a Content
@@ -1497,6 +1501,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Content-interface
   '{Store_URL}/home':
     $ref: '#/x-interfaces/{Folder_URL}'
   '{Store_URL}/sharedWithMe':

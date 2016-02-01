@@ -397,6 +397,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Application-interface
   '{Environment_URL}':
     get:
       description: Retrieve an Environment
@@ -519,6 +520,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Environment-interface
   '{Microservice_URL}':
     get:
       description: Retrieve a Microservice
@@ -641,6 +643,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Microservice-interface
   '{Revision_URL}':
     get:
       description: Retrieve a Revision
@@ -763,6 +766,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Revision-interface
   '{Deployment_URL}':
     get:
       description: Retrieve a Deployment
@@ -885,6 +889,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Deployment-interface
   '{EnvironmentStartRequest_URL}':
     get:
       description: Retrieve an EnvironmentStartRequest
@@ -1008,6 +1013,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: EnvironmentStartRequest-interface
   '{EnvironmentStopRequest_URL}':
     get:
       description: Retrieve an EnvironmentStopRequest
@@ -1131,6 +1137,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: EnvironmentStopRequest-interface
   '{DeploymentStartRequest_URL}':
     get:
       description: Retrieve a DeploymentStartRequest
@@ -1254,6 +1261,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: DeploymentStartRequest-interface
   '{DeploymentStopRequest_URL}':
     get:
       description: Retrieve a DeploymentStopRequest
@@ -1376,6 +1384,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: DeploymentStopRequest-interface
   '{DeploymentOfflineRequest_URL}':
     get:
       description: Retrieve a DeploymentOfflineRequest
@@ -1499,6 +1508,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: DeploymentOfflineRequest-interface
   '{DeploymentOnlineRequest_URL}':
     get:
       description: Retrieve a DeploymentOnlineRequest
@@ -1622,6 +1632,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: DeploymentOnlineRequest-interface
 parameters:
   Accept:
     description: specifies the requested media type - required
