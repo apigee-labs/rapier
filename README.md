@@ -119,7 +119,7 @@ entities:
       due:
         type: string
         format: date-time
-non_entity_resources:
+non_entities:
   Collection:
     readOnly: true
     properties:
@@ -134,7 +134,7 @@ property called `items`. In this case, the declaration of the relationship prope
 In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the entity property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
-relationship and can POST to make new ones. The `Collection` resource is defined in a `non_entity_resources` section of the Rapier spec because 
+relationship and can POST to make new ones. The `Collection` resource is defined in a `non_entities` section of the Rapier spec because 
 it is not an entity in the data model - it is a 'technical' resource needed to represent a collection of entities.
 In JSON, the `To_do_list` at `/to-dos` will look like this:
 ```json
@@ -193,7 +193,7 @@ entities:
       due:
         type: string
         format: date-time
-non_entity_resources:
+non_entities:
   Collection:
     readOnly: true
     properties:
@@ -207,13 +207,19 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
 
     /to-dos/items
     /to-dos/items/{id} [2]
-    
 
-These are examples of 'query URLs'. The provision of
+These URL and templates are examples of what Rapier calls 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
-The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`" — we are starting at `/todos`
+The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`" — we are starting at `/todos`
 and following the `items` relationship declared in the data model. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item`. 
+
+More generally, these URL templates are valid
+
+    {TodoList_URL}/items
+    {TodoList_URL}/items/{id}
+    
+The previous two are valid because there is a TodoList at `\items`, but the template is valid for any TodoList URL.
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-with-id.yaml)
 
@@ -261,7 +267,7 @@ entities:
       due:
         type: string
         format: date-time
-non_entity_resources:
+non_entities:
   Collection:
     readOnly: true
     properties:
