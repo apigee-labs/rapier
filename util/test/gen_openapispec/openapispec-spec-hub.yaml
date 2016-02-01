@@ -236,17 +236,17 @@ definitions:
         format: date-time
         readOnly: true
 paths:
-  /doc:
+  /store:
     $ref: '#/x-interfaces/{Store_URL}'
-  /doc/home:
+  /store/home:
     $ref: '#/x-interfaces/{Store_URL}~1home'
-  /doc/sharedWithMe:
+  /store/sharedWithMe:
     $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
-  /doc/docs:
+  /store/docs:
     $ref: '#/x-interfaces/{Store_URL}~1docs'
-  /doc/folders:
+  /store/folders:
     $ref: '#/x-interfaces/{Store_URL}~1folders'
-  /doc/groups:
+  /store/groups:
     $ref: '#/x-interfaces/{Store_URL}~1groups'
 x-interfaces:
   '{Store_URL}':

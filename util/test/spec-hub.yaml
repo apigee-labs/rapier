@@ -60,7 +60,7 @@ entities:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: O:n
-    well_known_URLs: /doc
+    well_known_URLs: /store
     query_paths: 
     - home
     - sharedWithMe
@@ -269,19 +269,19 @@ non_entities:
 implementation_only:
   Group:
     instance_url:
-      template: /ZG9j-Z3Jw-{} 
+      template: /c3Rvc-Z3Jw-{} 
       key:
         name: implementation_key
         type: integer
   Doc:
     instance_url:
-      template: /ZG9j-ZG9j-{} 
+      template: /c3Rvc-ZG9j-{} 
       key:
         name: implementation_key
         type: integer
   Folder:
     instance_url:
-      template: /ZG9j-Zmxk-{} 
+      template: /c3Rvc-Zmxk-{} 
       key:
         name: implementation_key
         type: integer  

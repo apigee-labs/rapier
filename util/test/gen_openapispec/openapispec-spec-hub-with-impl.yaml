@@ -236,19 +236,19 @@ definitions:
         format: date-time
         readOnly: true
 paths:
-  /doc:
+  /store:
     $ref: '#/x-interfaces/{Store_URL}'
-  /doc/home:
+  /store/home:
     $ref: '#/x-interfaces/{Store_URL}~1home'
-  /doc/sharedWithMe:
+  /store/sharedWithMe:
     $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
-  /doc/docs:
+  /store/docs:
     $ref: '#/x-interfaces/{Store_URL}~1docs'
-  /doc/folders:
+  /store/folders:
     $ref: '#/x-interfaces/{Store_URL}~1folders'
-  /doc/groups:
+  /store/groups:
     $ref: '#/x-interfaces/{Store_URL}~1groups'
-  /ZG9j-Zmxk-{implementation_key}:
+  /c3Rvc-Zmxk-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -381,7 +381,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /ZG9j-Zmxk-{implementation_key}/contents:
+  /c3Rvc-Zmxk-{implementation_key}/contents:
     x-private: true
     parameters:
     - description: This parameter is a private part of the implementation. It is not
@@ -500,7 +500,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /ZG9j-ZG9j-{implementation_key}:
+  /c3Rvc-ZG9j-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -633,7 +633,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /ZG9j-ZG9j-{implementation_key}/content:
+  /c3Rvc-ZG9j-{implementation_key}/content:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
@@ -792,7 +792,7 @@ paths:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  /ZG9j-Z3Jw-{implementation_key}:
+  /c3Rvc-Z3Jw-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton
       and may be important to implementation-aware software, such as proxies or specification-driven
