@@ -45,6 +45,7 @@ entities:
         format: uri
         type: string
         relationship:
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Deployment'
       requested_state:

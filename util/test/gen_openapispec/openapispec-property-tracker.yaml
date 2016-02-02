@@ -178,9 +178,9 @@ paths:
   /institutions;{name}/assets:
     $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}~1assets'
 x-interfaces:
-  '{Bicycle_URL}': &Bicycle-interface
+  '{PropertyTracker_URL}':
     get:
-      description: Retrieve a Bicycle
+      description: Retrieve a PropertyTracker
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -195,72 +195,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Bicycle'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a Bicycle entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Bicycle being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Bicycle'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Bicycle'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Bicycle
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Bicycle'
-        '400':
-          $ref: '#/responses/400'
+            $ref: '#/definitions/PropertyTracker'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -300,7 +235,347 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Bicycle-interface
+    x-id: PropertyTracker-interface
+  '{PropertyTracker_URL}/dogs':
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Dog
+      parameters:
+      - description: The representation of the new Dog being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Dog'
+      responses:
+        '201':
+          description: Created new Dog
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Dog
+              type: string
+          schema:
+            $ref: '#/definitions/Dog'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: PropertyTracker-dogs-interface
+  '{PropertyTracker_URL}/people':
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Person
+      parameters:
+      - description: The representation of the new Person being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Person'
+      responses:
+        '201':
+          description: Created new Person
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Person
+              type: string
+          schema:
+            $ref: '#/definitions/Person'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: PropertyTracker-people-interface
+  '{PropertyTracker_URL}/bicycles':
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Bicycle
+      parameters:
+      - description: The representation of the new Bicycle being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Bicycle'
+      responses:
+        '201':
+          description: Created new Bicycle
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Bicycle
+              type: string
+          schema:
+            $ref: '#/definitions/Bicycle'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: PropertyTracker-bicycles-interface
+  '{PropertyTracker_URL}/institutions':
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Institution
+      parameters:
+      - description: The representation of the new Institution being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Institution'
+      responses:
+        '201':
+          description: Created new Institution
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Institution
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: PropertyTracker-institutions-interface
   '{Dog_URL}': &Dog-interface
     get:
       description: Retrieve a Dog
@@ -424,9 +699,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Dog-interface
-  '{Institution_URL}': &Institution-interface
+  '{Bicycle_URL}': &Bicycle-interface
     get:
-      description: Retrieve an Institution
+      description: Retrieve a Bicycle
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -441,7 +716,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Bicycle'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -455,14 +730,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an Institution entity
+      description: Update a Bicycle entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Institution being updated
+      - description: The subset of properties of the Bicycle being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Institution'
+          $ref: '#/definitions/Bicycle'
       responses:
         '200':
           description: successful
@@ -475,7 +750,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Bicycle'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -491,7 +766,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Institution
+      description: Delete a Bicycle
       responses:
         '200':
           description: successful
@@ -504,7 +779,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Institution'
+            $ref: '#/definitions/Bicycle'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -546,7 +821,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Institution-interface
+    x-id: Bicycle-interface
   '{Person_URL}': &Person-interface
     get:
       description: Retrieve a Person
@@ -670,9 +945,98 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Person-interface
-  '{PropertyTracker_URL}':
+  '{Person_URL}/possessions': &Person-possessions-interface
     get:
-      description: Retrieve a PropertyTracker
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Dog or Bicycle
+      parameters:
+      - description: The representation of the new Dog or Bicycle being created
+        in: body
+        name: body
+        schema:
+          x-oneOf:
+          - $ref: '#/definitions/Dog'
+          - $ref: '#/definitions/Bicycle'
+      responses:
+        '201':
+          description: Created new Dog or Bicycle
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Dog or Bicycle
+              type: string
+          schema:
+            x-oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Person-possessions-interface
+  '{Institution_URL}': &Institution-interface
+    get:
+      description: Retrieve an Institution
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -687,7 +1051,72 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/PropertyTracker'
+            $ref: '#/definitions/Institution'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an Institution entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Institution being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Institution'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Institution
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Institution'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -727,8 +1156,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-interface
-  '{PropertyTracker_URL}/bicycles':
+    x-id: Institution-interface
+  '{Institution_URL}/assets': &Institution-assets-interface
     get:
       responses:
         '200':
@@ -752,25 +1181,29 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Bicycle
+      description: Create a new Dog or Bicycle
       parameters:
-      - description: The representation of the new Bicycle being created
+      - description: The representation of the new Dog or Bicycle being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Bicycle'
+          x-oneOf:
+          - $ref: '#/definitions/Dog'
+          - $ref: '#/definitions/Bicycle'
       responses:
         '201':
-          description: Created new Bicycle
+          description: Created new Dog or Bicycle
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Bicycle
+              description: perma-link URL of newly-created Dog or Bicycle
               type: string
           schema:
-            $ref: '#/definitions/Bicycle'
+            x-oneOf:
+            - $ref: '#/definitions/Dog'
+            - $ref: '#/definitions/Bicycle'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -812,104 +1245,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-  '{PropertyTracker_URL}/bicycles;{name}':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *Bicycle-interface
-  '{PropertyTracker_URL}/bicycles;{name}/owner':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *Person-interface
-  '{PropertyTracker_URL}/dogs':
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Dog
-      parameters:
-      - description: The representation of the new Dog being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Dog'
-      responses:
-        '201':
-          description: Created new Dog
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Dog
-              type: string
-          schema:
-            $ref: '#/definitions/Dog'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    x-id: Institution-assets-interface
   '{PropertyTracker_URL}/dogs;{name}':
     parameters:
     - in: path
@@ -924,274 +1260,6 @@ x-interfaces:
       required: true
       type: string
     <<: *Person-interface
-  '{PropertyTracker_URL}/institutions':
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Institution
-      parameters:
-      - description: The representation of the new Institution being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Institution'
-      responses:
-        '201':
-          description: Created new Institution
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Institution
-              type: string
-          schema:
-            $ref: '#/definitions/Institution'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{PropertyTracker_URL}/institutions;{name}':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *Institution-interface
-  '{PropertyTracker_URL}/institutions;{name}/assets':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Dog or Bicycle
-      parameters:
-      - description: The representation of the new Dog or Bicycle being created
-        in: body
-        name: body
-        schema:
-          x-oneOf:
-          - $ref: '#/definitions/Dog'
-          - $ref: '#/definitions/Bicycle'
-      responses:
-        '201':
-          description: Created new Dog or Bicycle
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Dog or Bicycle
-              type: string
-          schema:
-            x-oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{PropertyTracker_URL}/people':
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Person
-      parameters:
-      - description: The representation of the new Person being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Person'
-      responses:
-        '201':
-          description: Created new Person
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Person
-              type: string
-          schema:
-            $ref: '#/definitions/Person'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
   '{PropertyTracker_URL}/people;{name}':
     parameters:
     - in: path
@@ -1205,93 +1273,35 @@ x-interfaces:
       name: name
       required: true
       type: string
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Dog or Bicycle
-      parameters:
-      - description: The representation of the new Dog or Bicycle being created
-        in: body
-        name: body
-        schema:
-          x-oneOf:
-          - $ref: '#/definitions/Dog'
-          - $ref: '#/definitions/Bicycle'
-      responses:
-        '201':
-          description: Created new Dog or Bicycle
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Dog or Bicycle
-              type: string
-          schema:
-            x-oneOf:
-            - $ref: '#/definitions/Dog'
-            - $ref: '#/definitions/Bicycle'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    <<: *Person-possessions-interface
+  '{PropertyTracker_URL}/bicycles;{name}':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Bicycle-interface
+  '{PropertyTracker_URL}/bicycles;{name}/owner':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Person-interface
+  '{PropertyTracker_URL}/institutions;{name}':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Institution-interface
+  '{PropertyTracker_URL}/institutions;{name}/assets':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Institution-assets-interface
 parameters:
   Accept:
     description: specifies the requested media type - required

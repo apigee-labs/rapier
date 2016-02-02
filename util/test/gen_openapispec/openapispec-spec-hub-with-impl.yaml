@@ -926,16 +926,11 @@ paths:
         default:
           $ref: '#/responses/default'
 x-interfaces:
-  '{Content_URL}':
+  '{Store_URL}':
     get:
-      description: Retrieve a Content
+      description: Retrieve a Store
       parameters:
       - $ref: '#/parameters/Accept'
-      produces:
-      - application/x-yaml
-      - text/yaml
-      - text/html
-      - text/plain
       responses:
         '200':
           description: successful
@@ -948,93 +943,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Content'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      consumes:
-      - application/x-yaml
-      - text/yaml
-      - text/html
-      - text/plain
-      description: Create or Update a Content entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Content being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Content'
-      produces:
-      - application/x-yaml
-      - text/yaml
-      - text/html
-      - text/plain
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Content'
-        '201':
-          description: Created new Content
-          headers:
-            Location:
-              description: perma-link URL of newly-created Content
-              type: string
-          schema:
-            $ref: '#/definitions/Content'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Content
-      produces:
-      - application/x-yaml
-      - text/yaml
-      - text/html
-      - text/plain
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Content'
-        '400':
-          $ref: '#/responses/400'
+            $ref: '#/definitions/Store'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1074,25 +983,43 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Content-interface
-  '{Doc_URL}':
+    x-id: Store-interface
+  '{Store_URL}/sharedWithMe':
     get:
-      description: Retrieve a Doc
       parameters:
-      - $ref: '#/parameters/Accept'
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
       responses:
         '200':
-          description: successful
+          description: description
           headers:
             Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: perma-link URL of collection
               type: string
           schema:
-            $ref: '#/definitions/Doc'
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1103,56 +1030,99 @@ x-interfaces:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a Doc entity
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Doc being updated
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Store-sharedWithMe-interface
+  '{Store_URL}/docs':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Doc
+      parameters:
+      - description: The representation of the new Doc being created
         in: body
         name: body
         schema:
           $ref: '#/definitions/Doc'
       responses:
-        '200':
-          description: successful
+        '201':
+          description: Created new Doc
           headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
             ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: Value of ETag required for subsequent updates
               type: string
-          schema:
-            $ref: '#/definitions/Doc'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Doc
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+            Location:
+              description: perma-link URL of newly-created Doc
               type: string
           schema:
             $ref: '#/definitions/Doc'
@@ -1169,7 +1139,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     head:
-      description: retrieve HEAD
+      description: Retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -1197,9 +1167,223 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Doc-interface
-  '{Doc_URL}/content':
-    $ref: '#/x-interfaces/{Content_URL}'
+    x-id: Store-docs-interface
+  '{Store_URL}/folders':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Folder
+      parameters:
+      - description: The representation of the new Folder being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Folder'
+      responses:
+        '201':
+          description: Created new Folder
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Folder
+              type: string
+          schema:
+            $ref: '#/definitions/Folder'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Store-folders-interface
+  '{Store_URL}/groups':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationshipResource'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Group
+      parameters:
+      - description: The representation of the new Group being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Group'
+      responses:
+        '201':
+          description: Created new Group
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Group
+              type: string
+          schema:
+            $ref: '#/definitions/Group'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Store-groups-interface
   '{Folder_URL}':
     get:
       description: Retrieve a Folder
@@ -1434,6 +1618,130 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
+    x-id: Folder-contents-interface
+  '{Doc_URL}':
+    get:
+      description: Retrieve a Doc
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Doc'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Doc entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Doc being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Doc'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Doc'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Doc
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Doc'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Doc-interface
   '{Group_URL}':
     get:
       description: Retrieve a Group
@@ -1557,11 +1865,16 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Group-interface
-  '{Store_URL}':
+  '{Content_URL}':
     get:
-      description: Retrieve a Store
+      description: Retrieve a Content
       parameters:
       - $ref: '#/parameters/Accept'
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
       responses:
         '200':
           description: successful
@@ -1574,7 +1887,93 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Store'
+            $ref: '#/definitions/Content'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      consumes:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
+      description: Create or Update a Content entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the Content being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Content'
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '201':
+          description: Created new Content
+          headers:
+            Location:
+              description: perma-link URL of newly-created Content
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Content
+      produces:
+      - application/x-yaml
+      - text/yaml
+      - text/html
+      - text/plain
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Content'
+        '400':
+          $ref: '#/responses/400'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1614,405 +2013,11 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-interface
-  '{Store_URL}/docs':
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Doc
-      parameters:
-      - description: The representation of the new Doc being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Doc'
-      responses:
-        '201':
-          description: Created new Doc
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Doc
-              type: string
-          schema:
-            $ref: '#/definitions/Doc'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{Store_URL}/folders':
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Folder
-      parameters:
-      - description: The representation of the new Folder being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Folder'
-      responses:
-        '201':
-          description: Created new Folder
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Folder
-              type: string
-          schema:
-            $ref: '#/definitions/Folder'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-  '{Store_URL}/groups':
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new Group
-      parameters:
-      - description: The representation of the new Group being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Group'
-      responses:
-        '201':
-          description: Created new Group
-          headers:
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Group
-              type: string
-          schema:
-            $ref: '#/definitions/Group'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+    x-id: Content-interface
   '{Store_URL}/home':
     $ref: '#/x-interfaces/{Folder_URL}'
-  '{Store_URL}/sharedWithMe':
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-          schema:
-            $ref: '#/definitions/MultiValuedRelationshipResource'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
+  '{Doc_URL}/content':
+    $ref: '#/x-interfaces/{Content_URL}'
 parameters:
   Accept:
     description: specifies the requested media type - required

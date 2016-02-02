@@ -55,7 +55,7 @@ class SwaggerGenerator(object):
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
-        self.openapispec_interfaces = dict()
+        self.openapispec_interfaces = PresortedOrderedDict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
         else:
@@ -140,6 +140,16 @@ class SwaggerGenerator(object):
                     interface['x-id'] = '%s-interface' % entity_name
                     self.interfaces[entity_uri] = interface
                     self.openapispec['x-interfaces'][path] = interface
+                    rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
+                    for rel_property_spec in rel_property_specs:
+                        q_p = QueryPath(rel_property_spec.relationship_name, self)
+                        if rel_property_spec.is_collection_resource(): 
+                            rel_property_spec_stack = [rel_property_spec]
+                            assert q_p.matches(rel_property_spec_stack)
+                            interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec_stack, rel_property_specs)
+                            interface['x-id'] = '%s-%s-interface' % (entity_name, rel_property_spec.relationship_name)
+                            self.openapispec['x-interfaces'][rel_property_spec.uri_template()] = interface
+                            self.interfaces[rel_property_spec.uri_template()] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
@@ -233,7 +243,14 @@ class SwaggerGenerator(object):
             if path not in paths:
                 if prefix.is_uri_spec():
                     if is_collection_resource:
-                        interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                        #interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                        parameters = self.build_parameters(prefix, query_path)
+                        if parameters:
+                            interface = PresortedOrderedDict()
+                            interface['parameters'] = parameters
+                            interface['<<'] = self.interfaces[rel_property_spec_stack[-1].uri_template()]
+                        else:
+                            interface = self.build_template_reference(rel_property_spec_stack[-1])        
                     else:
                         if query_path:
                             parameters = self.build_parameters(prefix, query_path)
@@ -242,7 +259,7 @@ class SwaggerGenerator(object):
                                 interface['parameters'] = parameters
                                 interface['<<'] = self.interfaces[rel_property_spec_stack[-1].target_entity_uri]
                             else:
-                                interface = self.build_template_reference(EntityURLSpec(rel_property_spec_stack[-1].target_entity_uri, self))        
+                                interface = self.build_template_reference(rel_property_spec_stack[-1])        
                         else:
                             interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                 elif prefix.is_impl_spec():
@@ -657,7 +674,7 @@ class SwaggerGenerator(object):
     def build_collection_get(self, rel_property_spec):
         collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
-            sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.property_name, rel_property_spec.source_entity, self.filename))
+            sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.filename))
         if collection_entity_uri not in self.uri_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
@@ -886,7 +903,9 @@ class RelSVPropertySpec(SegmentSpec):
         self.readOnly = relationship.get('readOnly')                                 
         self.target_entity_uri = target_entity_uri
         self.relationship_name = relationship['name']        
-        self.implementation_private = property.get('implementation_private', False)                                
+        self.implementation_private = property.get('implementation_private', False)    
+        self._entity_spec = entity_spec      
+        self._generator = generator                      
         
     def is_multivalued(self):
         return False
@@ -899,7 +918,13 @@ class RelSVPropertySpec(SegmentSpec):
                 
     def is_private(self):
         return self.implementation_private
-                
+
+    def source_entity_name(self):
+        return self._entity_spec['name']
+        
+    def uri_template(self):
+        return EntityURLSpec(self.target_entity_uri, self._generator).uri_template()
+                        
 class RelMVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
@@ -941,6 +966,12 @@ class RelMVPropertySpec(SegmentSpec):
         
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def uri_template(self):
+        return '{%s_URL}/%s' % (self._entity_spec['name'], self.relationship_name)
+        
+    def source_entity_name(self):
+        return self._entity_spec['name']
         
 class WellKnownURLSpec(PathPrefix):
     

@@ -58,6 +58,7 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship:
+          collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Deployment'
       requested_state:
@@ -398,9 +399,225 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Application-interface
-  '{DeploymentOfflineRequest_URL}':
+  '{Application_URL}/has_environments':
     get:
-      description: Retrieve a DeploymentOfflineRequest
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Environment
+      parameters:
+      - description: The representation of the new Environment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      responses:
+        '201':
+          description: Created new Environment
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Environment
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Application-has_environments-interface
+  '{Application_URL}/comprises':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Microservice
+      parameters:
+      - description: The representation of the new Microservice being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Microservice'
+      responses:
+        '201':
+          description: Created new Microservice
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Microservice
+              type: string
+          schema:
+            $ref: '#/definitions/Microservice'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Application-comprises-interface
+  '{Environment_URL}':
+    get:
+      description: Retrieve an Environment
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -415,7 +632,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Environment'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -429,15 +646,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentOfflineRequest entity
+      description: Update an Environment entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOfflineRequest being
-          updated
+      - description: The subset of properties of the Environment being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOfflineRequest'
+          $ref: '#/definitions/Environment'
       responses:
         '200':
           description: successful
@@ -450,7 +666,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Environment'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -466,7 +682,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentOfflineRequest
+      description: Delete an Environment
       responses:
         '200':
           description: successful
@@ -479,7 +695,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Environment'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -521,10 +737,334 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentOfflineRequest-interface
-  '{DeploymentOnlineRequest_URL}':
+    x-id: Environment-interface
+  '{Environment_URL}/hosts':
     get:
-      description: Retrieve a DeploymentOnlineRequest
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Deployment
+      parameters:
+      - description: The representation of the new Deployment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      responses:
+        '201':
+          description: Created new Deployment
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment-hosts-interface
+  '{Environment_URL}/start_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new EnvironmentStartRequest
+      parameters:
+      - description: The representation of the new EnvironmentStartRequest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentStartRequest'
+      responses:
+        '201':
+          description: Created new EnvironmentStartRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created EnvironmentStartRequest
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment-start_requests-interface
+  '{Environment_URL}/stop_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new EnvironmentStopRequest
+      parameters:
+      - description: The representation of the new EnvironmentStopRequest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentStopRequest'
+      responses:
+        '201':
+          description: Created new EnvironmentStopRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created EnvironmentStopRequest
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment-stop_requests-interface
+  '{Microservice_URL}':
+    get:
+      description: Retrieve a Microservice
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -539,7 +1079,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
+            $ref: '#/definitions/Microservice'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -553,15 +1093,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentOnlineRequest entity
+      description: Update a Microservice entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOnlineRequest being
-          updated
+      - description: The subset of properties of the Microservice being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOnlineRequest'
+          $ref: '#/definitions/Microservice'
       responses:
         '200':
           description: successful
@@ -574,7 +1113,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
+            $ref: '#/definitions/Microservice'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -590,7 +1129,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentOnlineRequest
+      description: Delete a Microservice
       responses:
         '200':
           description: successful
@@ -603,7 +1142,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
+            $ref: '#/definitions/Microservice'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -645,10 +1184,118 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentOnlineRequest-interface
-  '{DeploymentStartRequest_URL}':
+    x-id: Microservice-interface
+  '{Microservice_URL}/produced':
     get:
-      description: Retrieve a DeploymentStartRequest
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Revision
+      parameters:
+      - description: The representation of the new Revision being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Revision'
+      responses:
+        '201':
+          description: Created new Revision
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Revision
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Microservice-produced-interface
+  '{Revision_URL}':
+    get:
+      description: Retrieve a Revision
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -663,7 +1310,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Revision'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -677,15 +1324,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentStartRequest entity
+      description: Update a Revision entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStartRequest being
-          updated
+      - description: The subset of properties of the Revision being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStartRequest'
+          $ref: '#/definitions/Revision'
       responses:
         '200':
           description: successful
@@ -698,7 +1344,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Revision'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -714,7 +1360,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentStartRequest
+      description: Delete a Revision
       responses:
         '200':
           description: successful
@@ -727,7 +1373,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Revision'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -769,25 +1415,43 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStartRequest-interface
-  '{DeploymentStopRequest_URL}':
+    x-id: Revision-interface
+  '{Revision_URL}/has_deployments':
     get:
-      description: Retrieve a DeploymentStopRequest
       parameters:
-      - $ref: '#/parameters/Accept'
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
       responses:
         '200':
-          description: successful
+          description: description
           headers:
             Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: perma-link URL of collection
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopRequest'
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -798,59 +1462,26 @@ x-interfaces:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a DeploymentStopRequest entity
+    post:
+      description: Create a new Deployment
       parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStopRequest being updated
+      - description: The representation of the new Deployment being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStopRequest'
+          $ref: '#/definitions/Deployment'
       responses:
-        '200':
-          description: successful
+        '201':
+          description: Created new Deployment
           headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
             ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a DeploymentStopRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentStopRequest'
+            $ref: '#/definitions/Deployment'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -864,7 +1495,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     head:
-      description: retrieve HEAD
+      description: Retrieve HEAD
       responses:
         '200':
           $ref: '#/responses/standard_200'
@@ -892,7 +1523,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStopRequest-interface
+    x-id: Revision-has_deployments-interface
   '{Deployment_URL}':
     get:
       description: Retrieve a Deployment
@@ -1016,6 +1647,439 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Deployment-interface
+  '{Deployment_URL}/start_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentStartRequest
+      parameters:
+      - description: The representation of the new DeploymentStartRequest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStartRequest'
+      responses:
+        '201':
+          description: Created new DeploymentStartRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentStartRequest
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment-start_requests-interface
+  '{Deployment_URL}/stop_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentStopRequest
+      parameters:
+      - description: The representation of the new DeploymentStopRequest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStopRequest'
+      responses:
+        '201':
+          description: Created new DeploymentStopRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentStopRequest
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment-stop_requests-interface
+  '{Deployment_URL}/go_live_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentOnlineRequest
+      parameters:
+      - description: The representation of the new DeploymentOnlineRequest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOnlineRequest'
+      responses:
+        '201':
+          description: Created new DeploymentOnlineRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentOnlineRequest
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment-go_live_requests-interface
+  '{Deployment_URL}/go_offline_requests':
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentOfflineRequest
+      parameters:
+      - description: The representation of the new DeploymentOfflineRequest being
+          created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOfflineRequest'
+      responses:
+        '201':
+          description: Created new DeploymentOfflineRequest
+          headers:
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentOfflineRequest
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOfflineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment-go_offline_requests-interface
   '{EnvironmentStartRequest_URL}':
     get:
       description: Retrieve an EnvironmentStartRequest
@@ -1264,9 +2328,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: EnvironmentStopRequest-interface
-  '{Environment_URL}':
+  '{DeploymentStartRequest_URL}':
     get:
-      description: Retrieve an Environment
+      description: Retrieve a DeploymentStartRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1281,7 +2345,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentStartRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1295,14 +2359,15 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an Environment entity
+      description: Update a DeploymentStartRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Environment being updated
+      - description: The subset of properties of the DeploymentStartRequest being
+          updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Environment'
+          $ref: '#/definitions/DeploymentStartRequest'
       responses:
         '200':
           description: successful
@@ -1315,7 +2380,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1331,7 +2396,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Environment
+      description: Delete a DeploymentStartRequest
       responses:
         '200':
           description: successful
@@ -1344,7 +2409,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1386,10 +2451,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-interface
-  '{Microservice_URL}':
+    x-id: DeploymentStartRequest-interface
+  '{DeploymentStopRequest_URL}':
     get:
-      description: Retrieve a Microservice
+      description: Retrieve a DeploymentStopRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1404,7 +2469,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentStopRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1418,14 +2483,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Microservice entity
+      description: Update a DeploymentStopRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Microservice being updated
+      - description: The subset of properties of the DeploymentStopRequest being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Microservice'
+          $ref: '#/definitions/DeploymentStopRequest'
       responses:
         '200':
           description: successful
@@ -1438,7 +2503,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1454,7 +2519,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Microservice
+      description: Delete a DeploymentStopRequest
       responses:
         '200':
           description: successful
@@ -1467,7 +2532,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentStopRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1509,10 +2574,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice-interface
-  '{Revision_URL}':
+    x-id: DeploymentStopRequest-interface
+  '{DeploymentOfflineRequest_URL}':
     get:
-      description: Retrieve a Revision
+      description: Retrieve a DeploymentOfflineRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1527,7 +2592,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1541,14 +2606,15 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Revision entity
+      description: Update a DeploymentOfflineRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Revision being updated
+      - description: The subset of properties of the DeploymentOfflineRequest being
+          updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Revision'
+          $ref: '#/definitions/DeploymentOfflineRequest'
       responses:
         '200':
           description: successful
@@ -1561,7 +2627,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1577,7 +2643,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Revision
+      description: Delete a DeploymentOfflineRequest
       responses:
         '200':
           description: successful
@@ -1590,7 +2656,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1632,7 +2698,131 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Revision-interface
+    x-id: DeploymentOfflineRequest-interface
+  '{DeploymentOnlineRequest_URL}':
+    get:
+      description: Retrieve a DeploymentOnlineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentOnlineRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentOnlineRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOnlineRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentOnlineRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentOnlineRequest-interface
 parameters:
   Accept:
     description: specifies the requested media type - required
@@ -1659,6 +2849,12 @@ parameters:
     required: true
     type: string
 responses:
+  '303':
+    description: See other. Server is redirecting client to a different resource
+    headers:
+      Location:
+        description: URL of other resource
+        type: string
   '400':
     description: Bad Request. Client request in error
     schema:
