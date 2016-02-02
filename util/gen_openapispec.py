@@ -235,30 +235,22 @@ class SwaggerGenerator(object):
         for inx, spec in enumerate(rel_property_spec_stack):
             if spec.is_multivalued() and not query_path.query_segments[inx].discriminates() and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
-        is_collection_resource = rel_property_spec_stack[-1].is_collection_resource() and not query_path.query_segments[-1].discriminates()
+        rel_spec = rel_property_spec_stack[-1]
+        is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].discriminates()
         path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
             paths = self.openapispec_interfaces if prefix.is_uri_spec() else self.openapispec_paths 
             if path not in paths:
                 if prefix.is_uri_spec():
-                    if is_collection_resource:
-                        #interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
-                        parameters = self.build_parameters(prefix, query_path)
-                        if parameters:
-                            interface = PresortedOrderedDict()
-                            interface['parameters'] = parameters
-                            interface['<<'] = self.interfaces[rel_property_spec_stack[-1].uri_template()]
-                        else:
-                            interface = self.build_template_reference(rel_property_spec_stack[-1])        
+                    interface_id = rel_spec.uri_template() if is_collection_resource else rel_spec.target_entity_uri
+                    parameters = self.build_parameters(prefix, query_path)
+                    if parameters:
+                        interface = PresortedOrderedDict()
+                        interface['parameters'] = parameters
+                        interface['<<'] = self.interfaces[interface_id]
                     else:
-                        parameters = self.build_parameters(prefix, query_path)
-                        if parameters:
-                            interface = PresortedOrderedDict()
-                            interface['parameters'] = parameters
-                            interface['<<'] = self.interfaces[rel_property_spec_stack[-1].target_entity_uri]
-                        else:
-                            interface = self.build_template_reference(rel_property_spec_stack[-1])        
+                        interface = self.build_template_reference(rel_property_spec_stack[-1])        
                 elif prefix.is_impl_spec():
                     if is_collection_resource:
                         interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
