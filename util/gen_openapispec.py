@@ -247,20 +247,26 @@ class SwaggerGenerator(object):
                     interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
                     parameters = self.build_parameters(prefix, query_path)
                     if parameters:
-                        interface = PresortedOrderedDict()
-                        interface['parameters'] = parameters
-                        interface['<<'] = self.interfaces[interface_id]
+                        template = PresortedOrderedDict()
+                        template['parameters'] = parameters
+                        template['<<'] = self.interfaces[interface_id]
                     else:
-                        interface = self.build_interface_reference(rel_property_spec_stack[-1])        
-                    self.openapispec_templates[path] = interface
+                        template = self.build_interface_reference(rel_property_spec_stack[-1])        
+                    self.openapispec_templates[path] = template
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
                     if prefix.is_impl_spec():
-                        if is_collection_resource:
-                            interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                        interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
+                        parameters = self.build_parameters(prefix, query_path)
+                        if parameters:
+                            path_spec = PresortedOrderedDict()
+                            path_spec['x-private'] = True
+                            parth_spec['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
+                            path_spec['parameters'] = parameters
+                            path_spec['<<'] = self.interfaces[interface_id]
                         else:
-                            interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
+                            interface = self.build_interface_reference(rel_property_spec_stack[-1])        
                     else:
                         interface = self.build_template_reference(prefix, query_path)
                     self.openapispec_paths[path] = interface
