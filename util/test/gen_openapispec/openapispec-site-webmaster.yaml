@@ -18,9 +18,6 @@ definitions:
     properties:
       name:
         type: string
-paths:
-  /:
-    $ref: '#/x-interfaces/{Site_URL}'
 x-interfaces:
   '{Site_URL}':
     get:
@@ -241,6 +238,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Person-interface
+paths:
+  /:
+    $ref: '#/x-interfaces/{Site_URL}'
 parameters:
   Accept:
     description: specifies the requested media type - required

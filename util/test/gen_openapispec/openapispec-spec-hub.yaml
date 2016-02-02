@@ -235,19 +235,6 @@ definitions:
         type: string
         format: date-time
         readOnly: true
-paths:
-  /store:
-    $ref: '#/x-interfaces/{Store_URL}'
-  /store/home:
-    $ref: '#/x-interfaces/{Store_URL}~1home'
-  /store/sharedWithMe:
-    $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
-  /store/docs:
-    $ref: '#/x-interfaces/{Store_URL}~1docs'
-  /store/folders:
-    $ref: '#/x-interfaces/{Store_URL}~1folders'
-  /store/groups:
-    $ref: '#/x-interfaces/{Store_URL}~1groups'
 x-interfaces:
   '{Store_URL}':
     get:
@@ -1341,6 +1328,19 @@ x-interfaces:
     $ref: '#/x-interfaces/{Folder_URL}'
   '{Doc_URL}/content':
     $ref: '#/x-interfaces/{Content_URL}'
+paths:
+  /store:
+    $ref: '#/x-interfaces/{Store_URL}'
+  /store/home:
+    $ref: '#/x-interfaces/{Store_URL}~1home'
+  /store/sharedWithMe:
+    $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
+  /store/docs:
+    $ref: '#/x-interfaces/{Store_URL}~1docs'
+  /store/folders:
+    $ref: '#/x-interfaces/{Store_URL}~1folders'
+  /store/groups:
+    $ref: '#/x-interfaces/{Store_URL}~1groups'
 parameters:
   Accept:
     description: specifies the requested media type - required

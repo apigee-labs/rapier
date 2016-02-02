@@ -12,9 +12,6 @@ definitions:
     properties:
       text:
         type: string
-paths:
-  /message:
-    $ref: '#/x-interfaces/{HelloMessage_URL}'
 x-interfaces:
   '{HelloMessage_URL}':
     get:
@@ -112,6 +109,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: HelloMessage-interface
+paths:
+  /message:
+    $ref: '#/x-interfaces/{HelloMessage_URL}'
 parameters:
   Accept:
     description: specifies the requested media type - required

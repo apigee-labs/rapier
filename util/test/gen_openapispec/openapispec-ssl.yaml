@@ -226,19 +226,6 @@ definitions:
         items:
           type: object
     readOnly: true
-paths:
-  /v1/o/{org}/e/{env}:
-    $ref: '#/x-interfaces/{Environment_URL}'
-  /v1/o/{org}/e/{env}/keystores:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores'
-  /v1/o/{org}/e/{env}/keystores/{name}:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
-  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1csr'
 x-interfaces:
   '{Environment_URL}':
     get:
@@ -996,6 +983,19 @@ x-interfaces:
       required: true
       type: string
     <<: *CSR-interface
+paths:
+  /v1/o/{org}/e/{env}:
+    $ref: '#/x-interfaces/{Environment_URL}'
+  /v1/o/{org}/e/{env}/keystores:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores'
+  /v1/o/{org}/e/{env}/keystores/{name}:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
+  /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
+    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1csr'
 parameters:
   Accept:
     description: specifies the requested media type - required

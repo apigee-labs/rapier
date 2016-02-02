@@ -32,11 +32,6 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Item'
-paths:
-  /to-dos:
-    $ref: '#/x-interfaces/{TodoList_URL}'
-  /to-dos/items:
-    $ref: '#/x-interfaces/{TodoList_URL}~1items'
 x-interfaces:
   '{TodoList_URL}':
     get:
@@ -304,6 +299,11 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Item-interface
+paths:
+  /to-dos:
+    $ref: '#/x-interfaces/{TodoList_URL}'
+  /to-dos/items:
+    $ref: '#/x-interfaces/{TodoList_URL}~1items'
 parameters:
   Accept:
     description: specifies the requested media type - required

@@ -71,8 +71,8 @@ class SwaggerGenerator(object):
         self.definitions = PresortedOrderedDict()
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
-        self.openapispec['paths'] = self.openapispec_paths
         self.openapispec['x-interfaces'] = self.openapispec_interfaces
+        self.openapispec['paths'] = self.openapispec_paths
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()

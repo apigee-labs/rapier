@@ -100,21 +100,6 @@ definitions:
         items:
           type: object
     readOnly: true
-paths:
-  /:
-    $ref: '#/x-interfaces/{DogTracker_URL}'
-  /dogs:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs'
-  /dogs;{name}:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs;{name}'
-  /dogs;{name}/owner:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs;{name}~1owner'
-  /people:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1people'
-  /people;{name}:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1people;{name}'
-  /people;{name}/dogs:
-    $ref: '#/x-interfaces/{DogTracker_URL}~1people;{name}~1dogs'
 x-interfaces:
   '{DogTracker_URL}':
     get:
@@ -703,6 +688,21 @@ x-interfaces:
       required: true
       type: string
     <<: *Person-dogs-interface
+paths:
+  /:
+    $ref: '#/x-interfaces/{DogTracker_URL}'
+  /dogs:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs'
+  /dogs;{name}:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs;{name}'
+  /dogs;{name}/owner:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1dogs;{name}~1owner'
+  /people:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1people'
+  /people;{name}:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1people;{name}'
+  /people;{name}/dogs:
+    $ref: '#/x-interfaces/{DogTracker_URL}~1people;{name}~1dogs'
 parameters:
   Accept:
     description: specifies the requested media type - required

@@ -150,33 +150,6 @@ definitions:
         items:
           type: object
     readOnly: true
-paths:
-  /:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}'
-  /dogs:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs'
-  /dogs;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}'
-  /dogs;{name}/owner:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}~1owner'
-  /people:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people'
-  /people;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}'
-  /people;{name}/possessions:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}~1possessions'
-  /bicycles:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles'
-  /bicycles;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}'
-  /bicycles;{name}/owner:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}~1owner'
-  /institutions:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions'
-  /institutions;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}'
-  /institutions;{name}/assets:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}~1assets'
 x-interfaces:
   '{PropertyTracker_URL}':
     get:
@@ -1302,6 +1275,33 @@ x-interfaces:
       required: true
       type: string
     <<: *Institution-assets-interface
+paths:
+  /:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}'
+  /dogs:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs'
+  /dogs;{name}:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}'
+  /dogs;{name}/owner:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}~1owner'
+  /people:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people'
+  /people;{name}:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}'
+  /people;{name}/possessions:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}~1possessions'
+  /bicycles:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles'
+  /bicycles;{name}:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}'
+  /bicycles;{name}/owner:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}~1owner'
+  /institutions:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions'
+  /institutions;{name}:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}'
+  /institutions;{name}/assets:
+    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}~1assets'
 parameters:
   Accept:
     description: specifies the requested media type - required
