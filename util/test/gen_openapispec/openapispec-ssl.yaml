@@ -227,7 +227,7 @@ definitions:
           type: object
     readOnly: true
 x-interfaces:
-  Environment:
+  Environment: &Environment
     get:
       description: Retrieve an Environment
       parameters:
@@ -323,7 +323,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment
-  Environment.keystores:
+  Environment.keystores: &Environment-keystores
     get:
       responses:
         '200':
@@ -998,17 +998,95 @@ x-templates:
     <<: *CSR
 paths:
   /v1/o/{org}/e/{env}:
-    $ref: '#/x-templates/{Environment}'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    <<: *Environment
   /v1/o/{org}/e/{env}/keystores:
-    $ref: '#/x-templates/{Environment}~1keystores'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    <<: *Environment-keystores
   /v1/o/{org}/e/{env}/keystores/{name}:
-    $ref: '#/x-templates/{Environment}~1keystores~1{name}'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Keystore
   /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Keystore-aliases
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    <<: *Certificate
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases~1{name_1}~1csr'
+    parameters:
+    - in: path
+      name: org
+      required: true
+      type: string
+    - in: path
+      name: env
+      required: true
+      type: string
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    <<: *CSR
 parameters:
   Accept:
     description: specifies the requested media type - required
