@@ -55,7 +55,7 @@ class SwaggerGenerator(object):
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
-        self.openapispec_uris = PresortedOrderedDict()
+        self.openapispec_interfaces = PresortedOrderedDict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
         else:
@@ -72,7 +72,7 @@ class SwaggerGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
         self.openapispec['paths'] = self.openapispec_paths
-        self.openapispec['x-interfaces'] = self.openapispec_uris
+        self.openapispec['x-interfaces'] = self.openapispec_interfaces
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()
@@ -81,7 +81,7 @@ class SwaggerGenerator(object):
 
         if 'entities' in spec:
             entities = spec['entities']
-            self.uri_templates = dict()
+            self.interfaces = dict()
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
@@ -138,7 +138,7 @@ class SwaggerGenerator(object):
                     path = entity_url_spec.path_segment()
                     interface = self.build_entity_interface(entity_url_spec)
                     interface['x-id'] = '%s-interface' % entity_name
-                    self.uri_templates[entity_uri] = interface
+                    self.interfaces[entity_uri] = interface
                     self.openapispec['x-interfaces'][path] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
@@ -171,7 +171,7 @@ class SwaggerGenerator(object):
                         self.add_query_paths(query_paths, entity_url_property_spec, rel_property_spec_stack, rel_property_specs)
                     if len(query_paths) > 0:
                         sys.exit('query paths not valid or listed more than once: %s' % [query_path.openapispec_path_string for query_path in query_paths] )  
-        if not self.openapispec_uris:
+        if not self.openapispec_interfaces:
             del self.openapispec['x-interfaces']
         return self.openapispec
 
@@ -229,7 +229,7 @@ class SwaggerGenerator(object):
         path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
-            paths = self.openapispec_uris if prefix.is_uri_spec() else self.openapispec_paths 
+            paths = self.openapispec_interfaces if prefix.is_uri_spec() else self.openapispec_paths 
             if path not in paths:
                 if prefix.is_uri_spec():
                     if is_collection_resource:
@@ -238,10 +238,9 @@ class SwaggerGenerator(object):
                         if query_path:
                             parameters = self.build_parameters(prefix, query_path)
                             if parameters:
-                                path_spec = PresortedOrderedDict()
-                                path_spec['parameters'] = parameters
-                                path_spec['<<'] = self.uri_templates[rel_property_spec_stack[-1].target_entity_uri]
-                                interface = path_spec
+                                interface = PresortedOrderedDict()
+                                interface['parameters'] = parameters
+                                interface['<<'] = self.interfaces[rel_property_spec_stack[-1].target_entity_uri]
                             else:
                                 interface = self.build_template_reference(EntityURLSpec(rel_property_spec_stack[-1].target_entity_uri, self))        
                         else:
