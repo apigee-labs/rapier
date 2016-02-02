@@ -55,7 +55,7 @@ class SwaggerGenerator(object):
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
-        self.openapispec_interfaces = PresortedOrderedDict()
+        self.openapispec_interfaces = dict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
         else:

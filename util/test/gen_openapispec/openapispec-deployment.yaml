@@ -398,9 +398,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Application-interface
-  '{Environment_URL}':
+  '{DeploymentOfflineRequest_URL}':
     get:
-      description: Retrieve an Environment
+      description: Retrieve a DeploymentOfflineRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -415,7 +415,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -429,14 +429,15 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an Environment entity
+      description: Update a DeploymentOfflineRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Environment being updated
+      - description: The subset of properties of the DeploymentOfflineRequest being
+          updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Environment'
+          $ref: '#/definitions/DeploymentOfflineRequest'
       responses:
         '200':
           description: successful
@@ -449,7 +450,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -465,7 +466,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Environment
+      description: Delete a DeploymentOfflineRequest
       responses:
         '200':
           description: successful
@@ -478,7 +479,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Environment'
+            $ref: '#/definitions/DeploymentOfflineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -520,10 +521,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-interface
-  '{Microservice_URL}':
+    x-id: DeploymentOfflineRequest-interface
+  '{DeploymentOnlineRequest_URL}':
     get:
-      description: Retrieve a Microservice
+      description: Retrieve a DeploymentOnlineRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -538,7 +539,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentOnlineRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -552,14 +553,15 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Microservice entity
+      description: Update a DeploymentOnlineRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Microservice being updated
+      - description: The subset of properties of the DeploymentOnlineRequest being
+          updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Microservice'
+          $ref: '#/definitions/DeploymentOnlineRequest'
       responses:
         '200':
           description: successful
@@ -572,7 +574,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentOnlineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -588,7 +590,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Microservice
+      description: Delete a DeploymentOnlineRequest
       responses:
         '200':
           description: successful
@@ -601,7 +603,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentOnlineRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -643,10 +645,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice-interface
-  '{Revision_URL}':
+    x-id: DeploymentOnlineRequest-interface
+  '{DeploymentStartRequest_URL}':
     get:
-      description: Retrieve a Revision
+      description: Retrieve a DeploymentStartRequest
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -661,7 +663,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentStartRequest'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -675,14 +677,15 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Revision entity
+      description: Update a DeploymentStartRequest entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Revision being updated
+      - description: The subset of properties of the DeploymentStartRequest being
+          updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Revision'
+          $ref: '#/definitions/DeploymentStartRequest'
       responses:
         '200':
           description: successful
@@ -695,7 +698,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -711,7 +714,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Revision
+      description: Delete a DeploymentStartRequest
       responses:
         '200':
           description: successful
@@ -724,7 +727,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Revision'
+            $ref: '#/definitions/DeploymentStartRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -766,7 +769,130 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Revision-interface
+    x-id: DeploymentStartRequest-interface
+  '{DeploymentStopRequest_URL}':
+    get:
+      description: Retrieve a DeploymentStopRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentStopRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentStopRequest being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStopRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentStopRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStopRequest-interface
   '{Deployment_URL}':
     get:
       description: Retrieve a Deployment
@@ -1138,9 +1264,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: EnvironmentStopRequest-interface
-  '{DeploymentStartRequest_URL}':
+  '{Environment_URL}':
     get:
-      description: Retrieve a DeploymentStartRequest
+      description: Retrieve an Environment
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1155,7 +1281,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Environment'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1169,15 +1295,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentStartRequest entity
+      description: Update an Environment entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStartRequest being
-          updated
+      - description: The subset of properties of the Environment being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStartRequest'
+          $ref: '#/definitions/Environment'
       responses:
         '200':
           description: successful
@@ -1190,7 +1315,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Environment'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1206,7 +1331,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentStartRequest
+      description: Delete an Environment
       responses:
         '200':
           description: successful
@@ -1219,7 +1344,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            $ref: '#/definitions/Environment'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1261,10 +1386,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStartRequest-interface
-  '{DeploymentStopRequest_URL}':
+    x-id: Environment-interface
+  '{Microservice_URL}':
     get:
-      description: Retrieve a DeploymentStopRequest
+      description: Retrieve a Microservice
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1279,7 +1404,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopRequest'
+            $ref: '#/definitions/Microservice'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1293,14 +1418,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentStopRequest entity
+      description: Update a Microservice entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentStopRequest being updated
+      - description: The subset of properties of the Microservice being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentStopRequest'
+          $ref: '#/definitions/Microservice'
       responses:
         '200':
           description: successful
@@ -1313,7 +1438,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopRequest'
+            $ref: '#/definitions/Microservice'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1329,7 +1454,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentStopRequest
+      description: Delete a Microservice
       responses:
         '200':
           description: successful
@@ -1342,7 +1467,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStopRequest'
+            $ref: '#/definitions/Microservice'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1384,10 +1509,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStopRequest-interface
-  '{DeploymentOfflineRequest_URL}':
+    x-id: Microservice-interface
+  '{Revision_URL}':
     get:
-      description: Retrieve a DeploymentOfflineRequest
+      description: Retrieve a Revision
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1402,7 +1527,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Revision'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1416,15 +1541,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentOfflineRequest entity
+      description: Update a Revision entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOfflineRequest being
-          updated
+      - description: The subset of properties of the Revision being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOfflineRequest'
+          $ref: '#/definitions/Revision'
       responses:
         '200':
           description: successful
@@ -1437,7 +1561,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Revision'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1453,7 +1577,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentOfflineRequest
+      description: Delete a Revision
       responses:
         '200':
           description: successful
@@ -1466,7 +1590,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
+            $ref: '#/definitions/Revision'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1508,131 +1632,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentOfflineRequest-interface
-  '{DeploymentOnlineRequest_URL}':
-    get:
-      description: Retrieve a DeploymentOnlineRequest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a DeploymentOnlineRequest entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOnlineRequest being
-          updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentOnlineRequest'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a DeploymentOnlineRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: DeploymentOnlineRequest-interface
+    x-id: Revision-interface
 parameters:
   Accept:
     description: specifies the requested media type - required
