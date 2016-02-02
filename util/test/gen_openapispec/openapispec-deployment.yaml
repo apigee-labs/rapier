@@ -2822,6 +2822,29 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOnlineRequest
+x-templates:
+  '{Application}':
+    $ref: '#/x-interfaces/Application'
+  '{Environment}':
+    $ref: '#/x-interfaces/Environment'
+  '{Microservice}':
+    $ref: '#/x-interfaces/Microservice'
+  '{Revision}':
+    $ref: '#/x-interfaces/Revision'
+  '{Deployment}':
+    $ref: '#/x-interfaces/Deployment'
+  '{EnvironmentStartRequest}':
+    $ref: '#/x-interfaces/EnvironmentStartRequest'
+  '{EnvironmentStopRequest}':
+    $ref: '#/x-interfaces/EnvironmentStopRequest'
+  '{DeploymentStartRequest}':
+    $ref: '#/x-interfaces/DeploymentStartRequest'
+  '{DeploymentStopRequest}':
+    $ref: '#/x-interfaces/DeploymentStopRequest'
+  '{DeploymentOfflineRequest}':
+    $ref: '#/x-interfaces/DeploymentOfflineRequest'
+  '{DeploymentOnlineRequest}':
+    $ref: '#/x-interfaces/DeploymentOnlineRequest'
 paths: {}
 parameters:
   Accept:

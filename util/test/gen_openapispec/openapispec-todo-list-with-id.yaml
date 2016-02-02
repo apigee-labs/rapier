@@ -302,9 +302,14 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Item
-  TodoList/items:
+x-templates:
+  '{TodoList}':
+    $ref: '#/x-interfaces/TodoList'
+  '{Item}':
+    $ref: '#/x-interfaces/Item'
+  '{TodoList}/items':
     $ref: '#/x-interfaces/TodoList.items'
-  TodoList/items/{id}:
+  '{TodoList}/items/{id}':
     parameters:
     - in: path
       name: id
@@ -313,11 +318,11 @@ x-interfaces:
     <<: *Item
 paths:
   /to-dos:
-    $ref: '#/x-interfaces/TodoList'
+    $ref: '#/x-templates/{TodoList}'
   /to-dos/items:
-    $ref: '#/x-interfaces/TodoList~1items'
+    $ref: '#/x-templates/{TodoList}~1items'
   /to-dos/items/{id}:
-    $ref: '#/x-interfaces/TodoList~1items~1{id}'
+    $ref: '#/x-templates/{TodoList}~1items~1{id}'
 parameters:
   Accept:
     description: specifies the requested media type - required

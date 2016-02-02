@@ -238,9 +238,14 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Person
+x-templates:
+  '{Site}':
+    $ref: '#/x-interfaces/Site'
+  '{Person}':
+    $ref: '#/x-interfaces/Person'
 paths:
   /:
-    $ref: '#/x-interfaces/Site'
+    $ref: '#/x-templates/{Site}'
 parameters:
   Accept:
     description: specifies the requested media type - required

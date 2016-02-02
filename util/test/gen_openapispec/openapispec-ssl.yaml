@@ -947,23 +947,34 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: CSR
-  Environment/keystores:
+x-templates:
+  '{Environment}':
+    $ref: '#/x-interfaces/Environment'
+  '{Keystore}':
+    $ref: '#/x-interfaces/Keystore'
+  '{Alias}':
+    $ref: '#/x-interfaces/Alias'
+  '{Certificate}':
+    $ref: '#/x-interfaces/Certificate'
+  '{CSR}':
+    $ref: '#/x-interfaces/CSR'
+  '{Environment}/keystores':
     $ref: '#/x-interfaces/Environment.keystores'
-  Environment/keystores/{name}:
+  '{Environment}/keystores/{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Keystore
-  Environment/keystores/{name}/aliases:
+  '{Environment}/keystores/{name}/aliases':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Keystore-aliases
-  Environment/keystores/{name}/aliases/{name_1}/certificate:
+  '{Environment}/keystores/{name}/aliases/{name_1}/certificate':
     parameters:
     - in: path
       name: name
@@ -974,7 +985,7 @@ x-interfaces:
       required: true
       type: string
     <<: *Certificate
-  Environment/keystores/{name}/aliases/{name_1}/csr:
+  '{Environment}/keystores/{name}/aliases/{name_1}/csr':
     parameters:
     - in: path
       name: name
@@ -987,17 +998,17 @@ x-interfaces:
     <<: *CSR
 paths:
   /v1/o/{org}/e/{env}:
-    $ref: '#/x-interfaces/Environment'
+    $ref: '#/x-templates/{Environment}'
   /v1/o/{org}/e/{env}/keystores:
-    $ref: '#/x-interfaces/Environment~1keystores'
+    $ref: '#/x-templates/{Environment}~1keystores'
   /v1/o/{org}/e/{env}/keystores/{name}:
-    $ref: '#/x-interfaces/Environment~1keystores~1{name}'
+    $ref: '#/x-templates/{Environment}~1keystores~1{name}'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases'
+    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases~1{name_1}~1certificate'
+    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases~1{name_1}~1csr'
+    $ref: '#/x-templates/{Environment}~1keystores~1{name}~1aliases~1{name_1}~1csr'
 parameters:
   Accept:
     description: specifies the requested media type - required

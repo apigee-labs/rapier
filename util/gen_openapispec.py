@@ -55,6 +55,7 @@ class SwaggerGenerator(object):
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
+        self.openapispec_templates = PresortedOrderedDict()
         self.openapispec_interfaces = PresortedOrderedDict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
@@ -72,6 +73,7 @@ class SwaggerGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
         self.openapispec['x-interfaces'] = self.openapispec_interfaces
+        self.openapispec['x-templates'] = self.openapispec_templates
         self.openapispec['paths'] = self.openapispec_paths
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
@@ -138,7 +140,8 @@ class SwaggerGenerator(object):
                     interface = self.build_entity_interface(entity_url_spec)
                     interface['x-id'] = entity_url_spec.interface_id()
                     self.interfaces[entity_uri] = interface
-                    self.openapispec['x-interfaces'][entity_url_spec.interface_id()] = interface
+                    self.openapispec_interfaces[entity_url_spec.interface_id()] = interface
+                    self.openapispec_templates[entity_url_spec.template_id()] = self.build_interface_reference(entity_url_spec)
                     rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
                     for rel_property_spec in rel_property_specs:
                         q_p = QueryPath(rel_property_spec.relationship_name, self)
@@ -147,7 +150,7 @@ class SwaggerGenerator(object):
                             assert q_p.matches(rel_property_spec_stack)
                             interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec_stack, rel_property_specs)
                             interface['x-id'] = rel_property_spec.interface_id()
-                            self.openapispec['x-interfaces'][rel_property_spec.interface_id()] = interface
+                            self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
                             self.interfaces[rel_property_spec.interface_id()] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
@@ -236,12 +239,11 @@ class SwaggerGenerator(object):
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
         rel_spec = rel_property_spec_stack[-1]
         is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].discriminates()
-        path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
-            paths = self.openapispec_interfaces if prefix.is_uri_spec() else self.openapispec_paths 
-            if path not in paths:
-                if prefix.is_uri_spec():
+            if prefix.is_uri_spec():
+                path = '/'.join([prefix.template_id(), query_path.openapispec_path_string])
+                if path not in self.openapispec_templates:
                     interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
                     parameters = self.build_parameters(prefix, query_path)
                     if parameters:
@@ -250,14 +252,18 @@ class SwaggerGenerator(object):
                         interface['<<'] = self.interfaces[interface_id]
                     else:
                         interface = self.build_interface_reference(rel_property_spec_stack[-1])        
-                elif prefix.is_impl_spec():
-                    if is_collection_resource:
-                        interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                    self.openapispec_templates[path] = interface
+            else:
+                path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
+                if path not in self.openapispec_paths:
+                    if prefix.is_impl_spec():
+                        if is_collection_resource:
+                            interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
+                        else:
+                            interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
                     else:
-                        interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
-                else:
-                    interface = self.build_template_reference(prefix, query_path)
-                paths[path] = interface
+                        interface = self.build_template_reference(prefix, query_path)
+                    self.openapispec_paths[path] = interface
 
     def build_template_reference(self, prefix, query_path=None):
         path = prefix.template_id()
@@ -265,7 +271,7 @@ class SwaggerGenerator(object):
             path = '/'.join([path, query_path.openapispec_path_string])
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
-        return {'$ref': '#/x-interfaces/%s' % path}            
+        return {'$ref': '#/x-templates/%s' % path}            
 
     def build_interface_reference(self, prefix, query_path=None):
         path = prefix.interface_id()
@@ -894,7 +900,7 @@ class PathPrefix(object):
         return EntityURLSpec(self.entity_uri, self.generator).interface_id()
       
     def template_id(self):
-        return self.generator.resolve_entity_name(self.entity_uri)
+        return '{%s}' % self.generator.resolve_entity_name(self.entity_uri)
       
 class RelSVPropertySpec(SegmentSpec):
     

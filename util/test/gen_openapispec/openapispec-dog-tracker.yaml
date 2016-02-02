@@ -660,32 +660,39 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Person.dogs
-  DogTracker/dogs:
+x-templates:
+  '{DogTracker}':
+    $ref: '#/x-interfaces/DogTracker'
+  '{Dog}':
+    $ref: '#/x-interfaces/Dog'
+  '{Person}':
+    $ref: '#/x-interfaces/Person'
+  '{DogTracker}/dogs':
     $ref: '#/x-interfaces/DogTracker.dogs'
-  DogTracker/dogs;{name}:
+  '{DogTracker}/dogs;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Dog
-  DogTracker/dogs;{name}/owner:
+  '{DogTracker}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  DogTracker/people:
+  '{DogTracker}/people':
     $ref: '#/x-interfaces/DogTracker.people'
-  DogTracker/people;{name}:
+  '{DogTracker}/people;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  DogTracker/people;{name}/dogs:
+  '{DogTracker}/people;{name}/dogs':
     parameters:
     - in: path
       name: name
@@ -694,19 +701,19 @@ x-interfaces:
     <<: *Person-dogs
 paths:
   /:
-    $ref: '#/x-interfaces/DogTracker'
+    $ref: '#/x-templates/{DogTracker}'
   /dogs:
-    $ref: '#/x-interfaces/DogTracker~1dogs'
+    $ref: '#/x-templates/{DogTracker}~1dogs'
   /dogs;{name}:
-    $ref: '#/x-interfaces/DogTracker~1dogs;{name}'
+    $ref: '#/x-templates/{DogTracker}~1dogs;{name}'
   /dogs;{name}/owner:
-    $ref: '#/x-interfaces/DogTracker~1dogs;{name}~1owner'
+    $ref: '#/x-templates/{DogTracker}~1dogs;{name}~1owner'
   /people:
-    $ref: '#/x-interfaces/DogTracker~1people'
+    $ref: '#/x-templates/{DogTracker}~1people'
   /people;{name}:
-    $ref: '#/x-interfaces/DogTracker~1people;{name}'
+    $ref: '#/x-templates/{DogTracker}~1people;{name}'
   /people;{name}/dogs:
-    $ref: '#/x-interfaces/DogTracker~1people;{name}~1dogs'
+    $ref: '#/x-templates/{DogTracker}~1people;{name}~1dogs'
 parameters:
   Accept:
     description: specifies the requested media type - required

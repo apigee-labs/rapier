@@ -1219,64 +1219,75 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Institution.assets
-  PropertyTracker/dogs:
+x-templates:
+  '{PropertyTracker}':
+    $ref: '#/x-interfaces/PropertyTracker'
+  '{Dog}':
+    $ref: '#/x-interfaces/Dog'
+  '{Bicycle}':
+    $ref: '#/x-interfaces/Bicycle'
+  '{Person}':
+    $ref: '#/x-interfaces/Person'
+  '{Institution}':
+    $ref: '#/x-interfaces/Institution'
+  '{PropertyTracker}/dogs':
     $ref: '#/x-interfaces/PropertyTracker.dogs'
-  PropertyTracker/dogs;{name}:
+  '{PropertyTracker}/dogs;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Dog
-  PropertyTracker/dogs;{name}/owner:
+  '{PropertyTracker}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  PropertyTracker/people:
+  '{PropertyTracker}/people':
     $ref: '#/x-interfaces/PropertyTracker.people'
-  PropertyTracker/people;{name}:
+  '{PropertyTracker}/people;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  PropertyTracker/people;{name}/possessions:
+  '{PropertyTracker}/people;{name}/possessions':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person-possessions
-  PropertyTracker/bicycles:
+  '{PropertyTracker}/bicycles':
     $ref: '#/x-interfaces/PropertyTracker.bicycles'
-  PropertyTracker/bicycles;{name}:
+  '{PropertyTracker}/bicycles;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Bicycle
-  PropertyTracker/bicycles;{name}/owner:
+  '{PropertyTracker}/bicycles;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  PropertyTracker/institutions:
+  '{PropertyTracker}/institutions':
     $ref: '#/x-interfaces/PropertyTracker.institutions'
-  PropertyTracker/institutions;{name}:
+  '{PropertyTracker}/institutions;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Institution
-  PropertyTracker/institutions;{name}/assets:
+  '{PropertyTracker}/institutions;{name}/assets':
     parameters:
     - in: path
       name: name
@@ -1285,31 +1296,31 @@ x-interfaces:
     <<: *Institution-assets
 paths:
   /:
-    $ref: '#/x-interfaces/PropertyTracker'
+    $ref: '#/x-templates/{PropertyTracker}'
   /dogs:
-    $ref: '#/x-interfaces/PropertyTracker~1dogs'
+    $ref: '#/x-templates/{PropertyTracker}~1dogs'
   /dogs;{name}:
-    $ref: '#/x-interfaces/PropertyTracker~1dogs;{name}'
+    $ref: '#/x-templates/{PropertyTracker}~1dogs;{name}'
   /dogs;{name}/owner:
-    $ref: '#/x-interfaces/PropertyTracker~1dogs;{name}~1owner'
+    $ref: '#/x-templates/{PropertyTracker}~1dogs;{name}~1owner'
   /people:
-    $ref: '#/x-interfaces/PropertyTracker~1people'
+    $ref: '#/x-templates/{PropertyTracker}~1people'
   /people;{name}:
-    $ref: '#/x-interfaces/PropertyTracker~1people;{name}'
+    $ref: '#/x-templates/{PropertyTracker}~1people;{name}'
   /people;{name}/possessions:
-    $ref: '#/x-interfaces/PropertyTracker~1people;{name}~1possessions'
+    $ref: '#/x-templates/{PropertyTracker}~1people;{name}~1possessions'
   /bicycles:
-    $ref: '#/x-interfaces/PropertyTracker~1bicycles'
+    $ref: '#/x-templates/{PropertyTracker}~1bicycles'
   /bicycles;{name}:
-    $ref: '#/x-interfaces/PropertyTracker~1bicycles;{name}'
+    $ref: '#/x-templates/{PropertyTracker}~1bicycles;{name}'
   /bicycles;{name}/owner:
-    $ref: '#/x-interfaces/PropertyTracker~1bicycles;{name}~1owner'
+    $ref: '#/x-templates/{PropertyTracker}~1bicycles;{name}~1owner'
   /institutions:
-    $ref: '#/x-interfaces/PropertyTracker~1institutions'
+    $ref: '#/x-templates/{PropertyTracker}~1institutions'
   /institutions;{name}:
-    $ref: '#/x-interfaces/PropertyTracker~1institutions;{name}'
+    $ref: '#/x-templates/{PropertyTracker}~1institutions;{name}'
   /institutions;{name}/assets:
-    $ref: '#/x-interfaces/PropertyTracker~1institutions;{name}~1assets'
+    $ref: '#/x-templates/{PropertyTracker}~1institutions;{name}~1assets'
 parameters:
   Accept:
     description: specifies the requested media type - required

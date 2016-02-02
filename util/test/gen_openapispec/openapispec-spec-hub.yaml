@@ -1324,33 +1324,44 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Content
-  Store/home:
+x-templates:
+  '{Store}':
+    $ref: '#/x-interfaces/Store'
+  '{Folder}':
     $ref: '#/x-interfaces/Folder'
-  Store/sharedWithMe:
+  '{Doc}':
+    $ref: '#/x-interfaces/Doc'
+  '{Group}':
+    $ref: '#/x-interfaces/Group'
+  '{Content}':
+    $ref: '#/x-interfaces/Content'
+  '{Store}/home':
+    $ref: '#/x-interfaces/Folder'
+  '{Store}/sharedWithMe':
     $ref: '#/x-interfaces/Store.sharedWithMe'
-  Store/docs:
+  '{Store}/docs':
     $ref: '#/x-interfaces/Store.docs'
-  Store/folders:
+  '{Store}/folders':
     $ref: '#/x-interfaces/Store.folders'
-  Store/groups:
+  '{Store}/groups':
     $ref: '#/x-interfaces/Store.groups'
-  Folder/contents:
+  '{Folder}/contents':
     $ref: '#/x-interfaces/Folder.contents'
-  Doc/content:
+  '{Doc}/content':
     $ref: '#/x-interfaces/Content'
 paths:
   /store:
-    $ref: '#/x-interfaces/Store'
+    $ref: '#/x-templates/{Store}'
   /store/home:
-    $ref: '#/x-interfaces/Store~1home'
+    $ref: '#/x-templates/{Store}~1home'
   /store/sharedWithMe:
-    $ref: '#/x-interfaces/Store~1sharedWithMe'
+    $ref: '#/x-templates/{Store}~1sharedWithMe'
   /store/docs:
-    $ref: '#/x-interfaces/Store~1docs'
+    $ref: '#/x-templates/{Store}~1docs'
   /store/folders:
-    $ref: '#/x-interfaces/Store~1folders'
+    $ref: '#/x-templates/{Store}~1folders'
   /store/groups:
-    $ref: '#/x-interfaces/Store~1groups'
+    $ref: '#/x-templates/{Store}~1groups'
 parameters:
   Accept:
     description: specifies the requested media type - required
