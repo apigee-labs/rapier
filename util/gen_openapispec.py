@@ -252,16 +252,13 @@ class SwaggerGenerator(object):
                         else:
                             interface = self.build_template_reference(rel_property_spec_stack[-1])        
                     else:
-                        if query_path:
-                            parameters = self.build_parameters(prefix, query_path)
-                            if parameters:
-                                interface = PresortedOrderedDict()
-                                interface['parameters'] = parameters
-                                interface['<<'] = self.interfaces[rel_property_spec_stack[-1].target_entity_uri]
-                            else:
-                                interface = self.build_template_reference(rel_property_spec_stack[-1])        
+                        parameters = self.build_parameters(prefix, query_path)
+                        if parameters:
+                            interface = PresortedOrderedDict()
+                            interface['parameters'] = parameters
+                            interface['<<'] = self.interfaces[rel_property_spec_stack[-1].target_entity_uri]
                         else:
-                            interface = self.build_entity_interface(prefix, query_path, rel_property_spec_stack)
+                            interface = self.build_template_reference(rel_property_spec_stack[-1])        
                 elif prefix.is_impl_spec():
                     if is_collection_resource:
                         interface = self.build_relationship_interface(prefix, query_path, rel_property_spec_stack, rel_property_specs)
