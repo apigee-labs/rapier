@@ -164,8 +164,9 @@ class SwaggerGenerator(object):
                 rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
-                    entity_interface = self.build_entity_interface(implementation_spec)
-                    self.openapispec_paths[implementation_spec.path_segment()] = entity_interface
+                    entity_interface = self.build_interface_reference(implementation_spec)
+                    path_spec = self.build_path_spec(implementation_spec, entity_uri, implementation_spec)
+                    self.openapispec_paths[implementation_spec.path_segment()] = path_spec
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
@@ -247,30 +248,32 @@ class SwaggerGenerator(object):
                     interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
                     parameters = self.build_parameters(prefix, query_path)
                     if parameters:
-                        template = PresortedOrderedDict()
-                        template['parameters'] = parameters
-                        template['<<'] = self.interfaces[interface_id]
+                        path_spec = PresortedOrderedDict()
+                        path_spec['parameters'] = parameters
+                        path_spec['<<'] = self.interfaces[interface_id]
                     else:
-                        template = self.build_interface_reference(rel_property_spec_stack[-1])        
-                    self.openapispec_templates[path] = template
+                        path_spec = self.build_interface_reference(rel_property_spec_stack[-1])        
+                    self.openapispec_templates[path] = path_spec
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
                     if prefix.is_impl_spec():
                         interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
-                        parameters = self.build_parameters(prefix, query_path)
-                        if parameters:
-                            path_spec = PresortedOrderedDict()
-                            path_spec['x-private'] = True
-                            parth_spec['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
-                            path_spec['parameters'] = parameters
-                            path_spec['<<'] = self.interfaces[interface_id]
-                        else:
-                            interface = self.build_interface_reference(rel_property_spec_stack[-1])        
+                        path_spec = self.build_path_spec(prefix, interface_id, rel_property_spec_stack[-1], query_path)        
                     else:
-                        interface = self.build_template_reference(prefix, query_path)
-                    self.openapispec_paths[path] = interface
+                        path_spec = self.build_template_reference(prefix, query_path)
+                    self.openapispec_paths[path] = path_spec
 
+    def build_path_spec(self, prefix, interface_id, path_spec, query_path=None):
+        parameters = self.build_parameters(prefix, query_path)
+        if parameters:
+            path_spec = PresortedOrderedDict()
+            path_spec['parameters'] = parameters
+            path_spec['<<'] = self.interfaces[interface_id]
+        else:
+            path_spec = self.build_interface_reference(path_spec)
+        return path_spec
+    
     def build_template_reference(self, prefix, query_path=None):
         path = prefix.template_id()
         if query_path:
