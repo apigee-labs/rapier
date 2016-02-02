@@ -151,7 +151,7 @@ definitions:
           type: object
     readOnly: true
 x-interfaces:
-  '{PropertyTracker_URL}':
+  PropertyTracker:
     get:
       description: Retrieve a PropertyTracker
       parameters:
@@ -208,8 +208,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-interface
-  '{PropertyTracker_URL}/dogs':
+    x-id: PropertyTracker
+  PropertyTracker.dogs:
     get:
       responses:
         '200':
@@ -293,8 +293,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-dogs-interface
-  '{PropertyTracker_URL}/people':
+    x-id: PropertyTracker.dogs
+  PropertyTracker.people:
     get:
       responses:
         '200':
@@ -378,8 +378,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-people-interface
-  '{PropertyTracker_URL}/bicycles':
+    x-id: PropertyTracker.people
+  PropertyTracker.bicycles:
     get:
       responses:
         '200':
@@ -463,8 +463,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-bicycles-interface
-  '{PropertyTracker_URL}/institutions':
+    x-id: PropertyTracker.bicycles
+  PropertyTracker.institutions:
     get:
       responses:
         '200':
@@ -548,8 +548,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: PropertyTracker-institutions-interface
-  '{Dog_URL}': &Dog-interface
+    x-id: PropertyTracker.institutions
+  Dog: &Dog
     get:
       description: Retrieve a Dog
       parameters:
@@ -671,8 +671,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Dog-interface
-  '{Bicycle_URL}': &Bicycle-interface
+    x-id: Dog
+  Bicycle: &Bicycle
     get:
       description: Retrieve a Bicycle
       parameters:
@@ -794,8 +794,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Bicycle-interface
-  '{Person_URL}': &Person-interface
+    x-id: Bicycle
+  Person: &Person
     get:
       description: Retrieve a Person
       parameters:
@@ -917,8 +917,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Person-interface
-  '{Person_URL}/possessions': &Person-possessions-interface
+    x-id: Person
+  Person.possessions: &Person-possessions
     get:
       responses:
         '200':
@@ -1006,8 +1006,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Person-possessions-interface
-  '{Institution_URL}': &Institution-interface
+    x-id: Person.possessions
+  Institution: &Institution
     get:
       description: Retrieve an Institution
       parameters:
@@ -1129,8 +1129,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Institution-interface
-  '{Institution_URL}/assets': &Institution-assets-interface
+    x-id: Institution
+  Institution.assets: &Institution-assets
     get:
       responses:
         '200':
@@ -1218,90 +1218,98 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Institution-assets-interface
-  '{PropertyTracker_URL}/dogs;{name}':
+    x-id: Institution.assets
+  PropertyTracker/dogs:
+    $ref: '#/x-interfaces/PropertyTracker.dogs'
+  PropertyTracker/dogs;{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Dog-interface
-  '{PropertyTracker_URL}/dogs;{name}/owner':
+    <<: *Dog
+  PropertyTracker/dogs;{name}/owner:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Person-interface
-  '{PropertyTracker_URL}/people;{name}':
+    <<: *Person
+  PropertyTracker/people:
+    $ref: '#/x-interfaces/PropertyTracker.people'
+  PropertyTracker/people;{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Person-interface
-  '{PropertyTracker_URL}/people;{name}/possessions':
+    <<: *Person
+  PropertyTracker/people;{name}/possessions:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Person-possessions-interface
-  '{PropertyTracker_URL}/bicycles;{name}':
+    <<: *Person-possessions
+  PropertyTracker/bicycles:
+    $ref: '#/x-interfaces/PropertyTracker.bicycles'
+  PropertyTracker/bicycles;{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Bicycle-interface
-  '{PropertyTracker_URL}/bicycles;{name}/owner':
+    <<: *Bicycle
+  PropertyTracker/bicycles;{name}/owner:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Person-interface
-  '{PropertyTracker_URL}/institutions;{name}':
+    <<: *Person
+  PropertyTracker/institutions:
+    $ref: '#/x-interfaces/PropertyTracker.institutions'
+  PropertyTracker/institutions;{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Institution-interface
-  '{PropertyTracker_URL}/institutions;{name}/assets':
+    <<: *Institution
+  PropertyTracker/institutions;{name}/assets:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Institution-assets-interface
+    <<: *Institution-assets
 paths:
   /:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}'
+    $ref: '#/x-interfaces/PropertyTracker'
   /dogs:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs'
+    $ref: '#/x-interfaces/PropertyTracker~1dogs'
   /dogs;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}'
+    $ref: '#/x-interfaces/PropertyTracker~1dogs;{name}'
   /dogs;{name}/owner:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1dogs;{name}~1owner'
+    $ref: '#/x-interfaces/PropertyTracker~1dogs;{name}~1owner'
   /people:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people'
+    $ref: '#/x-interfaces/PropertyTracker~1people'
   /people;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}'
+    $ref: '#/x-interfaces/PropertyTracker~1people;{name}'
   /people;{name}/possessions:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1people;{name}~1possessions'
+    $ref: '#/x-interfaces/PropertyTracker~1people;{name}~1possessions'
   /bicycles:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles'
+    $ref: '#/x-interfaces/PropertyTracker~1bicycles'
   /bicycles;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}'
+    $ref: '#/x-interfaces/PropertyTracker~1bicycles;{name}'
   /bicycles;{name}/owner:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1bicycles;{name}~1owner'
+    $ref: '#/x-interfaces/PropertyTracker~1bicycles;{name}~1owner'
   /institutions:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions'
+    $ref: '#/x-interfaces/PropertyTracker~1institutions'
   /institutions;{name}:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}'
+    $ref: '#/x-interfaces/PropertyTracker~1institutions;{name}'
   /institutions;{name}/assets:
-    $ref: '#/x-interfaces/{PropertyTracker_URL}~1institutions;{name}~1assets'
+    $ref: '#/x-interfaces/PropertyTracker~1institutions;{name}~1assets'
 parameters:
   Accept:
     description: specifies the requested media type - required

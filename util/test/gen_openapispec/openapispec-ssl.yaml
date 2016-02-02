@@ -227,7 +227,7 @@ definitions:
           type: object
     readOnly: true
 x-interfaces:
-  '{Environment_URL}':
+  Environment:
     get:
       description: Retrieve an Environment
       parameters:
@@ -322,8 +322,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-interface
-  '{Environment_URL}/keystores':
+    x-id: Environment
+  Environment.keystores:
     get:
       responses:
         '200':
@@ -407,8 +407,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-keystores-interface
-  '{Keystore_URL}': &Keystore-interface
+    x-id: Environment.keystores
+  Keystore: &Keystore
     get:
       description: Retrieve a Keystore
       parameters:
@@ -530,8 +530,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Keystore-interface
-  '{Keystore_URL}/aliases': &Keystore-aliases-interface
+    x-id: Keystore
+  Keystore.aliases: &Keystore-aliases
     get:
       responses:
         '200':
@@ -622,8 +622,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Keystore-aliases-interface
-  '{Alias_URL}':
+    x-id: Keystore.aliases
+  Alias:
     get:
       description: Retrieve an Alias
       parameters:
@@ -745,8 +745,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Alias-interface
-  '{Alias_URL}/selfSignedCertificate':
+    x-id: Alias
+  Alias.selfSignedCertificate:
     get:
       responses:
         '200':
@@ -830,8 +830,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Alias-selfSignedCertificate-interface
-  '{Certificate_URL}': &Certificate-interface
+    x-id: Alias.selfSignedCertificate
+  Certificate: &Certificate
     get:
       description: Retrieve a Certificate
       parameters:
@@ -888,8 +888,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Certificate-interface
-  '{CSR_URL}': &CSR-interface
+    x-id: Certificate
+  CSR: &CSR
     get:
       description: Retrieve a CSR
       parameters:
@@ -946,33 +946,24 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: CSR-interface
-  '{Environment_URL}/keystores/{name}':
+    x-id: CSR
+  Environment/keystores:
+    $ref: '#/x-interfaces/Environment.keystores'
+  Environment/keystores/{name}:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Keystore-interface
-  '{Environment_URL}/keystores/{name}/aliases':
+    <<: *Keystore
+  Environment/keystores/{name}/aliases:
     parameters:
     - in: path
       name: name
       required: true
       type: string
-    <<: *Keystore-aliases-interface
-  '{Environment_URL}/keystores/{name}/aliases/{name_1}/certificate':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    - in: path
-      name: name_1
-      required: true
-      type: string
-    <<: *Certificate-interface
-  '{Environment_URL}/keystores/{name}/aliases/{name_1}/csr':
+    <<: *Keystore-aliases
+  Environment/keystores/{name}/aliases/{name_1}/certificate:
     parameters:
     - in: path
       name: name
@@ -982,20 +973,31 @@ x-interfaces:
       name: name_1
       required: true
       type: string
-    <<: *CSR-interface
+    <<: *Certificate
+  Environment/keystores/{name}/aliases/{name_1}/csr:
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    <<: *CSR
 paths:
   /v1/o/{org}/e/{env}:
-    $ref: '#/x-interfaces/{Environment_URL}'
+    $ref: '#/x-interfaces/Environment'
   /v1/o/{org}/e/{env}/keystores:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores'
+    $ref: '#/x-interfaces/Environment~1keystores'
   /v1/o/{org}/e/{env}/keystores/{name}:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}'
+    $ref: '#/x-interfaces/Environment~1keystores~1{name}'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases'
+    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/certificate:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1certificate'
+    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases~1{name_1}~1certificate'
   /v1/o/{org}/e/{env}/keystores/{name}/aliases/{name_1}/csr:
-    $ref: '#/x-interfaces/{Environment_URL}~1keystores~1{name}~1aliases~1{name_1}~1csr'
+    $ref: '#/x-interfaces/Environment~1keystores~1{name}~1aliases~1{name_1}~1csr'
 parameters:
   Accept:
     description: specifies the requested media type - required

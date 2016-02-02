@@ -36,7 +36,7 @@ definitions:
         items:
           $ref: '#/definitions/Item'
 x-interfaces:
-  '{TodoList_URL}':
+  TodoList:
     get:
       description: Retrieve a TodoList
       parameters:
@@ -93,8 +93,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: TodoList-interface
-  '{TodoList_URL}/items':
+    x-id: TodoList
+  TodoList.items:
     get:
       responses:
         '200':
@@ -178,8 +178,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: TodoList-items-interface
-  '{Item_URL}': &Item-interface
+    x-id: TodoList.items
+  Item: &Item
     get:
       description: Retrieve an Item
       parameters:
@@ -301,21 +301,23 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Item-interface
-  '{TodoList_URL}/items/{id}':
+    x-id: Item
+  TodoList/items:
+    $ref: '#/x-interfaces/TodoList.items'
+  TodoList/items/{id}:
     parameters:
     - in: path
       name: id
       required: true
       type: string
-    <<: *Item-interface
+    <<: *Item
 paths:
   /to-dos:
-    $ref: '#/x-interfaces/{TodoList_URL}'
+    $ref: '#/x-interfaces/TodoList'
   /to-dos/items:
-    $ref: '#/x-interfaces/{TodoList_URL}~1items'
+    $ref: '#/x-interfaces/TodoList~1items'
   /to-dos/items/{id}:
-    $ref: '#/x-interfaces/{TodoList_URL}~1items~1{id}'
+    $ref: '#/x-interfaces/TodoList~1items~1{id}'
 parameters:
   Accept:
     description: specifies the requested media type - required

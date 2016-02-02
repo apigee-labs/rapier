@@ -275,7 +275,7 @@ definitions:
         format: date-time
         readOnly: true
 x-interfaces:
-  '{Application_URL}':
+  Application:
     get:
       description: Retrieve an Application
       parameters:
@@ -397,8 +397,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application-interface
-  '{Application_URL}/has_environments':
+    x-id: Application
+  Application.has_environments:
     get:
       parameters:
       - in: query
@@ -505,8 +505,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application-has_environments-interface
-  '{Application_URL}/comprises':
+    x-id: Application.has_environments
+  Application.comprises:
     get:
       parameters:
       - in: query
@@ -613,8 +613,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application-comprises-interface
-  '{Environment_URL}':
+    x-id: Application.comprises
+  Environment:
     get:
       description: Retrieve an Environment
       parameters:
@@ -736,8 +736,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-interface
-  '{Environment_URL}/hosts':
+    x-id: Environment
+  Environment.hosts:
     get:
       parameters:
       - in: query
@@ -844,8 +844,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-hosts-interface
-  '{Environment_URL}/start_requests':
+    x-id: Environment.hosts
+  Environment.start_requests:
     get:
       parameters:
       - in: query
@@ -952,8 +952,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-start_requests-interface
-  '{Environment_URL}/stop_requests':
+    x-id: Environment.start_requests
+  Environment.stop_requests:
     get:
       parameters:
       - in: query
@@ -1060,8 +1060,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment-stop_requests-interface
-  '{Microservice_URL}':
+    x-id: Environment.stop_requests
+  Microservice:
     get:
       description: Retrieve a Microservice
       parameters:
@@ -1183,8 +1183,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice-interface
-  '{Microservice_URL}/produced':
+    x-id: Microservice
+  Microservice.produced:
     get:
       parameters:
       - in: query
@@ -1291,8 +1291,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice-produced-interface
-  '{Revision_URL}':
+    x-id: Microservice.produced
+  Revision:
     get:
       description: Retrieve a Revision
       parameters:
@@ -1414,8 +1414,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Revision-interface
-  '{Revision_URL}/has_deployments':
+    x-id: Revision
+  Revision.has_deployments:
     get:
       parameters:
       - in: query
@@ -1522,8 +1522,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Revision-has_deployments-interface
-  '{Deployment_URL}':
+    x-id: Revision.has_deployments
+  Deployment:
     get:
       description: Retrieve a Deployment
       parameters:
@@ -1645,8 +1645,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment-interface
-  '{Deployment_URL}/start_requests':
+    x-id: Deployment
+  Deployment.start_requests:
     get:
       parameters:
       - in: query
@@ -1753,8 +1753,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment-start_requests-interface
-  '{Deployment_URL}/stop_requests':
+    x-id: Deployment.start_requests
+  Deployment.stop_requests:
     get:
       parameters:
       - in: query
@@ -1861,8 +1861,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment-stop_requests-interface
-  '{Deployment_URL}/go_live_requests':
+    x-id: Deployment.stop_requests
+  Deployment.go_live_requests:
     get:
       parameters:
       - in: query
@@ -1969,8 +1969,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment-go_live_requests-interface
-  '{Deployment_URL}/go_offline_requests':
+    x-id: Deployment.go_live_requests
+  Deployment.go_offline_requests:
     get:
       parameters:
       - in: query
@@ -2078,8 +2078,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment-go_offline_requests-interface
-  '{EnvironmentStartRequest_URL}':
+    x-id: Deployment.go_offline_requests
+  EnvironmentStartRequest:
     get:
       description: Retrieve an EnvironmentStartRequest
       parameters:
@@ -2202,8 +2202,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: EnvironmentStartRequest-interface
-  '{EnvironmentStopRequest_URL}':
+    x-id: EnvironmentStartRequest
+  EnvironmentStopRequest:
     get:
       description: Retrieve an EnvironmentStopRequest
       parameters:
@@ -2326,8 +2326,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: EnvironmentStopRequest-interface
-  '{DeploymentStartRequest_URL}':
+    x-id: EnvironmentStopRequest
+  DeploymentStartRequest:
     get:
       description: Retrieve a DeploymentStartRequest
       parameters:
@@ -2450,8 +2450,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStartRequest-interface
-  '{DeploymentStopRequest_URL}':
+    x-id: DeploymentStartRequest
+  DeploymentStopRequest:
     get:
       description: Retrieve a DeploymentStopRequest
       parameters:
@@ -2573,8 +2573,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentStopRequest-interface
-  '{DeploymentOfflineRequest_URL}':
+    x-id: DeploymentStopRequest
+  DeploymentOfflineRequest:
     get:
       description: Retrieve a DeploymentOfflineRequest
       parameters:
@@ -2697,8 +2697,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentOfflineRequest-interface
-  '{DeploymentOnlineRequest_URL}':
+    x-id: DeploymentOfflineRequest
+  DeploymentOnlineRequest:
     get:
       description: Retrieve a DeploymentOnlineRequest
       parameters:
@@ -2821,7 +2821,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentOnlineRequest-interface
+    x-id: DeploymentOnlineRequest
 paths: {}
 parameters:
   Accept:

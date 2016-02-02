@@ -236,7 +236,7 @@ definitions:
         format: date-time
         readOnly: true
 x-interfaces:
-  '{Store_URL}':
+  Store:
     get:
       description: Retrieve a Store
       parameters:
@@ -293,8 +293,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-interface
-  '{Store_URL}/sharedWithMe':
+    x-id: Store
+  Store.sharedWithMe:
     get:
       parameters:
       - in: query
@@ -369,8 +369,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-sharedWithMe-interface
-  '{Store_URL}/docs':
+    x-id: Store.sharedWithMe
+  Store.docs:
     get:
       parameters:
       - in: query
@@ -477,8 +477,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-docs-interface
-  '{Store_URL}/folders':
+    x-id: Store.docs
+  Store.folders:
     get:
       parameters:
       - in: query
@@ -585,8 +585,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-folders-interface
-  '{Store_URL}/groups':
+    x-id: Store.folders
+  Store.groups:
     get:
       parameters:
       - in: query
@@ -693,8 +693,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Store-groups-interface
-  '{Folder_URL}':
+    x-id: Store.groups
+  Folder:
     get:
       description: Retrieve a Folder
       parameters:
@@ -816,8 +816,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Folder-interface
-  '{Folder_URL}/contents':
+    x-id: Folder
+  Folder.contents:
     get:
       parameters:
       - in: query
@@ -928,8 +928,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Folder-contents-interface
-  '{Doc_URL}':
+    x-id: Folder.contents
+  Doc:
     get:
       description: Retrieve a Doc
       parameters:
@@ -1051,8 +1051,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Doc-interface
-  '{Group_URL}':
+    x-id: Doc
+  Group:
     get:
       description: Retrieve a Group
       parameters:
@@ -1174,8 +1174,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Group-interface
-  '{Content_URL}':
+    x-id: Group
+  Content:
     get:
       description: Retrieve a Content
       parameters:
@@ -1323,24 +1323,34 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Content-interface
-  '{Store_URL}/home':
-    $ref: '#/x-interfaces/{Folder_URL}'
-  '{Doc_URL}/content':
-    $ref: '#/x-interfaces/{Content_URL}'
+    x-id: Content
+  Store/home:
+    $ref: '#/x-interfaces/Folder'
+  Store/sharedWithMe:
+    $ref: '#/x-interfaces/Store.sharedWithMe'
+  Store/docs:
+    $ref: '#/x-interfaces/Store.docs'
+  Store/folders:
+    $ref: '#/x-interfaces/Store.folders'
+  Store/groups:
+    $ref: '#/x-interfaces/Store.groups'
+  Folder/contents:
+    $ref: '#/x-interfaces/Folder.contents'
+  Doc/content:
+    $ref: '#/x-interfaces/Content'
 paths:
   /store:
-    $ref: '#/x-interfaces/{Store_URL}'
+    $ref: '#/x-interfaces/Store'
   /store/home:
-    $ref: '#/x-interfaces/{Store_URL}~1home'
+    $ref: '#/x-interfaces/Store~1home'
   /store/sharedWithMe:
-    $ref: '#/x-interfaces/{Store_URL}~1sharedWithMe'
+    $ref: '#/x-interfaces/Store~1sharedWithMe'
   /store/docs:
-    $ref: '#/x-interfaces/{Store_URL}~1docs'
+    $ref: '#/x-interfaces/Store~1docs'
   /store/folders:
-    $ref: '#/x-interfaces/{Store_URL}~1folders'
+    $ref: '#/x-interfaces/Store~1folders'
   /store/groups:
-    $ref: '#/x-interfaces/{Store_URL}~1groups'
+    $ref: '#/x-interfaces/Store~1groups'
   /c3Rvc-Zmxk-{implementation_key}:
     x-private: true
     x-description: This path is NOT part of the API. It is used in the implementaton

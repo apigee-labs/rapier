@@ -19,7 +19,7 @@ definitions:
       name:
         type: string
 x-interfaces:
-  '{Site_URL}':
+  Site:
     get:
       description: Retrieve a Site
       parameters:
@@ -114,8 +114,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Site-interface
-  '{Person_URL}':
+    x-id: Site
+  Person:
     get:
       description: Retrieve a Person
       parameters:
@@ -237,10 +237,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Person-interface
+    x-id: Person
 paths:
   /:
-    $ref: '#/x-interfaces/{Site_URL}'
+    $ref: '#/x-interfaces/Site'
 parameters:
   Accept:
     description: specifies the requested media type - required

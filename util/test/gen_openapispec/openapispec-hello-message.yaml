@@ -13,7 +13,7 @@ definitions:
       text:
         type: string
 x-interfaces:
-  '{HelloMessage_URL}':
+  HelloMessage:
     get:
       description: Retrieve a HelloMessage
       parameters:
@@ -108,10 +108,10 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: HelloMessage-interface
+    x-id: HelloMessage
 paths:
   /message:
-    $ref: '#/x-interfaces/{HelloMessage_URL}'
+    $ref: '#/x-interfaces/HelloMessage'
 parameters:
   Accept:
     description: specifies the requested media type - required
