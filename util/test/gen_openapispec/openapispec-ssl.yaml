@@ -239,9 +239,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Environment'
@@ -273,9 +282,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Environment'
@@ -332,6 +350,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/Collection'
         '303':
@@ -354,10 +375,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/Keystore'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Keystore
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -420,9 +449,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Keystore'
@@ -454,9 +492,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Keystore'
@@ -483,9 +530,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Keystore'
@@ -540,6 +596,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/Collection'
         '303':
@@ -569,10 +628,18 @@ x-interfaces:
           - $ref: '#/definitions/KeyCertFileAlias'
           - $ref: '#/definitions/KeyCertJarAlias'
           - $ref: '#/definitions/SelfSignedCertAlias'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Alias
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -635,9 +702,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Alias'
@@ -669,9 +745,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Alias'
@@ -698,9 +783,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Alias'
@@ -755,6 +849,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/Collection'
         '303':
@@ -777,10 +874,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/SelfSignedCertAlias'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new SelfSignedCertAlias
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -843,9 +948,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Certificate'
@@ -901,9 +1015,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/CSR'
@@ -1162,6 +1285,9 @@ responses:
     headers:
       Content-Location:
         description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH

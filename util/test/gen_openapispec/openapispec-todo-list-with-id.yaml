@@ -48,9 +48,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/TodoList'
@@ -103,6 +112,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/Collection'
         '303':
@@ -125,10 +137,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/Item'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Item
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -191,9 +211,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -225,9 +254,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -254,9 +292,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Item'
@@ -398,6 +445,9 @@ responses:
     headers:
       Content-Location:
         description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH

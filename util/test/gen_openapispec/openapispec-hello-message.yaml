@@ -25,9 +25,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/HelloMessage'
@@ -59,9 +68,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/HelloMessage'
@@ -184,6 +202,9 @@ responses:
     headers:
       Content-Location:
         description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH

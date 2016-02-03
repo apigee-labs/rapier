@@ -248,9 +248,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Store'
@@ -325,6 +334,9 @@ x-interfaces:
           headers:
             Content-Location:
               description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
               type: string
           schema:
             $ref: '#/definitions/MultiValuedRelationshipResource'
@@ -402,6 +414,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
@@ -424,10 +439,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/Doc'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Doc
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -510,6 +533,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
@@ -532,10 +558,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/Folder'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Folder
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -618,6 +652,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
@@ -640,10 +677,18 @@ x-interfaces:
         name: body
         schema:
           $ref: '#/definitions/Group'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Group
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -706,9 +751,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Folder'
@@ -740,9 +794,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Folder'
@@ -769,9 +832,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Folder'
@@ -849,6 +921,9 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of collection
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
           schema:
             $ref: '#/definitions/MultiValuedRelationshipResource'
         '303':
@@ -873,10 +948,18 @@ x-interfaces:
           x-oneOf:
           - $ref: '#/definitions/Doc'
           - $ref: '#/definitions/Folder'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
       responses:
         '201':
           description: Created new Doc or Folder
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
@@ -941,9 +1024,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Doc'
@@ -975,9 +1067,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Doc'
@@ -1004,9 +1105,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Doc'
@@ -1064,9 +1174,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Group'
@@ -1098,9 +1217,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Group'
@@ -1127,9 +1255,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Group'
@@ -1192,9 +1329,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -1234,15 +1380,27 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Content'
         '201':
           description: Created new Content
           headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             Location:
               description: perma-link URL of newly-created Content
               type: string
@@ -1276,9 +1434,18 @@ x-interfaces:
             Content-Location:
               description: perma-link URL of resource
               type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
+              type: string
+            vary:
+              description: Make sure a cache of one content type is not returned to
+                a client wanting a different one.
+              enum:
+              - Accept
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -1454,6 +1621,9 @@ responses:
     headers:
       Content-Location:
         description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
         type: string
       ETag:
         description: this value must be echoed in the If-Match header of every PATCH

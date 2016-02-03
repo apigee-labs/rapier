@@ -303,8 +303,8 @@ class SwaggerGenerator(object):
                 }
             if len(rel_property_specs) > 1:
                 response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
-            if not self.yaml_merge:
-                response_200.update(self.build_standard_200())
+            if not self.yaml_merge or propduces and len(produces) > 1:
+                response_200.update(self.build_standard_200(produces or self.openapispec.get('produces')))
             else:
                 response_200['<<'] = self.responses.get('standard_200')
             return response_200  
@@ -379,6 +379,10 @@ class SwaggerGenerator(object):
                         'Location': {
                             'type': 'string',
                             'description': 'perma-link URL of newly-created %s'  % self.resolve_entity_name(entity_uri)
+                            },
+                        'Content-Type': {
+                            'type': 'string',
+                            'description': 'The media type of the returned body'
                             }
                         }
                     }
@@ -459,6 +463,12 @@ class SwaggerGenerator(object):
                      'in': 'body',
                      'description': body_desciption,
                      'schema': post_schema
+                    },
+                    {'name': 'Content-Type',
+                     'in': 'header',
+                     'required': True,
+                     'description': 'The media type of the body',
+                     'type': 'string'
                     }
                     ],
                 'responses': {
@@ -473,7 +483,11 @@ class SwaggerGenerator(object):
                             'ETag': {
                                 'type': 'string',
                                 'description': 'Value of ETag required for subsequent updates'
-                                }
+                                },
+                            'Content-Type': {
+                                'type': 'string',
+                                'description': 'The media type of the returned body'
+                                }                                
                             }
                         }
                     }                
@@ -603,8 +617,8 @@ class SwaggerGenerator(object):
                     result.append(param)
         return result
           
-    def build_standard_200(self):
-        return {
+    def build_standard_200(self, produces=None):
+        rslt = {
             'description': 'successful',
             'headers': {
                 'Content-Location': {
@@ -614,9 +628,20 @@ class SwaggerGenerator(object):
                 'ETag': {
                     'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
                     'type': 'string'
+                    },
+                'Content-Type': {
+                    'type': 'string',
+                    'description': 'The media type of the returned body'
                     }
                 }
             }
+        if produces and len(produces)> 1:
+            rslt['headers']['vary'] = {
+                'type': 'string',
+                'enum': ['Accept'],
+                'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
+                }
+        return rslt
 
     def build_standard_responses(self):
         return {
@@ -698,6 +723,10 @@ class SwaggerGenerator(object):
                         'Content-Location': {
                             'type': 'string',
                             'description': 'perma-link URL of collection'
+                            },
+                        'Content-Type': {
+                            'type': 'string',
+                            'description': 'The media type of the returned body'
                             }
                         }
                     }, 
