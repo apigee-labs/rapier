@@ -99,7 +99,7 @@ that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OAS docum
 
 ### To-do List
 
-The example above shows how easy it is to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
+The example above shows how to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
 
 ```yaml
 title: Todo List API
@@ -155,7 +155,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-The server may use the string `items` as the value for `xxxxx`, but this is not required by the API, and clients should not count on it.
+From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
 
@@ -298,8 +298,6 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
- 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
 ### Dog Tracker
