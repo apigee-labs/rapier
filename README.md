@@ -212,7 +212,7 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
 These URL and templates are examples of what Rapier calls 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`". In other words, we are starting at `/todos`
-and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`". The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
+and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item`. 
 
 More generally, these URL templates are valid
@@ -220,7 +220,7 @@ More generally, these URL templates are valid
     {TodoList-URL}/items
     {TodoList-URL}/items/{id}
     
-The previous two are valid because there is a TodoList at `\items`, but the template is valid for any TodoList URL.
+The previous two are valid because there is a TodoList at `/items`, but the template is valid for any TodoList URL.
 
 From the presence of the `items` query parameter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
 
