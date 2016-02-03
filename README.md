@@ -63,13 +63,15 @@ entities:
 ```                    
 The API defined by this Rapier specification exposes a single resource whose type is `Hello_message` at the URL `/message`. This resource has a single declared property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH. [\[2\]](#footnote2) You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
 The OAS document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
+
+[\[2\]](#footnote2) Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
 ### Webmaster
 
@@ -207,7 +209,7 @@ non_entities:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id} [2]
+    /to-dos/items/{id} [3]
 
 These URL and templates are examples of what Rapier calls 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
@@ -224,7 +226,7 @@ The previous two are valid because there is a TodoList at `\items`, but the temp
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
-\[2\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
+\[3\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
 ### Hiding the implementation detail
 
