@@ -18,14 +18,14 @@ security:
 definitions:
   ErrorResponse:
     type: string
-  Application:
+  System:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - Application
+        - System
       has_environments:
         format: uri
         type: string
@@ -41,7 +41,7 @@ definitions:
         x-rapier-relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#Microservice'
+          entities: '#DeploymentUnit'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -53,7 +53,7 @@ definitions:
       realizes:
         format: uri
         type: string
-        x-rapier-relationship: '#Application'
+        x-rapier-relationship: '#System'
       hosts:
         format: uri
         type: string
@@ -80,19 +80,19 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#EnvironmentStopRequest'
-  Microservice:
+  DeploymentUnit:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - Microservice
+        - DeploymentUnit
       is_component_of:
         format: uri
         type: string
-        x-rapier-relationship: '#Application'
-      produced:
+        x-rapier-relationship: '#System'
+      has_revisions:
         format: uri
         type: string
         readOnly: true
@@ -111,7 +111,7 @@ definitions:
       revises:
         format: uri
         type: string
-        x-rapier-relationship: '#Microservice'
+        x-rapier-relationship: '#DeploymentUnit'
       has_deployments:
         format: uri
         type: string
@@ -128,6 +128,10 @@ definitions:
         type: string
         enum:
         - Deployment
+      deploys:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Revision'
       runs_in:
         format: uri
         type: string
@@ -275,9 +279,9 @@ definitions:
         format: date-time
         readOnly: true
 x-interfaces:
-  Application:
+  System:
     get:
-      description: Retrieve an Application
+      description: Retrieve a System
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -292,7 +296,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/System'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -306,14 +310,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update an Application entity
+      description: Update a System entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Application being updated
+      - description: The subset of properties of the System being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Application'
+          $ref: '#/definitions/System'
       responses:
         '200':
           description: successful
@@ -326,7 +330,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/System'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -342,7 +346,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete an Application
+      description: Delete a System
       responses:
         '200':
           description: successful
@@ -355,7 +359,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Application'
+            $ref: '#/definitions/System'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -397,8 +401,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application
-  Application.has_environments:
+    x-id: System
+  System.has_environments:
     get:
       parameters:
       - in: query
@@ -505,8 +509,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application.has_environments
-  Application.comprises:
+    x-id: System.has_environments
+  System.comprises:
     get:
       parameters:
       - in: query
@@ -553,25 +557,25 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new Microservice
+      description: Create a new DeploymentUnit
       parameters:
-      - description: The representation of the new Microservice being created
+      - description: The representation of the new DeploymentUnit being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Microservice'
+          $ref: '#/definitions/DeploymentUnit'
       responses:
         '201':
-          description: Created new Microservice
+          description: Created new DeploymentUnit
           headers:
             ETag:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Microservice
+              description: perma-link URL of newly-created DeploymentUnit
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentUnit'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -613,7 +617,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Application.comprises
+    x-id: System.comprises
   Environment:
     get:
       description: Retrieve an Environment
@@ -1061,9 +1065,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment.stop_requests
-  Microservice:
+  DeploymentUnit:
     get:
-      description: Retrieve a Microservice
+      description: Retrieve a DeploymentUnit
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1078,7 +1082,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentUnit'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1092,14 +1096,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a Microservice entity
+      description: Update a DeploymentUnit entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Microservice being updated
+      - description: The subset of properties of the DeploymentUnit being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Microservice'
+          $ref: '#/definitions/DeploymentUnit'
       responses:
         '200':
           description: successful
@@ -1112,7 +1116,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentUnit'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1128,7 +1132,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Microservice
+      description: Delete a DeploymentUnit
       responses:
         '200':
           description: successful
@@ -1141,7 +1145,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Microservice'
+            $ref: '#/definitions/DeploymentUnit'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1183,8 +1187,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice
-  Microservice.produced:
+    x-id: DeploymentUnit
+  DeploymentUnit.has_revisions:
     get:
       parameters:
       - in: query
@@ -1291,7 +1295,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Microservice.produced
+    x-id: DeploymentUnit.has_revisions
   Revision:
     get:
       description: Retrieve a Revision
@@ -2823,12 +2827,12 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: DeploymentOnlineRequest
 x-templates:
-  '{Application-URL}':
-    $ref: '#/x-interfaces/Application'
+  '{System-URL}':
+    $ref: '#/x-interfaces/System'
   '{Environment-URL}':
     $ref: '#/x-interfaces/Environment'
-  '{Microservice-URL}':
-    $ref: '#/x-interfaces/Microservice'
+  '{DeploymentUnit-URL}':
+    $ref: '#/x-interfaces/DeploymentUnit'
   '{Revision-URL}':
     $ref: '#/x-interfaces/Revision'
   '{Deployment-URL}':

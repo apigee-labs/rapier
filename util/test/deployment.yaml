@@ -7,13 +7,13 @@ conventions:
   error_response:
     type: string
 entities:
-  Application:
+  System:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [Application]
+        enum: [System]
       has_environments:
         format: uri
         type: string
@@ -29,7 +29,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#Microservice'
+          entities: '#DeploymentUnit'
   Environment:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
@@ -40,7 +40,7 @@ entities:
       realizes:
         format: uri
         type: string
-        relationship: '#Application'
+        relationship: '#System'
       hosts:
         format: uri
         type: string
@@ -67,17 +67,17 @@ entities:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#EnvironmentStopRequest'              
-  Microservice:
+  DeploymentUnit:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [Microservice]
+        enum: [DeploymentUnit]
       is_component_of:
         format: uri
         type: string
-        relationship: '#Application'
+        relationship: '#System'
       has_revisions:
         format: uri
         type: string
@@ -96,7 +96,7 @@ entities:
       revises:
         format: uri
         type: string
-        relationship: '#Microservice'
+        relationship: '#DeploymentUnit'
       has_deployments:
         format: uri
         type: string
@@ -112,6 +112,10 @@ entities:
       kind:
         type: string
         enum: [Deployment]
+      deploys:
+        format: uri
+        type: string
+        relationship: '#Revision'
       runs_in:
         format: uri
         type: string
