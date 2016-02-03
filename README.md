@@ -40,7 +40,7 @@ or follow different conventions to the ones Rapier currently understands, or are
 Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
 
 
-1<a name="footnote">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
+<a name="footnote1">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
 
