@@ -78,7 +78,7 @@ entities:
         format: uri
         type: string
         relationship: '#Application'
-      produced:
+      has_revisions:
         format: uri
         type: string
         readOnly: true
