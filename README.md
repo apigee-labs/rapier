@@ -296,7 +296,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of ech other, and a particular implementation may make them the same.
+From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same.
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
@@ -450,5 +450,5 @@ Field pattern | Type | Description
 ---|:---:|---
 {entity_id} | `array` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an array or a space-deliminated list in a single string
 
- ## <a name="oas_generator">OAS Generator
+## <a name="oas_generator">OAS Generator
 
