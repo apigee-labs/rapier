@@ -1337,6 +1337,8 @@ x-templates:
     $ref: '#/x-interfaces/Content'
   '{Store-URL}/home':
     $ref: '#/x-interfaces/Folder'
+  '{Store-URL}/home/contents':
+    $ref: '#/x-interfaces/Folder.contents'
   '{Store-URL}/sharedWithMe':
     $ref: '#/x-interfaces/Store.sharedWithMe'
   '{Store-URL}/docs':
@@ -1354,6 +1356,8 @@ paths:
     $ref: '#/x-templates/{Store-URL}'
   /store/home:
     $ref: '#/x-templates/{Store-URL}~1home'
+  /store/home/contents:
+    $ref: '#/x-templates/{Store-URL}~1home~1contents'
   /store/sharedWithMe:
     $ref: '#/x-templates/{Store-URL}~1sharedWithMe'
   /store/docs:

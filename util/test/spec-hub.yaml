@@ -63,6 +63,7 @@ entities:
     well_known_URLs: /store
     query_paths: 
     - home
+    - home/contents
     - sharedWithMe
     - docs
     - folders
