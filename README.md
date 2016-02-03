@@ -295,7 +295,8 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
       ]
     }
 ``` 
-    From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of ech other, and a particular implementation may make them the same.
+
+From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of ech other, and a particular implementation may make them the same.
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
@@ -347,7 +348,7 @@ Field Name | Type | Description
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
-non_entites | [Entities](#entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection_resources fall in this category, because they do not independently define an interface - they are just elements of an interface that is defined by the dirrent relationships that reference them.  
+non_entites | [Entities](#entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection_resources fall in this category, because they do not independently define an interface - they are just elements of interfaces that are defined by the relationships that reference them.  
 consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 
