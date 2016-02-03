@@ -155,8 +155,6 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
-
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
 
 ### Query Paths
@@ -223,6 +221,8 @@ More generally, these URL templates are valid
     {TodoList-URL}/items/{id}
     
 The previous two are valid because there is a TodoList at `\items`, but the template is valid for any TodoList URL.
+
+From the presence of the `items` query parameter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
