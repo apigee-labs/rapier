@@ -10,7 +10,7 @@
 ## <a name="introduction">Introduction
 
 The goals of Rapier are to allow REST APIs to be specified with one tenth the effort required with other API specification languages, and to
-produce specifications that describe higher quality APIs. \[1\]
+produce specifications that describe higher quality APIs. [\[1\]](#footnote1)
 
 You specify an API with Rapier by specifying, in a YAML file, the entities and relationships of the data model that underlies the API. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
@@ -40,7 +40,7 @@ or follow different conventions to the ones Rapier currently understands, or are
 Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
 
 
-\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
+1<a name="footnote">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
 
