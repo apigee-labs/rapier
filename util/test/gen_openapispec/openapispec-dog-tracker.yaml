@@ -661,38 +661,38 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Person.dogs
 x-templates:
-  '{DogTracker}':
+  '{DogTracker-URL}':
     $ref: '#/x-interfaces/DogTracker'
-  '{Dog}':
+  '{Dog-URL}':
     $ref: '#/x-interfaces/Dog'
-  '{Person}':
+  '{Person-URL}':
     $ref: '#/x-interfaces/Person'
-  '{DogTracker}/dogs':
+  '{DogTracker-URL}/dogs':
     $ref: '#/x-interfaces/DogTracker.dogs'
-  '{DogTracker}/dogs;{name}':
+  '{DogTracker-URL}/dogs;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Dog
-  '{DogTracker}/dogs;{name}/owner':
+  '{DogTracker-URL}/dogs;{name}/owner':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  '{DogTracker}/people':
+  '{DogTracker-URL}/people':
     $ref: '#/x-interfaces/DogTracker.people'
-  '{DogTracker}/people;{name}':
+  '{DogTracker-URL}/people;{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Person
-  '{DogTracker}/people;{name}/dogs':
+  '{DogTracker-URL}/people;{name}/dogs':
     parameters:
     - in: path
       name: name
@@ -701,19 +701,19 @@ x-templates:
     <<: *Person-dogs
 paths:
   /:
-    $ref: '#/x-templates/{DogTracker}'
+    $ref: '#/x-templates/{DogTracker-URL}'
   /dogs:
-    $ref: '#/x-templates/{DogTracker}~1dogs'
+    $ref: '#/x-templates/{DogTracker-URL}~1dogs'
   /dogs;{name}:
-    $ref: '#/x-templates/{DogTracker}~1dogs;{name}'
+    $ref: '#/x-templates/{DogTracker-URL}~1dogs;{name}'
   /dogs;{name}/owner:
-    $ref: '#/x-templates/{DogTracker}~1dogs;{name}~1owner'
+    $ref: '#/x-templates/{DogTracker-URL}~1dogs;{name}~1owner'
   /people:
-    $ref: '#/x-templates/{DogTracker}~1people'
+    $ref: '#/x-templates/{DogTracker-URL}~1people'
   /people;{name}:
-    $ref: '#/x-templates/{DogTracker}~1people;{name}'
+    $ref: '#/x-templates/{DogTracker-URL}~1people;{name}'
   /people;{name}/dogs:
-    $ref: '#/x-templates/{DogTracker}~1people;{name}~1dogs'
+    $ref: '#/x-templates/{DogTracker-URL}~1people;{name}~1dogs'
 parameters:
   Accept:
     description: specifies the requested media type - required

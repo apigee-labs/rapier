@@ -908,7 +908,7 @@ class PathPrefix(object):
         return EntityURLSpec(self.entity_uri, self.generator).interface_id()
       
     def template_id(self):
-        return '{%s}' % self.generator.resolve_entity_name(self.entity_uri)
+        return '{%s-URL}' % self.generator.resolve_entity_name(self.entity_uri)
       
 class RelSVPropertySpec(SegmentSpec):
     
@@ -940,7 +940,7 @@ class RelSVPropertySpec(SegmentSpec):
         return EntityURLSpec(self.target_entity_uri, self._generator).interface_id()
 
     def template_id(self):
-        return '{%s}' % self._generator.resolve_entity_name(self._entity_uri)
+        return '{%s-URL}' % self._generator.resolve_entity_name(self._entity_uri)
       
 class RelMVPropertySpec(SegmentSpec):
     

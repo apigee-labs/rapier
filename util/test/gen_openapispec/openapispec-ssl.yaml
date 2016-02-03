@@ -948,33 +948,33 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: CSR
 x-templates:
-  '{Environment}':
+  '{Environment-URL}':
     $ref: '#/x-interfaces/Environment'
-  '{Keystore}':
+  '{Keystore-URL}':
     $ref: '#/x-interfaces/Keystore'
-  '{Alias}':
+  '{Alias-URL}':
     $ref: '#/x-interfaces/Alias'
-  '{Certificate}':
+  '{Certificate-URL}':
     $ref: '#/x-interfaces/Certificate'
-  '{CSR}':
+  '{CSR-URL}':
     $ref: '#/x-interfaces/CSR'
-  '{Environment}/keystores':
+  '{Environment-URL}/keystores':
     $ref: '#/x-interfaces/Environment.keystores'
-  '{Environment}/keystores/{name}':
+  '{Environment-URL}/keystores/{name}':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Keystore
-  '{Environment}/keystores/{name}/aliases':
+  '{Environment-URL}/keystores/{name}/aliases':
     parameters:
     - in: path
       name: name
       required: true
       type: string
     <<: *Keystore-aliases
-  '{Environment}/keystores/{name}/aliases/{name_1}/certificate':
+  '{Environment-URL}/keystores/{name}/aliases/{name_1}/certificate':
     parameters:
     - in: path
       name: name
@@ -985,7 +985,7 @@ x-templates:
       required: true
       type: string
     <<: *Certificate
-  '{Environment}/keystores/{name}/aliases/{name_1}/csr':
+  '{Environment-URL}/keystores/{name}/aliases/{name_1}/csr':
     parameters:
     - in: path
       name: name

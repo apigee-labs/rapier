@@ -1325,43 +1325,43 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Content
 x-templates:
-  '{Store}':
+  '{Store-URL}':
     $ref: '#/x-interfaces/Store'
-  '{Folder}':
+  '{Folder-URL}':
     $ref: '#/x-interfaces/Folder'
-  '{Doc}':
+  '{Doc-URL}':
     $ref: '#/x-interfaces/Doc'
-  '{Group}':
+  '{Group-URL}':
     $ref: '#/x-interfaces/Group'
-  '{Content}':
+  '{Content-URL}':
     $ref: '#/x-interfaces/Content'
-  '{Store}/home':
+  '{Store-URL}/home':
     $ref: '#/x-interfaces/Folder'
-  '{Store}/sharedWithMe':
+  '{Store-URL}/sharedWithMe':
     $ref: '#/x-interfaces/Store.sharedWithMe'
-  '{Store}/docs':
+  '{Store-URL}/docs':
     $ref: '#/x-interfaces/Store.docs'
-  '{Store}/folders':
+  '{Store-URL}/folders':
     $ref: '#/x-interfaces/Store.folders'
-  '{Store}/groups':
+  '{Store-URL}/groups':
     $ref: '#/x-interfaces/Store.groups'
-  '{Folder}/contents':
+  '{Folder-URL}/contents':
     $ref: '#/x-interfaces/Folder.contents'
-  '{Doc}/content':
+  '{Doc-URL}/content':
     $ref: '#/x-interfaces/Content'
 paths:
   /store:
-    $ref: '#/x-templates/{Store}'
+    $ref: '#/x-templates/{Store-URL}'
   /store/home:
-    $ref: '#/x-templates/{Store}~1home'
+    $ref: '#/x-templates/{Store-URL}~1home'
   /store/sharedWithMe:
-    $ref: '#/x-templates/{Store}~1sharedWithMe'
+    $ref: '#/x-templates/{Store-URL}~1sharedWithMe'
   /store/docs:
-    $ref: '#/x-templates/{Store}~1docs'
+    $ref: '#/x-templates/{Store-URL}~1docs'
   /store/folders:
-    $ref: '#/x-templates/{Store}~1folders'
+    $ref: '#/x-templates/{Store-URL}~1folders'
   /store/groups:
-    $ref: '#/x-templates/{Store}~1groups'
+    $ref: '#/x-templates/{Store-URL}~1groups'
   /c3Rvc-Zmxk-{implementation_key}:
     parameters:
     - description: This parameter is a private part of the implementation. It is not

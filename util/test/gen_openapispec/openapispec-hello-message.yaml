@@ -110,11 +110,11 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: HelloMessage
 x-templates:
-  '{HelloMessage}':
+  '{HelloMessage-URL}':
     $ref: '#/x-interfaces/HelloMessage'
 paths:
   /message:
-    $ref: '#/x-templates/{HelloMessage}'
+    $ref: '#/x-templates/{HelloMessage-URL}'
 parameters:
   Accept:
     description: specifies the requested media type - required
