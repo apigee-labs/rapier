@@ -19,7 +19,7 @@ Rapier eliminates the need to repetitively document individual URLs and methods 
 
 Rapier takes a data-oriented approach to API design, which fits the model of the world-wide-web. If your mental model of
 a web API is a network of HTTP resources identified and located using URLs, you should be confortable with Rapier. If you think of a web API
-as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), the Rapier approach may not resonate for you.
+as a set of 'end-points' with 'parameters' (i.e. a more traditional service-oriented model), the Rapier approach may not resonate with you.
 
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt dynamically to changing server data formats. 
 Most clients of Rapier APIs are quite conventional, and Rapier APIs add incrementally to the patterns used in conventional 'RESTful' APIs.
@@ -159,7 +159,7 @@ If you want to see the generated OAS document for this API specification, [it is
 
 ### Query Paths
  
-So far we have seen examples of APIs that are easy to navigate in a hypertext model. What if I want to include URLs in my API that allow the user to
+So far we have seen examples of APIs that are easy to navigate by following hyperlinks. What if I want to include URLs in my API that allow the user to
 quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` - clients are expected to understand their format and compose them.
 `Query URLs` are defined in Rapier using `Query Paths`.
 A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources without having to retrieve all the resources along the path. 
@@ -211,20 +211,20 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
 
 These URL and templates are examples of what Rapier calls 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
-The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`" — we are starting at `/todos`
-and following the `items` relationship declared in the data model. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
+The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`". In other words, we are starting at `/todos`
+and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`". The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item`. 
 
 More generally, these URL templates are valid
 
-    {TodoList_URL}/items
-    {TodoList_URL}/items/{id}
+    {TodoList-URL}/items
+    {TodoList-URL}/items/{id}
     
 The previous two are valid because there is a TodoList at `\items`, but the template is valid for any TodoList URL.
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
-\[2\] The format of the template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
+\[2\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
 ### Hiding the implementation detail
 
@@ -232,7 +232,7 @@ In the example above, we exposed an `id` property of an item and used it in a `q
 A better practice is to keep the `id` private to the implementation, rather than exposing it in the API. The way to do this while maintaining the full function of the API
 is to have the client of the API use the URL of the entity as the identifier, rather than an `id` property value. 
 This avoids the need for the client to plug an `id` value into a template to get the URL of an entity - 
-this job has already been done by the server. The entity URL can also be used in other URL templates, in the same maner that an `id` value can be used,
+this job has already been done by the server. The entity URL can also be used in URL templates, in the same maner that an `id` value can be used,
 so there is no loss of function in the API.
 The URL of each entity is already available to the API client
 in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
@@ -278,7 +278,7 @@ non_entities:
           $ref: '#/entities/Item'
 ```                
 
-The changes are to substitute the integer- or string-valued `id` property for a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL is opaque to the API clients,
+The changes are to substitute the integer- or string-valued `id` property for a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL should be opaque to the API clients,
 and it is a reasonable practice to deliberately obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque to clients.
 
 In JSON, the `To_do_list` at `/to-dos` will look like this:
@@ -295,6 +295,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
       ]
     }
 ``` 
+    From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of ech other, and a particular implementation may make them the same.
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
@@ -346,6 +347,7 @@ Field Name | Type | Description
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
+non_entites | [Entities](#entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection resources fall in this category, because they do not define an independent interface - they are just elements of an interface that is defined by the dirrent relationships that reference them.  
 consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 
