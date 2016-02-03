@@ -298,7 +298,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same.
+From the presence of the `items` query paramter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
  
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
