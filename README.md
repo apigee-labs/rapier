@@ -416,7 +416,7 @@ A `query path` can be represented as a string. Here are some examples with their
 - `siblings` - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
 - `siblings;{name}` - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
 - `siblings;name={name}` - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
-- `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings}  
+- `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings.  URL template is \{`child-URL`\}/siblings;name=\{name\}/siblings}  
 
 Multiple query paths may be included in the same string as a space-deliminated list.
 
