@@ -32,12 +32,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/HelloMessage'
         '401':
@@ -74,12 +68,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/HelloMessage'

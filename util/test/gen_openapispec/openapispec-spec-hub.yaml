@@ -255,12 +255,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Store'
         '401':
@@ -758,12 +752,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Folder'
         '401':
@@ -801,12 +789,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Folder'
         '400':
@@ -838,12 +820,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/Folder'
@@ -1031,12 +1007,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Doc'
         '401':
@@ -1074,12 +1044,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Doc'
         '400':
@@ -1111,12 +1075,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/Doc'
@@ -1181,12 +1139,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Group'
         '401':
@@ -1224,12 +1176,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Group'
         '400':
@@ -1261,12 +1207,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/Group'
@@ -1336,12 +1276,6 @@ x-interfaces:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
               type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
-              type: string
           schema:
             $ref: '#/definitions/Content'
         '401':
@@ -1386,12 +1320,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/Content'
@@ -1440,12 +1368,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-            vary:
-              description: Make sure a cache of one content type is not returned to
-                a client wanting a different one.
-              enum:
-              - Accept
               type: string
           schema:
             $ref: '#/definitions/Content'

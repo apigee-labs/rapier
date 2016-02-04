@@ -433,7 +433,8 @@ class SwaggerGenerator(object):
             path_spec['x-private'] = True            
         if parameters:
             path_spec['parameters'] = parameters
-        path_spec['get'] = self.build_collection_get(rel_property_spec)
+        produces = self.openapispec.get('produces')
+        path_spec['get'] = self.build_collection_get(rel_property_spec, produces)
         rel_property_specs = [spec for spec in rel_property_specs if spec.relationship_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
@@ -492,6 +493,12 @@ class SwaggerGenerator(object):
                         }
                     }                
                 }
+            if self.include_impl and produces and len(produces)> 1:
+                path_spec['post']['responses']['201']['headers']['Vary'] = {
+                    'type': 'string',
+                    'enum': ['Accept'],
+                    'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
+                    }
             if consumes_media_types:
                 path_spec['post']['consumes'] = consumes_media_types
             if not self.yaml_merge:
@@ -635,8 +642,8 @@ class SwaggerGenerator(object):
                     }
                 }
             }
-        if produces and len(produces)> 1:
-            rslt['headers']['vary'] = {
+        if self.include_impl and produces and len(produces)> 1:
+            rslt['headers']['Vary'] = {
                 'type': 'string',
                 'enum': ['Accept'],
                 'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
@@ -706,7 +713,7 @@ class SwaggerGenerator(object):
                 }
             }
         
-    def build_collection_get(self, rel_property_spec):
+    def build_collection_get(self, rel_property_spec, produces):
         collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
             sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.filename))
@@ -738,6 +745,12 @@ class SwaggerGenerator(object):
                 'default': self.global_response_ref('default')
                 }
             }
+        if self.include_impl and produces and len(produces)> 1:
+            rslt['responses']['200']['headers']['Vary'] = {
+                'type': 'string',
+                'enum': ['Accept'],
+                'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
+                }
         def add_query_parameters(entity, query_params):
             if 'query_parameters' in entity:
                 params = entity['query_parameters']
