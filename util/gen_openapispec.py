@@ -52,6 +52,11 @@ class SwaggerGenerator(object):
             self.relationship_separator = ';'
         patterns = spec.get('patterns')
         self.openapispec = PresortedOrderedDict()
+        if self.include_impl:
+            self.openapispec['x-description'] = \
+                '*** This document is not a specification of an API. This document includes implementation-specific additions and modifications ' \
+                'to an API that are designed to aid implementation-aware software like proxies and implementation frameworks. ' \
+                'If you are looking for the API specification, find the version that was generated without implementation extensions and modifications'
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
@@ -161,13 +166,13 @@ class SwaggerGenerator(object):
                             for well_known_URL in as_list(entity_spec['well_known_URLs']):
                                 path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
                                 spec = WellKnownURLSpec(path, entity_uri, self)
-                                path_spec = self.build_path_spec(spec, entity_uri, spec)
+                                path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
                                 self.openapispec_paths[path] = path_spec
                 rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
                     entity_interface = self.build_interface_reference(implementation_spec)
-                    path_spec = self.build_path_spec(implementation_spec, entity_uri, implementation_spec)
+                    path_spec = self.build_oas_path_spec(implementation_spec, entity_uri, implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = path_spec
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
@@ -259,19 +264,21 @@ class SwaggerGenerator(object):
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
-                    path_spec = self.build_path_spec(prefix, interface_id, rel_property_spec_stack[-1], query_path)
+                    path_spec = self.build_oas_path_spec(prefix, interface_id, rel_property_spec_stack[-1], query_path)
                     self.openapispec_paths[path] = path_spec
 
-    def build_path_spec(self, prefix, interface_id, path_spec, query_path=None):
+    def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
         parameters = self.build_parameters(prefix)
         if parameters:
             parameters = self.build_parameters(prefix, query_path)
-            path_spec = PresortedOrderedDict()
-            path_spec['parameters'] = parameters
-            path_spec['<<'] = self.interfaces[interface_id]
+            oas_path_spec = PresortedOrderedDict()
+            if prefix.is_impl_spec():            
+                oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+            oas_path_spec['parameters'] = parameters
+            oas_path_spec['<<'] = self.interfaces[interface_id]
         else:
-            path_spec = self.build_template_reference(prefix, query_path)
-        return path_spec
+            oas_path_spec = self.build_template_reference(prefix, query_path)
+        return oas_path_spec
     
     def build_template_reference(self, prefix, query_path=None):
         path = prefix.template_id()
@@ -279,7 +286,10 @@ class SwaggerGenerator(object):
             path = '/'.join([path, query_path.openapispec_path_string])
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
-        return {'$ref': '#/x-templates/%s' % path}            
+        rslt = {'$ref': '#/x-templates/%s' % path}
+        if prefix.is_impl_spec():            
+            rslt['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'        
+        return rslt            
 
     def build_interface_reference(self, prefix, query_path=None):
         path = prefix.interface_id()

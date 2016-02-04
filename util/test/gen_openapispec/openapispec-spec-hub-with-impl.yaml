@@ -1,3 +1,8 @@
+x-description: '*** This document is not a specification of an API. This document
+  includes implementation-specific additions and modifications to an API that are
+  designed to aid implementation-aware software like proxies and implementation frameworks.
+  If you are looking for the API specification, find the version that was generated
+  without implementation extensions and modifications'
 swagger: '2.0'
 info:
   title: Doc Store API
@@ -1588,6 +1593,8 @@ paths:
   /store/groups:
     $ref: '#/x-templates/{Store-URL}~1groups'
   /c3Rvc-Zmxk-{implementation_key}:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1597,6 +1604,8 @@ paths:
       type: integer
     <<: *Folder
   /c3Rvc-Zmxk-{implementation_key}/contents:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1606,6 +1615,8 @@ paths:
       type: integer
     <<: *Folder-contents
   /c3Rvc-ZG9j-{implementation_key}:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1615,6 +1626,8 @@ paths:
       type: integer
     <<: *Doc
   /c3Rvc-ZG9j-{implementation_key}/content:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1624,6 +1637,8 @@ paths:
       type: integer
     <<: *Content
   /c3Rvc-Z3Jw-{implementation_key}:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
