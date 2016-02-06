@@ -22,7 +22,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=PresortedOrderedD
         construct_mapping)
     return yaml.load(stream, OrderedLoader)
 
-class SwaggerGenerator(object):
+class OASGenerator(object):
 
     def __init__(self):
         pass
@@ -1262,7 +1262,7 @@ class CustomAnchorDumper(yaml.SafeDumper):
         return anchor
 
 def main(args):
-    generator = SwaggerGenerator()
+    generator = OASGenerator()
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'maivs', ['yaml-merge', 'yaml-alias', 'include-impl', 'suppress-annotations'])
     except getopt.GetoptError as err:
