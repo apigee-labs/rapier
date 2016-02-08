@@ -301,7 +301,7 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
         type: string
       - enum:
         - ascending
@@ -380,7 +380,7 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
         type: string
       - enum:
         - ascending
@@ -499,7 +499,7 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
         type: string
       - enum:
         - ascending
@@ -618,7 +618,7 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
         type: string
       - enum:
         - ascending
@@ -869,7 +869,7 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
         type: string
       - enum:
         - ascending

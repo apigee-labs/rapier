@@ -187,7 +187,7 @@ non_entities:
       minimum: 1
       maximum: 1000
       required: false
-    - name: orderby
+    - name: orderBy # required if limit is provided
       type: string
     - name: direction
       type: string
