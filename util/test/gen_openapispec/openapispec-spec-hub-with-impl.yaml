@@ -313,6 +313,7 @@ x-interfaces:
       parameters:
       - in: query
         name: orderBy
+        required: false
         type: string
       - enum:
         - ascending
@@ -398,6 +399,7 @@ x-interfaces:
       parameters:
       - in: query
         name: orderBy
+        required: false
         type: string
       - enum:
         - ascending
@@ -529,6 +531,7 @@ x-interfaces:
       parameters:
       - in: query
         name: orderBy
+        required: false
         type: string
       - enum:
         - ascending
@@ -660,6 +663,7 @@ x-interfaces:
       parameters:
       - in: query
         name: orderBy
+        required: false
         type: string
       - enum:
         - ascending
@@ -941,6 +945,7 @@ x-interfaces:
       parameters:
       - in: query
         name: orderBy
+        required: false
         type: string
       - enum:
         - ascending

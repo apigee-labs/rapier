@@ -189,6 +189,7 @@ non_entities:
       required: false
     - name: orderBy # required if limit is provided
       type: string
+      required: false
     - name: direction
       type: string
       required: false
