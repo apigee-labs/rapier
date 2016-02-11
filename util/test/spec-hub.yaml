@@ -107,6 +107,9 @@ entities:
     - $ref: '#/non_entities/PersistentResource'
     query_paths: [content]
     properties:
+      content_type:
+        description: The media type of the content of the Doc
+        type: string
       content:
         description: URL of a Content
         format: uri

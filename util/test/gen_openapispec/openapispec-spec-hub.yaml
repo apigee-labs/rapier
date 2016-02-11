@@ -102,6 +102,9 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
+      content_type:
+        description: The media type of the content of the Doc
+        type: string
       content:
         description: URL of a Content
         format: uri
