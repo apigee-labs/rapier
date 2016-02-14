@@ -9,7 +9,7 @@
 
 ## <a name="introduction">Introduction
 
-The goals of Rapier are to allow REST APIs to be specified or learned with one tenth the effort required with other API specification languages, and to
+The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. [\[1\]](#footnote1)
 
 You specify an API with Rapier by specifying, in a YAML file, the entities and relationships of the data model that underlies the API. The details of the API's 
