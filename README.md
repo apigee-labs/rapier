@@ -93,7 +93,7 @@ entities:
         type: string
 ```
 
-Here you see the definition of a property called webmaster that is a URI. The extra Rapier property `relationship` tells you that the entity
+Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
 
