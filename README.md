@@ -223,7 +223,7 @@ More generally, these URL templates are valid
     
 The previous two are valid because there is a TodoList at `/items`, but the template is valid for any TodoList URL.
 
-From the presence of the `items` query parameter, we know that `http://example.org/xxxxx` and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
+From the presence of the `items` query parameter, we know that `http://example.org/xxxxx` (from above) and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
 
 If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
