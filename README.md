@@ -160,7 +160,8 @@ If you want to see the generated OAS document for this API specification, [it is
 ### Query Paths
  
 So far we have seen examples of APIs that are easy to navigate by following hyperlinks. What if I want to include URLs in my API that allow the user to
-quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` - clients are expected to understand their format and compose them.
+quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs` - 
+in contrast to hyperlinks, which are opaque, query URLS have formats that clients are expected to understand and compose.
 `Query URLs` are defined in Rapier using `Query Paths`.
 A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources without having to retrieve all the resources along the path. 
 Each segment of a `query path` corresponds to a relationship declared in the data model.
