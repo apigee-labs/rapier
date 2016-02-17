@@ -7,8 +7,6 @@ entities:
     well_known_URLs: /builder
     query_paths: 
     - buildRequests 
-    - buildRequests;{name} 
-    - buildRequests;{name}/spec 
     allOf:
     - $ref: '#/non_entities/Resource'
     readOnly: true
@@ -26,11 +24,11 @@ entities:
           multiplicity: 0:n
           consumes: multi-part/form-data 
   BuildRequest:
+    query_paths: 
+    - spec 
     allOf:
     - $ref: '#/non_entities/PersistentResource'
     properties:
-      name:
-        type: string
       kind:
         type: string
         enum: [BuildRequest]
@@ -42,6 +40,7 @@ entities:
         type: string    
       status:
         type: string
+        readOnly: true
         enum: [building, done, failed]
       spec:
         format: uri

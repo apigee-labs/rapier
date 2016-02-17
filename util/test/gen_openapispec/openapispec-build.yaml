@@ -30,8 +30,6 @@ definitions:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
-      name:
-        type: string
       kind:
         type: string
         enum:
@@ -44,6 +42,7 @@ definitions:
         type: string
       status:
         type: string
+        readOnly: true
         enum:
         - building
         - done
@@ -257,7 +256,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Builder.buildRequests
-  BuildRequest: &BuildRequest
+  BuildRequest:
     get:
       description: Retrieve a BuildRequest
       parameters:
@@ -450,7 +449,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment
-  PodTemplateSpec: &PodTemplateSpec
+  PodTemplateSpec:
     get:
       description: Retrieve a PodTemplateSpec
       parameters:
@@ -522,29 +521,13 @@ x-templates:
     $ref: '#/x-interfaces/PodTemplateSpec'
   '{Builder-URL}/buildRequests':
     $ref: '#/x-interfaces/Builder.buildRequests'
-  '{Builder-URL}/buildRequests/{name}':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *BuildRequest
-  '{Builder-URL}/buildRequests/{name}/spec':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *PodTemplateSpec
+  '{BuildRequest-URL}/spec':
+    $ref: '#/x-interfaces/PodTemplateSpec'
 paths:
   /builder:
     $ref: '#/x-templates/{Builder-URL}'
   /builder/buildRequests:
     $ref: '#/x-templates/{Builder-URL}~1buildRequests'
-  /builder/buildRequests/{name}:
-    $ref: '#/x-templates/{Builder-URL}~1buildRequests~1{name}'
-  /builder/buildRequests/{name}/spec:
-    $ref: '#/x-templates/{Builder-URL}~1buildRequests~1{name}~1spec'
 parameters:
   Accept:
     description: specifies the requested media type - required
