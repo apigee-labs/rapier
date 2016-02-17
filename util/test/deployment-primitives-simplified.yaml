@@ -1,0 +1,115 @@
+title: Deployment Primiitves API
+version: "0.1"
+conventions:
+  selector_location: path-segment
+entities:
+  Cloud:
+    well_known_URLs: /
+    query_paths:
+    - environments
+    - deployments
+    readOnly: true
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Cloud]
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Environment'
+          multiplicity: 0:n
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Deployment'
+          multiplicity: 0:n
+  Environment:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum: [Environment]
+      org:
+        format: uri
+        type: string
+        relationship: '#Org'
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          entities: '#Deployment'
+          multiplicity: 0:n
+  Deployment:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum: [Deployment]
+      environment:
+        format: uri
+        type: string
+        relationship: '#Environment'
+      spec:
+        format: uri
+        type: string
+        relationship: '#PodTemplateSpec'   
+  PodTemplateSpec:
+    type: string  
+  Org: {}
+non_entities:
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
