@@ -1,0 +1,1395 @@
+swagger: '2.0'
+info:
+  title: Deployment Primiitves API
+  version: '0.1'
+consumes:
+- application/json
+produces:
+- application/json
+- text/html
+definitions:
+  Cloud:
+    readOnly: true
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Cloud
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Environment'
+          multiplicity: 0:n
+      orgs:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Org'
+          multiplicity: 0:n
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Deployment'
+          multiplicity: 0:n
+  Environment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Environment
+      org:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Org'
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Deployment'
+          multiplicity: 0:n
+  Org:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Org
+      environments:
+        format: uri
+        type: string
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          entities: '#Environment'
+          multiplicity: 0:n
+  Deployment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Deployment
+      environment:
+        format: uri
+        type: string
+        x-rapier-relationship: '#Environment'
+      spec:
+        format: uri
+        type: string
+        x-rapier-relationship: '#PodTemplateSpec'
+  PodTemplateSpec:
+    type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+x-interfaces:
+  Cloud:
+    get:
+      description: Retrieve a Cloud
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Cloud'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Cloud
+  Cloud.environments:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Environment
+      parameters:
+      - description: The representation of the new Environment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Environment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Environment
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Cloud.environments
+  Cloud.orgs:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Org
+      parameters:
+      - description: The representation of the new Org being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Org'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Org
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Org
+              type: string
+          schema:
+            $ref: '#/definitions/Org'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Cloud.orgs
+  Cloud.deployments:
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Deployment
+      parameters:
+      - description: The representation of the new Deployment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Deployment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Cloud.deployments
+  Environment: &Environment
+    get:
+      description: Retrieve an Environment
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an Environment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Environment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Environment
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment
+  Environment.deployments: &Environment-deployments
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Deployment
+      parameters:
+      - description: The representation of the new Deployment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Deployment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment.deployments
+  Org: &Org
+    get:
+      description: Retrieve an Org
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Org'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an Org entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Org being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Org'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Org'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Org
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Org'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Org
+  Org.environments: &Org-environments
+    get:
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Environment
+      parameters:
+      - description: The representation of the new Environment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Environment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Environment
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Org.environments
+  Deployment: &Deployment
+    get:
+      description: Retrieve a Deployment
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Deployment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Deployment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Deployment
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment
+  PodTemplateSpec:
+    get:
+      description: Retrieve a PodTemplateSpec
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PodTemplateSpec'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    put:
+      description: Create or Update a PodTemplateSpec entity
+      parameters:
+      - $ref: '#/parameters/Put-If-Match'
+      - description: The representation of the PodTemplateSpec being replaced
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/PodTemplateSpec'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PodTemplateSpec'
+        '201':
+          description: Created new PodTemplateSpec
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            Location:
+              description: perma-link URL of newly-created PodTemplateSpec
+              type: string
+          schema:
+            $ref: '#/definitions/PodTemplateSpec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a PodTemplateSpec
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/PodTemplateSpec'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: PodTemplateSpec
+x-templates:
+  '{Cloud-URL}':
+    $ref: '#/x-interfaces/Cloud'
+  '{Environment-URL}':
+    $ref: '#/x-interfaces/Environment'
+  '{Org-URL}':
+    $ref: '#/x-interfaces/Org'
+  '{Deployment-URL}':
+    $ref: '#/x-interfaces/Deployment'
+  '{PodTemplateSpec-URL}':
+    $ref: '#/x-interfaces/PodTemplateSpec'
+  '{Cloud-URL}/environments':
+    $ref: '#/x-interfaces/Cloud.environments'
+  '{Cloud-URL}/orgs':
+    $ref: '#/x-interfaces/Cloud.orgs'
+  '{Cloud-URL}/orgs/{name}':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Org
+  '{Cloud-URL}/orgs/{name}/environments':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    <<: *Org-environments
+  '{Cloud-URL}/orgs/{name}/environments/{name_1}':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    <<: *Environment
+  '{Cloud-URL}/orgs/{name}/environments/{name_1}/deployments':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    <<: *Environment-deployments
+  '{Cloud-URL}/orgs/{name}/environments/{name_1}/deployments/{name_2}':
+    parameters:
+    - in: path
+      name: name
+      required: true
+      type: string
+    - in: path
+      name: name_1
+      required: true
+      type: string
+    - in: path
+      name: name_2
+      required: true
+      type: string
+    <<: *Deployment
+paths:
+  /:
+    $ref: '#/x-templates/{Cloud-URL}'
+  /environments:
+    $ref: '#/x-templates/{Cloud-URL}~1environments'
+  /orgs:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs'
+  /orgs/{name}:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}'
+  /orgs/{name}/environments:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments'
+  /orgs/{name}/environments/{name_1}:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments~1{name_1}'
+  /orgs/{name}/environments/{name_1}/deployments:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments~1{name_1}~1deployments'
+  /orgs/{name}/environments/{name_1}/deployments/{name_2}:
+    $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments~1{name_1}~1deployments~1{name_2}'
+parameters:
+  Accept:
+    description: specifies the requested media type - required
+    in: header
+    name: Accept
+    required: true
+    type: string
+  Access-Control-Request-Headers:
+    description: specifies the custom headers the client wishes to use
+    in: header
+    name: Access-Control-Request-Headers
+    required: true
+    type: string
+  Access-Control-Request-Method:
+    description: specifies the method the client wishes to use
+    in: header
+    name: Access-Control-Request-Method
+    required: true
+    type: string
+  If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: true
+    type: string
+  Put-If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: false
+    type: string
+responses:
+  '303':
+    description: See other. Server is redirecting client to a different resource
+    headers:
+      Location:
+        description: URL of other resource
+        type: string
+  '400':
+    description: Bad Request. Client request in error
+    schema: {}
+  '401':
+    description: Unauthorized. Client authentication token missing from request
+    schema: {}
+  '403':
+    description: Forbidden. Client authentication token does not permit this method
+      on this resource
+    schema: {}
+  '404':
+    description: Not Found. Resource not found
+    schema: {}
+  '406':
+    description: Not Acceptable. Requested media type not available
+    schema: {}
+  '409':
+    description: Conflict. Value provided in If-Match header does not match current
+      ETag value of resource
+    schema: {}
+  default:
+    description: 5xx errors and other stuff
+    schema: {}
+  options_200:
+    description: successful
+    headers:
+      Access-Control-Allow-Headers:
+        description: headers allowed
+        type: string
+      Access-Control-Allow-Methods:
+        description: methods allowed
+        type: string
+      Access-Control-Allow-Origin:
+        description: origins allowed
+        type: string
+      Access-Control-Max-Age:
+        description: length of time response can be cached
+        type: string
+  standard_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
+        type: string
+
