@@ -1157,6 +1157,8 @@ class QuerySegment(object):
                     'property': parsed_format_part[1],
                     'openapispec_param': parsed_format_part[1]
                     } for parsed_format_part in parsed_format if parsed_format_part[1] is not None] 
+                if len(self.selectors) == 0:
+                    sys.exit('query segment %s must include {} element after ;' % query_segment)
                 self.selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
             else:
                 sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
