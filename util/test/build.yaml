@@ -8,6 +8,7 @@ entities:
     query_paths: 
     - buildRequests 
     - buildRequests;{name} 
+    - buildRequests;{name}/spec 
     allOf:
     - $ref: '#/non_entities/Resource'
     readOnly: true
@@ -39,7 +40,17 @@ entities:
         relationship: '#Environment'
       zip_contents:
         type: string    
-  Environment: {}
+      status:
+        type: string
+        enum: [building, done, failed]
+      spec:
+        format: uri
+        type: string
+        relationship: '#PodTemplateSpec'
+  Environment:
+    readOnly: true
+  PodTemplateSpec:
+    readOnly: true
 non_entities:
   PersistentResource:
     allOf:
