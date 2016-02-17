@@ -39,8 +39,9 @@ definitions:
       environment:
         format: uri
         type: string
-        readOnly: true
         x-rapier-relationship: '#Environment'
+      zip_contents:
+        type: string
   Environment: {}
   PersistentResource:
     allOf:

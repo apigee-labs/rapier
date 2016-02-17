@@ -36,8 +36,9 @@ entities:
       environment:
         format: uri
         type: string
-        readOnly: true
         relationship: '#Environment'
+      zip_contents:
+        type: string    
   Environment: {}
 non_entities:
   PersistentResource:
