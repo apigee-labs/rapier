@@ -33,7 +33,7 @@ entities:
           multiplicity: 0:n
   Environment:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/non_entities/Resource'
     properties:
       name:
         type: string
@@ -54,7 +54,7 @@ entities:
           multiplicity: 0:n
   Deployment:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/non_entities/Resource'
     properties:
       name:
         type: string
@@ -71,29 +71,8 @@ entities:
         relationship: '#PodTemplateSpec'   
   PodTemplateSpec:
     type: string  
-  Org: {}
 non_entities:
-  PersistentResource:
-    allOf:
-    - $ref: '#/non_entities/Resource'
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
+  Org: {}
   Resource:
     type: object
     properties:
