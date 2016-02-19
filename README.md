@@ -14,7 +14,7 @@ produce specifications that describe higher quality APIs. [\[1\]](#footnote1)
 
 You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
-that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and methods, which vary only in the entity they return or the query they express.
+that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and their methods, which vary only in the entity they return or the query they express.
 
 Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API uses the same conventions that 
 Rapier does and is perfectly consistent in applying them.
@@ -27,7 +27,7 @@ dynamically to changing server data formats—most clients of Rapier APIs are qu
 
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
-document from a Rapier specification. The generated OAS documents allow 
+document from a Rapier specification. The generated OAS document allows 
 you to learn the precise details of the HTTP messages implied by a Rapier specification, the HTTP specifications and our additional conventions.
 Generating OAS documents is also useful for integrating with tools that are based on OAS, or for communicating with
 people who know OAS but not Rapier. OAS remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
