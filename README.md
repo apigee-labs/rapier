@@ -16,8 +16,8 @@ You specify an API with Rapier by specifying in YAML the entities and relationsh
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and methods, which vary only in the entity they return or the query they express.
 
-Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
-Rapier does and was absolutely consistent in applying them.
+Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API uses the same conventions that 
+Rapier does and is perfectly consistent in applying them.
 
 Rapier takes a data-oriented approach to API design, which aligns with the model of the world-wide-web. If your mental model of
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
