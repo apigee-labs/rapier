@@ -18,7 +18,7 @@ that we have added. Rapier thereby eliminates the need to repetitively document 
 
 Rapier takes a data-oriented approach to API design, which aligns with the model of the world-wide-web. If your mental model of
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
-as a set of 'end-points' with 'parameters' (i.e. a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
+as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
 dynamically to changing server data formats—most clients of Rapier APIs are quite conventional.
 
@@ -160,7 +160,7 @@ So far we have seen examples of APIs that are easy to navigate by following hype
 quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs`. 
 In contrast to hyperlinks, which are opaque, query URLs have formats that clients are expected to understand in order to compose them.
 `Query URLs` are defined in Rapier using `Query Paths`.
-A `Query Path` describes a pre-defined path though the web of resources for quickly locating resources without having to retrieve all the resources along the path. 
+A `Query Path` describes a path along the relationships between resources for quickly locating resources without having to retrieve all the resources along the path. 
 Each segment of a `query path` corresponds to a relationship declared in the data model.
 Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
@@ -207,13 +207,14 @@ The combination of the `well_known_URLS` and `query_paths` properties of `To_do_
     /to-dos/items
     /to-dos/items/{id} [3]
 
-These URL and templates are examples of what Rapier calls 'query URLs'. The provision of
+This URL and URI template are examples of what Rapier calls 'query URLs'. The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`". In other words, we are starting at `/todos`
-and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`. The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
-of the URL `todos/items` to form a URL that will identify a single `Item`. 
+and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`. 
+The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
+of the URL `todos/items` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
 
-More generally, these URL templates are valid
+More generally, these URL templates are valid:
 
     {TodoList-URL}/items
     {TodoList-URL}/items/{id}
