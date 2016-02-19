@@ -16,23 +16,21 @@ You specify an API with Rapier by specifying in YAML the entities and relationsh
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and methods, which vary only in the entity they return or the query they express.
 
+Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
+Rapier does and was absolutely consistent in applying them.
+
 Rapier takes a data-oriented approach to API design, which aligns with the model of the world-wide-web. If your mental model of
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
 dynamically to changing server data formats—most clients of Rapier APIs are quite conventional.
 
-Rapier is for specifying new APIs. You will not be able to describe existing APIs with Rapier unless that API used the same conventions that 
-Rapier does and was absolutely consistent in applying them.
-
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
 document from a Rapier specification. The generated OAS documents allow 
 you to learn the precise details of the HTTP messages implied by a Rapier specification, the HTTP specifications and our additional conventions.
 Generating OAS documents is also useful for integrating with tools that are based on OAS, or for communicating with
-people who know OAS but not Rapier.
-
-OAS remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
+people who know OAS but not Rapier. OAS remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OAS.
 
 Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
