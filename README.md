@@ -12,7 +12,7 @@
 Rapier is a new API specification language created by Apigee. The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. [\[1\]](#footnote1)
 
-You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths along the relationships. The details of the API's 
+You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and methods, which vary only in the entity they return or the query they express.
 
