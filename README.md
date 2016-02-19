@@ -279,7 +279,7 @@ non_entities:
           $ref: '#/entities/Item'
 ```                
 
-The changes are to substitute the integer- or string-valued `id` property for a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL should be opaque to the API clients,
+The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `items;{id}` query path. The format of the `self` URL should be opaque to the API clients,
 and it is a reasonable practice to deliberately obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque to clients.
 
 In JSON, the `To_do_list` at `/to-dos` will look like this:
