@@ -322,7 +322,7 @@ view of the API to be generated instead of the client view. It can be found [her
 ## <a name="navigating"></a>Navigating the Repository
 
 - js - a directory containing a Node package that is used by the generated Javascript SDK
-- py - a directory contains a Python module that is used by the generated Python SDK
+- py - a directory containing a Python module that is used by the generated Python SDK
 - test-servers - a directory contains some simple servers used to test the genenrated SDKs
 - util - directory containing the sdk generators and the OAS generator. This directory is a Python module
   - gen_openapispec.py - the OAS generator
