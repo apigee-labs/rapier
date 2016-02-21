@@ -349,7 +349,7 @@ Field Name | Type | Description
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
-non_entites | [Entities](#entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection_resources fall in this category, because they do not independently define an interface - they are just elements of interfaces that are defined by the relationships that reference them.  
+non_entites | [Non-Entities](#non_entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection_resources fall in this category, because they do not independently define an interface - they are just elements of interfaces that are defined by the relationships that reference them.  
 consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 
@@ -372,7 +372,16 @@ query_paths | `string` or `array` of [Query Path](#query_path) | If the value is
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
-abstract | `boolean` | indicates that the entity (or non-resource-entity) will never actually be seen in the API. The definition may used in the definition of other entities
+
+#### <a name="non_entity"></a>Non-Entity
+
+Each non-entity is a [JSON Schema](http://json-schema.org/). It includes the standard JSON Schema properties (e.g. `properties`) as well as some Rapier-specific ones.
+
+Field Name | Type | Description
+---|:---:|---
+id | `string` | The id of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using the URI fragment `#{id}`. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
+readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 
 #### <a name="properties"></a>Properties
 

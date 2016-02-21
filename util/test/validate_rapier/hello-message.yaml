@@ -1,4 +1,4 @@
-title: 1
+title: HelloWorldAPI
 entities:
   HelloMessage:
     well_known_URLs: /message
@@ -6,4 +6,4 @@ entities:
       text:
         type: string
 titre: HelloWorldAPI
-title: HelloWorldAPI
+title: 1
