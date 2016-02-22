@@ -352,6 +352,13 @@ entities | [Entities](#entities) | The entities of the API.
 non_entites | [Non-Entities](#non_entities) | Resources of the API that are not full entities. They do not define an interface of HTTP requests. Examples are JSON Schemas that are only used in allOf constraints, and collection_resources. Collection_resources fall in this category, because they do not independently define an interface - they are just elements of interfaces that are defined by the relationships that reference them.  
 consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
+conventions | [Conventions](#conventions) | Conventions that affect the details of the HTTP messages of the API
+
+#### <a name="conventions"></a>Conventions
+
+Field Name | Type | Description
+---|:---:|---
+selector_location | `string` | Either the string "path-segment" or "path parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or in the same path segment as the relationship name.
 
 #### <a name="entities"></a>Entities
 
