@@ -379,7 +379,7 @@ The set of non-entities of the API.
 
 Field Pattern | Type | Description
 ---|:---:|---
-{non-entity name} | [Non Entity](#non_entity) | The name of an entity. Provides the default value of the id of the entity. That is, if the entity does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+{non-entity name} | [Non Entity](#non_entity) | The name of a non-entity. Provides the default value of the id of the non-entity. That is, if the non-entity does not have an explicit id value, it can be addressed using the URI fragment `#{non-entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
 
 #### <a name="non_entity"></a>Non Entity
 
