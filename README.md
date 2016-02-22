@@ -373,7 +373,15 @@ well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resou
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 
-#### <a name="non_entity"></a>Non-Entity
+#### <a name="non_entities"></a>Non-Entities
+
+The set of non-entities of the API.
+
+Field Pattern | Type | Description
+---|:---:|---
+{non-entity name} | [Non Entity](#non_entity) | The name of an entity. Provides the default value of the id of the entity. That is, if the entity does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+
+#### <a name="non_entity"></a>Non Entity
 
 Each non-entity is a [JSON Schema](http://json-schema.org/). It includes the standard JSON Schema properties (e.g. `properties`) as well as some Rapier-specific ones.
 
