@@ -358,7 +358,7 @@ conventions | [Conventions](#conventions) | Conventions that affect the details 
 
 Field Name | Type | Description
 ---|:---:|---
-selector_location | `string` | Either the string "path-segment" or "path parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or in the same path segment as the relationship name.
+selector_location | `string` | Either the string "path-segment" or "path-parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
 
 #### <a name="entities"></a>Entities
 
