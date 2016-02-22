@@ -43,10 +43,6 @@ definitions:
         type: string
         enum:
         - Environment
-      org:
-        format: uri
-        type: string
-        x-rapier-relationship: '#Org'
       deployments:
         format: uri
         type: string
@@ -75,12 +71,12 @@ definitions:
         x-rapier-relationship: '#PodTemplateSpec'
   PodTemplateSpec:
     type: string
-  Org: {}
   Resource:
     type: object
     properties:
       self:
         type: string
+        readOnly: true
       kind:
         type: string
   Collection:

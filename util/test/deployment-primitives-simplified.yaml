@@ -40,10 +40,6 @@ entities:
       kind:
         type: string
         enum: [Environment]
-      org:
-        format: uri
-        type: string
-        relationship: '#Org'
       deployments:
         format: uri
         type: string
@@ -72,12 +68,12 @@ entities:
   PodTemplateSpec:
     type: string  
 non_entities:
-  Org: {}
   Resource:
     type: object
     properties:
       self:
         type: string
+        readOnly: true
       kind:
         type: string
   Collection:
