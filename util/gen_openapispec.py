@@ -865,7 +865,7 @@ class OASGenerator(object):
             for k, v in node.iteritems():
                 if k == 'oneOf':
                     result['x-oneOf'] = self.to_openapispec(v)
-                if k == 'allOf':
+                elif k == 'allOf':
                     result['allOf'] = self.to_openapispec(v)
                 elif k == '$ref':
                     result['$ref'] = self.openapispec_uri_map[v]
