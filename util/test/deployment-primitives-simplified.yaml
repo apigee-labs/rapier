@@ -65,6 +65,8 @@ entities:
         format: uri
         type: string
         relationship: '#PodTemplateSpec'   
+      replicas:
+        type: integer
   PodTemplateSpec:
     type: string  
 non_entities:

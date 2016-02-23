@@ -69,6 +69,8 @@ definitions:
         format: uri
         type: string
         x-rapier-relationship: '#PodTemplateSpec'
+      replicas:
+        type: integer
   PodTemplateSpec:
     type: string
   Resource:
