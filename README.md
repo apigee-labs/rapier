@@ -395,7 +395,7 @@ Each non-entity is a [JSON Schema](http://json-schema.org/). It includes the sta
 
 Field Name | Type | Description
 ---|:---:|---
-id | `string` | The id of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using the URI fragment `#{id}`. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+id | `string` | The URI of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using that URI. If it does not have an explicit id value, it can be addressed using the URL fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 
