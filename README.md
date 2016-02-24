@@ -346,7 +346,7 @@ All properties are optional unless otherwise specified.
 
 Field Name | Type | Description
 ---|:---:|---
-id | `string` | The URL of the API. Note this is the URL of the API itself, not the Rapier document that describes it, nor the run-time URL at which an implementation of the API can be found. Can be any URL, although the use of URL fragments is popular for obvious reasons. The most common value is '#' - maybe we should make this the default.
+id | `string` | The URI of the API. Note this is the URI of the API itself, not the Rapier document that describes it, nor the run-time URL at which an implementation of the API can be found. Can be any URI, although the use of URL fragments is popular for obvious reasons. The most common value is '#' - maybe we should make this the default.
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
