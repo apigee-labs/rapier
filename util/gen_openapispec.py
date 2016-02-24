@@ -147,7 +147,7 @@ class OASGenerator(object):
                     self.interfaces[entity_uri] = interface
                     self.openapispec_interfaces[entity_url_spec.interface_id()] = interface
                     self.openapispec_templates[entity_url_spec.template_id()] = self.build_interface_reference(entity_url_spec)
-                    rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
+                    rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                     for rel_property_spec in rel_property_specs:
                         q_p = QueryPath(rel_property_spec.relationship_name, self)
                         if rel_property_spec.is_collection_resource(): 
@@ -168,7 +168,7 @@ class OASGenerator(object):
                                 spec = WellKnownURLSpec(path, entity_uri, self)
                                 path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
                                 self.openapispec_paths[path] = path_spec
-                rel_property_specs = self.get_relationship_property_specs(entity_uri, entity_spec)
+                rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
                     entity_interface = self.build_interface_reference(implementation_spec)
@@ -195,7 +195,17 @@ class OASGenerator(object):
             del self.openapispec['x-interfaces']
         return self.openapispec
 
-    def get_relationship_property_specs(self, entity_uri, entity_spec):
+    def get_one_relationship_property_specs(self, prop_name, property, entity_uri, entity_spec):
+        result = []
+        relationship = as_relationship(prop_name, property['relationship'])
+        upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
+        multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
+        for target_entity_uri in as_list(relationship['entities']):
+            p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
+            result.append(p_spec)
+        return result
+
+    def get_entity_relationship_property_specs(self, entity_uri, entity_spec):
         spec = self.rapier_spec
         result = []
         def add_properties(spec):
@@ -205,12 +215,7 @@ class OASGenerator(object):
                 elif 'properties' in spec:
                     for prop_name, property in spec['properties'].iteritems():
                         if 'relationship' in property:
-                            relationship = as_relationship(prop_name, property['relationship'])
-                            upper_multiplicity = relationship.get('multiplicity', '0:1').split(':')[-1]
-                            multi_valued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
-                            for target_entity_uri in as_list(relationship['entities']):
-                                p_spec = (RelMVPropertySpec if multi_valued else RelSVPropertySpec)(self, entity_uri, entity_spec, property, relationship, target_entity_uri)
-                                result.append(p_spec)
+                            result.extend(self.get_one_relationship_property_specs(prop_name, property, entity_uri, entity_spec))
                         else:
                             add_properties(property)
                 elif 'type' in spec and spec['type'] == 'array':
@@ -230,7 +235,7 @@ class OASGenerator(object):
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity_uri = rel_property_spec.target_entity_uri
         target_entity_spec = self.resolve_entity(target_entity_uri)
-        rel_property_specs = self.get_relationship_property_specs(target_entity_uri, target_entity_spec)
+        rel_property_specs = self.get_entity_relationship_property_specs(target_entity_uri, target_entity_spec)
         for query_path in query_paths[:]:
             if query_path.matches(rel_property_spec_stack):
                 self.emit_query_path(prefix, query_path, rel_property_spec_stack, prev_rel_property_specs)
@@ -769,10 +774,11 @@ class OASGenerator(object):
                     for param in params:
                         new_param = param.copy()
                         if 'enum' in param:
-                            param['enum'] = param['enum'][:]
+                            new_param['enum'] = param['enum'][:]
                         if 'items' in param:
-                            param['items'] = param['items'].copy()
-                query_params.extend(entity['query_parameters'])
+                            new_param['items'] = param['items'].copy()
+                        new_params.append(new_param)
+                query_params.extend(new_params)
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
                     add_query_parameters(self.resolve_entity_ref(entity_ref), query_params) 
@@ -859,22 +865,22 @@ class OASGenerator(object):
                 if property:
                     return property
 
-    def to_openapispec(self, node):
+    def to_openapispec(self, node, entity_spec=None, property_name=None):
         if hasattr(node, 'keys'):
             result = PresortedOrderedDict()
             for k, v in node.iteritems():
                 if k == 'oneOf':
-                    result['x-oneOf'] = self.to_openapispec(v)
+                    result['x-oneOf'] = self.to_openapispec(v, entity_spec, property_name)
                 elif k == 'allOf':
-                    result['allOf'] = self.to_openapispec(v)
+                    result['allOf'] = self.to_openapispec(v, entity_spec, property_name)
                 elif k == '$ref':
                     result['$ref'] = self.openapispec_uri_map[v]
                 elif k == 'type':
-                    result['type'] = self.to_openapispec(v)
+                    result['type'] = self.to_openapispec(v, entity_spec, property_name)
                 elif k == 'items':
-                    result['items'] = self.to_openapispec(v)
+                    result['items'] = self.to_openapispec(v, entity_spec, property_name)
                 elif k == 'format':
-                    result['format'] = self.to_openapispec(v)
+                    result['format'] = self.to_openapispec(v, entity_spec, property_name)
                 elif k == 'enum':
                     result['enum'] = v
                 elif k == 'description':
@@ -887,15 +893,22 @@ class OASGenerator(object):
                     oas_properties = PresortedOrderedDict()
                     for k2, v2 in v.iteritems():
                         if not v2.get('implementation_private', False):
-                            oas_properties[k2] = self.to_openapispec(v2)
-                    result['properties'] = oas_properties 
+                            oas_properties[k2] = self.to_openapispec(v2, entity_spec or node, k2)
+                    result['properties'] = oas_properties
                 elif k == 'relationship':
-                    result['x-rapier-relationship'] = v
+                    if False:
+                        rel_property_specs = self.get_one_relationship_property_specs(property_name, node, entity_spec['id'], entity_spec)
+                        if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
+                            result['x-interface'] = {'oneOf': [{'$ref': '#/x-interfaces/%s' % rel_property_spec.interface_id()} for rel_property_spec in rel_property_specs]}
+                        else:
+                            result['x-interface'] = {'$ref': '#/x-interfaces/%s' % rel_property_specs[0].interface_id()}
+                    else:
+                        result['x-rapier-relationship'] = v
                 elif k == 'type':
                     result['type'] = v
             return result
         elif isinstance(node, list):
-            return [self.to_openapispec(i) for i in node]
+            return [self.to_openapispec(i, entity_spec, property_name) for i in node]
         else:
             return node
 
@@ -1260,7 +1273,7 @@ class CustomAnchorDumper(yaml.SafeDumper):
                 if  item[0].__class__.id == 'scalar' and item[1].__class__.id == 'scalar'} 
             if 'x-id' in d:
                 return re.sub('[^a-zA-Z0-9]', '-', d['x-id'])
-        anchor =  super(yaml.Dumper, self).generate_anchor(node)
+        anchor =  super(CustomAnchorDumper, self).generate_anchor(node)
         return anchor
 
 def main(args):

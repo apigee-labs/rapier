@@ -167,37 +167,6 @@ entities:
     type: string
     consumes: application/x-yaml text/yaml text/html text/plain
     produces: application/x-yaml text/yaml text/html text/plain
-non_entities:
-  Collection:
-    allOf:
-    - $ref: '#/non_entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    query_parameters:
-    - name: properties
-      items:
-        type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
-    - name: orderBy # required if limit is provided
-      type: string
-      required: false
-    - name: direction
-      type: string
-      required: false
-      enum: ['ascending', 'descending']
-    readOnly: true
   Page:
     allOf:
     - $ref: '#/non_entities/Resource'
@@ -205,8 +174,6 @@ non_entities:
       kind:
         type: string
         enum: [Page]
-      item_type: 
-        type: string
       items:
         type: array
         items: 
@@ -238,11 +205,42 @@ non_entities:
       maximum: 1000
       required: false
     readOnly: true
+non_entities:
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderBy # required if limit is provided
+      type: string
+      required: false
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
   MultiValuedRelationshipResource:
     readOnly: true
     oneOf:
       - $ref: '#/non_entities/Collection'
-      - $ref: '#/non_entities/Page'
+      - $ref: '#/entities/Page'
   Resource:
     type: object
     properties:

@@ -66,8 +66,7 @@ entities:
         description: URL of a Person or Institution
         format: uri
         type: string
-        relationship:
-          entities: '#Person #Institution'
+        relationship: '#Person #Institution'
   Bicycle:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
@@ -82,8 +81,7 @@ entities:
         description: URL of a Person or Institution
         format: uri
         type: string
-        relationship:
-          entities: '#Person #Institution'
+        relationship: '#Person #Institution'
   Person:
     allOf:
     - $ref: '#/non_entities/PersistentResource'

@@ -59,8 +59,7 @@ definitions:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Person #Institution'
+        x-rapier-relationship: '#Person #Institution'
   Bicycle:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -75,8 +74,7 @@ definitions:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Person #Institution'
+        x-rapier-relationship: '#Person #Institution'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
