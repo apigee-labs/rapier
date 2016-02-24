@@ -23,6 +23,8 @@ Rapier does and is perfectly consistent in applying them.
 Rapier takes a data-oriented approach to API design, which aligns with the model of the world-wide-web. If your mental model of
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
+Entity-relationship modeling has been enormously successful for describing database schemas for 4 decades—it should not be a surpise that it is equally effective
+for describing APIs in the data-oriented REST model.
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
 to changing server data formats—most clients of Rapier APIs are quite conventional.
 
@@ -417,7 +419,7 @@ relationship | [Relationship](#relationship) | States that the property is a rel
  
 #### <a name="relationship"></a>Relationship
 
-Describes [one end of] a relationship to one or more other entities
+Describes a relationship to one or more other entities
 
 Field Name | Type | Description
 ---|:---:|---
