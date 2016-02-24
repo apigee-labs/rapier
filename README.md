@@ -35,7 +35,7 @@ Generating OpenAPI documents is also useful for integrating with tools that are 
 people who know OpenAPI but not Rapier. Even if you adopt Rapier enthusiastically, OpenAPI will likely remain important to you for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OpenAPI.
 
-Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
+Rapier also includes SDK generators for Javascript and Python. A validator is in development. In the future we may work on test tools, and server implementation frameworks.  
 
 <a name="footnote1">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
