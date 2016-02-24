@@ -244,7 +244,7 @@ definitions:
       kind:
         type: string
         enum:
-        - DeploymentOfflineRequest
+        - Canarytest
       hosts:
         type: string
     readOnly: true
@@ -255,7 +255,7 @@ definitions:
       kind:
         type: string
         enum:
-        - DeploymentOnlineRequest
+        - StatisticsTest
       traffic_percentage:
         type: integer
       duration:

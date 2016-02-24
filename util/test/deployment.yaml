@@ -221,7 +221,7 @@ entities:
     properties:
       kind:
         type: string
-        enum: [DeploymentOfflineRequest]  
+        enum: [Canarytest]  
       hosts: 
         type: string
     readOnly: true
@@ -231,7 +231,7 @@ entities:
     properties:
       kind:
         type: string
-        enum: [DeploymentOnlineRequest]
+        enum: [StatisticsTest]
       traffic_percentage:
         type: integer
       duration:
