@@ -171,6 +171,22 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#DeploymentOfflineRequest'
+      canary_tests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#CanaryTest'
+      statistics_tests:
+        format: uri
+        type: string
+        readOnly: true
+        x-rapier-relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#StatisticsTest'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -221,6 +237,39 @@ definitions:
         type: string
         enum:
         - DeploymentOnlineRequest
+  CanaryTest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentOfflineRequest
+      hosts:
+        type: string
+    readOnly: true
+  StatisticsTest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentOnlineRequest
+      traffic_percentage:
+        type: integer
+      duration:
+        type: integer
+      state:
+        type: string
+      results:
+        type: string
+        format: uri
+        x-rapier-relationship: '#StatisticsResults'
+    readOnly: true
+  StatistcsResults:
+    type: object
+    readOnly: true
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -2249,6 +2298,244 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Deployment.go_offline_requests
+  Deployment.canary_tests:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new CanaryTest
+      parameters:
+      - description: The representation of the new CanaryTest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/CanaryTest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new CanaryTest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created CanaryTest
+              type: string
+          schema:
+            $ref: '#/definitions/CanaryTest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment.canary_tests
+  Deployment.statistics_tests:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new StatisticsTest
+      parameters:
+      - description: The representation of the new StatisticsTest being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/StatisticsTest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new StatisticsTest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created StatisticsTest
+              type: string
+          schema:
+            $ref: '#/definitions/StatisticsTest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment.statistics_tests
   EnvironmentStartRequest:
     get:
       description: Retrieve an EnvironmentStartRequest
@@ -3046,6 +3333,189 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOnlineRequest
+  CanaryTest:
+    get:
+      description: Retrieve a CanaryTest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/CanaryTest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: CanaryTest
+  StatisticsTest:
+    get:
+      description: Retrieve a StatisticsTest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/StatisticsTest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: StatisticsTest
+  StatistcsResults:
+    get:
+      description: Retrieve a StatistcsResults
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/StatistcsResults'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: StatistcsResults
 x-templates:
   '{System-URL}':
     $ref: '#/x-interfaces/System'
@@ -3069,6 +3539,12 @@ x-templates:
     $ref: '#/x-interfaces/DeploymentOfflineRequest'
   '{DeploymentOnlineRequest-URL}':
     $ref: '#/x-interfaces/DeploymentOnlineRequest'
+  '{CanaryTest-URL}':
+    $ref: '#/x-interfaces/CanaryTest'
+  '{StatisticsTest-URL}':
+    $ref: '#/x-interfaces/StatisticsTest'
+  '{StatistcsResults-URL}':
+    $ref: '#/x-interfaces/StatistcsResults'
 paths: {}
 parameters:
   Accept:

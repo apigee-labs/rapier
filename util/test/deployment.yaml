@@ -155,6 +155,22 @@ entities:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#DeploymentOfflineRequest'        
+      canary_tests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#CanaryTest'        
+      statistics_tests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#StatisticsTest'    
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
@@ -199,6 +215,37 @@ entities:
       kind:
         type: string
         enum: [DeploymentOnlineRequest]    
+  CanaryTest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOfflineRequest]  
+      hosts: 
+        type: string
+    readOnly: true
+  StatisticsTest:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentOnlineRequest]
+      traffic_percentage:
+        type: integer
+      duration:
+        type: integer
+      state:
+        type: string
+      results:
+        type: string
+        format: uri
+        relationship: '#StatisticsResults'
+    readOnly: true
+  StatistcsResults:
+    type: object
+    readOnly: true
 non_entities:
   Collection:
     allOf:
