@@ -5,7 +5,7 @@
 - [Tutorial](#tutorial)
 - [Navigating the Repository](#navigating)
 - [Specification](#specification)
-- [OAS Generator](#oas_generator)
+- [OpenAPI Specification Generator](#oas_generator)
 
 ## <a name="introduction">Introduction
 
@@ -28,12 +28,12 @@ While Rapier APIs conform to the principles of REST, including the provision of 
 to changing server data formats—most clients of Rapier APIs are quite conventional.
 
 Since the Rapier specification language is not yet widely 
-known and adopted, we provide a tool that will generate an Open API Specification (OAS - formerly known as Swagger) 
-document from a Rapier specification. The generated OAS document allows 
+known and adopted, we provide a tool that will generate an Open API Specification (formerly known as Swagger) 
+document from a Rapier specification. The generated OpenAPI Specification document allows 
 you to learn the precise details of the HTTP messages implied by the Rapier specification, the HTTP specifications and our additional conventions.
-Generating OAS documents is also useful for integrating with tools that are based on OAS, or for communicating with
-people who know OAS but not Rapier. OAS remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
-or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OAS.
+Generating OpenAPI Specification documents is also useful for integrating with tools that are based on OpenAPI Specification, or for communicating with
+people who know OpenAPI Specification but not Rapier. OpenAPI Specification remains important for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
+or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OpenAPI Specification.
 
 Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
 
@@ -66,7 +66,7 @@ The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-The OAS document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
+The OpenAPI Specification document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
 
 [\[2\]](#footnote2) Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
@@ -92,7 +92,7 @@ entities:
 
 Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
+that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI Specification document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
 
 ### To-do List
 
@@ -152,7 +152,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
+If you want to see the generated OpenAPI Specification document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
 
 ### Query Paths
  
@@ -226,7 +226,7 @@ The previous two are valid because there is a TodoList at `/items`, but the temp
 
 From the presence of the `items` query parameter, we know that `http://example.org/xxxxx` (from above) and `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may make them the same (or not).
 
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
+If you want to see the generated OpenAPI Specification document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
 \[3\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
@@ -300,26 +300,26 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-If you want to see the generated OAS document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
+If you want to see the generated OpenAPI Specification document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
 ### Dog Tracker
  
 Another popular API example is the 'Dog Tracker' example. The Rapier spec for it [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/dog-tracker.yaml). 
 It shows a more complete example using the techniques we have already seen.
-The generated OAS document for this API specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
+The generated OpenAPI Specification document for this API specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
 
 ### Property Tracker
  
 The next example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://github.com/apigee-labs/rapier/blob/master/util/test/property-tracker.yaml). 
-This example strains the expressive power of OAS - you can see a generated [OAS document here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-property-tracker.yaml).
+This example strains the expressive power of OpenAPI Specification - you can see a generated [OpenAPI Specification document here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-property-tracker.yaml).
 
 ### Spec Repo
 
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee-labs/rapier/blob/master/util/test/spec-hub.yaml) 
-shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OAS document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub.yaml).
-The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OAS generator supports a -i command-line option that allows the implementation
+shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OpenAPI Specification document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub.yaml).
+The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OpenAPI Specification generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub-with-impl.yaml).
 
 ## <a name="navigating"></a>Navigating the Repository
@@ -327,8 +327,8 @@ view of the API to be generated instead of the client view. It can be found [her
 - js - a directory containing a Node package that is used by the generated Javascript SDK
 - py - a directory containing a Python module that is used by the generated Python SDK
 - test-servers - a directory contains some simple servers used to test the genenrated SDKs
-- util - directory containing the sdk generators and the OAS generator. This directory is a Python module
-  - gen_openapispec.py - the OAS generator
+- util - directory containing the sdk generators and the OpenAPI Specification generator. This directory is a Python module
+  - gen_openapispec.py - the OpenAPI Specification generator
   - gen_js_sdk.py - the Javascript SDK genenrator
   - gen_py_sdk.py - the Python SDK genenrator
   - requirements.txt - the pip file with the python dependencies for these generators
@@ -478,5 +478,5 @@ Field pattern | Type | Description
 ---|:---:|---
 {entity_id} | `array` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an array or a space-deliminated list in a single string
 
-## <a name="oas_generator">OAS Generator
+## <a name="oas_generator">OpenAPI Specification Generator
 
