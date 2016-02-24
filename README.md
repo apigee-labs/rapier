@@ -32,7 +32,7 @@ known and adopted, we provide a tool that will generate an OpenAPI (formerly kno
 document from a Rapier specification. The generated OpenAPI document allows 
 you to learn the precise details of the HTTP messages implied by the Rapier specification, the HTTP specifications and our additional conventions.
 Generating OpenAPI documents is also useful for integrating with tools that are based on OpenAPI, or for communicating with
-people who know OpenAPI but not Rapier. Even if you adopt rapier enthusiastically, OpenAPI will likely remain important to you for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
+people who know OpenAPI but not Rapier. Even if you adopt Rapier enthusiastically, OpenAPI will likely remain important to you for documenting APIs that follow a service-oriented rather than a data-oriented design pattern, 
 or follow different conventions to the ones Rapier currently understands, or are less consistent than Rapier APIs. Rapier is designed to complement, not replace, OpenAPI.
 
 Rapier also includes SDK generators for Javascript and Python. In the future we may work on test tools, and server implementation frameworks.  
