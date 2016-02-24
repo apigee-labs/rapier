@@ -29,7 +29,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#DeploymentUnit'
+          entities: '#Component'
   Environment:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
@@ -67,13 +67,13 @@ entities:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#EnvironmentStopRequest'              
-  DeploymentUnit:
+  Component:
     allOf:
     - $ref: '#/non_entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [DeploymentUnit]
+        enum: [Component]
       is_component_of:
         format: uri
         type: string
@@ -96,7 +96,7 @@ entities:
       revises:
         format: uri
         type: string
-        relationship: '#DeploymentUnit'
+        relationship: '#Component'
       has_deployments:
         format: uri
         type: string

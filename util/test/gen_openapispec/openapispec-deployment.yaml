@@ -41,7 +41,7 @@ definitions:
         x-rapier-relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#DeploymentUnit'
+          entities: '#Component'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -80,14 +80,14 @@ definitions:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#EnvironmentStopRequest'
-  DeploymentUnit:
+  Component:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - DeploymentUnit
+        - Component
       is_component_of:
         format: uri
         type: string
@@ -111,7 +111,7 @@ definitions:
       revises:
         format: uri
         type: string
-        x-rapier-relationship: '#DeploymentUnit'
+        x-rapier-relationship: '#Component'
       has_deployments:
         format: uri
         type: string
@@ -580,13 +580,13 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new DeploymentUnit
+      description: Create a new Component
       parameters:
-      - description: The representation of the new DeploymentUnit being created
+      - description: The representation of the new Component being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentUnit'
+          $ref: '#/definitions/Component'
       - description: The media type of the body
         in: header
         name: Content-Type
@@ -594,7 +594,7 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new DeploymentUnit
+          description: Created new Component
           headers:
             Content-Type:
               description: The media type of the returned body
@@ -603,10 +603,10 @@ x-interfaces:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created DeploymentUnit
+              description: perma-link URL of newly-created Component
               type: string
           schema:
-            $ref: '#/definitions/DeploymentUnit'
+            $ref: '#/definitions/Component'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1138,9 +1138,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment.stop_requests
-  DeploymentUnit:
+  Component:
     get:
-      description: Retrieve a DeploymentUnit
+      description: Retrieve a Component
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1158,7 +1158,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentUnit'
+            $ref: '#/definitions/Component'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1172,14 +1172,14 @@ x-interfaces:
     patch:
       consumes:
       - application/merge-patch+json
-      description: Update a DeploymentUnit entity
+      description: Update a Component entity
       parameters:
       - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentUnit being updated
+      - description: The subset of properties of the Component being updated
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentUnit'
+          $ref: '#/definitions/Component'
       responses:
         '200':
           description: successful
@@ -1195,7 +1195,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentUnit'
+            $ref: '#/definitions/Component'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1211,7 +1211,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a DeploymentUnit
+      description: Delete a Component
       responses:
         '200':
           description: successful
@@ -1227,7 +1227,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/DeploymentUnit'
+            $ref: '#/definitions/Component'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1269,8 +1269,8 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentUnit
-  DeploymentUnit.has_revisions:
+    x-id: Component
+  Component.has_revisions:
     get:
       parameters:
       - in: query
@@ -1388,7 +1388,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: DeploymentUnit.has_revisions
+    x-id: Component.has_revisions
   Revision:
     get:
       description: Retrieve a Revision
@@ -3051,8 +3051,8 @@ x-templates:
     $ref: '#/x-interfaces/System'
   '{Environment-URL}':
     $ref: '#/x-interfaces/Environment'
-  '{DeploymentUnit-URL}':
-    $ref: '#/x-interfaces/DeploymentUnit'
+  '{Component-URL}':
+    $ref: '#/x-interfaces/Component'
   '{Revision-URL}':
     $ref: '#/x-interfaces/Revision'
   '{Deployment-URL}':
