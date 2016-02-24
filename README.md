@@ -204,12 +204,12 @@ non_entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following URL and URL template are valid:
+The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /to-dos/items
     /to-dos/items/{id} [3]
 
-This URL and URI template are examples of what Rapier calls 'query URLs'. The provision of
+The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the items property of the TodoList resource at `/todos`". In other words, we are starting at `/todos`
 and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`. 
