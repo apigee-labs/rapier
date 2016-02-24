@@ -346,6 +346,7 @@ All properties are optional unless otherwise specified.
 
 Field Name | Type | Description
 ---|:---:|---
+id | `string` | The URL of the API. Note this is the URL of the API itself, not the Rapier document that describes it, nor the run-time URL at which an implementation of the API can be found. Can be any URL, although the use of URL fragments is popular for obvious reasons. The most common value is '#' - maybe we should make this the default.
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
@@ -374,7 +375,7 @@ Each entity is a [JSON Schema](http://json-schema.org/). It includes the standar
 
 Field Name | Type | Description
 ---|:---:|---
-id | `string` | The id of the entity. The default value is the name of the entity. If the Entity has an explicit id value, it can be addressed using the URI fragment `#{id}`. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+id | `string` | The id of the entity. Can be any URL, although the use of URL fragments is popular for obvious reasons. The default value is a URL fragment composed from the entity name which is the YAML key of the entity. If the Entity has an explicit id value, it can be addressed using that URI. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
 query_paths | `string` or `array` of [Query Path](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
