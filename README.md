@@ -28,7 +28,7 @@ While Rapier APIs conform to the principles of REST, including the provision of 
 to changing server data formats—most clients of Rapier APIs are quite conventional.
 
 Since the Rapier specification language is not yet widely 
-known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger) Specification
+known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger)
 document from a Rapier specification. The generated OpenAPI document allows 
 you to learn the precise details of the HTTP messages implied by the Rapier specification, the HTTP specifications and our additional conventions.
 Generating OpenAPI documents is also useful for integrating with tools that are based on OpenAPI, or for communicating with
