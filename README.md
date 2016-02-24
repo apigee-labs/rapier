@@ -23,6 +23,7 @@ Rapier does and is perfectly consistent in applying them.
 Rapier takes a data-oriented approach to API design, which aligns with the model of the world-wide-web. If your mental model of
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
+
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
 to changing server data formats—most clients of Rapier APIs are quite conventional.
 
