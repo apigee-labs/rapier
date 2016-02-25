@@ -329,7 +329,7 @@ query string portion of URLs? Rapier allows you to specify this on collections u
 This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
 
 We have seen three common patterns for query parameters on collections:
-- parameters that are specific to querying a collection. Examples are limit, orderBy, direction (ascending | descending). These are essentially properties of the collection itself. 
+- parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
 - a "projection" parameter that limits the fields being returned. In that case, the valid values would be declared properties of the entity that defines the elements of the collection
 - parameters that select entities that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
 
