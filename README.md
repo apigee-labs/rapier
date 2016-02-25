@@ -333,7 +333,7 @@ We have seen three common patterns for query parameters on collections:
 - a "projection" parameter that limits the fields being returned. In that case, the valid values would be declared properties of the entity that defines the elements of the collection
 - parameters that select entities that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
 
-Given this structure, we may model query parameters more formally in the future.
+Given this structure, we may model query parameters more carefully in the future.
 
 Rapier does not currently allow query parameters for entities - perhaps it should.
 
