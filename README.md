@@ -326,7 +326,9 @@ query string portion of URLs? Rapier allows you to specify this on collections u
       required: false
     readOnly: true
 ```
-This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the genenrated OpenAPI specificstion [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
+This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the genenrated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
+
+Rapier does not currently allow query parameters for entities - perhaps it should.
 
 ### Dog Tracker
  
