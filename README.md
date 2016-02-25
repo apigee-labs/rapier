@@ -302,6 +302,32 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
+### Query Parameters
+
+Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
+query string portion of URLs? Rapier allows you to specify this on collections using the same syntax as OpenAPI. Here is an example:
+```yaml
+  PetCollection:
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/entities/Pet'
+    query_parameters:
+    - name: tags
+      items:
+        type: string
+      type: array
+      collectionFormat: multi
+      required: false
+    - name: status
+      type: integer
+      collectionFormat: multi
+      required: false
+    readOnly: true
+```
+This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the genenrated OpenAPI specificstion [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
+
 ### Dog Tracker
  
 Another popular API example is the 'Dog Tracker' example. The Rapier spec for it [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/dog-tracker.yaml). 
