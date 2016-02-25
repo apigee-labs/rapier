@@ -1142,10 +1142,10 @@ class QuerySegment(object):
             self.relationship_separator = query_segment.get('separator', generator.relationship_separator)
             self.selectors = as_selectors(query_segment.get('selectors', []))
             if 'selector_template' in query_segment:
-                self.selector_template = query_segment['template']
+                selector_template = query_segment['template']
             else:
                 if len(self.selectors) == 1:
-                    self.selector_template = '{%s}'
+                    selector_template = '{%s}'
                     self.selectors[0]['brace_offset'] = 1
                 elif len(self.selectors) > 1:
                     brace_offset = 0
@@ -1155,7 +1155,7 @@ class QuerySegment(object):
                             template += '&'
                         template = template + selector['property'] + '={%s}'
                         selector['open_brace_offset'] = len(template) -1
-                    self.selector_template = template
+                    selector_template = template
         else:
             parts = query_segment.split(';')
             self.relationship_separator = generator.relationship_separator
@@ -1172,7 +1172,7 @@ class QuerySegment(object):
                     } for parsed_format_part in parsed_format if parsed_format_part[1] is not None] 
                 if len(self.selectors) == 0:
                     sys.exit('query segment %s must include {} element after ;' % query_segment)
-                self.selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
+                selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
             else:
                 sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
             self.relationship = parts[0]
@@ -1180,7 +1180,7 @@ class QuerySegment(object):
             duplicate_count = len([selector['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.selectors])
             selector['openapispec_param'] = '_'.join((selector['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else selector['property']
         if len(self.selectors) > 0:
-            params_part = self.selector_template.format(*['{%s}'%disc['openapispec_param'] for disc in self.selectors])
+            params_part = selector_template.format(*['{%s}'%disc['openapispec_param'] for disc in self.selectors])
             self.openapispec_segment_string = self.relationship_separator.join((self.relationship, params_part))
         else:
             self.openapispec_segment_string = self.relationship
