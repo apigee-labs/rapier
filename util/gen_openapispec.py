@@ -248,10 +248,10 @@ class OASGenerator(object):
                 
     def emit_query_path(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         for inx, spec in enumerate(rel_property_spec_stack):
-            if spec.is_multivalued() and not query_path.query_segments[inx].discriminates() and not inx == len(rel_property_spec_stack) - 1:
+            if spec.is_multivalued() and not query_path.query_segments[inx].selects_single_value() and not inx == len(rel_property_spec_stack) - 1:
                 sys.exit('query path has multi-valued segment with no parameter: %s' % query_path)
         rel_spec = rel_property_spec_stack[-1]
-        is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].discriminates()
+        is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].selects_single_value()
         interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
@@ -1141,8 +1141,10 @@ class QuerySegment(object):
             self.relationship = query_segment['relationship']
             self.relationship_separator = query_segment.get('separator', generator.relationship_separator)
             self.selectors = as_selectors(query_segment.get('selectors', []))
+            upper_multiplicity = query_segment.get('multiplicity', '0:1').split(':')[-1]
+            self.is_multivalued = upper_multiplicity == 'n' or (upper_multiplicity.isdigit() and int(upper_multiplicity) > 1)
             if 'selector_template' in query_segment:
-                selector_template = query_segment['template']
+                selector_template = query_segment['selector_template']
             else:
                 if len(self.selectors) == 1:
                     selector_template = '{%s}'
@@ -1176,6 +1178,7 @@ class QuerySegment(object):
             else:
                 sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
             self.relationship = parts[0]
+            self.is_multivalued = False
         for selector in self.selectors:
             duplicate_count = len([selector['property'] == disc['openapispec_param'] for qs in query_segments for disc in qs.selectors])
             selector['openapispec_param'] = '_'.join((selector['openapispec_param'], str(duplicate_count))) if duplicate_count > 0 else selector['property']
@@ -1205,8 +1208,8 @@ class QuerySegment(object):
         else:
             return None
             
-    def discriminates(self):
-        return len(self.selectors) > 0
+    def selects_single_value(self):
+        return len(self.selectors) > 0 and not self.is_multivalued
 
     def __str__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
