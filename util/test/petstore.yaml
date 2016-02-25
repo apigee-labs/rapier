@@ -1,0 +1,172 @@
+title: Pet Store
+entities:
+  Store:
+    well_known_URLs: /store
+    query_paths: pets orders users
+    properties:
+      pets:
+        type: string
+        format: uri
+        relationship:
+          entities: '#Pet'
+          multiplicity: n
+          collection_resource: '#PetCollection'
+      orders:
+        type: string
+        format: uri
+        relationship:
+          entities: '#Order'
+          multiplicity: n
+          collection_resource: '#Collection'
+      users:
+        type: string
+        format: uri
+        relationship:
+          entities: '#User'
+          multiplicity: n
+          collection_resource: '#Collection'
+      logins: #or is logsin ?
+        type: string
+        format: uri
+        relationship:
+          entities: '#Login'
+          multiplicity: n
+          collection_resource: '#Collection'
+        readOnly: true
+  Order:
+    type: object
+    properties:
+      pet:
+        type: string
+        format: uri
+        relationship: '#Pet'
+      quantity:
+        type: "integer"
+        format: "int32"
+      shipDate:
+        type: "string"
+        format: "date-time"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "placed"
+        - "approved"
+        - "delivered"
+      complete:
+        type: "boolean"
+        default: false
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
+      phone:
+        type: string
+      userStatus:
+        type: integer
+        format: int32
+        description: User Status
+      session:
+        type: string
+        format: uri
+        relationship: '#Session'
+  Session: {}
+  Image:
+    type: string
+  Pet:
+    type: object
+    required:
+    - name
+    properties:
+      category:
+        $ref: '#/non_entities/Category'
+      name:
+        type: string
+        example: doggie
+      tags:
+        type: array
+        items:
+          $ref: '#/non_entities/Tag'
+      status:
+        type: string
+        description: pet status in the store
+        enum:
+        - available
+        - pending
+        - sold
+      images:
+        type: string
+        format: uri
+        relationship: 
+          entities: '#Image'
+          multiplicity: n
+          collection_resource: '#Collection'
+  Inventory:
+    type: object
+    additionalProperties:
+        type: string
+        format: uri
+        relationship: '#Pet'
+  Login:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+      rate_limit:
+        type: integer
+      expires_after:
+        type: string
+        format: date-time
+non_entities:
+  Tag:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+  Category:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  Collection:
+    properties:
+      items:
+        type: array
+        items: 
+          type: object
+    readOnly: true
+  PetCollection:
+    properties:
+      items:
+        type: array
+        items: 
+          $ref: '#/entities/Pet'
+    query_parameters:
+    - name: tags
+      items:
+        type: string
+      type: array
+      collectionFormat: multi
+      required: false
+    - name: status
+      type: integer
+      collectionFormat: multi
+      required: false
+    readOnly: true
