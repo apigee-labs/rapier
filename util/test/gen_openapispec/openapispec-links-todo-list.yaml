@@ -24,11 +24,7 @@ definitions:
               href:
                 type: string
                 format: uri
-                x-rapier-relationship:
-                  name: items
-                  collection_resource: '#Collection'
-                  entities: '#Item'
-                  multiplicity: O:n
+                x-interface: '#/x-interfaces/TodoList.items'
   Item:
     properties:
       self:

@@ -30,18 +30,12 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Environment'
+        x-interface: '#/x-interfaces/System.has_environments'
       comprises:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Component'
+        x-interface: '#/x-interfaces/System.comprises'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -53,14 +47,11 @@ definitions:
       realizes:
         format: uri
         type: string
-        x-rapier-relationship: '#System'
+        x-interface: '#/x-interfaces/System'
       hosts:
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Deployment'
+        x-interface: '#/x-interfaces/Environment.hosts'
       requested_state:
         type: string
         readOnly: true
@@ -68,18 +59,12 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#EnvironmentStartRequest'
+        x-interface: '#/x-interfaces/Environment.start_requests'
       stop_requests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#EnvironmentStopRequest'
+        x-interface: '#/x-interfaces/Environment.stop_requests'
   Component:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -91,15 +76,12 @@ definitions:
       is_component_of:
         format: uri
         type: string
-        x-rapier-relationship: '#System'
+        x-interface: '#/x-interfaces/System'
       has_revisions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Revision'
+        x-interface: '#/x-interfaces/Component.has_revisions'
   Revision:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -111,15 +93,12 @@ definitions:
       revises:
         format: uri
         type: string
-        x-rapier-relationship: '#Component'
+        x-interface: '#/x-interfaces/Component'
       has_deployments:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Deployment'
+        x-interface: '#/x-interfaces/Revision.has_deployments'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -131,11 +110,11 @@ definitions:
       deploys:
         format: uri
         type: string
-        x-rapier-relationship: '#Revision'
+        x-interface: '#/x-interfaces/Revision'
       runs_in:
         format: uri
         type: string
-        x-rapier-relationship: '#Environment'
+        x-interface: '#/x-interfaces/Environment'
       requested_state:
         type: string
         readOnly: true
@@ -143,50 +122,32 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentStartRequest'
+        x-interface: '#/x-interfaces/Deployment.start_requests'
       stop_requests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentStopRequest'
+        x-interface: '#/x-interfaces/Deployment.stop_requests'
       go_live_requests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentOnlineRequest'
+        x-interface: '#/x-interfaces/Deployment.go_live_requests'
       go_offline_requests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentOfflineRequest'
+        x-interface: '#/x-interfaces/Deployment.go_offline_requests'
       canary_tests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#CanaryTest'
+        x-interface: '#/x-interfaces/Deployment.canary_tests'
       statistics_tests:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#StatisticsTest'
+        x-interface: '#/x-interfaces/Deployment.statistics_tests'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -265,9 +226,9 @@ definitions:
       results:
         type: string
         format: uri
-        x-rapier-relationship: '#StatisticsResults'
+        x-interface: '#/x-interfaces/StatisticsResults'
     readOnly: true
-  StatistcsResults:
+  StatisticsResults:
     type: object
     readOnly: true
   Collection:
@@ -3455,9 +3416,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: StatisticsTest
-  StatistcsResults:
+  StatisticsResults:
     get:
-      description: Retrieve a StatistcsResults
+      description: Retrieve a StatisticsResults
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -3475,7 +3436,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/StatistcsResults'
+            $ref: '#/definitions/StatisticsResults'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -3515,7 +3476,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: StatistcsResults
+    x-id: StatisticsResults
 x-templates:
   '{System-URL}':
     $ref: '#/x-interfaces/System'
@@ -3543,8 +3504,8 @@ x-templates:
     $ref: '#/x-interfaces/CanaryTest'
   '{StatisticsTest-URL}':
     $ref: '#/x-interfaces/StatisticsTest'
-  '{StatistcsResults-URL}':
-    $ref: '#/x-interfaces/StatistcsResults'
+  '{StatisticsResults-URL}':
+    $ref: '#/x-interfaces/StatisticsResults'
 paths: {}
 parameters:
   Accept:

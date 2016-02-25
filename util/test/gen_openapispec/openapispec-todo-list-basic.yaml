@@ -14,10 +14,7 @@ definitions:
       items:
         type: string
         format: uri
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Item'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/TodoList.items'
   Item:
     properties:
       description:

@@ -16,34 +16,22 @@ definitions:
         description: URL of a Collection of Dogs
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/PropertyTracker.dogs'
       people:
         description: URL of a Collection of Persons
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Person'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/PropertyTracker.people'
       bicycles:
         description: URL of a Collection of Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Bicycle'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/PropertyTracker.bicycles'
       institutions:
         description: URL of a Collection of Institutions
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Institution'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/PropertyTracker.institutions'
     readOnly: true
   Dog:
     allOf:
@@ -59,7 +47,10 @@ definitions:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship: '#Person #Institution'
+        x-interface:
+          oneOf:
+          - '#/x-interfaces/Person'
+          - '#/x-interfaces/Institution'
   Bicycle:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -74,7 +65,10 @@ definitions:
         description: URL of a Person or Institution
         format: uri
         type: string
-        x-rapier-relationship: '#Person #Institution'
+        x-interface:
+          oneOf:
+          - '#/x-interfaces/Person'
+          - '#/x-interfaces/Institution'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -87,10 +81,7 @@ definitions:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog #Bicycle'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Person.possessions'
   Institution:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -103,10 +94,7 @@ definitions:
         description: URL of a Collection of Dogs and Bicycles
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog #Bicycle'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Institution.assets'
   Resource:
     type: object
     properties:

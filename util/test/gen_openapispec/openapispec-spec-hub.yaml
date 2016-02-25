@@ -30,40 +30,27 @@ definitions:
         description: URL of the current user's 'home' Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        x-interface: '#/x-interfaces/Folder'
       sharedWithMe:
         description: URL of a Collection of Folders and Docs
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder #Doc'
-          multiplicity: O:n
-          readOnly: true
+        x-interface: '#/x-interfaces/Store.sharedWithMe'
       docs:
         description: URL of a Collection of Docs
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Doc'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/Store.docs'
       folders:
         description: URL of a Collection of Folders
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Folder'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/Store.folders'
       groups:
         description: URL of a Collection of Groups
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Group'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/Store.groups'
     readOnly: true
   Folder:
     allOf:
@@ -74,15 +61,12 @@ definitions:
         format: uri
         readOnly: true
         type: string
-        x-rapier-relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
-          entities: '#Doc #Folder'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/Folder.contents'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        x-interface: '#/x-interfaces/Folder'
       kind:
         type: string
         enum:
@@ -109,12 +93,12 @@ definitions:
         description: URL of a Content
         format: uri
         type: string
-        x-rapier-relationship: '#Content'
+        x-interface: '#/x-interfaces/Content'
       folder:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        x-interface: '#/x-interfaces/Folder'
       kind:
         type: string
         enum:
@@ -144,7 +128,7 @@ definitions:
         description: URL of a Folder
         format: uri
         type: string
-        x-rapier-relationship: '#Folder'
+        x-interface: '#/x-interfaces/Folder'
       kind:
         type: string
         enum:
@@ -180,15 +164,11 @@ definitions:
       next_page:
         type: string
         format: uri
-        x-rapier-relationship:
-          entities: '#Page'
-          readOnly: true
+        x-interface: '#/x-interfaces/Page'
       previous_page:
         type: string
         format: uri
-        x-rapier-relationship:
-          entities: '#Page'
-          readOnly: true
+        x-interface: '#/x-interfaces/Page'
     readOnly: true
   Collection:
     allOf:

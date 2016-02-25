@@ -16,18 +16,12 @@ definitions:
         description: URL of a Collection of Dogs
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/DogTracker.dogs'
       people:
         description: URL of a Collection of Persons
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Person'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/DogTracker.people'
     readOnly: true
   Dog:
     allOf:
@@ -42,8 +36,7 @@ definitions:
       owner:
         format: uri
         type: string
-        x-rapier-relationship:
-          entities: '#Person'
+        x-interface: '#/x-interfaces/Person'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -55,10 +48,7 @@ definitions:
       dogs:
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Dog'
-          multiplicity: O:n
+        x-interface: '#/x-interfaces/Person.dogs'
   Resource:
     type: object
     properties:

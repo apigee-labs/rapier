@@ -21,18 +21,12 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Environment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Cloud.environments'
       deployments:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Deployment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Cloud.deployments'
   Environment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -47,10 +41,7 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Deployment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Environment.deployments'
   Deployment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -64,11 +55,11 @@ definitions:
       environment:
         format: uri
         type: string
-        x-rapier-relationship: '#Environment'
+        x-interface: '#/x-interfaces/Environment'
       spec:
         format: uri
         type: string
-        x-rapier-relationship: '#PodTemplateSpec'
+        x-interface: '#/x-interfaces/PodTemplateSpec'
       replicas:
         type: integer
   PodTemplateSpec:

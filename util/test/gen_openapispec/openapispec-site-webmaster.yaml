@@ -13,7 +13,7 @@ definitions:
       webmaster:
         type: string
         format: uri
-        x-rapier-relationship: '#Person'
+        x-interface: '#/x-interfaces/Person'
   Person:
     properties:
       name:

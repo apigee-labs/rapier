@@ -21,26 +21,17 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Environment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Cloud.environments'
       orgs:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Org'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Cloud.orgs'
       deployments:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Deployment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Cloud.deployments'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -54,15 +45,12 @@ definitions:
       org:
         format: uri
         type: string
-        x-rapier-relationship: '#Org'
+        x-interface: '#/x-interfaces/Org'
       deployments:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Deployment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Environment.deployments'
   Org:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -76,10 +64,7 @@ definitions:
       environments:
         format: uri
         type: string
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Environment'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Org.environments'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -93,11 +78,11 @@ definitions:
       environment:
         format: uri
         type: string
-        x-rapier-relationship: '#Environment'
+        x-interface: '#/x-interfaces/Environment'
       spec:
         format: uri
         type: string
-        x-rapier-relationship: '#PodTemplateSpec'
+        x-interface: '#/x-interfaces/PodTemplateSpec'
   PodTemplateSpec:
     type: string
   PersistentResource:

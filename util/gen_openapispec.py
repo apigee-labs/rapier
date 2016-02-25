@@ -896,14 +896,11 @@ class OASGenerator(object):
                             oas_properties[k2] = self.to_openapispec(v2, entity_spec or node, k2)
                     result['properties'] = oas_properties
                 elif k == 'relationship':
-                    if False:
-                        rel_property_specs = self.get_one_relationship_property_specs(property_name, node, entity_spec['id'], entity_spec)
-                        if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
-                            result['x-interface'] = {'oneOf': [{'$ref': '#/x-interfaces/%s' % rel_property_spec.interface_id()} for rel_property_spec in rel_property_specs]}
-                        else:
-                            result['x-interface'] = {'$ref': '#/x-interfaces/%s' % rel_property_specs[0].interface_id()}
+                    rel_property_specs = self.get_one_relationship_property_specs(property_name, node, entity_spec['id'], entity_spec)
+                    if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
+                        result['x-interface'] = {'oneOf': [{'$ref': '#/x-interfaces/%s' % rel_property_spec.interface_id()} if False else '#/x-interfaces/%s' % rel_property_spec.interface_id() for rel_property_spec in rel_property_specs]}
                     else:
-                        result['x-rapier-relationship'] = v
+                        result['x-interface'] = {'$ref': '#/x-interfaces/%s' % rel_property_specs[0].interface_id()} if False else '#/x-interfaces/%s' % rel_property_specs[0].interface_id()
                 elif k == 'type':
                     result['type'] = v
             return result

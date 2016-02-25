@@ -20,10 +20,7 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Keystore'
-          multiplicity: 0:n
+        x-interface: '#/x-interfaces/Environment.keystores'
   Keystore:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -38,13 +35,7 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#Alias'
-          multiplicity: 0:n
-          consumes:
-            multi-part/form-data: '#Pkcs12Alias #KeyCertFileAlias #KeyCertJarAlias'
-            application/json: '#SelfSignedCertAlias'
+        x-interface: '#/x-interfaces/Keystore.aliases'
   Alias:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -75,21 +66,16 @@ definitions:
       certificate:
         format: uri
         type: string
-        x-rapier-relationship: '#Certificate'
+        x-interface: '#/x-interfaces/Certificate'
       csr:
         format: uri
         type: string
-        x-rapier-relationship:
-          readOnly: true
-          entities: '#CSR'
+        x-interface: '#/x-interfaces/CSR'
       selfSignedCertificate:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#SelfSignedCertAlias'
+        x-interface: '#/x-interfaces/Alias.selfSignedCertificate'
   Certificate:
     readOnly: true
     type: string
