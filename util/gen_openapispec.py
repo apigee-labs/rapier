@@ -1198,6 +1198,8 @@ class QuerySegment(object):
                     'type': property['type'],
                     'required': True
                     } 
+                if property['type'] == 'array':
+                    rslt['items'] =  property['items']
                 if self.rel_property_spec.implementation_private:
                     rslt['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
                 result.append(rslt)
