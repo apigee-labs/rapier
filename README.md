@@ -332,7 +332,8 @@ We have seen three common patterns for query parameters on collections:
 - parameters that are specific to querying a collection. Examples are limit, orderBy, direction (ascending | descending). These are essentially properties of the collection itself. 
 - a "projection" parameter that limits the fields being returned. In that case, the valid values would be declared properties of the entity that defines the elements of the collection
 - parameters that select entities that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
-Given this structure, we may model query paramters more formally in the future.
+
+Given this structure, we may model query parameters more formally in the future.
 
 Rapier does not currently allow query parameters for entities - perhaps it should.
 
