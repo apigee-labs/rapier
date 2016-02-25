@@ -470,8 +470,8 @@ class OASGenerator(object):
                 post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([self.resolve_entity_name(rel_prop_spec.target_entity_uri) for rel_prop_spec in rel_property_specs])
             else:
-                post_schema = self.global_definition_ref(entity_uri)
-                description = 'Create a new %s' % self.resolve_entity_name(entity_uri)
+                post_schema = self.global_definition_ref(consumes_entities[0])
+                description = 'Create a new %s' % self.resolve_entity_name(consumes_entities[0])
             path_spec['post'] = {
                 'description': description,
                 'parameters': [

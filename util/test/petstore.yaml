@@ -26,12 +26,15 @@ entities:
           multiplicity: n
           collection_resource: '#Collection'
       logins: #or is logsin ?
+        description: POST a Login to log yourself in. You will get back the URL of a Session. DELETE the Session to log out 
         type: string
         format: uri
         relationship:
-          entities: '#Login'
+          entities: '#Session'
           multiplicity: n
           collection_resource: '#Collection'
+          consumes:
+            application/json: '#Login'
         readOnly: true
   Order:
     type: object
@@ -79,7 +82,6 @@ entities:
         type: string
         format: uri
         relationship: '#Session'
-  Session: {}
   Image:
     type: string
   Pet:
@@ -116,6 +118,15 @@ entities:
         type: string
         format: uri
         relationship: '#Pet'
+  Session:
+    type: object
+    properties:
+      rate_limit:
+        type: integer
+      expires_after:
+        type: string
+        format: date-time
+non_entities:
   Login:
     type: object
     properties:
@@ -123,12 +134,6 @@ entities:
         type: string
       password:
         type: string
-      rate_limit:
-        type: integer
-      expires_after:
-        type: string
-        format: date-time
-non_entities:
   Tag:
     type: "object"
     properties:

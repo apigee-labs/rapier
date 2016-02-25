@@ -23,6 +23,8 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/Store.users'
       logins:
+        description: POST a Login to log yourself in. You will get back the URL of
+          a Session. DELETE the Session to log out
         type: string
         format: uri
         x-interface: '#/x-interfaces/Store.logins'
@@ -72,7 +74,6 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/Session'
-  Session: {}
   Image:
     type: string
   Pet:
@@ -101,6 +102,14 @@ definitions:
         x-interface: '#/x-interfaces/Pet.images'
   Inventory:
     type: object
+  Session:
+    type: object
+    properties:
+      rate_limit:
+        type: integer
+      expires_after:
+        type: string
+        format: date-time
   Login:
     type: object
     properties:
@@ -108,11 +117,6 @@ definitions:
         type: string
       password:
         type: string
-      rate_limit:
-        type: integer
-      expires_after:
-        type: string
-        format: date-time
   Tag:
     type: object
     properties:
@@ -574,9 +578,11 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
+      consumes:
+      - application/json
       description: Create a new Login
       parameters:
-      - description: The representation of the new Login being created
+      - description: The representation of the new Session being created
         in: body
         name: body
         schema:
@@ -588,7 +594,7 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new Login
+          description: Created new Session
           headers:
             Content-Type:
               description: The media type of the returned body
@@ -597,10 +603,10 @@ x-interfaces:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created Login
+              description: perma-link URL of newly-created Session
               type: string
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/Session'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -925,138 +931,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: User
-  Session:
-    get:
-      description: Retrieve a Session
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Session'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a Session entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Session being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Session'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Session'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a Session
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Session'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Session
   Image:
     get:
       description: Retrieve an Image
@@ -1576,9 +1450,9 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Inventory
-  Login:
+  Session:
     get:
-      description: Retrieve a Login
+      description: Retrieve a Session
       parameters:
       - $ref: '#/parameters/Accept'
       responses:
@@ -1596,7 +1470,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/Session'
         '401':
           $ref: '#/responses/401'
         '403':
@@ -1608,14 +1482,14 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     put:
-      description: Create or Update a Login entity
+      description: Create or Update a Session entity
       parameters:
       - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Login being replaced
+      - description: The representation of the Session being replaced
         in: body
         name: body
         schema:
-          $ref: '#/definitions/Login'
+          $ref: '#/definitions/Session'
       responses:
         '200':
           description: successful
@@ -1631,18 +1505,18 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/Session'
         '201':
-          description: Created new Login
+          description: Created new Session
           headers:
             Content-Type:
               description: The media type of the returned body
               type: string
             Location:
-              description: perma-link URL of newly-created Login
+              description: perma-link URL of newly-created Session
               type: string
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/Session'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1658,7 +1532,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     delete:
-      description: Delete a Login
+      description: Delete a Session
       responses:
         '200':
           description: successful
@@ -1674,7 +1548,7 @@ x-interfaces:
                 PATCH or PUT
               type: string
           schema:
-            $ref: '#/definitions/Login'
+            $ref: '#/definitions/Session'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1716,7 +1590,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Login
+    x-id: Session
 x-templates:
   '{Store-URL}':
     $ref: '#/x-interfaces/Store'
@@ -1724,16 +1598,14 @@ x-templates:
     $ref: '#/x-interfaces/Order'
   '{User-URL}':
     $ref: '#/x-interfaces/User'
-  '{Session-URL}':
-    $ref: '#/x-interfaces/Session'
   '{Image-URL}':
     $ref: '#/x-interfaces/Image'
   '{Pet-URL}':
     $ref: '#/x-interfaces/Pet'
   '{Inventory-URL}':
     $ref: '#/x-interfaces/Inventory'
-  '{Login-URL}':
-    $ref: '#/x-interfaces/Login'
+  '{Session-URL}':
+    $ref: '#/x-interfaces/Session'
   '{Store-URL}/pets':
     $ref: '#/x-interfaces/Store.pets'
   '{Store-URL}/orders':
