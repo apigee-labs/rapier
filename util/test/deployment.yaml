@@ -334,7 +334,7 @@ securityDefinitions:
   sso:
     type: oauth2
     scopes: {}
-    flow: application
+    flow: password
     tokenUrl: whatever
 security:
 - sso: []
