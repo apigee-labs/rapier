@@ -94,24 +94,13 @@ class OASValidator(object):
             self.error('version must be a string ', key)
         
     def check_id_uniqueness(self):
-        entities = set()
-        non_entities = set()
-        if 'entities' in self.rapier_spec:
-            for name, entity in self.rapier_spec['entities'].iteritems():
-                id = entity.get('id', name)
-                if id in entities:
-                    self.info('information about %s is provided in multiple places - is this what you meant?' % id)
-                else:
-                    entities.add(id)
-        if 'non_entities' in self.rapier_spec:
-            for name, entity in self.rapier_spec['non_entities'].iteritems():
-                id = entity.get('id', name)
-                if id in non_entities:
-                    self.info('information about %s is provided in multiple places - is this what you meant?' % id)
-                if id in entities:
-                    self.error('%s is declared to be both an entity and a non_entity. It cannot be both' % id)
-                else:
-                    entities.add(id)
+        self.entities = {}
+        for name, entity in {k:v for d in (self.rapier_spec.get('entities',{}), self.rapier_spec.get('non_entities',{})) for k,v in d.iteritems()}.iteritems():
+            id = entity.get('id', '#%s'%name)
+            if id in self.entities:
+                self.info('information about %s is provided in multiple places - is this what you meant?' % id)
+            else:
+                self.entities[id] = entity
         self.checked_id_uniqueness = True
             
     def validate_entities(self, key, entities):
@@ -185,16 +174,65 @@ class OASValidator(object):
             self.error('format must be a string: %s' % format, key)    
             
     def validate_property_relationship(self, key, relationship):
-        self.info('relationship not yet validated')        
+        if hasattr(relationship, 'keys'):
+            self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship)
+        elif isinstance(relationship, basestring):
+            self.check_and_validate_keywords(self.__class__.relationship_keywords, {'entities': relationship})            
+        else:
+            self.error('relationship must be a string or a map %s' % relationship)        
             
     def validate_property_items(self, key, items):
-        self.info('items not yet validated')        
+        self.info('items not yet validated')  
+        
+    def validate_relationship_entities(self, key, entities):
+        if isinstance(entities, basestring):
+            entity_urls = entities.split()
+        else:
+            if not isinstance(entities, list):
+                return self.error('entities must be a string or list %s' % s, key)
+            else:
+                entity_urls = entities
+        for entity_url in entity_urls:
+            self.validate_entity_url(entity_url, key)  
+            
+    def validate_relationship_multiplicity(self, key, multiplicity):
+        if not isinstance(multiplicity, basestring):
+            self.error('relationship multiplicity mut be a string %s' %s, key)
+        else:
+            parts = multiplicity.split(':')
+            if len(parts) == 1:
+                lower_bound = '0'
+                upper_bound = parts[0]
+            elif len(parts) == 2:
+                lower_bound = parts[0]
+                upper_bound = parts[1]
+            else:
+                return self.error('only one : is allowed in multiplicity %s' %multiplicity, key)
+            if not lower_bound.isdigit():
+                self.error('multiplicity lower bound must be a digit: %s,' % lower_bound, key)
+            if not upper_bound == 'n':
+                if not upper_bound.isdigit():
+                    self.error('multiplicity upper bound must be a digit or "n" %s' % lower_bound, key)
+                else:
+                    if int(upper_bound) < int(lower_bound):
+                        self.error('multiplicity upper bound must be greater than or equal to lower bound %s %s' % (upper_bound, lower_bound), key)
+                        
+    def validate_relationship_collection_resource(self, key, collection_resource):
+        self.validate_entity_url(collection_resource, key)
             
     rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'non_entities': validate_non_entities, 'conventions': validate_conventions, 'version': validate_version}
     entity_keywords = {'id': validate_id, 'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs, 'properties': validate_properties, 'readOnly': validate_readOnly}
     non_entity_keywords = {'id': validate_id, 'properties': validate_properties, 'readOnly': validate_readOnly}
     conventions_keywords = {'selector_location': validate_selector_location}
     property_keywords = {'type': validate_property_type, 'format': validate_property_format, 'relationship': validate_property_relationship, 'items': validate_property_items, 'readOnly': validate_readOnly}
+    relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource}
+
+    def validate_entity_url(self, entity_url, key):
+        # in the future, handle URLs outisde the current document. for now assume fragment URLs
+        if not isinstance(entity_url, basestring):
+            self.error('entity URL must be a string %s' % entity_url, key)
+        elif entity_url not in self.entities:
+            self.error('entity not found %s' % entity_url, key)
 
     def validate(self):
         if not hasattr(self.rapier_spec, 'keys'):
