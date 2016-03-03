@@ -1,0 +1,180 @@
+title: Teams API
+version: "0.1"
+consumes: application/json
+produces: application/json text/html
+conventions:
+  patch_consumes: application/merge-patch+json
+  error_response:
+    type: string
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+- sso: []
+entities:
+  System:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [System]
+      groups:
+        description: URL of a Collection of Groups
+        format: uri
+        type: string        
+        relationship:
+          collection_resource: '#MultiValuedRelationshipResource'
+          entities: '#Group'
+          multiplicity: O:n
+          query_parameters:
+          - name: folder
+            type: array
+            format: uri
+            required: false
+    well_known_URLs: /system
+    query_paths: 
+    - groups
+    readOnly: true
+  Group:
+    allOf:
+    - $ref: '#/non_entities/PersistentResource'
+    properties:
+      members:
+        description: Array of URLs of Users
+        type: array
+        items:
+          type: string
+          format: uri
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        relationship: '#Folder'
+      kind:
+        type: string
+        enum: [Group]
+      name:
+        type: string
+      permissions:
+        type: array
+        items: 
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+  Page:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Page]
+      items:
+        type: array
+        items: 
+          type: object
+      collection:
+        type: string
+        format: uri
+      next_page:
+        type: string
+        format: uri
+        relationship:
+          entities: '#Page'
+          readOnly: True
+      previous_page:
+        type: string
+        format: uri
+        relationship:
+          entities: '#Page'
+          readOnly: True
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    readOnly: true
+non_entities:   
+  Folder: {}
+  Collection:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderBy # required if limit is provided
+      type: string
+      required: false
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
+  MultiValuedRelationshipResource:
+    readOnly: true
+    oneOf:
+      - $ref: '#/non_entities/Collection'
+      - $ref: '#/entities/Page'
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/non_entities/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+implementation_only:
+  Group:
+    instance_url:
+      template: /c3Rvc-Z3Jw-{} 
+      key:
+        name: implementation_key
+        type: integer
