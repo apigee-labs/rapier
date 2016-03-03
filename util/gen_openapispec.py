@@ -159,14 +159,13 @@ class OASGenerator(object):
                             self.interfaces[rel_property_spec.interface_id()] = interface
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
-                if entity_spec['kind'] == 'Entity': 
+                if 'well_known_URLs' in entity_spec:
                     entity_url_spec = EntityURLSpec(entity_uri, self)
-                    if 'well_known_URLs' in entity_spec:
-                        for well_known_URL in as_list(entity_spec['well_known_URLs']):
-                            path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
-                            spec = WellKnownURLSpec(path, entity_uri, self)
-                            path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
-                            self.openapispec_paths[path] = path_spec
+                    for well_known_URL in as_list(entity_spec['well_known_URLs']):
+                        path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
+                        spec = WellKnownURLSpec(path, entity_uri, self)
+                        path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
+                        self.openapispec_paths[path] = path_spec
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'instance_url' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
