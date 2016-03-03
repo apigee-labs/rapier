@@ -145,7 +145,7 @@ class OASGenerator(object):
                     interface = self.build_entity_interface(entity_url_spec)
                     interface['x-id'] = entity_url_spec.interface_id()
                     self.interfaces[entity_uri] = interface
-                    self.openapispec_interfaces[entity_url_spec.interface_id()] = interface
+                    self.openapispec_interfaces[self.resolve_entity_name(entity_uri)] = interface
                     self.openapispec_templates[entity_url_spec.template_id()] = self.build_interface_reference(entity_url_spec)
                     rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                     for rel_property_spec in rel_property_specs:
@@ -966,10 +966,10 @@ class PathPrefix(object):
         return False
         
     def interface_id(self):
-        return EntityURLSpec(self.entity_uri, self.generator).interface_id()
+        return self.generator.resolve_entity_name(self.entity_uri)
       
     def template_id(self):
-        return '{%s-URL}' % self.generator.resolve_entity_name(self.entity_uri)
+        return '{%s-URL}' % self.interface_id()
       
 class RelSVPropertySpec(SegmentSpec):
     
@@ -1223,9 +1223,6 @@ class EntityURLSpec(PathPrefix):
 
     def path_segment(self, select_one_of_many = False):
         return self.generator.resolve_entity_name(self.entity_uri)
-
-    def interface_id(self):
-        return '%s' % self.generator.resolve_entity_name(self.entity_uri)
 
     def build_param(self):
         return None
