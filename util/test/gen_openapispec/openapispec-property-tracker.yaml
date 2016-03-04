@@ -51,6 +51,7 @@ definitions:
           oneOf:
           - '#/x-interfaces/Person'
           - '#/x-interfaces/Institution'
+    x-template: '#/x-templates/{Dog-URL}'
   Bicycle:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -69,6 +70,7 @@ definitions:
           oneOf:
           - '#/x-interfaces/Person'
           - '#/x-interfaces/Institution'
+    x-template: '#/x-templates/{Bicycle-URL}'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -82,6 +84,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Person.possessions'
+    x-template: '#/x-templates/{Person-URL}'
   Institution:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -95,6 +98,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Institution.assets'
+    x-template: '#/x-templates/{Institution-URL}'
   Resource:
     type: object
     properties:

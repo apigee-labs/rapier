@@ -3,7 +3,7 @@ version: "0.1"
 entities:
   PropertyTracker:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       dogs:
         description: URL of a Collection of Dogs
@@ -54,7 +54,7 @@ entities:
     readOnly: true
   Dog:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -69,7 +69,7 @@ entities:
         relationship: '#Person #Institution'
   Bicycle:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -84,7 +84,7 @@ entities:
         relationship: '#Person #Institution'
   Person:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -100,7 +100,7 @@ entities:
           multiplicity: 0:n
   Institution:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -114,7 +114,6 @@ entities:
           collection_resource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
-non_entities:
   Resource:
     type: object
     properties:
@@ -125,7 +124,7 @@ non_entities:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       created:
         type: string
@@ -145,7 +144,7 @@ non_entities:
         readOnly: true
   Collection:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
