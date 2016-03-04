@@ -87,6 +87,7 @@ definitions:
               type: string
             action:
               type: string
+    x-template: '#/x-templates/{Folder-URL}'
   Doc:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -119,6 +120,7 @@ definitions:
               type: string
             action:
               type: string
+    x-template: '#/x-templates/{Doc-URL}'
   Group:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -149,8 +151,10 @@ definitions:
               type: string
             action:
               type: string
+    x-template: '#/x-templates/{Group-URL}'
   Content:
     type: string
+    x-template: '#/x-templates/{Content-URL}'
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -175,6 +179,7 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/Page'
     readOnly: true
+    x-template: '#/x-templates/{Page-URL}'
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'

@@ -149,6 +149,8 @@ class OASGenerator(object):
                             interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec, rel_property_specs)
                             self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
                             self.interfaces[rel_property_spec.interface_id()] = interface
+                        else:
+                            self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
             for entity_name, entity_spec in entities.iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
@@ -448,9 +450,7 @@ class OASGenerator(object):
         rel_property_specs = [spec for spec in rel_property_specs if spec.relationship_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
-#        self.referenced_entities.extend([spec.target_entity_uri for spec in rel_property_specs])
-        for spec in rel_property_specs:
-            self.referenced_entities.add(spec.target_entity_uri) 
+        self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])
         if not rel_property_spec.readOnly:
             if len(rel_property_specs) > 1:
                 schema = {}
@@ -789,7 +789,6 @@ class OASGenerator(object):
         return rslt        
  
     def define_put_if_match_header(self):
-        1/0
         if not 'Put-If-Match' in self.header_parameters:
             self.header_parameters['Put-If-Match'] = {
                 'name': 'If-Match',
