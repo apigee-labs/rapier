@@ -299,7 +299,7 @@ class OASGenerator(object):
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
         if path not in self.openapispec_interfaces: 
-            self.openapispec_interfaces[path] = self.interfaces[prefix.entity_uri]
+            self.openapispec_interfaces[path] = self.interfaces[path if query_path else prefix.entity_uri]
         return {'$ref': '#/x-interfaces/%s' % path}            
 
     def build_entity_interface(self, entity_url_spec):
@@ -309,7 +309,7 @@ class OASGenerator(object):
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
-        structured = 'type' not in entity_spec
+        structured = 'type' not in entity_spec or entity_spec['type'] == 'object'
         def build_response_200():
             response_200 = {
                 'schema': self.global_definition_ref(entity_uri)
@@ -789,6 +789,7 @@ class OASGenerator(object):
         return rslt        
  
     def define_put_if_match_header(self):
+        1/0
         if not 'Put-If-Match' in self.header_parameters:
             self.header_parameters['Put-If-Match'] = {
                 'name': 'If-Match',
@@ -922,7 +923,7 @@ class SegmentSpec(object):
         return self.__dict__.hash()
 
     def __str__(self):
-        return 'SegmentSpec(%s)' % self.__dict__.__str__()
+        return '%s(%s)' % (self.__class__.__name__, self.__dict__.__str__())
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
@@ -976,6 +977,7 @@ class RelSVPropertySpec(SegmentSpec):
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
         self.readOnly = relationship.get('readOnly')                                 
         self.target_entity_uri = target_entity_uri
+        self.entity_uri = target_entity_uri
         self.relationship_name = relationship['name']        
         self.implementation_private = property.get('implementation_private', False)    
         self._entity_spec = entity_spec      
@@ -1013,8 +1015,9 @@ class RelMVPropertySpec(SegmentSpec):
         self._collection_resource = relationship.get('collection_resource', True)
         self._consumes = relationship.get('consumes')
         self._generator = generator
+        self._entity_uri = entity_uri
 
-        self.entity_uri = entity_uri
+        self.entity_uri = target_entity_uri
         self.readOnly = relationship.get('readOnly')                                 
         self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
         self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
@@ -1050,7 +1053,7 @@ class RelMVPropertySpec(SegmentSpec):
         return '%s.%s' % (self._entity_spec['name'], self.relationship_name)
         
     def template_id(self):
-        return '{%s}' % self._generator.resolve_entity_name(self.entity_uri)
+        return '{%s}' % self._generator.resolve_entity_name(self._entity_uri)
       
     def source_entity_name(self):
         return self._entity_spec['name']
