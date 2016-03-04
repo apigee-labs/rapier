@@ -36,6 +36,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Keystore.aliases'
+    x-template: '#/x-templates/{Keystore-URL}'
   Alias:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -75,13 +76,16 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-interface: '#/x-interfaces/Alias.selfSignedCertificate'
+        x-interface: '#/x-interfaces/Certificate'
+    x-template: '#/x-templates/{Alias-URL}'
   Certificate:
     readOnly: true
     type: string
+    x-template: '#/x-templates/{Certificate-URL}'
   CSR:
     readOnly: true
     type: string
+    x-template: '#/x-templates/{CSR-URL}'
   Pkcs12Alias:
     type: object
     properties:
@@ -345,102 +349,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Alias
-  Alias.selfSignedCertificate:
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new SelfSignedCertAlias
-      parameters:
-      - description: The representation of the new SelfSignedCertAlias being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/SelfSignedCertAlias'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new SelfSignedCertAlias
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created SelfSignedCertAlias
-              type: string
-          schema:
-            $ref: '#/definitions/SelfSignedCertAlias'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Alias.selfSignedCertificate
   CSR: &CSR
     get:
       description: Retrieve a CSR

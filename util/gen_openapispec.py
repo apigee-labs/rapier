@@ -270,6 +270,7 @@ class OASGenerator(object):
     def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
         parameters = self.build_parameters(prefix)
         if parameters:
+            self.build_template_reference(prefix, query_path)
             parameters = self.build_parameters(prefix, query_path)
             oas_path_spec = PresortedOrderedDict()
             if prefix.is_impl_spec():            

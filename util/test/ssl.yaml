@@ -85,10 +85,7 @@ entities:
         format: uri
         type: string
         readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#SelfSignedCertAlias'
+        relationship: '#Certificate'
   Certificate:
     readOnly: true
     type: string
