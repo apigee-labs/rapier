@@ -1,4 +1,4 @@
-# Welcome to Rapier - REST APIs from Entities and Relationships.
+# Rapier - REST APIs from Entities and Relationships.
 
 ## Table of Contents
 - [Introduction](#introduction)
