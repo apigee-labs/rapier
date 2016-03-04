@@ -119,7 +119,6 @@ entities:
       due:
         type: string
         format: date-time
-non_entities:
   Collection:
     readOnly: true
     properties:
@@ -134,8 +133,7 @@ property called `items`. In this case, the declaration of the relationship prope
 In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the entity property is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
-relationship and can POST to make new ones. The `Collection` resource is defined in a `non_entities` section of the Rapier spec because 
-it is not an entity in the data model - it is a 'technical' resource needed to represent a collection of entities.
+relationship and can POST to make new ones.
 In JSON, the `To_do_list` at `/to-dos` will look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
@@ -195,7 +193,6 @@ entities:
       due:
         type: string
         format: date-time
-non_entities:
   Collection:
     readOnly: true
     properties:
@@ -272,7 +269,6 @@ entities:
       due:
         type: string
         format: date-time
-non_entities:
   Collection:
     readOnly: true
     properties:
