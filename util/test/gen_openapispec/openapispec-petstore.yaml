@@ -29,6 +29,7 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/Store.logins'
         readOnly: true
+    x-interface: '#/x-interfaces/Store'
   Order:
     type: object
     properties:
@@ -51,7 +52,7 @@ definitions:
         - delivered
       complete:
         type: boolean
-    x-template: '#/x-templates/{Order-URL}'
+    x-interface: '#/x-interfaces/Order'
   User:
     type: object
     properties:
@@ -75,10 +76,10 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/Session'
-    x-template: '#/x-templates/{User-URL}'
+    x-interface: '#/x-interfaces/User'
   Image:
     type: string
-    x-template: '#/x-templates/{Image-URL}'
+    x-interface: '#/x-interfaces/Image'
   Pet:
     type: object
     required:
@@ -103,7 +104,7 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/Pet.images'
-    x-template: '#/x-templates/{Pet-URL}'
+    x-interface: '#/x-interfaces/Pet'
   Inventory:
     type: object
   Session:
@@ -114,7 +115,7 @@ definitions:
       expires_after:
         type: string
         format: date-time
-    x-template: '#/x-templates/{Session-URL}'
+    x-interface: '#/x-interfaces/Session'
   Login:
     type: object
     properties:
@@ -1516,14 +1517,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: User
 x-templates:
-  '{Image-URL}':
-    $ref: '#/x-interfaces/Image'
-  '{Order-URL}':
-    $ref: '#/x-interfaces/Order'
-  '{Pet-URL}':
-    $ref: '#/x-interfaces/Pet'
-  '{Session-URL}':
-    $ref: '#/x-interfaces/Session'
   '{Store-URL}':
     $ref: '#/x-interfaces/Store'
   '{Store-URL}/orders':
@@ -1532,8 +1525,6 @@ x-templates:
     $ref: '#/x-interfaces/Store.pets'
   '{Store-URL}/users':
     $ref: '#/x-interfaces/Store.users'
-  '{User-URL}':
-    $ref: '#/x-interfaces/User'
 paths:
   /store:
     $ref: '#/x-templates/{Store-URL}'

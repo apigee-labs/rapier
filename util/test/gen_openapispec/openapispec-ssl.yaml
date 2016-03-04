@@ -21,6 +21,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.keystores'
+    x-interface: '#/x-interfaces/Environment'
   Keystore:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -36,7 +37,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Keystore.aliases'
-    x-template: '#/x-templates/{Keystore-URL}'
+    x-interface: '#/x-interfaces/Keystore'
   Alias:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -77,15 +78,15 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Certificate'
-    x-template: '#/x-templates/{Alias-URL}'
+    x-interface: '#/x-interfaces/Alias'
   Certificate:
     readOnly: true
     type: string
-    x-template: '#/x-templates/{Certificate-URL}'
+    x-interface: '#/x-interfaces/Certificate'
   CSR:
     readOnly: true
     type: string
-    x-template: '#/x-templates/{CSR-URL}'
+    x-interface: '#/x-interfaces/CSR'
   Pkcs12Alias:
     type: object
     properties:
@@ -905,12 +906,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Keystore.aliases
 x-templates:
-  '{Alias-URL}':
-    $ref: '#/x-interfaces/Alias'
-  '{CSR-URL}':
-    $ref: '#/x-interfaces/CSR'
-  '{Certificate-URL}':
-    $ref: '#/x-interfaces/Certificate'
   '{Environment-URL}':
     $ref: '#/x-interfaces/Environment'
   '{Environment-URL}/keystores':
@@ -951,8 +946,6 @@ x-templates:
       required: true
       type: string
     <<: *CSR
-  '{Keystore-URL}':
-    $ref: '#/x-interfaces/Keystore'
 paths:
   /v1/o/{org}/e/{env}:
     parameters:

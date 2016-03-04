@@ -57,6 +57,7 @@ definitions:
         type: string
         x-interface: '#/x-interfaces/Store.groups'
     readOnly: true
+    x-interface: '#/x-interfaces/Store'
   Folder:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -87,7 +88,7 @@ definitions:
               type: string
             action:
               type: string
-    x-template: '#/x-templates/{Folder-URL}'
+    x-interface: '#/x-interfaces/Folder'
   Doc:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -120,7 +121,7 @@ definitions:
               type: string
             action:
               type: string
-    x-template: '#/x-templates/{Doc-URL}'
+    x-interface: '#/x-interfaces/Doc'
   Group:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -151,10 +152,10 @@ definitions:
               type: string
             action:
               type: string
-    x-template: '#/x-templates/{Group-URL}'
+    x-interface: '#/x-interfaces/Group'
   Content:
     type: string
-    x-template: '#/x-templates/{Content-URL}'
+    x-interface: '#/x-interfaces/Content'
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -179,7 +180,7 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/Page'
     readOnly: true
-    x-template: '#/x-templates/{Page-URL}'
+    x-interface: '#/x-interfaces/Page'
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -1620,8 +1621,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Store.sharedWithMe
 x-templates:
-  '{Content-URL}':
-    $ref: '#/x-interfaces/Content'
   '{Doc-URL}':
     $ref: '#/x-interfaces/Doc'
   '{Doc-URL}/content':
@@ -1632,8 +1631,6 @@ x-templates:
     $ref: '#/x-interfaces/Folder.contents'
   '{Group-URL}':
     $ref: '#/x-interfaces/Group'
-  '{Page-URL}':
-    $ref: '#/x-interfaces/Page'
   '{Store-URL}':
     $ref: '#/x-interfaces/Store'
   '{Store-URL}/docs':

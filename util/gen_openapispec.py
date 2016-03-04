@@ -85,7 +85,6 @@ class OASGenerator(object):
         self.openapispec['responses'] = dict()
         self.openapispec['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-        self.referenced_entities = set()
 
         if 'entities' in spec:
             entities = spec['entities']
@@ -94,12 +93,6 @@ class OASGenerator(object):
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
             self.openapispec_uri_map.update({'#/non_entities/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entities',{}).iterkeys()})
-            for entity in entities.itervalues():
-                if 'kind' not in entity:
-                    entity['kind'] = 'Entity'
-            for entity in spec.get('non_entities',{}).itervalues():
-                if 'kind' not in entity:
-                    entity['kind'] = 'NonEntityResource'                
             entities.update(spec.get('non_entities',{}))
             if 'implementation_only' in spec:
                 for entity_name, entity in spec['implementation_only'].iteritems():
@@ -127,6 +120,7 @@ class OASGenerator(object):
                 entity_spec['name'] = entity_name
                 if not 'id' in entity_spec:
                     entity_spec['id'] = '#%s' % entity_name
+            self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
                 self.openapispec_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
@@ -138,19 +132,18 @@ class OASGenerator(object):
             self.methods = self.build_standard_methods()
             for entity_name, entity_spec in entities.iteritems():
                 entity_uri = entity_spec['id']
-                if entity_spec['kind'] == 'Entity': 
-                    entity_url_spec = EntityURLSpec(entity_uri, self)
-                    interface = self.build_entity_interface(entity_url_spec)
-                    self.interfaces[entity_uri] = interface
-                    rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
-                    for rel_property_spec in rel_property_specs:
-                        q_p = QueryPath(rel_property_spec.relationship_name, self)
-                        if rel_property_spec.is_collection_resource(): 
-                            interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec, rel_property_specs)
-                            self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
-                            self.interfaces[rel_property_spec.interface_id()] = interface
-                        else:
-                            self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
+                entity_url_spec = EntityURLSpec(entity_uri, self)
+                interface = self.build_entity_interface(entity_url_spec)
+                self.interfaces[entity_uri] = interface
+                rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
+                for rel_property_spec in rel_property_specs:
+                    q_p = QueryPath(rel_property_spec.relationship_name, self)
+                    if rel_property_spec.is_collection_resource(): 
+                        interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec, rel_property_specs)
+                        self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
+                        self.interfaces[rel_property_spec.interface_id()] = interface
+                    else:
+                        self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
             for entity_name, entity_spec in entities.iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
@@ -902,7 +895,7 @@ class OASGenerator(object):
                     else:
                         result['x-interface'] = self.build_interface_reference(rel_property_specs[0]) if False else self.build_interface_reference(rel_property_specs[0])['$ref']
                 elif k == 'id' and v in self.referenced_entities:
-                    result['x-template'] = self.build_template_reference(EntityURLSpec(v, self))['$ref']
+                    result['x-interface'] = self.build_interface_reference(EntityURLSpec(v, self))['$ref']
             return result
         elif isinstance(node, list):
             return [self.to_openapispec(i, entity_spec, property_name) for i in node]

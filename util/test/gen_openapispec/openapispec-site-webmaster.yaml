@@ -14,11 +14,12 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/Person'
+    x-interface: '#/x-interfaces/Site'
   Person:
     properties:
       name:
         type: string
-    x-template: '#/x-templates/{Person-URL}'
+    x-interface: '#/x-interfaces/Person'
 x-interfaces:
   Person:
     get:
@@ -255,8 +256,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Site
 x-templates:
-  '{Person-URL}':
-    $ref: '#/x-interfaces/Person'
   '{Site-URL}':
     $ref: '#/x-interfaces/Site'
 paths:

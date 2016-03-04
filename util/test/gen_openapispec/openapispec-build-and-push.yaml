@@ -16,6 +16,7 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/Registry.repos'
+    x-interface: '#/x-interfaces/Registry'
   Repo:
     type: object
     properties:
@@ -31,10 +32,10 @@ definitions:
         format: uri
         readOnly: true
         x-interface: '#/x-interfaces/Repo.images'
-    x-template: '#/x-templates/{Repo-URL}'
+    x-interface: '#/x-interfaces/Repo'
   Image:
     type: object
-    x-template: '#/x-templates/{Image-URL}'
+    x-interface: '#/x-interfaces/Image'
   BuildRequest:
     type: object
     properties:
@@ -42,7 +43,7 @@ definitions:
         type: string
       revision:
         type: string
-    x-template: '#/x-templates/{BuildRequest-URL}'
+    x-interface: '#/x-interfaces/BuildRequest'
   Collection:
     readOnly: true
     properties:
@@ -756,10 +757,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Repo.images
 x-templates:
-  '{BuildRequest-URL}':
-    $ref: '#/x-interfaces/BuildRequest'
-  '{Image-URL}':
-    $ref: '#/x-interfaces/Image'
   '{Registry-URL}':
     $ref: '#/x-interfaces/Registry'
   '{Registry-URL}/repos':
@@ -785,8 +782,6 @@ x-templates:
       required: true
       type: string
     <<: *Repo-images
-  '{Repo-URL}':
-    $ref: '#/x-interfaces/Repo'
 paths:
   /registry:
     $ref: '#/x-templates/{Registry-URL}'

@@ -12,6 +12,7 @@ definitions:
     properties:
       text:
         type: string
+    x-interface: '#/x-interfaces/HelloMessage'
 x-interfaces:
   HelloMessage:
     get:

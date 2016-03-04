@@ -23,6 +23,7 @@ definitions:
         type: string
         x-interface: '#/x-interfaces/DogTracker.people'
     readOnly: true
+    x-interface: '#/x-interfaces/DogTracker'
   Dog:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -37,7 +38,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Person'
-    x-template: '#/x-templates/{Dog-URL}'
+    x-interface: '#/x-interfaces/Dog'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -50,7 +51,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Person.dogs'
-    x-template: '#/x-templates/{Person-URL}'
+    x-interface: '#/x-interfaces/Person'
   Resource:
     type: object
     properties:
@@ -707,8 +708,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: Person.dogs
 x-templates:
-  '{Dog-URL}':
-    $ref: '#/x-interfaces/Dog'
   '{DogTracker-URL}':
     $ref: '#/x-interfaces/DogTracker'
   '{DogTracker-URL}/dogs':
@@ -743,8 +742,6 @@ x-templates:
       required: true
       type: string
     <<: *Person-dogs
-  '{Person-URL}':
-    $ref: '#/x-interfaces/Person'
 paths:
   /:
     $ref: '#/x-templates/{DogTracker-URL}'

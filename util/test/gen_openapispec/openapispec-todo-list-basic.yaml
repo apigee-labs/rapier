@@ -15,6 +15,7 @@ definitions:
         type: string
         format: uri
         x-interface: '#/x-interfaces/TodoList.items'
+    x-interface: '#/x-interfaces/TodoList'
   Item:
     properties:
       description:
@@ -22,7 +23,7 @@ definitions:
       due:
         type: string
         format: date-time
-    x-template: '#/x-templates/{Item-URL}'
+    x-interface: '#/x-interfaces/Item'
   Collection:
     readOnly: true
     properties:
@@ -321,8 +322,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: TodoList.items
 x-templates:
-  '{Item-URL}':
-    $ref: '#/x-interfaces/Item'
   '{TodoList-URL}':
     $ref: '#/x-interfaces/TodoList'
   '{TodoList-URL}/items':

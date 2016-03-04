@@ -33,6 +33,7 @@ definitions:
         type: string
         x-interface: '#/x-interfaces/PropertyTracker.institutions'
     readOnly: true
+    x-interface: '#/x-interfaces/PropertyTracker'
   Dog:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -51,7 +52,7 @@ definitions:
           oneOf:
           - '#/x-interfaces/Person'
           - '#/x-interfaces/Institution'
-    x-template: '#/x-templates/{Dog-URL}'
+    x-interface: '#/x-interfaces/Dog'
   Bicycle:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -70,7 +71,7 @@ definitions:
           oneOf:
           - '#/x-interfaces/Person'
           - '#/x-interfaces/Institution'
-    x-template: '#/x-templates/{Bicycle-URL}'
+    x-interface: '#/x-interfaces/Bicycle'
   Person:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -84,7 +85,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Person.possessions'
-    x-template: '#/x-templates/{Person-URL}'
+    x-interface: '#/x-interfaces/Person'
   Institution:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -98,7 +99,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Institution.assets'
-    x-template: '#/x-templates/{Institution-URL}'
+    x-interface: '#/x-interfaces/Institution'
   Resource:
     type: object
     properties:
@@ -1315,14 +1316,6 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: PropertyTracker.people
 x-templates:
-  '{Bicycle-URL}':
-    $ref: '#/x-interfaces/Bicycle'
-  '{Dog-URL}':
-    $ref: '#/x-interfaces/Dog'
-  '{Institution-URL}':
-    $ref: '#/x-interfaces/Institution'
-  '{Person-URL}':
-    $ref: '#/x-interfaces/Person'
   '{PropertyTracker-URL}':
     $ref: '#/x-interfaces/PropertyTracker'
   '{PropertyTracker-URL}/bicycles':

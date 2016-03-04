@@ -27,6 +27,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Cloud.deployments'
+    x-interface: '#/x-interfaces/Cloud'
   Environment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -42,7 +43,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.deployments'
-    x-template: '#/x-templates/{Environment-URL}'
+    x-interface: '#/x-interfaces/Environment'
   Deployment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -63,10 +64,10 @@ definitions:
         x-interface: '#/x-interfaces/PodTemplateSpec'
       replicas:
         type: integer
-    x-template: '#/x-templates/{Deployment-URL}'
+    x-interface: '#/x-interfaces/Deployment'
   PodTemplateSpec:
     type: string
-    x-template: '#/x-templates/{PodTemplateSpec-URL}'
+    x-interface: '#/x-interfaces/PodTemplateSpec'
   Resource:
     type: object
     properties:
@@ -850,12 +851,6 @@ x-templates:
     $ref: '#/x-interfaces/Cloud.deployments'
   '{Cloud-URL}/environments':
     $ref: '#/x-interfaces/Cloud.environments'
-  '{Deployment-URL}':
-    $ref: '#/x-interfaces/Deployment'
-  '{Environment-URL}':
-    $ref: '#/x-interfaces/Environment'
-  '{PodTemplateSpec-URL}':
-    $ref: '#/x-interfaces/PodTemplateSpec'
 paths:
   /:
     $ref: '#/x-templates/{Cloud-URL}'

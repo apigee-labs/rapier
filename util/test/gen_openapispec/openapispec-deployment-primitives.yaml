@@ -32,6 +32,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Cloud.deployments'
+    x-interface: '#/x-interfaces/Cloud'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -51,7 +52,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.deployments'
-    x-template: '#/x-templates/{Environment-URL}'
+    x-interface: '#/x-interfaces/Environment'
   Org:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -66,7 +67,7 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/Org.environments'
-    x-template: '#/x-templates/{Org-URL}'
+    x-interface: '#/x-interfaces/Org'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -85,10 +86,10 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/PodTemplateSpec'
-    x-template: '#/x-templates/{Deployment-URL}'
+    x-interface: '#/x-interfaces/Deployment'
   PodTemplateSpec:
     type: string
-    x-template: '#/x-templates/{PodTemplateSpec-URL}'
+    x-interface: '#/x-interfaces/PodTemplateSpec'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -1267,14 +1268,6 @@ x-templates:
       required: true
       type: string
     <<: *Deployment
-  '{Deployment-URL}':
-    $ref: '#/x-interfaces/Deployment'
-  '{Environment-URL}':
-    $ref: '#/x-interfaces/Environment'
-  '{Org-URL}':
-    $ref: '#/x-interfaces/Org'
-  '{PodTemplateSpec-URL}':
-    $ref: '#/x-interfaces/PodTemplateSpec'
 paths:
   /:
     $ref: '#/x-templates/{Cloud-URL}'

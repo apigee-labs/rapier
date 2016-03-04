@@ -22,6 +22,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Builder.buildRequests'
+    x-interface: '#/x-interfaces/Builder'
   BuildRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -47,13 +48,13 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/PodTemplateSpec'
-    x-template: '#/x-templates/{BuildRequest-URL}'
+    x-interface: '#/x-interfaces/BuildRequest'
   Environment:
     readOnly: true
-    x-template: '#/x-templates/{Environment-URL}'
+    x-interface: '#/x-interfaces/Environment'
   PodTemplateSpec:
     readOnly: true
-    x-template: '#/x-templates/{PodTemplateSpec-URL}'
+    x-interface: '#/x-interfaces/PodTemplateSpec'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -510,18 +511,12 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: PodTemplateSpec
 x-templates:
-  '{BuildRequest-URL}':
-    $ref: '#/x-interfaces/BuildRequest'
   '{BuildRequest-URL}/spec':
     $ref: '#/x-interfaces/PodTemplateSpec'
   '{Builder-URL}':
     $ref: '#/x-interfaces/Builder'
   '{Builder-URL}/buildRequests':
     $ref: '#/x-interfaces/Builder.buildRequests'
-  '{Environment-URL}':
-    $ref: '#/x-interfaces/Environment'
-  '{PodTemplateSpec-URL}':
-    $ref: '#/x-interfaces/PodTemplateSpec'
 paths:
   /builder:
     $ref: '#/x-templates/{Builder-URL}'

@@ -36,7 +36,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/System.comprises'
-    x-template: '#/x-templates/{System-URL}'
+    x-interface: '#/x-interfaces/System'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -66,7 +66,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.stop_requests'
-    x-template: '#/x-templates/{Environment-URL}'
+    x-interface: '#/x-interfaces/Environment'
   Component:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -84,7 +84,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Component.has_revisions'
-    x-template: '#/x-templates/{Component-URL}'
+    x-interface: '#/x-interfaces/Component'
   Revision:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -102,7 +102,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Revision.has_deployments'
-    x-template: '#/x-templates/{Revision-URL}'
+    x-interface: '#/x-interfaces/Revision'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -152,7 +152,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Deployment.statistics_tests'
-    x-template: '#/x-templates/{Deployment-URL}'
+    x-interface: '#/x-interfaces/Deployment'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -161,7 +161,7 @@ definitions:
         type: string
         enum:
         - EnvironmentStartRequest
-    x-template: '#/x-templates/{EnvironmentStartRequest-URL}'
+    x-interface: '#/x-interfaces/EnvironmentStartRequest'
   EnvironmentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -170,7 +170,7 @@ definitions:
         type: string
         enum:
         - EnvironmentStopRequest
-    x-template: '#/x-templates/{EnvironmentStopRequest-URL}'
+    x-interface: '#/x-interfaces/EnvironmentStopRequest'
   DeploymentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -181,7 +181,7 @@ definitions:
         - DeploymentStartRequest
       replicas:
         type: integer
-    x-template: '#/x-templates/{DeploymentStartRequest-URL}'
+    x-interface: '#/x-interfaces/DeploymentStartRequest'
   DeploymentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -190,7 +190,7 @@ definitions:
         type: string
         enum:
         - DeploymentStopRequest
-    x-template: '#/x-templates/{DeploymentStopRequest-URL}'
+    x-interface: '#/x-interfaces/DeploymentStopRequest'
   DeploymentOfflineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -199,7 +199,7 @@ definitions:
         type: string
         enum:
         - DeploymentOfflineRequest
-    x-template: '#/x-templates/{DeploymentOfflineRequest-URL}'
+    x-interface: '#/x-interfaces/DeploymentOfflineRequest'
   DeploymentOnlineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -208,7 +208,7 @@ definitions:
         type: string
         enum:
         - DeploymentOnlineRequest
-    x-template: '#/x-templates/{DeploymentOnlineRequest-URL}'
+    x-interface: '#/x-interfaces/DeploymentOnlineRequest'
   CanaryTest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -220,7 +220,7 @@ definitions:
       hosts:
         type: string
     readOnly: true
-    x-template: '#/x-templates/{CanaryTest-URL}'
+    x-interface: '#/x-interfaces/CanaryTest'
   StatisticsTest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -240,11 +240,11 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/StatisticsResults'
     readOnly: true
-    x-template: '#/x-templates/{StatisticsTest-URL}'
+    x-interface: '#/x-interfaces/StatisticsTest'
   StatisticsResults:
     type: object
     readOnly: true
-    x-template: '#/x-templates/{StatisticsResults-URL}'
+    x-interface: '#/x-interfaces/StatisticsResults'
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -3491,35 +3491,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: System.has_environments
-x-templates:
-  '{CanaryTest-URL}':
-    $ref: '#/x-interfaces/CanaryTest'
-  '{Component-URL}':
-    $ref: '#/x-interfaces/Component'
-  '{Deployment-URL}':
-    $ref: '#/x-interfaces/Deployment'
-  '{DeploymentOfflineRequest-URL}':
-    $ref: '#/x-interfaces/DeploymentOfflineRequest'
-  '{DeploymentOnlineRequest-URL}':
-    $ref: '#/x-interfaces/DeploymentOnlineRequest'
-  '{DeploymentStartRequest-URL}':
-    $ref: '#/x-interfaces/DeploymentStartRequest'
-  '{DeploymentStopRequest-URL}':
-    $ref: '#/x-interfaces/DeploymentStopRequest'
-  '{Environment-URL}':
-    $ref: '#/x-interfaces/Environment'
-  '{EnvironmentStartRequest-URL}':
-    $ref: '#/x-interfaces/EnvironmentStartRequest'
-  '{EnvironmentStopRequest-URL}':
-    $ref: '#/x-interfaces/EnvironmentStopRequest'
-  '{Revision-URL}':
-    $ref: '#/x-interfaces/Revision'
-  '{StatisticsResults-URL}':
-    $ref: '#/x-interfaces/StatisticsResults'
-  '{StatisticsTest-URL}':
-    $ref: '#/x-interfaces/StatisticsTest'
-  '{System-URL}':
-    $ref: '#/x-interfaces/System'
+x-templates: {}
 paths: {}
 parameters:
   Accept:
