@@ -141,7 +141,7 @@ class OASGenerator(object):
                 if entity_spec['kind'] == 'Entity': 
                     entity_url_spec = EntityURLSpec(entity_uri, self)
                     interface = self.build_entity_interface(entity_url_spec)
-                    self.interfaces[entity_url_spec.interface_id()] = interface
+                    self.interfaces[entity_uri] = interface
                     rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                     for rel_property_spec in rel_property_specs:
                         q_p = QueryPath(rel_property_spec.relationship_name, self)
@@ -149,7 +149,6 @@ class OASGenerator(object):
                             interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec, rel_property_specs)
                             self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
                             self.interfaces[rel_property_spec.interface_id()] = interface
-            print >>sys.stderr, self.referenced_entities
             for entity_name, entity_spec in entities.iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
@@ -300,7 +299,7 @@ class OASGenerator(object):
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
         if path not in self.openapispec_interfaces: 
-            self.openapispec_interfaces[path] = self.interfaces[path]
+            self.openapispec_interfaces[path] = self.interfaces[prefix.entity_uri]
         return {'$ref': '#/x-interfaces/%s' % path}            
 
     def build_entity_interface(self, entity_url_spec):

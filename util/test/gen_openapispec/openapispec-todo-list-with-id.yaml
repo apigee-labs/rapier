@@ -25,6 +25,7 @@ definitions:
       due:
         type: string
         format: date-time
+    x-template: '#/x-templates/{Item-URL}'
   Collection:
     readOnly: true
     properties:
