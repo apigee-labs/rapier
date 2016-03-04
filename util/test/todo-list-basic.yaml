@@ -19,7 +19,6 @@ entities:
       due:
         type: string
         format: date-time
-non_entities:
   Collection:
     readOnly: true
     properties:

@@ -85,6 +85,7 @@ class OASGenerator(object):
         self.openapispec['responses'] = dict()
         self.openapispec['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
+        self.referenced_entities = set()
 
         if 'entities' in spec:
             entities = spec['entities']
@@ -136,27 +137,22 @@ class OASGenerator(object):
             self.response_sets = self.build_standard_response_sets()
             self.methods = self.build_standard_methods()
             for entity_name, entity_spec in entities.iteritems():
-                definition = self.to_openapispec(entity_spec)
-                self.definitions[entity_name] = definition
-            for entity_name, entity_spec in entities.iteritems():
                 entity_uri = entity_spec['id']
                 if entity_spec['kind'] == 'Entity': 
                     entity_url_spec = EntityURLSpec(entity_uri, self)
                     interface = self.build_entity_interface(entity_url_spec)
-                    interface['x-id'] = entity_url_spec.interface_id()
-                    self.interfaces[entity_uri] = interface
-                    self.openapispec_interfaces[entity_url_spec.interface_id()] = interface
-                    self.openapispec_templates[entity_url_spec.template_id()] = self.build_interface_reference(entity_url_spec)
+                    self.interfaces[entity_url_spec.interface_id()] = interface
                     rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                     for rel_property_spec in rel_property_specs:
                         q_p = QueryPath(rel_property_spec.relationship_name, self)
                         if rel_property_spec.is_collection_resource(): 
-                            rel_property_spec_stack = [rel_property_spec]
-                            assert q_p.matches(rel_property_spec_stack)
-                            interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec_stack, rel_property_specs)
-                            interface['x-id'] = rel_property_spec.interface_id()
+                            interface = self.build_relationship_interface(entity_url_spec, q_p, rel_property_spec, rel_property_specs)
                             self.openapispec_interfaces[rel_property_spec.interface_id()] = interface
                             self.interfaces[rel_property_spec.interface_id()] = interface
+            print >>sys.stderr, self.referenced_entities
+            for entity_name, entity_spec in entities.iteritems():
+                definition = self.to_openapispec(entity_spec)
+                self.definitions[entity_name] = definition
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
                 if 'well_known_URLs' in entity_spec:
@@ -290,6 +286,9 @@ class OASGenerator(object):
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
         rslt = {'$ref': '#/x-templates/%s' % path}
+        template_id = prefix.template_id()
+        if template_id not in self.openapispec_templates:
+            self.openapispec_templates[prefix.template_id()] = self.build_interface_reference(prefix)
         if prefix.is_impl_spec():            
             rslt['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'        
         return rslt            
@@ -300,41 +299,40 @@ class OASGenerator(object):
             path = '.'.join([path, query_path.openapispec_path_string])
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
+        if path not in self.openapispec_interfaces: 
+            self.openapispec_interfaces[path] = self.interfaces[path]
         return {'$ref': '#/x-interfaces/%s' % path}            
 
-    def build_entity_interface(self, prefix, query_path=None, rel_property_spec_stack=[], rel_property_specs=[]):
-        entity_uri = rel_property_spec_stack[-1].target_entity_uri if rel_property_spec_stack else prefix.entity_uri
+    def build_entity_interface(self, entity_url_spec):
+        entity_uri = entity_url_spec.entity_uri
         entity_spec = self.resolve_entity(entity_uri)
-        parameters = self.build_parameters(prefix, query_path)
+        parameters = self.build_parameters(entity_url_spec)
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
         structured = 'type' not in entity_spec
         def build_response_200():
             response_200 = {
-                'schema': {} if len(rel_property_specs) > 1 else self.global_definition_ref(entity_uri)
+                'schema': self.global_definition_ref(entity_uri)
                 }
-            if len(rel_property_specs) > 1:
-                response_200['schema']['x-oneOf'] = [self.global_definition_ref(spec.target_entity) for spec in rel_property_specs]
             if not self.yaml_merge or propduces and len(produces) > 1:
                 response_200.update(self.build_standard_200(produces or self.openapispec.get('produces')))
             else:
                 response_200['<<'] = self.responses.get('standard_200')
             return response_200  
         response_200 = build_response_200()
-        path_spec = PresortedOrderedDict()
-        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
-        if is_private:
-            path_spec['x-private'] = True
+        interface = PresortedOrderedDict()
+        if entity_url_spec.is_private():
+            interface['x-private'] = True
             x_description = 'This path is NOT part of the API. It is used in the implementaton and may be ' \
                 'important to implementation-aware software, such as proxies or specification-driven implementations.'
         else:
-            x_description = prefix.x_description()
+            x_description = entity_url_spec.x_description()
         if x_description:
-            path_spec['x-description'] = x_description
+            interface['x-description'] = x_description
         if parameters:
-            path_spec['parameters'] = parameters
-        path_spec['get'] = {
+            interface['parameters'] = parameters
+        interface['get'] = {
                 'description': 'Retrieve %s' % articled(self.resolve_entity_name(entity_uri)),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
@@ -342,13 +340,13 @@ class OASGenerator(object):
                     }
                 }
         if produces:
-            path_spec['get']['produces'] = produces if self.yaml_merge else produces[:]
+            interface['get']['produces'] = produces if self.yaml_merge else produces[:]
         if query_parameters:
-            path_spec['get']['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
+            interface['get']['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
         if not self.yaml_merge:
-            path_spec['get']['responses'].update(self.build_entity_get_responses())
+            interface['get']['responses'].update(self.build_entity_get_responses())
         else:
-            path_spec['get']['responses']['<<'] = self.response_sets['entity_get_responses']
+            interface['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         immutable = entity_spec.get('readOnly', False)
         if not immutable:
             if structured:
@@ -364,7 +362,7 @@ class OASGenerator(object):
                 body_desciption =  'The representation of the %s being replaced' % self.resolve_entity_name(entity_uri)
             schema = self.global_definition_ref(entity_uri)
             description = description % articled(self.resolve_entity_name(entity_uri))
-            path_spec[update_verb] = {
+            interface[update_verb] = {
                 'description': description,
                 'parameters': [
                     {'$ref': parameter_ref}, 
@@ -379,13 +377,13 @@ class OASGenerator(object):
                     }
                 }
             if not self.yaml_merge:
-                path_spec[update_verb]['responses'].update(self.build_put_patch_responses())
+                interface[update_verb]['responses'].update(self.build_put_patch_responses())
             else:
-                path_spec[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
+                interface[update_verb]['responses']['<<'] = self.response_sets['put_patch_responses']
             if structured:
-                path_spec['patch']['consumes'] = self.patch_consumes if self.yaml_merge else self.patch_consumes[:]
+                interface['patch']['consumes'] = self.patch_consumes if self.yaml_merge else self.patch_consumes[:]
             else:
-                path_spec['put']['responses']['201'] = {
+                interface['put']['responses']['201'] = {
                     'description': 'Created new %s' % self.resolve_entity_name(entity_uri),
                     'schema': self.global_definition_ref(entity_uri),
                     'headers': {
@@ -400,69 +398,72 @@ class OASGenerator(object):
                         }
                     }
                 if consumes:
-                    path_spec[update_verb]['consumes'] = consumes
+                    interface[update_verb]['consumes'] = consumes
 
             if produces:
-                path_spec[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
+                interface[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
         well_known = entity_spec.get('well_known_URLs')
         if not well_known and not immutable:        
-            path_spec['delete'] = {
+            interface['delete'] = {
                 'description': 'Delete %s' % articled(self.resolve_entity_name(entity_uri)),
                 'responses': {
                     '200': response_200
                     }
                 }
             if produces:
-                path_spec['delete']['produces'] = produces if self.yaml_merge else produces[:]
+                interface['delete']['produces'] = produces if self.yaml_merge else produces[:]
             if not self.yaml_merge:
-                path_spec['delete']['responses'].update(self.build_delete_responses())
+                interface['delete']['responses'].update(self.build_delete_responses())
             else:
-                path_spec['delete']['responses']['<<'] = self.response_sets['delete_responses']
-        path_spec['head'] = {
+                interface['delete']['responses']['<<'] = self.response_sets['delete_responses']
+        interface['head'] = {
                 'description': 'retrieve HEAD'
                 }
         if not self.yaml_merge:
-            path_spec['head'].update(self.build_head_method())
+            interface['head'].update(self.build_head_method())
         else:
-            path_spec['head']['<<'] = self.methods['head']
-        path_spec['options'] = {
+            interface['head']['<<'] = self.methods['head']
+        interface['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
         if not self.yaml_merge:
-            path_spec['options'].update(self.build_options_method())
+            interface['options'].update(self.build_options_method())
         else:
-            path_spec['options']['<<'] = self.methods['options']        
-        return path_spec
+            interface['options']['<<'] = self.methods['options']  
+        interface['x-id'] = entity_url_spec.interface_id()
+        return interface
 
-    def build_relationship_interface(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
-        rel_property_spec = rel_property_spec_stack[-1] if rel_property_spec_stack else prefix
-        parameters = self.build_parameters(prefix, query_path) 
+    def build_relationship_interface(self, entity_url_spec, query_path, rel_property_spec, rel_property_specs):
+        parameters = self.build_parameters(entity_url_spec, query_path) 
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.resolve_entity(entity_uri)
-        path_spec = PresortedOrderedDict()
-        is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, prefix.is_private())
+        interface = PresortedOrderedDict()
+        is_private = rel_property_spec.is_private() or entity_url_spec.is_private()
         if is_private:
-            path_spec['x-private'] = True            
+            interface['x-private'] = True            
         if parameters:
-            path_spec['parameters'] = parameters
+            interface['parameters'] = parameters
         produces = self.openapispec.get('produces')
-        path_spec['get'] = self.build_collection_get(rel_property_spec, produces)
+        interface['get'] = self.build_collection_get(rel_property_spec, produces)
         rel_property_specs = [spec for spec in rel_property_specs if spec.relationship_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
-        if len(rel_property_specs) > 1:
-            schema = {}
-            schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
-            i201_description = 'Created new %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
-            location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
-            body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
-        else:    
-            schema = self.global_definition_ref(entity_uri)
-            i201_description = 'Created new %s' % self.resolve_entity_name(entity_uri)
-            location_desciption = 'perma-link URL of newly-created %s'  % self.resolve_entity_name(entity_uri)
-            body_desciption =  'The representation of the new %s being created' % self.resolve_entity_name(entity_uri) 
+#        self.referenced_entities.extend([spec.target_entity_uri for spec in rel_property_specs])
+        for spec in rel_property_specs:
+            self.referenced_entities.add(spec.target_entity_uri) 
         if not rel_property_spec.readOnly:
+            if len(rel_property_specs) > 1:
+                schema = {}
+                schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
+                i201_description = 'Created new %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+                location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+                body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+            else:    
+                schema = self.global_definition_ref(entity_uri)
+                i201_description = 'Created new %s' % self.resolve_entity_name(entity_uri)
+                location_desciption = 'perma-link URL of newly-created %s'  % self.resolve_entity_name(entity_uri)
+                body_desciption =  'The representation of the new %s being created' % self.resolve_entity_name(entity_uri) 
             if len(consumes_entities) > 1:
                 post_schema = {}
                 post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
@@ -470,7 +471,7 @@ class OASGenerator(object):
             else:
                 post_schema = self.global_definition_ref(consumes_entities[0])
                 description = 'Create a new %s' % self.resolve_entity_name(consumes_entities[0])
-            path_spec['post'] = {
+            interface['post'] = {
                 'description': description,
                 'parameters': [
                     {'name': 'body',
@@ -507,32 +508,33 @@ class OASGenerator(object):
                     }                
                 }
             if self.include_impl and produces and len(produces)> 1:
-                path_spec['post']['responses']['201']['headers']['Vary'] = {
+                interface['post']['responses']['201']['headers']['Vary'] = {
                     'type': 'string',
                     'enum': ['Accept'],
                     'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
                     }
             if consumes_media_types:
-                path_spec['post']['consumes'] = consumes_media_types
+                interface['post']['consumes'] = consumes_media_types
             if not self.yaml_merge:
-                path_spec['post']['responses'].update(self.build_post_responses())
+                interface['post']['responses'].update(self.build_post_responses())
             else:
-                path_spec['post']['responses']['<<'] = self.response_sets['post_responses']
-        path_spec['head'] = {
+                interface['post']['responses']['<<'] = self.response_sets['post_responses']
+        interface['head'] = {
                 'description': 'Retrieve HEAD'
                 }
         if not self.yaml_merge:
-            path_spec['head'].update(self.build_head_method())
+            interface['head'].update(self.build_head_method())
         else:
-            path_spec['head']['<<'] = self.methods['head']
-        path_spec['options'] = {
+            interface['head']['<<'] = self.methods['head']
+        interface['options'] = {
                 'description': 'Retrieve OPTIONS',
                }
         if not self.yaml_merge:
-            path_spec['options'].update(self.build_options_method())
+            interface['options'].update(self.build_options_method())
         else:
-            path_spec['options']['<<'] = self.methods['options']            
-        return path_spec
+            interface['options']['<<'] = self.methods['options']  
+        interface['x-id'] = rel_property_spec.interface_id()
+        return interface
 
     def build_entity_get_responses(self):
         return  {
@@ -896,11 +898,11 @@ class OASGenerator(object):
                 elif k == 'relationship':
                     rel_property_specs = self.get_one_relationship_property_specs(property_name, node, entity_spec['id'], entity_spec)
                     if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
-                        result['x-interface'] = {'oneOf': [{'$ref': '#/x-interfaces/%s' % rel_property_spec.interface_id()} if False else '#/x-interfaces/%s' % rel_property_spec.interface_id() for rel_property_spec in rel_property_specs]}
+                        result['x-interface'] = {'oneOf': [self.build_interface_reference(rel_property_spec) if False else self.build_interface_reference(rel_property_spec)['$ref'] for rel_property_spec in rel_property_specs]}
                     else:
-                        result['x-interface'] = {'$ref': '#/x-interfaces/%s' % rel_property_specs[0].interface_id()} if False else '#/x-interfaces/%s' % rel_property_specs[0].interface_id()
-                elif k == 'type':
-                    result['type'] = v
+                        result['x-interface'] = self.build_interface_reference(rel_property_specs[0]) if False else self.build_interface_reference(rel_property_specs[0])['$ref']
+                elif k == 'id' and v in self.referenced_entities:
+                    result['x-template'] = self.build_template_reference(EntityURLSpec(v, self))['$ref']
             return result
         elif isinstance(node, list):
             return [self.to_openapispec(i, entity_spec, property_name) for i in node]
@@ -1006,7 +1008,6 @@ class RelMVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
         self._generator = generator
-        self._entity_uri = entity_uri
         self._entity_spec = entity_spec
         self._property = property
         self._relationship = relationship
@@ -1014,6 +1015,7 @@ class RelMVPropertySpec(SegmentSpec):
         self._consumes = relationship.get('consumes')
         self._generator = generator
 
+        self.entity_uri = entity_uri
         self.readOnly = relationship.get('readOnly')                                 
         self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
         self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
@@ -1049,7 +1051,7 @@ class RelMVPropertySpec(SegmentSpec):
         return '%s.%s' % (self._entity_spec['name'], self.relationship_name)
         
     def template_id(self):
-        return '{%s}' % self._generator.resolve_entity_name(self._entity_uri)
+        return '{%s}' % self._generator.resolve_entity_name(self.entity_uri)
       
     def source_entity_name(self):
         return self._entity_spec['name']

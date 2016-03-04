@@ -34,6 +34,7 @@ entities:
           collection_resource: '#Collection'
           entities: '#Image'
           multiplicity: 0:n
+          readOnly: True
   Image:
     type: object
   BuildRequest:
