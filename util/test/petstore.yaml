@@ -90,14 +90,14 @@ entities:
     - name
     properties:
       category:
-        $ref: '#/non_entities/Category'
+        $ref: '#/entities/Category'
       name:
         type: string
         example: doggie
       tags:
         type: array
         items:
-          $ref: '#/non_entities/Tag'
+          $ref: '#/entities/Tag'
       status:
         type: string
         description: pet status in the store
@@ -126,7 +126,6 @@ entities:
       expires_after:
         type: string
         format: date-time
-non_entities:
   Login:
     type: object
     properties:
