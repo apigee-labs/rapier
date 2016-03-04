@@ -31,8 +31,10 @@ definitions:
         format: uri
         readOnly: true
         x-interface: '#/x-interfaces/Repo.images'
+    x-template: '#/x-templates/{Repo-URL}'
   Image:
     type: object
+    x-template: '#/x-templates/{Image-URL}'
   BuildRequest:
     type: object
     properties:
@@ -40,6 +42,7 @@ definitions:
         type: string
       revision:
         type: string
+    x-template: '#/x-templates/{BuildRequest-URL}'
   Collection:
     readOnly: true
     properties:
@@ -47,6 +50,270 @@ definitions:
         type: array
         items: {}
 x-interfaces:
+  BuildRequest:
+    get:
+      description: Retrieve a BuildRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a BuildRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the BuildRequest being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/BuildRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a BuildRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: BuildRequest
+  Image:
+    get:
+      description: Retrieve an Image
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Image'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an Image entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Image being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Image'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Image'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Image
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Image'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Image
   Registry:
     get:
       description: Retrieve a Registry
@@ -235,11 +502,13 @@ x-interfaces:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    put:
-      description: Create or Update a Repo entity
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Repo entity
       parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Repo being replaced
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Repo being updated
         in: body
         name: body
         schema:
@@ -257,17 +526,6 @@ x-interfaces:
             ETag:
               description: this value must be echoed in the If-Match header of every
                 PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Repo'
-        '201':
-          description: Created new Repo
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            Location:
-              description: perma-link URL of newly-created Repo
               type: string
           schema:
             $ref: '#/definitions/Repo'
@@ -467,46 +725,6 @@ x-interfaces:
           $ref: '#/responses/406'
         default:
           $ref: '#/responses/default'
-    post:
-      description: Create a new Image
-      parameters:
-      - description: The representation of the new Image being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Image'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new Image
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created Image
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
     head:
       description: Retrieve HEAD
       responses:
@@ -537,360 +755,13 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Repo.images
-  Image:
-    get:
-      description: Retrieve an Image
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      description: Create or Update an Image entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the Image being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Image'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '201':
-          description: Created new Image
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            Location:
-              description: perma-link URL of newly-created Image
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete an Image
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Image
-  BuildRequest:
-    get:
-      description: Retrieve a BuildRequest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    put:
-      description: Create or Update a BuildRequest entity
-      parameters:
-      - $ref: '#/parameters/Put-If-Match'
-      - description: The representation of the BuildRequest being replaced
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/BuildRequest'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '201':
-          description: Created new BuildRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            Location:
-              description: perma-link URL of newly-created BuildRequest
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a BuildRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: BuildRequest
-  Collection:
-    get:
-      description: Retrieve a Collection
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Collection
 x-templates:
-  '{Registry-URL}':
-    $ref: '#/x-interfaces/Registry'
-  '{Repo-URL}':
-    $ref: '#/x-interfaces/Repo'
-  '{Image-URL}':
-    $ref: '#/x-interfaces/Image'
   '{BuildRequest-URL}':
     $ref: '#/x-interfaces/BuildRequest'
-  '{Collection-URL}':
-    $ref: '#/x-interfaces/Collection'
+  '{Image-URL}':
+    $ref: '#/x-interfaces/Image'
+  '{Registry-URL}':
+    $ref: '#/x-interfaces/Registry'
   '{Registry-URL}/repos':
     $ref: '#/x-interfaces/Registry.repos'
   '{Registry-URL}/repos;{name}':
@@ -914,6 +785,8 @@ x-templates:
       required: true
       type: string
     <<: *Repo-images
+  '{Repo-URL}':
+    $ref: '#/x-interfaces/Repo'
 paths:
   /registry:
     $ref: '#/x-templates/{Registry-URL}'
@@ -949,12 +822,6 @@ parameters:
     in: header
     name: If-Match
     required: true
-    type: string
-  Put-If-Match:
-    description: specifies the last known ETag value of the resource being modified
-    in: header
-    name: If-Match
-    required: false
     type: string
 responses:
   '303':

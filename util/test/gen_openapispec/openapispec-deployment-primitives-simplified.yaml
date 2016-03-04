@@ -42,6 +42,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.deployments'
+    x-template: '#/x-templates/{Environment-URL}'
   Deployment:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -62,8 +63,10 @@ definitions:
         x-interface: '#/x-interfaces/PodTemplateSpec'
       replicas:
         type: integer
+    x-template: '#/x-templates/{Deployment-URL}'
   PodTemplateSpec:
     type: string
+    x-template: '#/x-templates/{PodTemplateSpec-URL}'
   Resource:
     type: object
     properties:

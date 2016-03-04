@@ -10,7 +10,7 @@ entities:
     - deployments
     readOnly: true
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -33,7 +33,7 @@ entities:
           multiplicity: 0:n
   Environment:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       name:
         type: string
@@ -50,7 +50,7 @@ entities:
           multiplicity: 0:n
   Deployment:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       name:
         type: string
@@ -69,7 +69,6 @@ entities:
         type: integer
   PodTemplateSpec:
     type: string  
-non_entities:
   Resource:
     type: object
     properties:
@@ -80,7 +79,7 @@ non_entities:
         type: string
   Collection:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string

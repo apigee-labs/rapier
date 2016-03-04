@@ -21,11 +21,7 @@ definitions:
         format: uri
         type: string
         readOnly: true
-        x-rapier-relationship:
-          collection_resource: '#Collection'
-          entities: '#BuildRequest'
-          multiplicity: 0:n
-          consumes: multi-part/form-data
+        x-interface: '#/x-interfaces/Builder.buildRequests'
   BuildRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -37,7 +33,7 @@ definitions:
       environment:
         format: uri
         type: string
-        x-rapier-relationship: '#Environment'
+        x-interface: '#/x-interfaces/Environment'
       zip_contents:
         type: string
       status:
@@ -50,11 +46,14 @@ definitions:
       spec:
         format: uri
         type: string
-        x-rapier-relationship: '#PodTemplateSpec'
+        x-interface: '#/x-interfaces/PodTemplateSpec'
+    x-template: '#/x-templates/{BuildRequest-URL}'
   Environment:
     readOnly: true
+    x-template: '#/x-templates/{Environment-URL}'
   PodTemplateSpec:
     readOnly: true
+    x-template: '#/x-templates/{PodTemplateSpec-URL}'
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -97,6 +96,138 @@ definitions:
           type: object
     readOnly: true
 x-interfaces:
+  BuildRequest:
+    get:
+      description: Retrieve a BuildRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a BuildRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the BuildRequest being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/BuildRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a BuildRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/BuildRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: BuildRequest
   Builder:
     get:
       description: Retrieve a Builder
@@ -256,138 +387,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Builder.buildRequests
-  BuildRequest:
-    get:
-      description: Retrieve a BuildRequest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a BuildRequest entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the BuildRequest being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/BuildRequest'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a BuildRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/BuildRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: BuildRequest
   Environment:
     get:
       description: Retrieve an Environment
@@ -511,17 +510,17 @@ x-interfaces:
           $ref: '#/responses/default'
     x-id: PodTemplateSpec
 x-templates:
-  '{Builder-URL}':
-    $ref: '#/x-interfaces/Builder'
   '{BuildRequest-URL}':
     $ref: '#/x-interfaces/BuildRequest'
+  '{BuildRequest-URL}/spec':
+    $ref: '#/x-interfaces/PodTemplateSpec'
+  '{Builder-URL}':
+    $ref: '#/x-interfaces/Builder'
+  '{Builder-URL}/buildRequests':
+    $ref: '#/x-interfaces/Builder.buildRequests'
   '{Environment-URL}':
     $ref: '#/x-interfaces/Environment'
   '{PodTemplateSpec-URL}':
-    $ref: '#/x-interfaces/PodTemplateSpec'
-  '{Builder-URL}/buildRequests':
-    $ref: '#/x-interfaces/Builder.buildRequests'
-  '{BuildRequest-URL}/spec':
     $ref: '#/x-interfaces/PodTemplateSpec'
 paths:
   /builder:

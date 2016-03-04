@@ -18,3 +18,5 @@ cd $ROOT_DIR
 ./rapier/util/gen_openapispec.py rapier/util/test/deployment-primitives.yaml > rapier/util/test/gen_openapispec/openapispec-deployment-primitives.yaml
 ./rapier/util/gen_openapispec.py rapier/util/test/deployment-primitives-simplified.yaml > rapier/util/test/gen_openapispec/openapispec-deployment-primitives-simplified.yaml
 ./rapier/util/gen_openapispec.py rapier/util/test/petstore.yaml > rapier/util/test/gen_openapispec/openapispec-petstore.yaml
+./rapier/util/gen_openapispec.py rapier/util/test/build-and-push.yaml > rapier/util/test/gen_openapispec/openapispec-build-and-push.yaml
+./rapier/util/gen_openapispec.py rapier/util/test/build.yaml > rapier/util/test/gen_openapispec/openapispec-build.yaml

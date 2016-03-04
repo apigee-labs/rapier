@@ -17,7 +17,7 @@ security:
 entities:
   System:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -41,7 +41,7 @@ entities:
     readOnly: true
   Group:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       members:
         description: Array of URLs of Users
@@ -70,7 +70,7 @@ entities:
               type: string
   Page:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -106,11 +106,10 @@ entities:
       maximum: 1000
       required: false
     readOnly: true
-non_entities:   
   Folder: {}
   Collection:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -141,7 +140,7 @@ non_entities:
   MultiValuedRelationshipResource:
     readOnly: true
     oneOf:
-      - $ref: '#/non_entities/Collection'
+      - $ref: '#/entities/Collection'
       - $ref: '#/entities/Page'
   Resource:
     type: object
@@ -153,7 +152,7 @@ non_entities:
         type: string
   PersistentResource:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       created:
         type: string

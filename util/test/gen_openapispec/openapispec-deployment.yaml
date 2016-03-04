@@ -36,6 +36,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/System.comprises'
+    x-template: '#/x-templates/{System-URL}'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -65,6 +66,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.stop_requests'
+    x-template: '#/x-templates/{Environment-URL}'
   Component:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -82,6 +84,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Component.has_revisions'
+    x-template: '#/x-templates/{Component-URL}'
   Revision:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -99,6 +102,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Revision.has_deployments'
+    x-template: '#/x-templates/{Revision-URL}'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -148,6 +152,7 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Deployment.statistics_tests'
+    x-template: '#/x-templates/{Deployment-URL}'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -156,6 +161,7 @@ definitions:
         type: string
         enum:
         - EnvironmentStartRequest
+    x-template: '#/x-templates/{EnvironmentStartRequest-URL}'
   EnvironmentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -164,6 +170,7 @@ definitions:
         type: string
         enum:
         - EnvironmentStopRequest
+    x-template: '#/x-templates/{EnvironmentStopRequest-URL}'
   DeploymentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -174,6 +181,7 @@ definitions:
         - DeploymentStartRequest
       replicas:
         type: integer
+    x-template: '#/x-templates/{DeploymentStartRequest-URL}'
   DeploymentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -182,6 +190,7 @@ definitions:
         type: string
         enum:
         - DeploymentStopRequest
+    x-template: '#/x-templates/{DeploymentStopRequest-URL}'
   DeploymentOfflineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -190,6 +199,7 @@ definitions:
         type: string
         enum:
         - DeploymentOfflineRequest
+    x-template: '#/x-templates/{DeploymentOfflineRequest-URL}'
   DeploymentOnlineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -198,6 +208,7 @@ definitions:
         type: string
         enum:
         - DeploymentOnlineRequest
+    x-template: '#/x-templates/{DeploymentOnlineRequest-URL}'
   CanaryTest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -209,6 +220,7 @@ definitions:
       hosts:
         type: string
     readOnly: true
+    x-template: '#/x-templates/{CanaryTest-URL}'
   StatisticsTest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -228,9 +240,11 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/StatisticsResults'
     readOnly: true
+    x-template: '#/x-templates/{StatisticsTest-URL}'
   StatisticsResults:
     type: object
     readOnly: true
+    x-template: '#/x-templates/{StatisticsResults-URL}'
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'

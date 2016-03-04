@@ -15,7 +15,7 @@ entities:
     - orgs;{name}/environments;{name}/deployments;{name}
     readOnly: true
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string
@@ -46,7 +46,7 @@ entities:
           multiplicity: 0:n
   Environment:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -67,7 +67,7 @@ entities:
           multiplicity: 0:n
   Org: 
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -83,7 +83,7 @@ entities:
           multiplicity: 0:n
   Deployment:
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       name:
         type: string
@@ -100,10 +100,9 @@ entities:
         relationship: '#PodTemplateSpec'    
   PodTemplateSpec:
     type: string  
-non_entities:
   PersistentResource:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     type: object
     properties:
       created:
@@ -131,7 +130,7 @@ non_entities:
         type: string
   Collection:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string

@@ -8,7 +8,7 @@ entities:
     query_paths: 
     - buildRequests 
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     readOnly: true
     properties:
       kind:
@@ -27,7 +27,7 @@ entities:
     query_paths: 
     - spec 
     allOf:
-    - $ref: '#/non_entities/PersistentResource'
+    - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -50,10 +50,9 @@ entities:
     readOnly: true
   PodTemplateSpec:
     readOnly: true
-non_entities:
   PersistentResource:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     type: object
     properties:
       created:
@@ -81,7 +80,7 @@ non_entities:
         type: string
   Collection:
     allOf:
-    - $ref: '#/non_entities/Resource'
+    - $ref: '#/entities/Resource'
     properties:
       kind:
         type: string

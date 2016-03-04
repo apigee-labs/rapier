@@ -18,6 +18,7 @@ definitions:
     properties:
       name:
         type: string
+    x-template: '#/x-templates/{Person-URL}'
 x-interfaces:
   Person:
     get:
