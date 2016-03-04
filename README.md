@@ -1,4 +1,4 @@
-# Rapier - REST APIs from Entities and Relationships.
+# Rapier - REST APIs from Entities and Relationships
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -301,7 +301,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
 ### Query Parameters
 
 Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
-query string portion of URLs? Rapier allows you to specify this on collections using the same syntax as OpenAPI. Here is an example:
+query string portion of URLs? Rapier allows you to specify this on entities using the same syntax as OpenAPI. Here is an example:
 ```yaml
   PetCollection:
     properties:
@@ -324,14 +324,12 @@ query string portion of URLs? Rapier allows you to specify this on collections u
 ```
 This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
 
-We have seen three common patterns for query parameters on collections:
+We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
-- a "projection" parameter that limits the fields being returned. In that case, the valid values would be declared properties of the entity that defines the elements of the collection
-- parameters that select entities that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
+- a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid valid values would be declared properties of the entity
+- parameters that select entities from a collection that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
 
 Given this structure, we may model query parameters more carefully in the future.
-
-Rapier does not currently allow query parameters for entities - perhaps it should.
 
 ### Dog Tracker
  

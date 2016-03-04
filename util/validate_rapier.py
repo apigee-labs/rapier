@@ -118,8 +118,42 @@ class OASValidator(object):
         if not isinstance(id, basestring):
             self.error('id must be a string: %s' % id, key)
 
-    def validate_query_paths(self, key, entities):
-        self.info('query_paths not yet validated')
+    def validate_query_paths(self, key, query_paths):
+        if isinstance(query_paths, basestring):
+            effective_query_paths = query_paths.split()
+        elif isinstance(query_paths, list):
+            effective_query_paths = query_paths
+        else:
+            return self.error('query paths must be either a space-delimited string or a sequence: %s' % query_paths, key)
+        for query_path in effective_query_paths:
+            self.validate_query_path(key, query_path)
+            
+    def validate_query_path(self, key, query_path):
+        if isinstance(query_path, basestring):
+            path_segments = query_path.split()
+            for path_segment in path_segments:
+                self.validate_query_path_segment_string(key, path_segment)
+        elif hasattr(query_path, 'keys'):
+            return self.error('structured query paths not supported: %s' % query_path, key)                   
+        else:
+            return self.error('query-path must be either a space-delimited string or a map: %s' % query_paths, key)            
+
+    def validate_query_path_segment_string(self, key, query_path_segment_string):
+        parts = query_path_segment_string.split(';')
+        if len(parts) == 1: # no ';'
+            pass
+        elif len(parts) == 2: # found ';'
+            params_part = parts[1]
+            formatter = string.Formatter()
+            try:
+                parsed_format = list(formatter.parse(params_part))
+            except Exception as e:
+                return self.error('error parsing query path segment string: %s' % e, key)
+            leading_parts = [part for part in parsed_format if part[1] is not None]
+            if len(leading_parts) == 0:
+                self.error('query segment %s must include at least one {name} element after ;' % query_path_segment_string)
+            if len ([part for part in leading_parts if part[1] == '']) > 0:
+                self.error('property name required between {} characters after %s in query segment %s' %([part[0] for part in leading_parts if part[1]] ,query_path_segment_string))            
 
     def validate_well_known_URLs(self, key, urls):
         if not isinstance(urls, (basestring, list)):
