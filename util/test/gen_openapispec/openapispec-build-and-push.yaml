@@ -27,21 +27,15 @@ definitions:
         format: uri
         readOnly: true
         x-interface: '#/x-interfaces/Repo.buildRequests'
-      images:
-        type: string
-        format: uri
-        readOnly: true
-        x-interface: '#/x-interfaces/Repo.images'
     x-interface: '#/x-interfaces/Repo'
-  Image:
-    type: object
-    x-interface: '#/x-interfaces/Image'
   BuildRequest:
     type: object
     properties:
       appName:
         type: string
       revision:
+        type: string
+      zip:
         type: string
     x-interface: '#/x-interfaces/BuildRequest'
   Collection:
@@ -183,138 +177,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: BuildRequest
-  Image:
-    get:
-      description: Retrieve an Image
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update an Image entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Image being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Image'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete an Image
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Image'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Image
   Registry:
     get:
       description: Retrieve a Registry
@@ -631,6 +493,8 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
+      consumes:
+      - multi-part/form-data
       description: Create a new BuildRequest
       parameters:
       - description: The representation of the new BuildRequest being created
@@ -700,62 +564,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Repo.buildRequests
-  Repo.images: &Repo-images
-    get:
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Repo.images
 x-templates:
   '{Registry-URL}':
     $ref: '#/x-interfaces/Registry'
@@ -775,13 +583,6 @@ x-templates:
       required: true
       type: string
     <<: *Repo-buildRequests
-  '{Registry-URL}/repos;{name}/images':
-    parameters:
-    - in: path
-      name: name
-      required: true
-      type: string
-    <<: *Repo-images
 paths:
   /registry:
     $ref: '#/x-templates/{Registry-URL}'
@@ -791,8 +592,6 @@ paths:
     $ref: '#/x-templates/{Registry-URL}~1repos;{name}'
   /registry/repos;{name}/buildRequests:
     $ref: '#/x-templates/{Registry-URL}~1repos;{name}~1buildRequests'
-  /registry/repos;{name}/images:
-    $ref: '#/x-templates/{Registry-URL}~1repos;{name}~1images'
 parameters:
   Accept:
     description: specifies the requested media type - required

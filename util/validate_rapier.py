@@ -109,12 +109,6 @@ class OASValidator(object):
         for entity in entities.itervalues():
             self.check_and_validate_keywords(self.__class__.entity_keywords, entity)
 
-    def validate_non_entities(self, key, non_entities):
-        if not self.checked_id_uniqueness:
-            self.check_id_uniqueness()
-        for non_entity in non_entities.itervalues():
-            self.check_and_validate_keywords(self.__class__.entity_keywords, non_entity)
-
     def validate_conventions(self, key, conventions):
         if not hasattr(conventions, 'iteritems'):
             self.error('conventions must be a JSON object')
@@ -220,9 +214,8 @@ class OASValidator(object):
     def validate_relationship_collection_resource(self, key, collection_resource):
         self.validate_entity_url(collection_resource, key)
             
-    rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'non_entities': validate_non_entities, 'conventions': validate_conventions, 'version': validate_version}
+    rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'conventions': validate_conventions, 'version': validate_version}
     entity_keywords = {'id': validate_id, 'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs, 'properties': validate_properties, 'readOnly': validate_readOnly}
-    non_entity_keywords = {'id': validate_id, 'properties': validate_properties, 'readOnly': validate_readOnly}
     conventions_keywords = {'selector_location': validate_selector_location}
     property_keywords = {'type': validate_property_type, 'format': validate_property_format, 'relationship': validate_property_relationship, 'items': validate_property_items, 'readOnly': validate_readOnly}
     relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource}

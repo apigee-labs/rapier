@@ -12,7 +12,7 @@ entities:
           collection_resource: '#Collection'
           entities: '#Repo'
           multiplicity: 0:n
-    query_paths: repos repos;{name} repos;{name}/buildRequests repos;{name}/images
+    query_paths: repos repos;{name} repos;{name}/buildRequests
   Repo:
     type: object
     properties:
@@ -26,23 +26,15 @@ entities:
           collection_resource: '#Collection'
           entities: '#BuildRequest'
           multiplicity: 0:n
-      images:
-        type: string
-        format: uri
-        readOnly: True
-        relationship:
-          collection_resource: '#Collection'
-          entities: '#Image'
-          multiplicity: 0:n
-          readOnly: True
-  Image:
-    type: object
+          consumes: multi-part/form-data
   BuildRequest:
     type: object
     properties:
       appName:
         type: string
       revision:
+        type: string
+      zip:
         type: string    
   Collection:
     readOnly: true
