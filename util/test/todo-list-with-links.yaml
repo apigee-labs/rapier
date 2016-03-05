@@ -28,7 +28,7 @@ entities:
                   name: items
                   collection_resource: '#Collection'
                   entities: '#Item'
-                  multiplicity: O:n
+                  multiplicity: 0:n
   Item:
     properties:
       self:

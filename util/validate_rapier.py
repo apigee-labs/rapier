@@ -3,7 +3,7 @@
 from difflib import SequenceMatcher
 from collections import OrderedDict
 from collections import Counter
-import sys
+import sys, string
 from yaml.composer import Composer
 from yaml.reader import Reader
 from yaml.scanner import Scanner
@@ -84,6 +84,7 @@ class OASValidator(object):
         self.errors = 0
         self.similarity_ratio = 0.7
         self.checked_id_uniqueness = False
+        self.validated_nodes = set()
 
     def validate_title(self, key, title):
         if not isinstance(title, basestring):
@@ -106,13 +107,11 @@ class OASValidator(object):
     def validate_entities(self, key, entities):
         if not self.checked_id_uniqueness:
             self.check_id_uniqueness()
-        for entity in entities.itervalues():
-            self.check_and_validate_keywords(self.__class__.entity_keywords, entity)
+        for key, entity in entities.iteritems():
+            self.check_and_validate_keywords(self.__class__.entity_keywords, entity, key)
 
     def validate_conventions(self, key, conventions):
-        if not hasattr(conventions, 'iteritems'):
-            self.error('conventions must be a JSON object')
-        self.check_and_validate_keywords(self.__class__.conventions_keywords, conventions)
+        self.check_and_validate_keywords(self.__class__.conventions_keywords, conventions, key)
 
     def validate_id(self, key, id):
         if not isinstance(id, basestring):
@@ -178,7 +177,7 @@ class OASValidator(object):
                         self.error('items must be only be present if the type is array: %s' % property, property_name)
             else:
                 self.error('property must be a map: %s' % property, property_name)
-            self.check_and_validate_keywords(self.__class__.property_keywords, property)
+            self.check_and_validate_keywords(self.__class__.property_keywords, property, property_name)
 
     def validate_readOnly(self, key, readOnly):
         if not (readOnly is True or readOnly is False) :
@@ -191,21 +190,54 @@ class OASValidator(object):
     def similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio() > self.similarity_ratio
     
-    def check_and_validate_keywords(self, keyword_validators, spec):
-        for key, value in spec.iteritems():
-            if key not in keyword_validators:
-                similar_keywords = [keyword for keyword in keyword_validators.iterkeys() if self.similar(key, keyword)]
-                message = 'unrecognized keyword %s at line %s, column %s' % (key, key.start_mark.line + 1, key.start_mark.column + 1)
-                if similar_keywords:
-                    message += ' - did you mean %s?' % ' or '.join(similar_keywords)
-                self.info(message)
+    def resolve_json_ref(self, json_ref, key):
+        # for now support only refs in the same document
+        if isinstance(json_ref, basestring):
+            if json_ref.startswith('#/'):
+                parts = json_ref[2:].split('/')
+                spec = self.rapier_spec
+                for part in parts:
+                    spec = spec.get(part)
+                    if spec is None:
+                        return self.error('json ref segment value not found: %s' % part, key)
+                return spec
             else:
-                keyword_validators[key](self, key, value)        
+                self.error('json ref value must begin with "#/": %s' % json_ref, key)
+        else:
+            self.error('json ref value must be a string: %s' % json_ref, key)
+
+    def check_and_validate_keywords(self, keyword_validators, node, node_key):
+        if hasattr(node, 'keys'):
+            if id(node) not in self.validated_nodes:
+                if '$ref' in node:
+                    ref_key = [item for item in node.iteritems() if item[0] == '$ref'][0][0]
+                    node = self.resolve_json_ref(node['$ref'], ref_key)
+                    if node is not None:
+                        self.check_and_validate_keywords(keyword_validators, node, node_key)
+                else:
+                    self.validated_nodes.add(id(node))
+                    for key, value in node.iteritems():
+                        if key not in keyword_validators:
+                            similar_keywords = [keyword for keyword in keyword_validators.iterkeys() if self.similar(key, keyword)]
+                            message = 'unrecognized keyword %s at line %s, column %s' % (key, key.start_mark.line + 1, key.start_mark.column + 1)
+                            if similar_keywords:
+                                message += ' - did you mean %s?' % ' or '.join(similar_keywords)
+                            self.info(message)
+                        else:
+                            if key == 'oneOf' or key == 'allOf':
+                                if isinstance(value, list):
+                                    for one in value:
+                                        self.check_and_validate_keywords(keyword_validators, one, key)
+                                else:
+                                    self.error('oneOf value must be a list: %s' % value, key)
+                            else:
+                                keyword_validators[key](self, key, value)        
+        else:
+            self.error('spec must be a map: %s' % spec, spec_key)
 
     def validate_property_type(self, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
             self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
-        
             
     def validate_property_format(self, key, format):
         if not isinstance(format, basestring):
@@ -213,14 +245,14 @@ class OASValidator(object):
             
     def validate_property_relationship(self, key, relationship):
         if hasattr(relationship, 'keys'):
-            self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship)
+            self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship, key)
         elif isinstance(relationship, basestring):
-            self.check_and_validate_keywords(self.__class__.relationship_keywords, {'entities': relationship})            
+            self.check_and_validate_keywords(self.__class__.relationship_keywords, {'entities': relationship}, key)            
         else:
             self.error('relationship must be a string or a map %s' % relationship)        
             
     def validate_property_items(self, key, items):
-        self.info('items not yet validated')  
+        self.check_and_validate_keywords(self.__class__.property_keywords, items, key)
         
     def validate_relationship_entities(self, key, entities):
         if isinstance(entities, basestring):
@@ -257,11 +289,14 @@ class OASValidator(object):
                         
     def validate_relationship_collection_resource(self, key, collection_resource):
         self.validate_entity_url(collection_resource, key)
-            
+                        
     rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'conventions': validate_conventions, 'version': validate_version}
-    entity_keywords = {'id': validate_id, 'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs, 'properties': validate_properties, 'readOnly': validate_readOnly}
+    schema_keywords = {'id': validate_id, 'type': validate_property_type, 'format': validate_property_format, 'items': validate_property_items, 'properties': validate_properties, 'readOnly': validate_readOnly, 'oneOf': None, 'allOf': None}
+    property_keywords = {'relationship': validate_property_relationship}
+    property_keywords.update(schema_keywords)
+    entity_keywords = {'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs}
+    entity_keywords.update(schema_keywords)
     conventions_keywords = {'selector_location': validate_selector_location}
-    property_keywords = {'type': validate_property_type, 'format': validate_property_format, 'relationship': validate_property_relationship, 'items': validate_property_items, 'readOnly': validate_readOnly}
     relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource}
 
     def validate_entity_url(self, entity_url, key):
@@ -274,7 +309,7 @@ class OASValidator(object):
     def validate(self):
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
-        self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec)
+        self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
 
     def marked_load(self, stream):
         def construct_mapping(loader, node):

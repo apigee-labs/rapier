@@ -456,31 +456,6 @@ A `query path` can be represented as a string. Here are some examples with their
 
 Multiple query paths may be included in the same string as a space-deliminated list.
 
-Alternatively, you can provide a query path as a JSON object:
-
-Field Name | Type | Description
----|:---:|---
-segments | `array` of [Query Path Segment](#query_path_segment) | A segment of a query path.
-
-#### <a name="query_path_segment"></a>Query Path Segment
-
-Describes one segment of a query path. Each segment corresponds to a single relationship being traversed.
-
-Field Name | Type | Description
----|:---:|---
-relationship | `string` | The name of the relationship for this segment
-selectors | `array` of [Selector](#selector) | For multi-valued relationships, defines the properties that will be used to filter the relationship members. May be specified as a simple string, in which case the string is specified as a space-delimited list of property names
-separator | `string` | The string that separates the relationship name from the selectors in the query URL. Default value is ';'. Popular alternative is '/'.
-selector_template | `string` | A [URI Template](https://tools.ietf.org/html/rfc6570) for the selectors. For example: "`name={},age<{}`"
-
-#### <a name="selector"></a>Selector
-
-Describes one selector in a segment. Each selector corresponds to a single property of the elements of a relationship.
-
-Field Name | Type | Description
----|:---:|---
-property_name | `string` | the name of the property
-
 #### <a name="media_type"></a>Media Type
 
 Describes a media type. If a media type is given as a simple string, it applies to all entity types. If the media type is given as a JSON structure, you can say which entity types use it
