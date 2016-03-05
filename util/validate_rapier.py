@@ -167,8 +167,17 @@ class OASValidator(object):
                     self.error('validate_well_known_URLs must be begin with a single slash %s' % url, key)
 
     def validate_properties(self, key, properties):
-        #TODO validate property names
-        for property in properties.itervalues():
+        for property_name, property in properties.iteritems():
+            if hasattr(property, 'keys'):
+                p_type = property.get('type')
+                if p_type == 'array':
+                    if not 'items' in property:
+                        self.error('items must be present if the type is array: %s' % property, property_name)
+                else:
+                    if 'items' in property:
+                        self.error('items must be only be present if the type is array: %s' % property, property_name)
+            else:
+                self.error('property must be a map: %s' % property, property_name)
             self.check_and_validate_keywords(self.__class__.property_keywords, property)
 
     def validate_readOnly(self, key, readOnly):
@@ -195,7 +204,8 @@ class OASValidator(object):
 
     def validate_property_type(self, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
-            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)            
+            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
+        
             
     def validate_property_format(self, key, format):
         if not isinstance(format, basestring):
