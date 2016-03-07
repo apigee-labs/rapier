@@ -415,7 +415,7 @@ properties | [Properties](#properties) | The properties of the entity. This is t
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 consumes | `string` or `array of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `array of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
-query_paramters | `sequence` of [Query Parameter](#query_paramter)s
+query_parameters | `sequence` of [Query Parameter](#query_parameter)s
 
 #### <a name="properties"></a>Properties
 
@@ -463,7 +463,7 @@ A `query path` can be represented as a string. Here are some examples with their
 
 Multiple query paths may be included in the same string as a space-deliminated list.
 
-#### <a name="quary_parameter"></a>Query Parameter
+#### <a name="query_parameter"></a>Query Parameter
 
 A Query parameter that may be appended to the URL of an entity to identify an entity that is closely related to the entity identified by the URL.
 A common use is to restrict the fields returned. 
