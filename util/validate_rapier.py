@@ -166,6 +166,22 @@ class OASValidator(object):
                 if parsed_url.scheme or parsed_url.netloc or not parsed_url.path.startswith('/'):
                     self.error('validate_well_known_URLs must be begin with a single slash %s' % url, key)
 
+    def validate_entity_consumes(self, key, consumes):
+        if isinstance(consumes, basestring):
+            pass
+        elif isinstance(consumes, list):
+            for media_type in consumes:
+                if not isinstance(media_type, basestring):
+                    self.error('consumes value must be a media_type string: %s' % media_type, key)
+    
+    def validate_entity_produces(self, key, produces):
+        if isinstance(produces, basestring):
+            pass
+        elif isinstance(produces, list):
+            for media_type in produces:
+                if not isinstance(media_type, basestring):
+                    self.error('produces value must be a media_type string: %s' % media_type, key)
+    
     def validate_properties(self, key, properties):
         for property_name, property in properties.iteritems():
             if hasattr(property, 'keys'):
@@ -297,7 +313,11 @@ class OASValidator(object):
                         
     def validate_relationship_collection_resource(self, key, collection_resource):
         self.validate_entity_url(collection_resource, key)
-                        
+
+    def validate_relationship_readOnly(self, key, readOnly):
+        if not (readOnly is True or readOnly is False):
+            self.error('readOnly must be a boolean: %s' % readOnly, key) 
+
     def validate_enum_val(self, key, enum_val):
         if not (isinstance(enum_val, basestring) or isinstance(enum_val, Number) or enum_val is True or enum_val is False or enum_val is None):
             self.error('enum value must be a string, number, boolean or null: %s' % enum_val, key)
@@ -360,7 +380,9 @@ class OASValidator(object):
     property_keywords.update(schema_keywords)
     entity_keywords = {
         'query_paths': validate_query_paths, 
-        'well_known_URLs': validate_well_known_URLs}
+        'well_known_URLs': validate_well_known_URLs,
+        'consumes': validate_entity_consumes,
+        'produces': validate_entity_produces}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -370,7 +392,8 @@ class OASValidator(object):
         'entities': validate_relationship_entities, 
         'multiplicity': validate_relationship_multiplicity, 
         'collection_resource': validate_relationship_collection_resource, 
-        'name': validate_relationship_name}
+        'name': validate_relationship_name,
+        'readOnly': validate_relationship_readOnly}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs

@@ -391,7 +391,7 @@ security | [Security Requirement Object](https://github.com/OAI/OpenAPI-Specific
 Field Name | Type | Description
 ---|:---:|---
 selector_location | `string` | Either the string "path-segment" or "path-parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
-patch_consumes | `string` | The media type used for PATCH rwquests. Default is `['application/merge-patch+json']`
+patch_consumes | `string` | The media type used for PATCH requests. Default is `['application/merge-patch+json']`
 error_reponse | `schema` | the schema of the response for all error cases. the default is `{}`
 
 #### <a name="entities"></a>Entities
@@ -413,6 +413,8 @@ query_paths | `string` or `array` of [Query Path](#query_path) | If the value is
 well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
+consumes | `string` or `array of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
+produces | `string` or `array of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 
 #### <a name="properties"></a>Properties
 
@@ -439,6 +441,7 @@ Field Name | Type | Description
 entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
 collection_resource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
+readOnly | `true or false` | For multi-valued relationships, says whether a POST is valid. default is `false`
 
 #### <a name="query_path"></a>Query Path
 
