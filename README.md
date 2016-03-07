@@ -475,7 +475,7 @@ description | `string` | The description
 required | `true or false` | The default is `false`
 type | "string", "number", "integer", "boolean", or "array" | Required. The type of the parameter. Since the parameter is not located at the request body, it is limited to simple types (that is, not an object).
 items | [Items Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#itemsObject) | Required if the value of type is "array". From the OpenAPI spec
-collectionFormat | `string` | From OpenAPI Spec. Determines the format of the array if type array is used. Possible values are: <ul><li>`csv` - comma separated values `foo,bar`. <li>`ssv` - space separated values `foo bar`. <li>`tsv` - tab separated values `foo\tbar`. <li>`pipes` - pipe separated values <code>foo&#124;bar</code>. </ul> Default value is `csv`.
+collectionFormat | `string` | From OpenAPI Spec. Determines the format of the array if type array is used. Possible values are: <ul><li>`csv` - comma separated values `foo,bar`. <li>`ssv` - space separated values `foo%20bar`. <li>`tsv` - tab separated values `foo\tbar`. <li>`pipes` - pipe separated values <code>foo&#124;bar</code>. </ul> Default value is `csv`.
 
 #### <a name="media_type"></a>Media Type
 
