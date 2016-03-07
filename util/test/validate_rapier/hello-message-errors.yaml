@@ -1,3 +1,3 @@
 WARNING - title occurs 2 times, at line 1, column 1 and line 9, column 1 in rapier/util/test/validate_rapier/hello-message.yaml
-ERROR - relationship name must be a string: 1 after line 1 column 1 to line 1 column 6 in rapier/util/test/validate_rapier/hello-message.yaml
+ERROR - title name must be a string: 1 after line 1 column 1 to line 1 column 6 in rapier/util/test/validate_rapier/hello-message.yaml
 INFO - unrecognized keyword titre at line 8, column 1 - did you mean title? in rapier/util/test/validate_rapier/hello-message.yaml

@@ -7,13 +7,13 @@ conventions:
   error_response:
     type: string
 securityDefinitions:
-  sso:
+  ss0:
     type: oauth2
     scopes: {}
     flow: application
     tokenUrl: whatever
 security:
-- sso: []
+- ss0: []
 entities:
   Store:
     allOf:
@@ -34,7 +34,7 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Doc'
-          multiplicity: O:n
+          multiplicity: 0:n
           readOnly: true
       docs:
         description: URL of a Collection of Docs
@@ -43,7 +43,7 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Doc'
-          multiplicity: O:n
+          multiplicity: 0:n
       folders:
         description: URL of a Collection of Folders
         format: uri
@@ -51,7 +51,7 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Folder'
-          multiplicity: O:n
+          multiplicity: 0:n
       groups:
         description: URL of a Collection of Groups
         format: uri
@@ -59,7 +59,7 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
-          multiplicity: O:n
+          multiplicity: 0:n
     well_known_URLs: /store
     query_paths: 
     - home
@@ -82,7 +82,7 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Doc #Folder'
-          multiplicity: O:n
+          multiplicity: 0:n
       folder:
         description: URL of a Folder
         format: uri

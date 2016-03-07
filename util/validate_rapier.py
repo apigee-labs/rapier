@@ -184,9 +184,16 @@ class OASValidator(object):
         if not (readOnly is True or readOnly is False) :
             self.error('id must be a boolean: %s' % readOnly, key)
 
-    def validate_selector_location(self, key, location):
+    def validate_conventions_selector_location(self, key, location):
         if not location in ['path-segment', 'path-parameter']:
             self.error('%s must be either the string "path-segment" or "path-parameter"' % location)
+
+    def validate_conventions_patch_consumes(self, key, patch_consumes):
+        if not isinstance(patch_consumes, basestring):
+            self.error('patch_consumes must be a string: %s' % patch_consumes)
+
+    def validate_conventions_error_response(self, key, error_response):
+        self.check_and_validate_keywords(self.__class__.schema_keywords, error_response, key)
 
     def similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio() > self.similarity_ratio
@@ -307,30 +314,63 @@ class OASValidator(object):
 
     def validate_title(self, key, title):
         if not isinstance(title, basestring):
-            self.error('relationship name must be a string: %s' % title, key) 
+            self.error('title name must be a string: %s' % title, key) 
 
     def validate_description(self, key, description):
         if not isinstance(description, basestring):
-            self.error('relationship name must be a string: %s' % description, key) 
+            self.error('description name must be a string: %s' % description, key) 
 
-    rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'conventions': validate_conventions, 'version': validate_version}
-    schema_keywords =  {'id': validate_id, 
-                        'type': validate_property_type, 
-                        'format': validate_property_format, 
-                        'items': validate_property_items, 
-                        'properties': validate_properties, 
-                        'readOnly': validate_readOnly, 
-                        'oneOf': None, 
-                        'allOf': None, 
-                        'enum': validate_enum,
-                        'title': validate_title,
-                        'description': validate_description}
-    property_keywords = {'relationship': validate_property_relationship}
+    def validate_rapier_consumes(self, key, consumes):
+        if not isinstance(consumes, basestring):
+            self.error('consumes name must be a string: %s' % consumes, key) 
+
+    def validate_rapier_produces(self, key, produces):
+        if not isinstance(produces, basestring):
+            self.error('produces name must be a string: %s' % produces, key) 
+
+    def validate_rapier_security_definitions(self, key, security_definitions):
+        self.info('Security definitions not yet validated')
+
+    def validate_rapier_security(self, key, security):
+        self.info('Security not yet validated')
+
+    rapier_spec_keywords = {
+        'title': validate_title, 
+        'entities': validate_entities, 
+        'conventions': validate_conventions, 
+        'version': validate_version,
+        'consumes': validate_rapier_consumes,
+        'produces': validate_rapier_produces,
+        'securityDefinitions': validate_rapier_security_definitions,
+        'security': validate_rapier_security}
+    schema_keywords =  {
+        'id': validate_id, 
+        'type': validate_property_type, 
+        'format': validate_property_format, 
+        'items': validate_property_items, 
+        'properties': validate_properties, 
+        'readOnly': validate_readOnly, 
+        'oneOf': None, 
+        'allOf': None, 
+        'enum': validate_enum,
+        'title': validate_title,
+        'description': validate_description}
+    property_keywords = {
+        'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
-    entity_keywords = {'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs}
+    entity_keywords = {
+        'query_paths': validate_query_paths, 
+        'well_known_URLs': validate_well_known_URLs}
     entity_keywords.update(schema_keywords)
-    conventions_keywords = {'selector_location': validate_selector_location}
-    relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource, 'name': validate_relationship_name}
+    conventions_keywords = {
+        'selector_location': validate_conventions_selector_location,
+        'patch_consumes': validate_conventions_patch_consumes,
+        'error_response': validate_conventions_error_response}
+    relationship_keywords = {
+        'entities': validate_relationship_entities, 
+        'multiplicity': validate_relationship_multiplicity, 
+        'collection_resource': validate_relationship_collection_resource, 
+        'name': validate_relationship_name}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs
