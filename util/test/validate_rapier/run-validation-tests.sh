@@ -8,7 +8,7 @@ cd $ROOT_DIR
 ./rapier/util/validate_rapier.py rapier/util/test/todo-list-with-id.yaml
 ./rapier/util/validate_rapier.py rapier/util/test/todo-list-with-self.yaml
 ./rapier/util/validate_rapier.py rapier/util/test/todo-list-with-links.yaml
-#./rapier/util/validate_rapier.py rapier/util/test/dog-tracker.yaml
+./rapier/util/validate_rapier.py rapier/util/test/dog-tracker.yaml
 #./rapier/util/validate_rapier.py rapier/util/test/property-tracker.yaml
 #./rapier/util/validate_rapier.py rapier/util/test/spec-hub.yaml
 #./rapier/util/validate_rapier.py rapier/util/test/spec-hub.yaml

@@ -12,7 +12,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           entities: '#Dog'
-          multiplicity: O:n
+          multiplicity: 0:n
       people:
         description: URL of a Collection of Persons
         format: uri
@@ -20,7 +20,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           entities: '#Person'
-          multiplicity: O:n
+          multiplicity: 0:n
     well_known_URLs: /
     query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
     readOnly: true
@@ -53,7 +53,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           entities: '#Dog'
-          multiplicity: O:n
+          multiplicity: 0:n
   Resource:
     type: object
     properties:

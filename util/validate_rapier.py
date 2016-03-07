@@ -305,8 +305,26 @@ class OASValidator(object):
         if not isinstance(name, basestring):
             self.error('relationship name must be a string: %s' % name, key) 
 
+    def validate_title(self, key, title):
+        if not isinstance(title, basestring):
+            self.error('relationship name must be a string: %s' % title, key) 
+
+    def validate_description(self, key, description):
+        if not isinstance(description, basestring):
+            self.error('relationship name must be a string: %s' % description, key) 
+
     rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'conventions': validate_conventions, 'version': validate_version}
-    schema_keywords = {'id': validate_id, 'type': validate_property_type, 'format': validate_property_format, 'items': validate_property_items, 'properties': validate_properties, 'readOnly': validate_readOnly, 'oneOf': None, 'allOf': None, 'enum': validate_enum}
+    schema_keywords =  {'id': validate_id, 
+                        'type': validate_property_type, 
+                        'format': validate_property_format, 
+                        'items': validate_property_items, 
+                        'properties': validate_properties, 
+                        'readOnly': validate_readOnly, 
+                        'oneOf': None, 
+                        'allOf': None, 
+                        'enum': validate_enum,
+                        'title': validate_title,
+                        'description': validate_description}
     property_keywords = {'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
     entity_keywords = {'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs}
