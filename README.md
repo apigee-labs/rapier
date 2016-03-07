@@ -384,6 +384,7 @@ consumes | `array` of [Media Type](media_type) | The media-types that may be use
 produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 conventions | [Conventions](#conventions) | Conventions that affect the details of the HTTP messages of the API
 securityDefinitions | [Security Definitions Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject) | From the OpenAPI specification
+security | [Security Requirement Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject) | From the OpenAPI specification
 
 #### <a name="conventions"></a>Conventions
 
