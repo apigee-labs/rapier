@@ -415,6 +415,7 @@ properties | [Properties](#properties) | The properties of the entity. This is t
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 consumes | `string` or `array of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `array of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
+query_paramters | `sequence` of [Query Parameter](#query_paramter)s
 
 #### <a name="properties"></a>Properties
 
@@ -461,6 +462,20 @@ A `query path` can be represented as a string. Here are some examples with their
 - `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings.  URL template is \{`child-URL`\}/siblings;name=\{name\}/siblings}  
 
 Multiple query paths may be included in the same string as a space-deliminated list.
+
+#### <a name="quary_parameter"></a>Query Parameter
+
+A Query parameter that may be appended to the URL of an entity to identify an entity that is closely related to the entity identified by the URL.
+A common use is to restrict the fields returned. 
+
+Field Name | Type | Description
+---|:---:|---
+name | `string` | The name
+description | `string` | The description
+required | `true or false` | The default is `false`
+type | "string", "number", "integer", "boolean", or "array" | Required. The type of the parameter. Since the parameter is not located at the request body, it is limited to simple types (that is, not an object).
+items | [Items Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#itemsObject) | Required if the value of type is "array". From the OpenAPI spec
+collectionFormat | `string` | From OpenAPI Spec. Determines the format of the array if type array is used. Possible values are: <ul><li>`csv` - comma separated values `foo,bar`. <li>`ssv` - space separated values `foo bar`. <li>`tsv` - tab separated values `foo\tbar`. <li>`pipes` - pipe separated values <code>foo&#124;bar</code>. </ul> Default value is `csv`.
 
 #### <a name="media_type"></a>Media Type
 
