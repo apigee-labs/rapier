@@ -12,6 +12,7 @@ from yaml.resolver import Resolver
 from yaml.parser import Parser
 from yaml.constructor import Constructor, BaseConstructor, SafeConstructor
 from urlparse import urlsplit
+from numbers import Number
 
 class PresortedList(list):
     def sort(self, *args, **kwargs):
@@ -209,13 +210,13 @@ class OASValidator(object):
     def check_and_validate_keywords(self, keyword_validators, node, node_key):
         if hasattr(node, 'keys'):
             if id(node) not in self.validated_nodes:
+                self.validated_nodes.add(id(node))
                 if '$ref' in node:
                     ref_key = [item for item in node.iteritems() if item[0] == '$ref'][0][0]
                     node = self.resolve_json_ref(node['$ref'], ref_key)
                     if node is not None:
                         self.check_and_validate_keywords(keyword_validators, node, node_key)
                 else:
-                    self.validated_nodes.add(id(node))
                     for key, value in node.iteritems():
                         if key not in keyword_validators:
                             similar_keywords = [keyword for keyword in keyword_validators.iterkeys() if self.similar(key, keyword)]
@@ -290,14 +291,28 @@ class OASValidator(object):
     def validate_relationship_collection_resource(self, key, collection_resource):
         self.validate_entity_url(collection_resource, key)
                         
+    def validate_enum_val(self, key, enum_val):
+        if not (isinstance(enum_val, basestring) or isinstance(enum_val, Number) or enum_val is True or enum_val is False or enum_val is None):
+            self.error('enum value must be a string, number, boolean or null: %s' % enum_val, key)
+            
+    def validate_enum(self, key, enum):
+        if not isinstance(enum, list):
+            self.error('enum must be a list: %s' % enum, key) 
+        for enum_val in enum:
+            self.validate_enum_val(enum_val, key)
+                        
+    def validate_relationship_name(self, key, name):
+        if not isinstance(name, basestring):
+            self.error('relationship name must be a string: %s' % name, key) 
+
     rapier_spec_keywords = {'title': validate_title, 'entities': validate_entities, 'conventions': validate_conventions, 'version': validate_version}
-    schema_keywords = {'id': validate_id, 'type': validate_property_type, 'format': validate_property_format, 'items': validate_property_items, 'properties': validate_properties, 'readOnly': validate_readOnly, 'oneOf': None, 'allOf': None}
+    schema_keywords = {'id': validate_id, 'type': validate_property_type, 'format': validate_property_format, 'items': validate_property_items, 'properties': validate_properties, 'readOnly': validate_readOnly, 'oneOf': None, 'allOf': None, 'enum': validate_enum}
     property_keywords = {'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
     entity_keywords = {'query_paths': validate_query_paths, 'well_known_URLs': validate_well_known_URLs}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {'selector_location': validate_selector_location}
-    relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource}
+    relationship_keywords = {'entities': validate_relationship_entities, 'multiplicity': validate_relationship_multiplicity, 'collection_resource': validate_relationship_collection_resource, 'name': validate_relationship_name}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs
