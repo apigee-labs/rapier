@@ -275,7 +275,7 @@ entities:
 ```                
 
 The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `items;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client the information it needed to form the URL that is now included in the self property.
+We don't need this query path any more because its only purpose was to give the client this information it needed to form the URL that is now included in the self property.
 The format of the `self` URL should be opaque to the API clients,
 and it is a reasonable practice to obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
 
@@ -378,8 +378,8 @@ id | `string` | The URI of the API. Note this is the URI of the API itself, not 
 title | `string` | The title of the API. Dublin Core title. The default is 'untitled'
 version | `string` | The version of the API. The default is 'initial'
 entities | [Entities](#entities) | The entities of the API.
-consumes | `array` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
-produces | `array` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
+consumes | `sequence` of [Media Type](media_type) | The media-types that may be used by clients when providing data in POST and PUT requests. The valid values for the Content-Type HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
+produces | `sequence` of [Media Type](media_type) | The media-types that clients can request from the server in GET, POST, PUT, PATCH and DELETE requests. The valid values for the Accept HTTP header in those requests. May also be specified as a single string, which is interpreted as a space-delimited list. This value can be overridden at a relationship level
 conventions | [Conventions](#conventions) | Conventions that affect the details of the HTTP messages of the API
 securityDefinitions | [Security Definitions Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject) | From the OpenAPI specification
 security | [Security Requirement Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject) | From the OpenAPI specification
@@ -407,12 +407,12 @@ Each entity is a [JSON Schema](http://json-schema.org/). It includes the standar
 Field Name | Type | Description
 ---|:---:|---
 id | `string` | The URI of the entity. Can be any URI, although the use of URL fragments is popular for obvious reasons. The default value is a URL fragment composed from the entity name which is the YAML key of the entity. If the Entity has an explicit id value, it can be addressed using that URI. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
-query_paths | `string` or `array` of [Query Path](#query_path) | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
-well_known_URLs | `string` or `array` of URLs | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
+query_paths | `string` or `sequence of [Query Path](#query_path)` | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
+well_known_URLs | `string` or `sequence of URLs` | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'.
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
-consumes | `string` or `array of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
-produces | `string` or `array of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
+consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
+produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 query_parameters | `sequence` of [Query Parameter](#query_parameter)s
 
 #### <a name="properties"></a>Properties
@@ -437,7 +437,7 @@ Describes a relationship to one or more other entities
 
 Field Name | Type | Description
 ---|:---:|---
-entities | `string` or `array` of URLs | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an array, each item is interpreted as a single URL.
+entities | `string` or `sequence of URLs` | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
 collection_resource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
 readOnly | `true or false` | For multi-valued relationships, says whether a POST is valid. default is `false`
@@ -481,7 +481,7 @@ Describes a media type. If a media type is given as a simple string, it applies 
 
 Field pattern | Type | Description
 ---|:---:|---
-{entity_id} | `array` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an array or a space-deliminated list in a single string
+{entity_id} | `sequence` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an sequence or a space-deliminated list in a single string
 
 ## <a name="oas_generator">OpenAPI Generator
 
