@@ -214,13 +214,12 @@ and following the `items` relationship declared in the data model, but without h
 The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `todos/items` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
 
+`/to-dos/items` and `/to-dos/items/{id}` are valid because there is a TodoList at `/items`, but the template is valid for any TodoList URL, like this:
 More generally, these URL templates are valid:
 
     {TodoList-URL}/items
     {TodoList-URL}/items/{id}
     
-The previous two are valid because there is a TodoList at `/items`, but the template is valid for any TodoList URL.
-
 In the example above, the value of the items property of the TodoList at `items` was `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
 `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may chhose to make them the same (or not).
 
