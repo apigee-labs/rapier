@@ -94,7 +94,7 @@ Here you see the definition of a property called webmaster whose value is a URI.
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
 
-### To-do List
+### <a name="to_do_list"></a>To-do List
 
 The example above shows how to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
 
@@ -219,7 +219,7 @@ of the URL `todos/items` to form a URL that will identify a single `Item` amongs
     {TodoList-URL}/items
     {TodoList-URL}/items/{id}
     
-In the example above, the value of the items property of the TodoList at `items` was `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
+In the [To-do List example](#to_do_list) above, the value of the items property of the TodoList at `items` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
 `http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may chhose to make them the same (or not).
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
