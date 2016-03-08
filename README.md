@@ -215,7 +215,6 @@ The second URL template indicates that we can form a query URL by appending the 
 of the URL `todos/items` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
 
 `/to-dos/items` and `/to-dos/items/{id}` are valid because there is a TodoList at `/to-dos`, but the template is valid for any TodoList URL, like this:
-More generally, these URL templates are valid:
 
     {TodoList-URL}/items
     {TodoList-URL}/items/{id}
