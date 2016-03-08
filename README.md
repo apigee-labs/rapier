@@ -220,7 +220,7 @@ of the URL `todos/items` to form a URL that will identify a single `Item` amongs
     {TodoList-URL}/items/{id}
     
 In the [To-do List example](#to_do_list) above, the value of the items property of the TodoList at `/to-dos` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
-`http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may chhose to make them the same (or not).
+`http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may choose to make them the same (or not).
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
