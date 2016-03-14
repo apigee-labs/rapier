@@ -144,11 +144,12 @@ In addition to declaring the entity type at the end of the relationship, it decl
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the relationship property (`items` in this case) is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
+
 In JSON, the `To_do_list` at `/to-dos` will look like this:
 ```json
     {"items": "http://example.org/xxxxx"}
 ```
-The Collection at `http://example.org/xxxxx` will look like this in JSON:
+The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 ```json
     {"items": [{
          "description": "Get milk on the way home",
