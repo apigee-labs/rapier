@@ -94,6 +94,16 @@ Here you see the definition of a property called webmaster whose value is a URI.
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
 
+In JSON, the `Site` at `/` will look like this:
+```json
+    {"webmaster": "http://example.org/xxxxx"}
+```
+The `Person` at `http://example.org/xxxxx` will look like this in JSON:
+```json
+    {"name": "Jane Doe"
+    }
+``` 
+
 ### <a name="to_do_list"></a>To-do List
 
 The example above shows how to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
