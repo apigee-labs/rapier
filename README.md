@@ -216,7 +216,8 @@ entities:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id} [\[3\]](#footnote1)
+    /to-dos/items/{id} 
+[\[3\]](#footnote3)
 
 The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
