@@ -216,7 +216,7 @@ entities:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id} [3]
+    /to-dos/items/{id} [\[3\]](#footnote1)
 
 The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
@@ -235,7 +235,7 @@ In the [To-do List example](#to_do_list) above, the value of the items property 
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
-\[3\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
+<a name="footnote3">\[3\] The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`
 
 ### Hiding the implementation detail
 
