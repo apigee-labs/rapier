@@ -216,8 +216,7 @@ entities:
 The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /to-dos/items
-    /to-dos/items/{id} 
-[The format of the URI template is influenced by the convention specification `selector_location: path-segment`. Without that, the template would have been `/to-dos/items;{id}`]
+    /to-dos/items/{id} [The format of this URI template is influenced by the convention specification `selector_location: path-segment`.]
 
 The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
