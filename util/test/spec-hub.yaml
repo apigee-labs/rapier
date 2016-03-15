@@ -268,21 +268,21 @@ entities:
         type: string
         format: date-time
         readOnly: true
-implementation_only:
+implementation_private_information:
   Group:
-    instance_url:
+    implementation_url:
       template: /c3Rvc-Z3Jw-{} 
       key:
         name: implementation_key
         type: integer
   Doc:
-    instance_url:
+    implementation_url:
       template: /c3Rvc-ZG9j-{} 
       key:
         name: implementation_key
         type: integer
   Folder:
-    instance_url:
+    implementation_url:
       template: /c3Rvc-Zmxk-{} 
       key:
         name: implementation_key

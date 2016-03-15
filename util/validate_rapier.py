@@ -97,7 +97,7 @@ class OASValidator(object):
         
     def check_id_uniqueness(self):
         self.entities = {}
-        for name, entity in {k:v for d in (self.rapier_spec.get('entities',{}), self.rapier_spec.get('non_entities',{})) for k,v in d.iteritems()}.iteritems():
+        for name, entity in self.rapier_spec.get('entities',{}).iteritems():
             id = entity.get('id', '#%s'%name)
             if id in self.entities:
                 self.info('information about %s is provided in multiple places - is this what you meant?' % id)
@@ -401,14 +401,32 @@ class OASValidator(object):
         if not (required is True or required is False):
             self.error('query_parameter required must be a true or false: %s' % required, key) 
 
-    def validate_minimum(self, key, value):
+    def validate_number(self, key, value):
         if not isinstance(value, Number):
-            self.error('minimum must be a number %s' % number, key)
+            self.error('%s must be a number %s' % (key, number), key)
+            
+    def validate_implementation_private_information(self, key, entities):
+        for key, entity in entities.iteritems():
+            self.check_and_validate_keywords(self.__class__.implementation_private_keywords, entity, key)
+
+    def validate_implementation_url(self, key, entity):
+        self.check_and_validate_keywords(self.__class__.implementation_url_keywords, entity, key)
         
-    def validate_maximum(self, key, value):
-        if not isinstance(value, Number):
-            self.error('maximum must be a number %s' % number, key)
-        
+    def validate_implementation_url_template(self, key, template):
+        formatter = string.Formatter()
+        try:
+            parsed_format = list(formatter.parse(template))
+        except Exception as e:
+            return self.error('error parsing query path segment string: %s' % e, key)
+        leading_parts = [part for part in parsed_format if part[1] is not None]
+        if len(leading_parts) != 1:
+            self.error('query segment %s must include exactly one {name} element after ;' % query_path_segment_string)
+        if leading_parts[0] == '':
+            self.error('property name required between {} characters after %s in query segment %s' %(leading_parts[0] ,query_path_segment_string))
+
+    def validate_implementation_url_key(self, key, value):
+        pass
+    
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -417,7 +435,8 @@ class OASValidator(object):
         'consumes': validate_rapier_consumes,
         'produces': validate_rapier_produces,
         'securityDefinitions': validate_rapier_security_definitions,
-        'security': validate_rapier_security}
+        'security': validate_rapier_security,
+        'implementation_private_information': validate_implementation_private_information}
     schema_keywords =  {
         'id': validate_id, 
         'type': validate_property_type, 
@@ -430,8 +449,8 @@ class OASValidator(object):
         'enum': validate_enum,
         'title': validate_title,
         'description': validate_description,
-        'minimum': validate_minimum,
-        'maximum': validate_maximum}
+        'minimum': validate_number,
+        'maximum': validate_number}
     property_keywords = {
         'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
@@ -464,8 +483,13 @@ class OASValidator(object):
         'description': validate_description,
         'name': validate_query_parameter_name,
         'required': validate_query_parameter_required,
-        'minimum': validate_minimum,
-        'maximum': validate_maximum}
+        'minimum': validate_number,
+        'maximum': validate_number}
+    implementation_private_keywords =  {
+        'implementation_url': validate_implementation_url}
+    implementation_url_keywords =  {
+        'template': validate_implementation_url_template,
+        'key': validate_implementation_url_key}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs
