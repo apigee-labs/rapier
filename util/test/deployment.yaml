@@ -172,7 +172,15 @@ entities:
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#StatisticsTest'    
+          entities: '#StatisticsTest' 
+      scalingRequests:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#DeploymentScalingRequest' 
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -244,6 +252,16 @@ entities:
         type: string
         format: uri
         relationship: '#StatisticsResults'
+    readOnly: true
+  DeploymentScalingRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentScalingRequest]  
+      replicas: 
+        type: integer
     readOnly: true
   StatisticsResults:
     type: object

@@ -164,6 +164,11 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Deployment.statistics_tests'
+      scalingRequests:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Deployment.scalingRequests'
     x-interface: '#/x-interfaces/Deployment'
   EnvironmentStartRequest:
     allOf:
@@ -253,6 +258,18 @@ definitions:
         x-interface: '#/x-interfaces/StatisticsResults'
     readOnly: true
     x-interface: '#/x-interfaces/StatisticsTest'
+  DeploymentScalingRequest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentScalingRequest
+      replicas:
+        type: integer
+    readOnly: true
+    x-interface: '#/x-interfaces/DeploymentScalingRequest'
   StatisticsResults:
     type: object
     readOnly: true
@@ -1117,6 +1134,126 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Deployment.go_offline_requests
+  Deployment.scalingRequests:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentScalingRequest
+      parameters:
+      - description: The representation of the new DeploymentScalingRequest being
+          created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentScalingRequest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new DeploymentScalingRequest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentScalingRequest
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentScalingRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment.scalingRequests
   Deployment.start_requests:
     get:
       parameters:
@@ -1740,6 +1877,67 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOfflineRequest
+  DeploymentScalingRequest:
+    get:
+      description: Retrieve a DeploymentScalingRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentScalingRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentScalingRequest
   DeploymentStartRequest:
     get:
       description: Retrieve a DeploymentStartRequest
