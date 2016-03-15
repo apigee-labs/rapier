@@ -94,8 +94,8 @@ class OASGenerator(object):
             self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
             self.openapispec_uri_map.update({'#/non_entities/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entities',{}).iterkeys()})
             entities.update(spec.get('non_entities',{}))
-            if 'implementation_only' in spec:
-                for entity_name, entity in spec['implementation_only'].iteritems():
+            if 'implementation_private_information' in spec:
+                for entity_name, entity in spec['implementation_private_information'].iteritems():
                     if 'properties' in entity:
                         for property in entity['properties'].itervalues():
                             property['implementation_private'] = True
@@ -109,8 +109,8 @@ class OASGenerator(object):
                         if 'query_paths' in entity:
                             entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
                             entities[entity_name]['query_paths'].extend(entity['query_paths'])
-                        if 'instance_url' in entity:
-                            entities[entity_name]['instance_url'] = entity['instance_url']
+                        if 'implementation_url' in entity:
+                            entities[entity_name]['implementation_url'] = entity['implementation_url']
                     else:
                         entities[entity_name] = entity
             self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
@@ -157,8 +157,8 @@ class OASGenerator(object):
                         path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
                         self.openapispec_paths[path] = path_spec
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
-                if self.include_impl and 'instance_url' in entity_spec:
-                    implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
+                if self.include_impl and 'implementation_url' in entity_spec:
+                    implementation_spec = ImplementationPathSpec(entity_spec['implementation_url'], entity_uri, self)
                     entity_interface = self.build_interface_reference(implementation_spec)
                     path_spec = self.build_oas_path_spec(implementation_spec, entity_uri, implementation_spec)
                     self.openapispec_paths[implementation_spec.path_segment()] = path_spec
@@ -166,8 +166,8 @@ class OASGenerator(object):
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
-                        if self.include_impl and 'instance_url' in entity_spec:
-                            implementation_spec = ImplementationPathSpec(entity_spec['instance_url'], entity_uri, self)
+                        if self.include_impl and 'implementation_url' in entity_spec:
+                            implementation_spec = ImplementationPathSpec(entity_spec['implementation_url'], entity_uri, self)
                             self.add_query_paths(query_paths[:], implementation_spec, rel_property_spec_stack, rel_property_specs)
                         if 'well_known_URLs' in entity_spec:
                             qps = query_paths[:]
@@ -1073,21 +1073,21 @@ class WellKnownURLSpec(PathPrefix):
 
 class ImplementationPathSpec(PathPrefix):
     
-    def __init__(self, instance_url, entity_uri, generator):
-        self.instance_url = instance_url 
+    def __init__(self, implementation_url, entity_uri, generator):
+        self.implementation_url = implementation_url 
         self.entity_uri = entity_uri
         self.generator = generator
 
     def path_segment(self, select_one_of_many = False):
-        template = self.instance_url['template']
-        return template.format(self.instance_url['key']['name'].join('{}'))
+        template = self.implementation_url['template']
+        return template.format(self.implementation_url['key']['name'].join('{}'))
 
     def build_param(self):
         result = {
-            'name': self.instance_url['key']['name'],
+            'name': self.implementation_url['key']['name'],
             'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'in': 'path',
-            'type': self.instance_url['key'].get('type', 'string'),
+            'type': self.implementation_url['key'].get('type', 'string'),
             'required': True
             }
         return result
