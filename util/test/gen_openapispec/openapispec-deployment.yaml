@@ -31,11 +31,11 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/System.has_environments'
-      comprises:
+      has_components:
         format: uri
         type: string
         readOnly: true
-        x-interface: '#/x-interfaces/System.comprises'
+        x-interface: '#/x-interfaces/System.has_components'
     x-interface: '#/x-interfaces/System'
   Environment:
     allOf:
@@ -56,6 +56,10 @@ definitions:
       requested_state:
         type: string
         readOnly: true
+        enum:
+        - initial
+        - started
+        - stopped
       start_requests:
         format: uri
         type: string
@@ -122,6 +126,14 @@ definitions:
       requested_state:
         type: string
         readOnly: true
+        enum:
+        - initial
+        - started
+        - stopped
+        - live
+        - offline
+        - canary
+        - statistics
       start_requests:
         format: uri
         type: string
@@ -200,15 +212,15 @@ definitions:
         enum:
         - DeploymentOfflineRequest
     x-interface: '#/x-interfaces/DeploymentOfflineRequest'
-  DeploymentOnlineRequest:
+  DeploymentGoLiveRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - DeploymentOnlineRequest
-    x-interface: '#/x-interfaces/DeploymentOnlineRequest'
+        - DeploymentGoLiveRequest
+    x-interface: '#/x-interfaces/DeploymentGoLiveRequest'
   CanaryTest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -916,13 +928,13 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new DeploymentOnlineRequest
+      description: Create a new DeploymentGoLiveRequest
       parameters:
-      - description: The representation of the new DeploymentOnlineRequest being created
+      - description: The representation of the new DeploymentGoLiveRequest being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/DeploymentOnlineRequest'
+          $ref: '#/definitions/DeploymentGoLiveRequest'
       - description: The media type of the body
         in: header
         name: Content-Type
@@ -930,7 +942,7 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new DeploymentOnlineRequest
+          description: Created new DeploymentGoLiveRequest
           headers:
             Content-Type:
               description: The media type of the returned body
@@ -939,10 +951,10 @@ x-interfaces:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created DeploymentOnlineRequest
+              description: perma-link URL of newly-created DeploymentGoLiveRequest
               type: string
           schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
+            $ref: '#/definitions/DeploymentGoLiveRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1462,6 +1474,139 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Deployment.stop_requests
+  DeploymentGoLiveRequest:
+    get:
+      description: Retrieve a DeploymentGoLiveRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentGoLiveRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentGoLiveRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentGoLiveRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentGoLiveRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentGoLiveRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentGoLiveRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentGoLiveRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentGoLiveRequest
   DeploymentOfflineRequest:
     get:
       description: Retrieve a DeploymentOfflineRequest
@@ -1595,139 +1740,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOfflineRequest
-  DeploymentOnlineRequest:
-    get:
-      description: Retrieve a DeploymentOnlineRequest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a DeploymentOnlineRequest entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentOnlineRequest being
-          updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentOnlineRequest'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a DeploymentOnlineRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOnlineRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: DeploymentOnlineRequest
   DeploymentStartRequest:
     get:
       description: Retrieve a DeploymentStartRequest
@@ -3253,7 +3265,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: System
-  System.comprises:
+  System.has_components:
     get:
       parameters:
       - in: query
@@ -3371,7 +3383,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: System.comprises
+    x-id: System.has_components
   System.has_environments:
     get:
       parameters:

@@ -22,7 +22,7 @@ entities:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Environment'
-      comprises:
+      has_components:
         format: uri
         type: string
         readOnly: true
@@ -51,6 +51,7 @@ entities:
       requested_state:
         type: string
         readOnly: true
+        enum: [initial, started, stopped]
       start_requests:
         format: uri
         type: string
@@ -123,6 +124,7 @@ entities:
       requested_state:
         type: string
         readOnly: true
+        enum: [initial, started, stopped, live, offline, canary, statistics]
       start_requests:
         format: uri
         type: string
@@ -146,7 +148,7 @@ entities:
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#DeploymentOnlineRequest'        
+          entities: '#DeploymentGoLiveRequest'        
       go_offline_requests:
         format: uri
         type: string
@@ -208,13 +210,13 @@ entities:
       kind:
         type: string
         enum: [DeploymentOfflineRequest]    
-  DeploymentOnlineRequest:
+  DeploymentGoLiveRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [DeploymentOnlineRequest]    
+        enum: [DeploymentGoLiveRequest]    
   CanaryTest:
     allOf:
     - $ref: '#/entities/PersistentResource'

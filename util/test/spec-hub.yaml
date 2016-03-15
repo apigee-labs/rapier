@@ -7,13 +7,13 @@ conventions:
   error_response:
     type: string
 securityDefinitions:
-  ss0:
+  sso:
     type: oauth2
     scopes: {}
     flow: application
     tokenUrl: whatever
 security:
-- ss0: []
+- sso: []
 entities:
   Store:
     allOf:
