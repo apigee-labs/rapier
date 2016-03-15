@@ -248,20 +248,17 @@ class OASValidator(object):
                                 message += ' - did you mean %s?' % ' or '.join(similar_keywords)
                             self.info(message)
                         else:
-                            if key == 'oneOf' or key == 'allOf':
-                                if isinstance(value, list):
-                                    for one in value:
-                                        self.check_and_validate_keywords(keyword_validators, one, key)
-                                else:
-                                    self.error('oneOf value must be a list: %s' % value, key)
-                            else:
-                                keyword_validators[key](self, key, value)        
+                            keyword_validators[key](self, key, value)        
         else:
             self.error('spec must be a map: %s' % spec, spec_key)
 
     def validate_property_type(self, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
             self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
+            
+    def validate_query_parameter_property_type(self, key, p_type):
+        if not p_type in ['array', 'boolean', 'integer', 'number', 'string']:
+            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'string': " % p_type, key)   
             
     def validate_property_format(self, key, format):
         if not isinstance(format, basestring):
@@ -354,6 +351,64 @@ class OASValidator(object):
     def validate_rapier_security(self, key, security):
         self.info('Security not yet validated')
 
+    def validate_query_parameters(self, key, query_parameters):
+        if not isinstance(query_parameters, list):
+            return self.error('query_parameters must be a list: %s' % query_parameters, key)
+        names = set()
+        for query_parameter in query_parameters:
+            self.check_and_validate_keywords(self.__class__.query_parameter_keywords, query_parameter, key)
+            if hasattr(query_parameter, 'keys'):
+                name = query_parameter.get('name')
+                if name:
+                    if name in names:
+                        self.error('duplicate name: %s' %name, name)
+                    else:
+                        names.add(name)
+                else:
+                    self,error('name must not be null', name)
+            
+    def invalid(self, key, value):
+        self.error('%s is not allowed: value' %key, key)
+    
+    def validate_starOf(self, key, starOf, keyword_validators):
+        if isinstance(starOf, list):
+            for one in starOf:
+                self.check_and_validate_keywords(keyword_validators, one, key)
+        else:
+            self.error('oneOf value must be a list: %s' % value, key)
+
+    def validate_schema_allOf(self, key, value):
+        self.validate_starOf(key, value, self.__class__.schema_keywords)
+                                    
+    def validate_schema_oneOf(self, key, value):
+        self.validate_starOf(key, value, self.__class__.schema_keywords)
+                                    
+    def validate_query_parameter_allOf(self, key, value):
+        self.validate_starOf(key, value, self.__class__.schema_keywords)
+                                    
+    def validate_query_parameter_oneOf(self, key, value):
+        self.validate_starOf(key, value, self.__class__.schema_keywords)
+                                    
+    def validate_query_parameter_name(self, key, name):
+        if not isinstance(name, basestring):
+            self.error('query_parameter name must be a string: %s' % name, key) 
+
+    def validate_query_parameter_required(self, key, required):
+        if not (required is True or required is False):
+            self.error('query_parameter required must be a true or false: %s' % required, key) 
+
+    def validate_query_parameter_required(self, key, required):
+        if not (required is True or required is False):
+            self.error('query_parameter required must be a true or false: %s' % required, key) 
+
+    def validate_minimum(self, key, value):
+        if not isinstance(value, Number):
+            self.error('minimum must be a number %s' % number, key)
+        
+    def validate_maximum(self, key, value):
+        if not isinstance(value, Number):
+            self.error('maximum must be a number %s' % number, key)
+        
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -370,11 +425,13 @@ class OASValidator(object):
         'items': validate_property_items, 
         'properties': validate_properties, 
         'readOnly': validate_readOnly, 
-        'oneOf': None, 
-        'allOf': None, 
+        'oneOf': validate_schema_oneOf, 
+        'allOf': validate_schema_allOf, 
         'enum': validate_enum,
         'title': validate_title,
-        'description': validate_description}
+        'description': validate_description,
+        'minimum': validate_minimum,
+        'maximum': validate_maximum}
     property_keywords = {
         'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
@@ -382,7 +439,8 @@ class OASValidator(object):
         'query_paths': validate_query_paths, 
         'well_known_URLs': validate_well_known_URLs,
         'consumes': validate_entity_consumes,
-        'produces': validate_entity_produces}
+        'produces': validate_entity_produces,
+        'query_parameters': validate_query_parameters}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -394,6 +452,20 @@ class OASValidator(object):
         'collection_resource': validate_relationship_collection_resource, 
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly}
+    query_parameter_keywords =  {
+        'type': validate_query_parameter_property_type, 
+        'format': validate_property_format, 
+        'items': validate_property_items, 
+        'properties': invalid, 
+        'oneOf': validate_query_parameter_oneOf, 
+        'allOf': validate_query_parameter_allOf, 
+        'enum': validate_enum,
+        'title': validate_title,
+        'description': validate_description,
+        'name': validate_query_parameter_name,
+        'required': validate_query_parameter_required,
+        'minimum': validate_minimum,
+        'maximum': validate_maximum}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs
