@@ -1077,17 +1077,32 @@ class ImplementationPathSpec(PathPrefix):
         self.implementation_url = implementation_url 
         self.entity_uri = entity_uri
         self.generator = generator
+        template = self.implementation_url['template']
+        formatter = string.Formatter()
+        try:
+            parsed_format = list(formatter.parse(template))
+        except Exception as e:
+            sys.exit('error parsing implementation_url template: %s e:' % (template, e))
+        leading_parts = [part for part in parsed_format if part[1] is not None]
+        if len(leading_parts) != 1:
+            sys.exit('implementation_url template %s must include exactly one {name} element after ;' % query_path_segment_string)
+        else:
+            part = leading_parts[0]
+        if part[1] == '':
+            self.error('property name required between {} characters after %s in implementation_url template %s' %(leading_parts[0] ,query_path_segment_string))
+        else:
+            self.implementation_url_variable_name = part[1]
+            self.implementation_url_variable_type = self.implementation_url['key'].get('type', 'string')
 
     def path_segment(self, select_one_of_many = False):
-        template = self.implementation_url['template']
-        return template.format(self.implementation_url['key']['name'].join('{}'))
+        return self.implementation_url['template']
 
     def build_param(self):
         result = {
-            'name': self.implementation_url['key']['name'],
+            'name': self.implementation_url_variable_name,
             'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'in': 'path',
-            'type': self.implementation_url['key'].get('type', 'string'),
+            'type': self.implementation_url_variable_type,
             'required': True
             }
         return result

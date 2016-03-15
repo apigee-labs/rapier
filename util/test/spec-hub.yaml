@@ -271,19 +271,19 @@ entities:
 implementation_private_information:
   Group:
     implementation_url:
-      template: /c3Rvc-Z3Jw-{} 
+      template: /c3Rvc-Z3Jw-{implementation_key} 
       key:
         name: implementation_key
         type: integer
   Doc:
     implementation_url:
-      template: /c3Rvc-ZG9j-{} 
+      template: /c3Rvc-ZG9j-{implementation_key} 
       key:
         name: implementation_key
         type: integer
   Folder:
     implementation_url:
-      template: /c3Rvc-Zmxk-{} 
+      template: /c3Rvc-Zmxk-{implementation_key} 
       key:
         name: implementation_key
         type: integer  

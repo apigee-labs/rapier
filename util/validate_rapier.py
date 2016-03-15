@@ -420,9 +420,11 @@ class OASValidator(object):
             return self.error('error parsing query path segment string: %s' % e, key)
         leading_parts = [part for part in parsed_format if part[1] is not None]
         if len(leading_parts) != 1:
-            self.error('query segment %s must include exactly one {name} element after ;' % query_path_segment_string)
-        if leading_parts[0] == '':
-            self.error('property name required between {} characters after %s in query segment %s' %(leading_parts[0] ,query_path_segment_string))
+            self.error('implementation_url template %s must include exactly one {name} element after ;' % query_path_segment_string)
+        else:
+            part = leading_parts[0]
+        if part[1] == '':
+            self.error('property name required between {} characters after %s in implementation_url template %s' %(leading_parts[0] ,query_path_segment_string))
 
     def validate_implementation_url_key(self, key, value):
         pass
