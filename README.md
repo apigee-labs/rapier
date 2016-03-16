@@ -457,10 +457,10 @@ consumes | `string` or [Relationship Consumes](#relationship_consumes) | Specifi
 
 The most common pattern for a multi-valued relationship is that new entities are created by POSTing the entity type of the
 relationship. In other words, the relationship property is the URL of a collection resource whose elements are of the
-declared entity type of the reltionship and you create a new one by POSTing an entity of the same type to the collection.
+declared entity type of the relationship and you create a new one by POSTing an representation of the same type to the collection.
 However, there are cases where the representation that is POSTed to create a new entity is of a different type—the server
-the new entity from the provided representstion. In this case, Rapier allows you to specify both the media type and 
-representation of these POSTed entities. 
+constructs the new entity from the input representation. In this case, Rapier allows you to specify both the media type and 
+representation of these POSTed entities. See the [ssl.yaml](https://github.com/apigee-labs/rapier/blob/master/util/test/ssl.yaml) test sample for an example 
 
 Field Pattern | Type | Description
 ---|:---:|---
