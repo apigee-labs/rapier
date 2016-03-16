@@ -426,6 +426,30 @@ class OASValidator(object):
         if not (a_type == 'string' or a_type == 'integer' or a_type == 'number'):
             self.error('permalink_template type must be "string" or "interger" or "number": %s' % required, key) 
     
+    def validate_media_type(self, key, media_type):
+        if not isinstance(media_type, basestring):
+            self.error('relationship consumes list entry must be media_type string: %s' % media_type, key)
+        else:
+            if len(media_type.split()) > 1:
+                    self.error('relationship consumes media_type string may not contain whitespace: %s' % media_type, key)
+        
+    def validate_relationship_consumes(self, key, consumes):
+        if hasattr(consumes, 'keys'):
+            for media_type, entities in consumes.iteritems():
+                self.validate_media_type(media_type, media_type)
+                if isinstance(entities, list):
+                    for entity in entities:
+                        if not isinstance(entity, basestring):
+                            self.error('entity URL must be a string: %s' % entity, media_type)
+                elif not isinstance(entities, basestring):
+                    self.error('entity URLs associated with media_type must be string or list: %s' % entities, media_type)
+        elif isinstance(consumes, list):
+            for media_type in consumes:
+                self.validate_media_type(media_type, media_type)
+        else:
+            if not isinstance(consumes, basestring):
+                self.error('relationship consumes must be a list, string or relationship_consumes object: %s' % consumes, key)
+    
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -469,7 +493,8 @@ class OASValidator(object):
         'multiplicity': validate_relationship_multiplicity, 
         'collection_resource': validate_relationship_collection_resource, 
         'name': validate_relationship_name,
-        'readOnly': validate_relationship_readOnly}
+        'readOnly': validate_relationship_readOnly,
+        'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 
         'format': validate_property_format, 

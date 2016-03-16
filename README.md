@@ -450,7 +450,21 @@ Field Name | Type | Description
 entities | `string` or `sequence of URLs` | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
 collection_resource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
-readOnly | `true or false` | For multi-valued relationships, says whether a POST is valid. default is `false`
+readOnly | "true" or "false" | For multi-valued relationships, says whether a POST is valid. default is `false`
+consumes | `string` or [Relationship Consumes](#relationship_consumes) | Specifies the media types and entities that can be POSTed to a multi-valued relationship. If the value is a string, it is a single media-type or a space-delimited list of media types
+
+#### <a name="relationship_consumes"></a>Relationship Consumes
+
+The most common pattern for a multi-valued relationship is that new entities are created by POSTing the entity type of the
+relationship. In other words, the relationship property is the URL of a collection resource whose elements are of the
+declared entity type of the reltionship and you create a new one by POSTing an entity of the same type to the collection.
+However, there are cases where the representation that is POSTed to create a new entity is of a different type—the server
+the new entity from the provided representstion. In this case, Rapier allows you to specify both the media type and 
+representation of these POSTed entities. 
+
+Field Pattern | Type | Description
+---|:---:|---
+{media-type} | `string` or `sequence` | One or more Entity URLs. If the value is a string, it is a space-delimited list of URLs 
 
 #### <a name="query_path"></a>Query Path
 
@@ -493,7 +507,7 @@ Field pattern | Type | Description
 ---|:---:|---
 {entity_id} | `sequence` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an sequence or a space-deliminated list in a single string
 
-#### <a name="entities_private_extensions"></a>Entities Private extensions
+#### <a name="entities_private_extensions"></a>Entities Private Extensions
 
 The primary goal of Rapier is to describe an API as seen by a client. However, it is sometimes useful to capture additional implementation-private extensions for use by
 proxies (like Apigee Edge) or implementation frameworks (like Apigee a127). This section exptresses such information. 
