@@ -270,17 +270,17 @@ entities:
         readOnly: true
 implementation_private_information:
   Group:
-    implementation_url:
+    permalink_template:
       template: /c3Rvc-Z3Jw-{implementation_key} 
       key:
         type: integer
   Doc:
-    implementation_url:
+    permalink_template:
       template: /c3Rvc-ZG9j-{implementation_key} 
       key:
         type: integer
   Folder:
-    implementation_url:
+    permalink_template:
       template: /c3Rvc-Zmxk-{implementation_key} 
       key:
         type: integer  

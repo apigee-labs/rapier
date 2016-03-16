@@ -409,10 +409,10 @@ class OASValidator(object):
         for key, entity in entities.iteritems():
             self.check_and_validate_keywords(self.__class__.implementation_private_keywords, entity, key)
 
-    def validate_implementation_url(self, key, entity):
-        self.check_and_validate_keywords(self.__class__.implementation_url_keywords, entity, key)
+    def validate_permalink_template(self, key, entity):
+        self.check_and_validate_keywords(self.__class__.permalink_template_keywords, entity, key)
         
-    def validate_implementation_url_template(self, key, template):
+    def validate_permalink_template_template(self, key, template):
         formatter = string.Formatter()
         try:
             parsed_format = list(formatter.parse(template))
@@ -420,13 +420,13 @@ class OASValidator(object):
             return self.error('error parsing query path segment string: %s' % e, key)
         leading_parts = [part for part in parsed_format if part[1] is not None]
         if len(leading_parts) != 1:
-            self.error('implementation_url template %s must include exactly one {name} element after ;' % query_path_segment_string)
+            self.error('permalink_template template %s must include exactly one {name} element after ;' % query_path_segment_string)
         else:
             part = leading_parts[0]
         if part[1] == '':
-            self.error('property name required between {} characters after %s in implementation_url template %s' %(leading_parts[0] ,query_path_segment_string))
+            self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
 
-    def validate_implementation_url_key(self, key, value):
+    def validate_permalink_template_key(self, key, value):
         pass
     
     rapier_spec_keywords = {
@@ -488,10 +488,10 @@ class OASValidator(object):
         'minimum': validate_number,
         'maximum': validate_number}
     implementation_private_keywords =  {
-        'implementation_url': validate_implementation_url}
-    implementation_url_keywords =  {
-        'template': validate_implementation_url_template,
-        'key': validate_implementation_url_key}
+        'permalink_template': validate_permalink_template}
+    permalink_template_keywords =  {
+        'template': validate_permalink_template_template,
+        'key': validate_permalink_template_key}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs
