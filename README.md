@@ -493,8 +493,6 @@ Field pattern | Type | Description
 ---|:---:|---
 {entity_id} | `sequence` of `string`s | the media types to be used with the associated entity. The list of media types may be given as an sequence or a space-deliminated list in a single string
 
-## <a name="oas_generator">OpenAPI Generator
-
 #### <a name="entities_private_extensions"></a>Entities Private extensions
 
 The primary goal of Rapier is to describe an API as seen by a client. However, it is sometimes useful to capture additional implementation-private extensions for use by
@@ -516,3 +514,6 @@ Field Name | Type | Description
 ---|:---:|---
 template | `string` | A URL template that must contain a single variable.
 type | "string" or "integer" or "number" | The type of the variable
+
+## <a name="oas_generator">OpenAPI Generator
+
