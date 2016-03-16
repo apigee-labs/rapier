@@ -395,11 +395,7 @@ class OASValidator(object):
 
     def validate_query_parameter_required(self, key, required):
         if not (required is True or required is False):
-            self.error('query_parameter required must be a true or false: %s' % required, key) 
-
-    def validate_query_parameter_required(self, key, required):
-        if not (required is True or required is False):
-            self.error('query_parameter required must be a true or false: %s' % required, key) 
+            self.error('query_parameter required must be true or false: %s' % required, key) 
 
     def validate_number(self, key, value):
         if not isinstance(value, Number):
@@ -426,8 +422,9 @@ class OASValidator(object):
         if part[1] == '':
             self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
 
-    def validate_permalink_template_key(self, key, value):
-        pass
+    def validate_permalink_template_type(self, key, a_type):
+        if not (a_type == 'string' or a_type == 'integer' or a_type == 'number'):
+            self.error('permalink_template type must be "string" or "interger" or "number": %s' % required, key) 
     
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -491,7 +488,7 @@ class OASValidator(object):
         'permalink_template': validate_permalink_template}
     permalink_template_keywords =  {
         'template': validate_permalink_template_template,
-        'key': validate_permalink_template_key}
+        'type': validate_permalink_template_type}
 
     def validate_entity_url(self, entity_url, key):
         # in the future, handle URLs outisde the current document. for now assume fragment URLs

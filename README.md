@@ -392,6 +392,7 @@ produces | `sequence` of [Media Type](media_type) | The media-types that clients
 conventions | [Conventions](#conventions) | Conventions that affect the details of the HTTP messages of the API
 securityDefinitions | [Security Definitions Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject) | From the OpenAPI specification
 security | [Security Requirement Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject) | From the OpenAPI specification
+implementation_private_information | [Entities Private Extensions](#entities_private_extensions)
 
 #### <a name="conventions"></a>Conventions
 
@@ -494,3 +495,24 @@ Field pattern | Type | Description
 
 ## <a name="oas_generator">OpenAPI Generator
 
+#### <a name="entities_private_extensions"></a>Entities Private extensions
+
+The primary goal of Rapier is to describe an API as seen by a client. However, it is sometimes useful to capture additional implementation-private extensions for use by
+proxies (like Apigee Edge) or implementation frameworks (like Apigee a127). This section exptresses such information. 
+
+Field Pattern | Type | Description
+---|:---:|---
+{entity name} | [Entity Private Extension](#entity_private_extension) | The name of an entity. Provides the default value of the id of the entity. That is, if the entity does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
+
+#### <a name="entity_private_extension"></a>Entity Private Extension
+
+Field Name | Type | Description
+---|:---:|---
+permalink_template | [Permalink Template](#permalink_template) | A specification of the format of permalinks for this entity. These are the URLs that the server provides to identify an entity of this entity type.
+
+#### <a name="permalink_template"></a>Permalink Template
+
+Field Name | Type | Description
+---|:---:|---
+template | `string` | A URL template that must contain a single variable.
+type | "string" or "integer" or "number" | The type of the variable

@@ -1092,7 +1092,7 @@ class ImplementationPathSpec(PathPrefix):
             self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
         else:
             self.implementation_url_variable_name = part[1]
-            self.implementation_url_variable_type = self.permalink_template['key'].get('type', 'string')
+            self.implementation_url_variable_type = self.permalink_template.get('type', 'string')
 
     def path_segment(self, select_one_of_many = False):
         return self.permalink_template['template']
