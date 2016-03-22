@@ -24,7 +24,7 @@ definitions:
     properties:
       kind:
         description: "The value of the kind property must always be the string \"\
-          Environment\". The kind property is always set by the server in responses\
+          Environment\".  The kind property is always set by the server in responses\
           \ to GET. The kind property must be set by the client on POST, and must\
           \ not be set by the client on PATCH. (PUT is not supported) \n"
         type: string
@@ -32,7 +32,7 @@ definitions:
         - Environment
       realizes:
         description: "The value of the realizes property is the URI of the System\
-          \ of which this Environment is a running examplar. The realizes property\
+          \ of which this Environment is a running examplar.  The realizes property\
           \ is always set by the server in responses to GET. The realizes property\
           \ must be set by the client on POST, and must not be set by the client on\
           \ PATCH. (PUT is not supported) \n"
@@ -55,12 +55,13 @@ definitions:
         description: "A description of the Environment \n"
         type: string
       requested_state:
-        description: "The requested, or 'desired' state of the Environment. The value\
+        description: "The requested, or 'desired' state of the Environment.  The value\
           \ of the requested_state property is a string (URLs would be cooler) representing\
           \ the last requested state of the Deployment.  The requested_state property\
           \ is always set by the server in responses to GET. The requested_state property\
-          \ may never be set directly by the client. Clients affect the value of requested_state\
-          \ by POSTing requests to the URL in the requests property. \n"
+          \ may never be set directly by the client.  Clients affect the value of\
+          \ requested_state by POSTing requests to the URL in the requests property.\
+          \ \n"
         type: string
         readOnly: true
         enum:
@@ -97,7 +98,7 @@ definitions:
     properties:
       kind:
         description: "The value of the kind property must always be the string \"\
-          Deployment\". The kind property is always set by the server in responses\
+          Deployment\".  The kind property is always set by the server in responses\
           \ to GET. The kind property must be set by the client on POST, and must\
           \ not be set by the client on PATCH. (PUT is not supported) \n"
         type: string
@@ -105,7 +106,7 @@ definitions:
         - Deployment
       deploys:
         description: "The value of the deploys property must be the URI of the Revision\
-          \ that the deployment executes. The deploys property is always set by the\
+          \ that the deployment executes.  The deploys property is always set by the\
           \ server in responses to GET. The deploys property must be set by the client\
           \ on POST, and must not be set by the client on PATCH. (PUT is not supported)\
           \ \n"
@@ -114,7 +115,7 @@ definitions:
         x-interface: '#/x-interfaces/Revision'
       runs_in:
         description: "The value of the runs_in property must be the URI of the Environment\
-          \ that the deployment is part of. The runs_in property is always set by\
+          \ that the deployment is part of.  The runs_in property is always set by\
           \ the server in responses to GET. The runs_in property must be set by the\
           \ client on POST, and must not be set by the client on PATCH. (PUT is not\
           \ supported) \n"
@@ -122,12 +123,13 @@ definitions:
         type: string
         x-interface: '#/x-interfaces/Environment'
       requested_state:
-        description: "The requested, or 'desired' state of the Deployment. The value\
+        description: "The requested, or 'desired' state of the Deployment.  The value\
           \ of the requested_state property is a string (URLs would be cooler) representing\
           \ the last requested state of the Deployment.  The requested_state property\
           \ is always set by the server in responses to GET. The requested_state property\
-          \ may never be set directly by the client. Clients affect the value of requested_state\
-          \ by POSTing requests to the URL in the requests property. \n"
+          \ may never be set directly by the client.  Clients affect the value of\
+          \ requested_state by POSTing requests to the URL in the requests property.\
+          \ \n"
         type: string
         readOnly: true
         enum:
@@ -171,7 +173,7 @@ definitions:
     properties:
       kind:
         description: "The value of the kind property must always be the string \"\
-          System\". The kind property is always set by the server in responses to\
+          System\".  The kind property is always set by the server in responses to\
           \ GET. The kind property must be set by the client on POST, and must not\
           \ be set by the client on PATCH. (PUT is not supported) \n"
         type: string
@@ -180,7 +182,7 @@ definitions:
       has_environments:
         description: "The value of the has_environments property is the URI of the\
           \ collection of Environments where this System is deployed.  New Environments\
-          \ can be POSTed to this collection\u2014alternatively, a new Environment\
+          \ can be POSTed to this collection\u2014alternatively,  a new Environment\
           \ can be added to the collection by creating the Environment with a value\
           \ of 'realizes' that references this System.\n"
         format: uri
