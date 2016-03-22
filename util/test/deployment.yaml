@@ -7,29 +7,6 @@ conventions:
   error_response:
     type: string
 entities:
-  System:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [System]
-      has_environments:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Environment'
-      has_components:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Component'
   Environment:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -41,17 +18,21 @@ entities:
         format: uri
         type: string
         relationship: '#System'
-      hosts:
+      comprises:
         format: uri
         type: string
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#Deployment'
+      domain_name:
+        type: string
+      description:
+        type: string
       requested_state:
         type: string
         readOnly: true
-        enum: [initial, started, stopped]
+        enum: [initial, started, stopped, retired]
       start_requests:
         format: uri
         type: string
@@ -67,45 +48,15 @@ entities:
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#EnvironmentStopRequest'              
-  Component:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [Component]
-      is_component_of:
-        format: uri
-        type: string
-        relationship: '#System'
-      has_revisions:
+          entities: '#EnvironmentStopRequest'  
+      retirement_requests:
         format: uri
         type: string
         readOnly: true
         relationship:
           collection_resource: '#Collection'
           multiplicity: 0:n
-          entities: '#Revision'
-  Revision:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [Revision]
-      revises:
-        format: uri
-        type: string
-        relationship: '#Component'
-      has_deployments:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#Deployment'        
+          entities: '#EnvironmentRetirementRequest'  
   Deployment:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -181,6 +132,67 @@ entities:
           collection_resource: '#Collection'
           multiplicity: 0:n
           entities: '#DeploymentScalingRequest' 
+  System:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [System]
+      has_environments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Environment'
+      has_components:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Component'
+  Component:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Component]
+      is_component_of:
+        format: uri
+        type: string
+        relationship: '#System'
+      has_revisions:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Revision'
+  Revision:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Revision]
+      revises:
+        format: uri
+        type: string
+        relationship: '#Component'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#Collection'
+          multiplicity: 0:n
+          entities: '#Deployment'        
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -188,6 +200,13 @@ entities:
       kind:
         type: string
         enum: [EnvironmentStartRequest]    
+  EnvironmentRetirementRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStopRequest]    
   EnvironmentStopRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'

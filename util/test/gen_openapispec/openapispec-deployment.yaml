@@ -18,25 +18,6 @@ security:
 definitions:
   ErrorResponse:
     type: string
-  System:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - System
-      has_environments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/System.has_environments'
-      has_components:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/System.has_components'
-    x-interface: '#/x-interfaces/System'
   Environment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -49,10 +30,14 @@ definitions:
         format: uri
         type: string
         x-interface: '#/x-interfaces/System'
-      hosts:
+      comprises:
         format: uri
         type: string
-        x-interface: '#/x-interfaces/Environment.hosts'
+        x-interface: '#/x-interfaces/Environment.comprises'
+      domain_name:
+        type: string
+      description:
+        type: string
       requested_state:
         type: string
         readOnly: true
@@ -60,6 +45,7 @@ definitions:
         - initial
         - started
         - stopped
+        - retired
       start_requests:
         format: uri
         type: string
@@ -70,43 +56,12 @@ definitions:
         type: string
         readOnly: true
         x-interface: '#/x-interfaces/Environment.stop_requests'
+      retirement_requests:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.retirement_requests'
     x-interface: '#/x-interfaces/Environment'
-  Component:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Component
-      is_component_of:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/System'
-      has_revisions:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Component.has_revisions'
-    x-interface: '#/x-interfaces/Component'
-  Revision:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Revision
-      revises:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Component'
-      has_deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Revision.has_deployments'
-    x-interface: '#/x-interfaces/Revision'
   Deployment:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -170,6 +125,61 @@ definitions:
         readOnly: true
         x-interface: '#/x-interfaces/Deployment.scalingRequests'
     x-interface: '#/x-interfaces/Deployment'
+  System:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - System
+      has_environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/System.has_environments'
+      has_components:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/System.has_components'
+    x-interface: '#/x-interfaces/System'
+  Component:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Component
+      is_component_of:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/System'
+      has_revisions:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Component.has_revisions'
+    x-interface: '#/x-interfaces/Component'
+  Revision:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Revision
+      revises:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Component'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Revision.has_deployments'
+    x-interface: '#/x-interfaces/Revision'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -179,6 +189,15 @@ definitions:
         enum:
         - EnvironmentStartRequest
     x-interface: '#/x-interfaces/EnvironmentStartRequest'
+  EnvironmentRetirementRequest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - EnvironmentStopRequest
+    x-interface: '#/x-interfaces/EnvironmentRetirementRequest'
   EnvironmentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -2335,7 +2354,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment
-  Environment.hosts:
+  Environment.comprises:
     get:
       parameters:
       - in: query
@@ -2453,7 +2472,127 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment.hosts
+    x-id: Environment.comprises
+  Environment.retirement_requests:
+    get:
+      parameters:
+      - in: query
+        name: orderby
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/Collection'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new EnvironmentRetirementRequest
+      parameters:
+      - description: The representation of the new EnvironmentRetirementRequest being
+          created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentRetirementRequest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new EnvironmentRetirementRequest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created EnvironmentRetirementRequest
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment.retirement_requests
   Environment.start_requests:
     get:
       parameters:
@@ -2692,6 +2831,139 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment.stop_requests
+  EnvironmentRetirementRequest:
+    get:
+      description: Retrieve an EnvironmentRetirementRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an EnvironmentRetirementRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the EnvironmentRetirementRequest
+          being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentRetirementRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an EnvironmentRetirementRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: EnvironmentRetirementRequest
   EnvironmentStartRequest:
     get:
       description: Retrieve an EnvironmentStartRequest
