@@ -12,20 +12,28 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        # The value of the kind property must always be the string "Environment". The kind property is always set by the server in responses to GET.
+        # The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [Environment]
       realizes:
+        # The value of the realizes property is the URI of the System of which this Environment is a running examplar. The realizes property is always set by the server in responses to GET.
+        # The realizes property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#System'
       comprises:
+        # The value of the comprises property is the URI of the collection of Deployments that are part of this Environment. 
+        # the comprises property is always set by the server, and is readOnly for the client 
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Deployment'
       domain_name:
+        # The value of the domain_name property is the URI of the collection of Deployments that are part of this Environment. 
+        # the comprises property is always set by the server, and is readOnly for the client 
         type: string
       description:
         type: string
@@ -33,30 +41,14 @@ entities:
         type: string
         readOnly: true
         enum: [initial, started, stopped, retired]
-      start_requests:
+      requests:
         format: uri
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
-          entities: '#EnvironmentStartRequest'        
-      stop_requests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#EnvironmentStopRequest'  
-      retirement_requests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#EnvironmentRetirementRequest'  
+          entities: '#EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest'  
   Deployment:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -75,63 +67,15 @@ entities:
       requested_state:
         type: string
         readOnly: true
-        enum: [initial, started, stopped, live, offline, canary, statistics]
-      start_requests:
+        enum: [initial, started, stopped, offline, online, temporarily_online]
+      requests:
         format: uri
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
-          entities: '#DeploymentStartRequest'        
-      stop_requests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentStopRequest'        
-      go_live_requests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentGoLiveRequest'        
-      go_offline_requests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentOfflineRequest'        
-      canary_tests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#CanaryTest'        
-      statistics_tests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#StatisticsTest' 
-      scalingRequests:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#Collection'
-          multiplicity: 0:n
-          entities: '#DeploymentScalingRequest' 
+          entities: '#DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest #DeploymentTemporarilyOnlineRequest #DeploymentScalingRequest #DeploymentRetirementRequest' 
   System:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -144,7 +88,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Environment'
       has_components:
@@ -152,7 +96,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Component'
   Component:
@@ -171,7 +115,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Revision'
   Revision:
@@ -190,7 +134,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Deployment'        
   EnvironmentStartRequest:
@@ -237,30 +181,20 @@ entities:
       kind:
         type: string
         enum: [DeploymentOfflineRequest]    
-  DeploymentGoLiveRequest:
+  DeploymentOnlineRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [DeploymentGoLiveRequest]    
-  CanaryTest:
+        enum: [DeploymentOnlineRequest]    
+  DeploymentTemporarilyOnlineRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
         type: string
-        enum: [Canarytest]  
-      hosts: 
-        type: string
-    readOnly: true
-  StatisticsTest:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [StatisticsTest]
+        enum: [DeploymentTemporarilyOnlineRequest]
       traffic_percentage:
         type: integer
       duration:
@@ -282,9 +216,20 @@ entities:
       replicas: 
         type: integer
     readOnly: true
+  DeploymentRetirementRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [DeploymentRetirementRequest]    
   StatisticsResults:
     type: object
     readOnly: true
+  MultiValuedRelationship:
+    oneOf:
+    - $ref: '#/entities/Collection'
+    - $ref: '#/entities/Page'      
   Collection:
     allOf:
     - $ref: '#/entities/Resource'

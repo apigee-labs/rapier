@@ -46,21 +46,11 @@ definitions:
         - started
         - stopped
         - retired
-      start_requests:
+      requests:
         format: uri
         type: string
         readOnly: true
-        x-interface: '#/x-interfaces/Environment.start_requests'
-      stop_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Environment.stop_requests'
-      retirement_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Environment.retirement_requests'
+        x-interface: '#/x-interfaces/Environment.requests'
     x-interface: '#/x-interfaces/Environment'
   Deployment:
     allOf:
@@ -85,45 +75,14 @@ definitions:
         - initial
         - started
         - stopped
-        - live
         - offline
-        - canary
-        - statistics
-      start_requests:
+        - online
+        - temporarily_online
+      requests:
         format: uri
         type: string
         readOnly: true
-        x-interface: '#/x-interfaces/Deployment.start_requests'
-      stop_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.stop_requests'
-      go_live_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.go_live_requests'
-      go_offline_requests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.go_offline_requests'
-      canary_tests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.canary_tests'
-      statistics_tests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.statistics_tests'
-      scalingRequests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.scalingRequests'
+        x-interface: '#/x-interfaces/Deployment.requests'
     x-interface: '#/x-interfaces/Deployment'
   System:
     allOf:
@@ -236,35 +195,23 @@ definitions:
         enum:
         - DeploymentOfflineRequest
     x-interface: '#/x-interfaces/DeploymentOfflineRequest'
-  DeploymentGoLiveRequest:
+  DeploymentOnlineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - DeploymentGoLiveRequest
-    x-interface: '#/x-interfaces/DeploymentGoLiveRequest'
-  CanaryTest:
+        - DeploymentOnlineRequest
+    x-interface: '#/x-interfaces/DeploymentOnlineRequest'
+  DeploymentTemporarilyOnlineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
         type: string
         enum:
-        - Canarytest
-      hosts:
-        type: string
-    readOnly: true
-    x-interface: '#/x-interfaces/CanaryTest'
-  StatisticsTest:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - StatisticsTest
+        - DeploymentTemporarilyOnlineRequest
       traffic_percentage:
         type: integer
       duration:
@@ -276,7 +223,7 @@ definitions:
         format: uri
         x-interface: '#/x-interfaces/StatisticsResults'
     readOnly: true
-    x-interface: '#/x-interfaces/StatisticsTest'
+    x-interface: '#/x-interfaces/DeploymentTemporarilyOnlineRequest'
   DeploymentScalingRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -289,10 +236,23 @@ definitions:
         type: integer
     readOnly: true
     x-interface: '#/x-interfaces/DeploymentScalingRequest'
+  DeploymentRetirementRequest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - DeploymentRetirementRequest
+    x-interface: '#/x-interfaces/DeploymentRetirementRequest'
   StatisticsResults:
     type: object
     readOnly: true
     x-interface: '#/x-interfaces/StatisticsResults'
+  MultiValuedRelationship:
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'
@@ -351,67 +311,6 @@ definitions:
         format: date-time
         readOnly: true
 x-interfaces:
-  CanaryTest:
-    get:
-      description: Retrieve a CanaryTest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/CanaryTest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: CanaryTest
   Component:
     get:
       description: Retrieve a Component
@@ -580,7 +479,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -795,7 +694,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Deployment
-  Deployment.canary_tests:
+  Deployment.requests:
     get:
       parameters:
       - in: query
@@ -831,7 +730,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -845,13 +744,24 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new CanaryTest
+      description: Create a new DeploymentStartRequest or DeploymentStopRequest or
+        DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentTemporarilyOnlineRequest
+        or DeploymentScalingRequest or DeploymentRetirementRequest
       parameters:
-      - description: The representation of the new CanaryTest being created
+      - description: The representation of the new DeploymentStartRequest or DeploymentStopRequest
+          or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentTemporarilyOnlineRequest
+          or DeploymentScalingRequest or DeploymentRetirementRequest being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/CanaryTest'
+          x-oneOf:
+          - $ref: '#/definitions/DeploymentStartRequest'
+          - $ref: '#/definitions/DeploymentStopRequest'
+          - $ref: '#/definitions/DeploymentOnlineRequest'
+          - $ref: '#/definitions/DeploymentOfflineRequest'
+          - $ref: '#/definitions/DeploymentTemporarilyOnlineRequest'
+          - $ref: '#/definitions/DeploymentScalingRequest'
+          - $ref: '#/definitions/DeploymentRetirementRequest'
       - description: The media type of the body
         in: header
         name: Content-Type
@@ -859,485 +769,9 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new CanaryTest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created CanaryTest
-              type: string
-          schema:
-            $ref: '#/definitions/CanaryTest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.canary_tests
-  Deployment.go_live_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new DeploymentGoLiveRequest
-      parameters:
-      - description: The representation of the new DeploymentGoLiveRequest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentGoLiveRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new DeploymentGoLiveRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created DeploymentGoLiveRequest
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentGoLiveRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.go_live_requests
-  Deployment.go_offline_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new DeploymentOfflineRequest
-      parameters:
-      - description: The representation of the new DeploymentOfflineRequest being
-          created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentOfflineRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new DeploymentOfflineRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created DeploymentOfflineRequest
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentOfflineRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.go_offline_requests
-  Deployment.scalingRequests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new DeploymentScalingRequest
-      parameters:
-      - description: The representation of the new DeploymentScalingRequest being
-          created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentScalingRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new DeploymentScalingRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created DeploymentScalingRequest
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentScalingRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.scalingRequests
-  Deployment.start_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new DeploymentStartRequest
-      parameters:
-      - description: The representation of the new DeploymentStartRequest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentStartRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new DeploymentStartRequest
+          description: Created new DeploymentStartRequest or DeploymentStopRequest
+            or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentTemporarilyOnlineRequest
+            or DeploymentScalingRequest or DeploymentRetirementRequest
           headers:
             Content-Type:
               description: The media type of the returned body
@@ -1347,9 +781,19 @@ x-interfaces:
               type: string
             Location:
               description: perma-link URL of newly-created DeploymentStartRequest
+                or DeploymentStopRequest or DeploymentOnlineRequest or DeploymentOfflineRequest
+                or DeploymentTemporarilyOnlineRequest or DeploymentScalingRequest
+                or DeploymentRetirementRequest
               type: string
           schema:
-            $ref: '#/definitions/DeploymentStartRequest'
+            x-oneOf:
+            - $ref: '#/definitions/DeploymentStartRequest'
+            - $ref: '#/definitions/DeploymentStopRequest'
+            - $ref: '#/definitions/DeploymentOnlineRequest'
+            - $ref: '#/definitions/DeploymentOfflineRequest'
+            - $ref: '#/definitions/DeploymentTemporarilyOnlineRequest'
+            - $ref: '#/definitions/DeploymentScalingRequest'
+            - $ref: '#/definitions/DeploymentRetirementRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -1391,378 +835,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Deployment.start_requests
-  Deployment.statistics_tests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new StatisticsTest
-      parameters:
-      - description: The representation of the new StatisticsTest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/StatisticsTest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new StatisticsTest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created StatisticsTest
-              type: string
-          schema:
-            $ref: '#/definitions/StatisticsTest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.statistics_tests
-  Deployment.stop_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new DeploymentStopRequest
-      parameters:
-      - description: The representation of the new DeploymentStopRequest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentStopRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new DeploymentStopRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created DeploymentStopRequest
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentStopRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Deployment.stop_requests
-  DeploymentGoLiveRequest:
-    get:
-      description: Retrieve a DeploymentGoLiveRequest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentGoLiveRequest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update a DeploymentGoLiveRequest entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the DeploymentGoLiveRequest being
-          updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/DeploymentGoLiveRequest'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentGoLiveRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
-        default:
-          $ref: '#/responses/default'
-    delete:
-      description: Delete a DeploymentGoLiveRequest
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/DeploymentGoLiveRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: DeploymentGoLiveRequest
+    x-id: Deployment.requests
   DeploymentOfflineRequest:
     get:
       description: Retrieve a DeploymentOfflineRequest
@@ -1896,6 +969,272 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOfflineRequest
+  DeploymentOnlineRequest:
+    get:
+      description: Retrieve a DeploymentOnlineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentOnlineRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentOnlineRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOnlineRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentOnlineRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentOnlineRequest
+  DeploymentRetirementRequest:
+    get:
+      description: Retrieve a DeploymentRetirementRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentRetirementRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentRetirementRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentRetirementRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentRetirementRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentRetirementRequest
   DeploymentScalingRequest:
     get:
       description: Retrieve a DeploymentScalingRequest
@@ -2222,6 +1561,67 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentStopRequest
+  DeploymentTemporarilyOnlineRequest:
+    get:
+      description: Retrieve a DeploymentTemporarilyOnlineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentTemporarilyOnlineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentTemporarilyOnlineRequest
   Environment:
     get:
       description: Retrieve an Environment
@@ -2390,7 +1790,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -2473,7 +1873,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Environment.comprises
-  Environment.retirement_requests:
+  Environment.requests:
     get:
       parameters:
       - in: query
@@ -2509,7 +1909,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -2523,14 +1923,18 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new EnvironmentRetirementRequest
+      description: Create a new EnvironmentStartRequest or EnvironmentStopRequest
+        or EnvironmentRetirementRequest
       parameters:
-      - description: The representation of the new EnvironmentRetirementRequest being
-          created
+      - description: The representation of the new EnvironmentStartRequest or EnvironmentStopRequest
+          or EnvironmentRetirementRequest being created
         in: body
         name: body
         schema:
-          $ref: '#/definitions/EnvironmentRetirementRequest'
+          x-oneOf:
+          - $ref: '#/definitions/EnvironmentStartRequest'
+          - $ref: '#/definitions/EnvironmentStopRequest'
+          - $ref: '#/definitions/EnvironmentRetirementRequest'
       - description: The media type of the body
         in: header
         name: Content-Type
@@ -2538,126 +1942,8 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new EnvironmentRetirementRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created EnvironmentRetirementRequest
-              type: string
-          schema:
-            $ref: '#/definitions/EnvironmentRetirementRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Environment.retirement_requests
-  Environment.start_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new EnvironmentStartRequest
-      parameters:
-      - description: The representation of the new EnvironmentStartRequest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/EnvironmentStartRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new EnvironmentStartRequest
+          description: Created new EnvironmentStartRequest or EnvironmentStopRequest
+            or EnvironmentRetirementRequest
           headers:
             Content-Type:
               description: The media type of the returned body
@@ -2667,9 +1953,13 @@ x-interfaces:
               type: string
             Location:
               description: perma-link URL of newly-created EnvironmentStartRequest
+                or EnvironmentStopRequest or EnvironmentRetirementRequest
               type: string
           schema:
-            $ref: '#/definitions/EnvironmentStartRequest'
+            x-oneOf:
+            - $ref: '#/definitions/EnvironmentStartRequest'
+            - $ref: '#/definitions/EnvironmentStopRequest'
+            - $ref: '#/definitions/EnvironmentRetirementRequest'
         '400':
           $ref: '#/responses/400'
         '401':
@@ -2711,126 +2001,7 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: Environment.start_requests
-  Environment.stop_requests:
-    get:
-      parameters:
-      - in: query
-        name: orderby
-        type: string
-      - enum:
-        - ascending
-        - descending
-        in: query
-        name: direction
-        required: false
-        type: string
-      - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
-        items:
-          type: string
-        name: properties
-        required: false
-        type: array
-      responses:
-        '200':
-          description: description
-          headers:
-            Content-Location:
-              description: perma-link URL of collection
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-          schema:
-            $ref: '#/definitions/Collection'
-        '303':
-          $ref: '#/responses/303'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    post:
-      description: Create a new EnvironmentStopRequest
-      parameters:
-      - description: The representation of the new EnvironmentStopRequest being created
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/EnvironmentStopRequest'
-      - description: The media type of the body
-        in: header
-        name: Content-Type
-        required: true
-        type: string
-      responses:
-        '201':
-          description: Created new EnvironmentStopRequest
-          headers:
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: Value of ETag required for subsequent updates
-              type: string
-            Location:
-              description: perma-link URL of newly-created EnvironmentStopRequest
-              type: string
-          schema:
-            $ref: '#/definitions/EnvironmentStopRequest'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: Retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: Environment.stop_requests
+    x-id: Environment.requests
   EnvironmentRetirementRequest:
     get:
       description: Retrieve an EnvironmentRetirementRequest
@@ -3398,7 +2569,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -3542,67 +2713,6 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: StatisticsResults
-  StatisticsTest:
-    get:
-      description: Retrieve a StatisticsTest
-      parameters:
-      - $ref: '#/parameters/Accept'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/StatisticsTest'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    head:
-      description: retrieve HEAD
-      responses:
-        '200':
-          $ref: '#/responses/standard_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    options:
-      description: Retrieve OPTIONS
-      parameters:
-      - $ref: '#/parameters/Access-Control-Request-Method'
-      - $ref: '#/parameters/Access-Control-Request-Headers'
-      responses:
-        '200':
-          $ref: '#/responses/options_200'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        default:
-          $ref: '#/responses/default'
-    x-id: StatisticsTest
   System:
     get:
       description: Retrieve a System
@@ -3771,7 +2881,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
@@ -3890,7 +3000,7 @@ x-interfaces:
               description: The media type of the returned body
               type: string
           schema:
-            $ref: '#/definitions/Collection'
+            $ref: '#/definitions/MultiValuedRelationship'
         '303':
           $ref: '#/responses/303'
         '401':
