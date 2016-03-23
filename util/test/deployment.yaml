@@ -13,23 +13,25 @@ entities:
     properties:
       kind:
         description: >
-          The value of the kind property must always be the string "Environment". 
-          The kind property is always set by the server in responses to GET.
-          The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+          The value must always be the string "Environment". 
+          This property is always set by the server in responses to GET.
+          It must be set by the client on POST, and must not be set 
+          by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [Environment]
       realizes:
         description: >
-          The value of the realizes property is the URI of the System of which this Environment is a running examplar. 
-          The realizes property is always set by the server in responses to GET.
-          The realizes property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+          The the URI of the System of which this Environment is a running examplar. 
+          This property is always set by the server in responses to GET.
+          It must be set by the client on POST, and must not 
+          be set by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#System'
       comprises:
         description: >
-          The value of the comprises property is the URI of the collection of Deployments that are part of this Environment. 
-          the comprises property is always set by the server, and is readOnly for the client 
+          The URI of the collection of Deployments that are part of this Environment. 
+          This property is always set by the server, and is readOnly for the client 
         format: uri
         type: string
         relationship:
@@ -38,8 +40,8 @@ entities:
           entities: '#Deployment'
       domain_name:
         description: >
-          The value of the domain_name property is the URI of the collection of Deployments that are part of this Environment. 
-          the comprises property is always set by the server, and is readOnly for the client 
+          The URI of the collection of Deployments that are part of this Environment. 
+          This property is always set by the server, and is readOnly for the client 
         type: string
       description:
         description: >
@@ -48,15 +50,15 @@ entities:
       requested_state:
         description: >
           The requested, or 'desired' state of the Environment. 
-          The value of the requested_state property is a string (URLs would be cooler) representing the last requested state of the Deployment. 
-          The requested_state property is always set by the server in responses to GET.
-          The requested_state property may never be set directly by the client. 
+          A string (URLs would be cooler) representing the last requested state of the Deployment. 
+          This property is always set by the server in responses to GET.
+          It may never be set directly by the client. 
           Clients affect the value of requested_state by POSTing requests to the URL in the requests property. 
         type: string
         readOnly: true
         enum: [initial, started, stopped, retired]
       valid_requests:
-        description:  the value of the valid_requests property is a list of valid requests given the current requested_state
+        description:  A list of valid requests given the current requested_state
         type: array
         items:
           type: string
@@ -64,8 +66,9 @@ entities:
           enum: ["#EnvironmentStartRequest", "#EnvironmentStopRequest", "#EnvironmentRetirementRequest"]
       requests:
         description: >
-          The value of the requests property is the URI of the collection of Requests for this Environment. 
-          New requests can be POSTed to this collection to change the requested (desired) state of the Environment.
+          The  URI of the collection of Requests for this Environment. 
+          New requests can be POSTed to this collection to change the 
+          requested (desired) state of the Environment.
           These requests will typically change the state of the runtime. Valid request types are:
           #EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest 
         format: uri
@@ -81,14 +84,15 @@ entities:
     properties:
       kind:
         description: >
-          The value of the kind property must always be the string "Deployment". 
+          This value must always be the string "Deployment". 
           The kind property is always set by the server in responses to GET.
-          The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+          The kind property must be set by the client on POST, and must not be 
+          set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [Deployment]
       deploys:
         description: >
-          The value of the deploys property must be the URI of the Revision that the deployment executes. 
+          The URI of the Revision that the deployment executes. 
           The deploys property is always set by the server in responses to GET.
           The deploys property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
         format: uri
@@ -251,7 +255,11 @@ entities:
     properties:
       kind:
         type: string
-        enum: [DeploymentOnlineRequest]    
+        enum: [DeploymentOnlineRequest]   
+      hosts:
+        type: string
+      percentage:
+        type: number
   DeploymentStatisticsRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -259,7 +267,9 @@ entities:
       kind:
         type: string
         enum: [DeploymentStatisticsRequest]
-      traffic_percentage:
+      hosts:
+        type: string
+      percentage:
         type: integer
       duration:
         type: integer
