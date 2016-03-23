@@ -145,6 +145,17 @@ entities:
         type: string
         readOnly: true
         enum: [initial, started, stopped, offline, online, temporarily_online]
+      requested_replicas:
+        type: integer
+        readOnly: true
+      requested_hosts:
+        type: string
+        readOnly: true
+      requested_percentage:
+        type: number
+        minimum: 0
+        maximum: 100
+        readOnly: true
       valid_requests:
         description:  > 
           A list of valid requests given the current requested_state. This property is always set 
@@ -222,6 +233,8 @@ entities:
         type: string
       percentage:
         type: number
+        minimum: 0
+        maximum: 100
   DeploymentStatisticsRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -237,6 +250,8 @@ entities:
         type: string
       percentage:
         type: integer
+        minimum: 0
+        maximum: 100
       duration:
         type: integer
       state:
