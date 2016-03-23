@@ -13,10 +13,9 @@ entities:
     properties:
       kind:
         description: >
-          The value must always be the string "Environment". 
-          This property is always set by the server in responses to GET.
-          It must be set by the client on POST, and must not be set 
-          by the client on PATCH. (PUT is not supported) 
+          The value must always be the string "Environment". This property is always set 
+          by the server in responses to GET. It must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [Environment]
       realizes:
@@ -49,11 +48,10 @@ entities:
         type: string
       requested_state:
         description: >
-          The requested, or 'desired' state of the Environment. 
-          A string (URLs would be cooler) representing the last requested state of the Deployment. 
-          This property is always set by the server in responses to GET.
-          It may never be set directly by the client. 
-          Clients affect the value of requested_state by POSTing requests to the URL in the requests property. 
+          The requested, or 'desired' state of the Environment. A string (URLs would be cooler) 
+          representing the last requested state of the Deployment. This property is always set by 
+          the server in responses to GET. It may never be set directly by the client. Clients affect 
+          the value of requested_state by POSTing requests to the URL in the requests property. 
         type: string
         readOnly: true
         enum: [initial, started, stopped, retired]
@@ -66,9 +64,8 @@ entities:
           enum: ["#EnvironmentStartRequest", "#EnvironmentStopRequest", "#EnvironmentRetirementRequest"]
       requests:
         description: >
-          The  URI of the collection of Requests for this Environment. 
-          New requests can be POSTed to this collection to change the 
-          requested (desired) state of the Environment.
+          The  URI of the collection of Requests for this Environment. New requests can be POSTed 
+          to this collection to change the requested (desired) state of the Environment.
           These requests will typically change the state of the runtime. Valid request types are:
           #EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest 
         format: uri
@@ -84,38 +81,33 @@ entities:
     properties:
       kind:
         description: >
-          This value must always be the string "Deployment". 
-          The kind property is always set by the server in responses to GET.
-          The kind property must be set by the client on POST, and must not be 
-          set by the client on PATCH. (PUT is not supported) 
+          This value must always be the string "Deployment". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [Deployment]
       deploys:
         description: >
-          The URI of the Revision that the deployment executes. 
-          This property is always set by the server in responses to GET.
-          It must be set by the client on POST, and must not be set 
+          The URI of the Revision that the deployment executes. This property is always set by the 
+          server in responses to GET. It must be set by the client on POST, and must not be set 
           by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#Revision'
       runs_in:
         description: >
-          The URI of the Environment that the deployment is part of. 
-          This property is always set by the server in responses to GET.
-          It must be set by the client on POST, and must not be set 
+          The URI of the Environment that the deployment is part of. This property is always set by 
+          the server in responses to GET. It must be set by the client on POST, and must not be set 
           by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#Environment'
       requested_state:
         description: >
-          The requested, or 'desired' state of the Deployment. 
-          The value is a string (URLs would be cooler) representing the last requested state of the Deployment. 
-          This property is always set by the server in responses to GET.
-          It may never be set directly by the client. 
-          Clients affect the value of requested_state by POSTing requests 
-          to the URL in the requests property. 
+          The requested, or 'desired' state of the Deployment. The value is a string (URLs would be cooler) 
+          representing the last requested state of the Deployment. This property is always set by the server 
+          in responses to GET. It may never be set directly by the client. Clients affect the value of 
+          requested_state by POSTing requests to the URL in the requests property. 
         type: string
         readOnly: true
         enum: [initial, started, stopped, offline, online, temporarily_online]
@@ -130,11 +122,10 @@ entities:
                  "#DeploymentScalingRequest", "#DeploymentRetirementRequest"]
       requests:
         description: >
-          The URI of the collection of Requests for this Deployment. 
-          New requests can be POSTed to this collection to change the requested (desired) state of the Deployment.
-          These requests will typically change the state of the runtime. Valid request types are:
-          #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest 
-          #DeploymentOfflineRequest #DeploymentStatisticsRequest 
+          The URI of the collection of Requests for this Deployment. New requests can be POSTed to this 
+          collection to change the requested (desired) state of the Deployment. These requests will typically 
+          change the state of the runtime. Valid request types are: #DeploymentStartRequest 
+          #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest #DeploymentStatisticsRequest 
           #DeploymentScalingRequest #DeploymentRetirementRequest 
         format: uri
         type: string
@@ -142,9 +133,8 @@ entities:
         relationship:
           collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
-          entities: > #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest 
-                      #DeploymentOfflineRequest #DeploymentStatisticsRequest 
-                      #DeploymentScalingRequest #DeploymentRetirementRequest
+          entities: > #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
+                      #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
