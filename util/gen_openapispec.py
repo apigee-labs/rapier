@@ -91,9 +91,6 @@ class OASGenerator(object):
             self.interfaces = dict()
             self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
-            self.uri_map.update({'#/non_entities/%s' % name: entity for name, entity in spec.get('non_entities',{}).iteritems()})
-            self.openapispec_uri_map.update({'#/non_entities/%s' % name: '#/definitions/%s' % name for name in spec.get('non_entities',{}).iterkeys()})
-            entities.update(spec.get('non_entities',{}))
             if 'implementation_private_information' in spec:
                 for entity_name, entity in spec['implementation_private_information'].iteritems():
                     if 'properties' in entity:

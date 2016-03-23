@@ -93,118 +93,58 @@ entities:
       deploys:
         description: >
           The URI of the Revision that the deployment executes. 
-          The deploys property is always set by the server in responses to GET.
-          The deploys property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+          This property is always set by the server in responses to GET.
+          It must be set by the client on POST, and must not be set 
+          by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#Revision'
       runs_in:
         description: >
-          The value of the runs_in property must be the URI of the Environment that the deployment is part of. 
-          The runs_in property is always set by the server in responses to GET.
-          The runs_in property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+          The URI of the Environment that the deployment is part of. 
+          This property is always set by the server in responses to GET.
+          It must be set by the client on POST, and must not be set 
+          by the client on PATCH. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#Environment'
       requested_state:
         description: >
           The requested, or 'desired' state of the Deployment. 
-          The value of the requested_state property is a string (URLs would be cooler) representing the last requested state of the Deployment. 
-          The requested_state property is always set by the server in responses to GET.
-          The requested_state property may never be set directly by the client. 
-          Clients affect the value of requested_state by POSTing requests to the URL in the requests property. 
+          The value is a string (URLs would be cooler) representing the last requested state of the Deployment. 
+          This property is always set by the server in responses to GET.
+          It may never be set directly by the client. 
+          Clients affect the value of requested_state by POSTing requests 
+          to the URL in the requests property. 
         type: string
         readOnly: true
         enum: [initial, started, stopped, offline, online, temporarily_online]
       valid_requests:
-        description:  the value of the valid_requests property is a list of valid requests given the current requested_state
+        description:  A list of valid requests given the current requested_state
         type: array
         items:
           type: string
           format: uri
-          enum: ["#DeploymentStartRequest", "#DeploymentStopRequest", "#DeploymentOnlineRequest", "#DeploymentOfflineRequest", "#DeploymentStatisticsRequest", "#DeploymentScalingRequest", "#DeploymentRetirementRequest"]
+          enum: ["#DeploymentStartRequest", "#DeploymentStopRequest", "#DeploymentOnlineRequest", 
+                 "#DeploymentOfflineRequest", "#DeploymentStatisticsRequest", 
+                 "#DeploymentScalingRequest", "#DeploymentRetirementRequest"]
       requests:
         description: >
-          The value of the requests property is the URI of the collection of Requests for this Deployment. 
+          The URI of the collection of Requests for this Deployment. 
           New requests can be POSTed to this collection to change the requested (desired) state of the Deployment.
           These requests will typically change the state of the runtime. Valid request types are:
-          #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest 
+          #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest 
+          #DeploymentOfflineRequest #DeploymentStatisticsRequest 
+          #DeploymentScalingRequest #DeploymentRetirementRequest 
         format: uri
         type: string
         readOnly: true
         relationship:
           collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
-          entities: '#DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest' 
-  System:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        description: >
-          The value of the kind property must always be the string "System". 
-          The kind property is always set by the server in responses to GET.
-          The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
-        type: string
-        enum: [System]
-      has_environments:
-        description: >
-          The value of the has_environments property is the URI of the collection of Environments where this System is deployed. 
-          New Environments can be POSTed to this collection—alternatively, 
-          a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#MultiValuedRelationship'
-          multiplicity: 0:n
-          entities: '#Environment'
-      has_components:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#MultiValuedRelationship'
-          multiplicity: 0:n
-          entities: '#Component'
-  Component:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [Component]
-      is_component_of:
-        format: uri
-        type: string
-        relationship: '#System'
-      has_revisions:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#MultiValuedRelationship'
-          multiplicity: 0:n
-          entities: '#Revision'
-  Revision:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [Revision]
-      revises:
-        format: uri
-        type: string
-        relationship: '#Component'
-      has_deployments:
-        format: uri
-        type: string
-        readOnly: true
-        relationship:
-          collection_resource: '#MultiValuedRelationship'
-          multiplicity: 0:n
-          entities: '#Deployment'        
+          entities: > #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest 
+                      #DeploymentOfflineRequest #DeploymentStatisticsRequest 
+                      #DeploymentScalingRequest #DeploymentRetirementRequest
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -297,6 +237,75 @@ entities:
       kind:
         type: string
         enum: [DeploymentRetirementRequest]    
+  System:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        description: >
+          The value of the kind property must always be the string "System". 
+          The kind property is always set by the server in responses to GET.
+          The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+        type: string
+        enum: [System]
+      has_environments:
+        description: >
+          The value of the has_environments property is the URI of the collection of Environments where this System is deployed. 
+          New Environments can be POSTed to this collection—alternatively, 
+          a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Environment'
+      has_components:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Component'
+  Component:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Component]
+      is_component_of:
+        format: uri
+        type: string
+        relationship: '#System'
+      has_revisions:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Revision'
+  Revision:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [Revision]
+      revises:
+        format: uri
+        type: string
+        relationship: '#Component'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Deployment'        
   StatisticsResults:
     type: object
     readOnly: true
