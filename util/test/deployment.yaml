@@ -75,6 +75,27 @@ entities:
           collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest'  
+  EnvironmentStartRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStartRequest]    
+  EnvironmentRetirementRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStopRequest]    
+  EnvironmentStopRequest:
+    allOf:
+    - $ref: '#/entities/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum: [EnvironmentStopRequest]    
   Deployment:
     allOf:
     - $ref: '#/entities/PersistentResource'
@@ -123,39 +144,19 @@ entities:
       requests:
         description: >
           The URI of the collection of Requests for this Deployment. New requests can be POSTed to this 
-          collection to change the requested (desired) state of the Deployment. These requests will typically 
-          change the state of the runtime. Valid request types are: #DeploymentStartRequest 
-          #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest #DeploymentStatisticsRequest 
-          #DeploymentScalingRequest #DeploymentRetirementRequest 
+          collection to change the requested (desired) state of the Deployment. These requests will 
+          typically change the state of the runtime. Valid request types are: #DeploymentStartRequest 
+          #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
+          #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest 
         format: uri
         type: string
         readOnly: true
         relationship:
           collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
-          entities: > #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
-                      #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest
-  EnvironmentStartRequest:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [EnvironmentStartRequest]    
-  EnvironmentRetirementRequest:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [EnvironmentStopRequest]    
-  EnvironmentStopRequest:
-    allOf:
-    - $ref: '#/entities/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum: [EnvironmentStopRequest]    
+          entities: > 
+            #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
+            #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest
   DeploymentStartRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'

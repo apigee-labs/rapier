@@ -23,9 +23,9 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
-        description: "The value must always be the string \"Environment\".  This property\
-          \ is always set by the server in responses to GET. It must be set by the\
-          \ client on POST, and must not be set  by the client on PATCH. (PUT is not\
+        description: "The value must always be the string \"Environment\". This property\
+          \ is always set  by the server in responses to GET. It must be set by the\
+          \ client on POST,  and must not be set by the client on PATCH. (PUT is not\
           \ supported) \n"
         type: string
         enum:
@@ -54,10 +54,10 @@ definitions:
         description: "A description of the Environment \n"
         type: string
       requested_state:
-        description: "The requested, or 'desired' state of the Environment.  A string\
-          \ (URLs would be cooler) representing the last requested state of the Deployment.\
-          \  This property is always set by the server in responses to GET. It may\
-          \ never be set directly by the client.  Clients affect the value of requested_state\
+        description: "The requested, or 'desired' state of the Environment. A string\
+          \ (URLs would be cooler)  representing the last requested state of the Deployment.\
+          \ This property is always set by  the server in responses to GET. It may\
+          \ never be set directly by the client. Clients affect  the value of requested_state\
           \ by POSTing requests to the URL in the requests property. \n"
         type: string
         readOnly: true
@@ -78,7 +78,7 @@ definitions:
           - '#EnvironmentRetirementRequest'
       requests:
         description: "The  URI of the collection of Requests for this Environment.\
-          \  New requests can be POSTed to this collection to change the  requested\
+          \ New requests can be POSTed  to this collection to change the requested\
           \ (desired) state of the Environment. These requests will typically change\
           \ the state of the runtime. Valid request types are: #EnvironmentStartRequest\
           \ #EnvironmentStopRequest #EnvironmentRetirementRequest \n"
@@ -87,77 +87,6 @@ definitions:
         readOnly: true
         x-interface: '#/x-interfaces/Environment.requests'
     x-interface: '#/x-interfaces/Environment'
-  Deployment:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: "This value must always be the string \"Deployment\".  The kind\
-          \ property is always set by the server in responses to GET. The kind property\
-          \ must be set by the client on POST, and must not be  set by the client\
-          \ on PATCH. (PUT is not supported) \n"
-        type: string
-        enum:
-        - Deployment
-      deploys:
-        description: "The URI of the Revision that the deployment executes.  This\
-          \ property is always set by the server in responses to GET. It must be set\
-          \ by the client on POST, and must not be set  by the client on PATCH. (PUT\
-          \ is not supported) \n"
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Revision'
-      runs_in:
-        description: "The URI of the Environment that the deployment is part of. \
-          \ This property is always set by the server in responses to GET. It must\
-          \ be set by the client on POST, and must not be set  by the client on PATCH.\
-          \ (PUT is not supported) \n"
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Environment'
-      requested_state:
-        description: "The requested, or 'desired' state of the Deployment.  The value\
-          \ is a string (URLs would be cooler) representing the last requested state\
-          \ of the Deployment.  This property is always set by the server in responses\
-          \ to GET. It may never be set directly by the client.  Clients affect the\
-          \ value of requested_state by POSTing requests  to the URL in the requests\
-          \ property. \n"
-        type: string
-        readOnly: true
-        enum:
-        - initial
-        - started
-        - stopped
-        - offline
-        - online
-        - temporarily_online
-      valid_requests:
-        description: A list of valid requests given the current requested_state
-        type: array
-        items:
-          type: string
-          format: uri
-          enum:
-          - '#DeploymentStartRequest'
-          - '#DeploymentStopRequest'
-          - '#DeploymentOnlineRequest'
-          - '#DeploymentOfflineRequest'
-          - '#DeploymentStatisticsRequest'
-          - '#DeploymentScalingRequest'
-          - '#DeploymentRetirementRequest'
-      requests:
-        description: "The URI of the collection of Requests for this Deployment. \
-          \ New requests can be POSTed to this collection to change the requested\
-          \ (desired) state of the Deployment. These requests will typically change\
-          \ the state of the runtime. Valid request types are: #DeploymentStartRequest\
-          \ #DeploymentStopRequest #DeploymentOnlineRequest  #DeploymentOfflineRequest\
-          \ #DeploymentStatisticsRequest  #DeploymentScalingRequest #DeploymentRetirementRequest\
-          \ \n"
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Deployment.requests'
-    x-interface: '#/x-interfaces/Deployment'
   EnvironmentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -185,6 +114,76 @@ definitions:
         enum:
         - EnvironmentStopRequest
     x-interface: '#/x-interfaces/EnvironmentStopRequest'
+  Deployment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"Deployment\". The kind\
+          \ property is always set by  the server in responses to GET. The kind property\
+          \ must be set by the client on POST,  and must not be set by the client\
+          \ on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - Deployment
+      deploys:
+        description: "The URI of the Revision that the deployment executes. This property\
+          \ is always set by the  server in responses to GET. It must be set by the\
+          \ client on POST, and must not be set  by the client on PATCH. (PUT is not\
+          \ supported) \n"
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Revision'
+      runs_in:
+        description: "The URI of the Environment that the deployment is part of. This\
+          \ property is always set by  the server in responses to GET. It must be\
+          \ set by the client on POST, and must not be set  by the client on PATCH.\
+          \ (PUT is not supported) \n"
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Environment'
+      requested_state:
+        description: "The requested, or 'desired' state of the Deployment. The value\
+          \ is a string (URLs would be cooler)  representing the last requested state\
+          \ of the Deployment. This property is always set by the server  in responses\
+          \ to GET. It may never be set directly by the client. Clients affect the\
+          \ value of  requested_state by POSTing requests to the URL in the requests\
+          \ property. \n"
+        type: string
+        readOnly: true
+        enum:
+        - initial
+        - started
+        - stopped
+        - offline
+        - online
+        - temporarily_online
+      valid_requests:
+        description: A list of valid requests given the current requested_state
+        type: array
+        items:
+          type: string
+          format: uri
+          enum:
+          - '#DeploymentStartRequest'
+          - '#DeploymentStopRequest'
+          - '#DeploymentOnlineRequest'
+          - '#DeploymentOfflineRequest'
+          - '#DeploymentStatisticsRequest'
+          - '#DeploymentScalingRequest'
+          - '#DeploymentRetirementRequest'
+      requests:
+        description: "The URI of the collection of Requests for this Deployment. New\
+          \ requests can be POSTed to this  collection to change the requested (desired)\
+          \ state of the Deployment. These requests will  typically change the state\
+          \ of the runtime. Valid request types are: #DeploymentStartRequest  #DeploymentStopRequest\
+          \ #DeploymentOnlineRequest #DeploymentOfflineRequest  #DeploymentStatisticsRequest\
+          \ #DeploymentScalingRequest #DeploymentRetirementRequest \n"
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Deployment.requests'
+    x-interface: '#/x-interfaces/Deployment'
   DeploymentStartRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -195,6 +194,7 @@ definitions:
         - DeploymentStartRequest
       replicas:
         type: integer
+    x-interface: '#/x-interfaces/DeploymentStartRequest'
   DeploymentStopRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -203,6 +203,7 @@ definitions:
         type: string
         enum:
         - DeploymentStopRequest
+    x-interface: '#/x-interfaces/DeploymentStopRequest'
   DeploymentOfflineRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -224,6 +225,7 @@ definitions:
         type: string
       percentage:
         type: number
+    x-interface: '#/x-interfaces/DeploymentOnlineRequest'
   DeploymentStatisticsRequest:
     allOf:
     - $ref: '#/definitions/PersistentResource'
@@ -830,15 +832,20 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     post:
-      description: Create a new DeploymentOfflineRequest or DeploymentStatisticsRequest
+      description: Create a new DeploymentStartRequest or DeploymentStopRequest or
+        DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
         or DeploymentScalingRequest or DeploymentRetirementRequest
       parameters:
-      - description: The representation of the new DeploymentOfflineRequest or DeploymentStatisticsRequest
+      - description: The representation of the new DeploymentStartRequest or DeploymentStopRequest
+          or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
           or DeploymentScalingRequest or DeploymentRetirementRequest being created
         in: body
         name: body
         schema:
           x-oneOf:
+          - $ref: '#/definitions/DeploymentStartRequest'
+          - $ref: '#/definitions/DeploymentStopRequest'
+          - $ref: '#/definitions/DeploymentOnlineRequest'
           - $ref: '#/definitions/DeploymentOfflineRequest'
           - $ref: '#/definitions/DeploymentStatisticsRequest'
           - $ref: '#/definitions/DeploymentScalingRequest'
@@ -850,7 +857,8 @@ x-interfaces:
         type: string
       responses:
         '201':
-          description: Created new DeploymentOfflineRequest or DeploymentStatisticsRequest
+          description: Created new DeploymentStartRequest or DeploymentStopRequest
+            or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
             or DeploymentScalingRequest or DeploymentRetirementRequest
           headers:
             Content-Type:
@@ -860,11 +868,15 @@ x-interfaces:
               description: Value of ETag required for subsequent updates
               type: string
             Location:
-              description: perma-link URL of newly-created DeploymentOfflineRequest
+              description: perma-link URL of newly-created DeploymentStartRequest
+                or DeploymentStopRequest or DeploymentOnlineRequest or DeploymentOfflineRequest
                 or DeploymentStatisticsRequest or DeploymentScalingRequest or DeploymentRetirementRequest
               type: string
           schema:
             x-oneOf:
+            - $ref: '#/definitions/DeploymentStartRequest'
+            - $ref: '#/definitions/DeploymentStopRequest'
+            - $ref: '#/definitions/DeploymentOnlineRequest'
             - $ref: '#/definitions/DeploymentOfflineRequest'
             - $ref: '#/definitions/DeploymentStatisticsRequest'
             - $ref: '#/definitions/DeploymentScalingRequest'
@@ -1044,6 +1056,139 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentOfflineRequest
+  DeploymentOnlineRequest:
+    get:
+      description: Retrieve a DeploymentOnlineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentOnlineRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentOnlineRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOnlineRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentOnlineRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentOnlineRequest
   DeploymentRetirementRequest:
     get:
       description: Retrieve a DeploymentRetirementRequest
@@ -1238,6 +1383,139 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentScalingRequest
+  DeploymentStartRequest:
+    get:
+      description: Retrieve a DeploymentStartRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentStartRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentStartRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStartRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentStartRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStartRequest
   DeploymentStatisticsRequest:
     get:
       description: Retrieve a DeploymentStatisticsRequest
@@ -1299,6 +1577,138 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: DeploymentStatisticsRequest
+  DeploymentStopRequest:
+    get:
+      description: Retrieve a DeploymentStopRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentStopRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentStopRequest being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStopRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentStopRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStopRequest
   Environment:
     get:
       description: Retrieve an Environment
