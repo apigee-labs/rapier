@@ -22,8 +22,8 @@ entities:
         description: >
           The the URI of the System of which this Environment is a running examplar. 
           This property is always set by the server in responses to GET.
-          It must be set by the client on POST, and must not 
-          be set by the client on PATCH. (PUT is not supported) 
+          It must be set by the client on POST, and may only be set by the client on PATCH
+          if the requested_state is initial. (PUT is not supported) 
         format: uri
         type: string
         relationship: '#System'
@@ -33,18 +33,16 @@ entities:
           This property is always set by the server, and is readOnly for the client 
         format: uri
         type: string
+        readOnly: true
         relationship:
           collection_resource: '#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Deployment'
       domain_name:
-        description: >
-          The URI of the collection of Deployments that are part of this Environment. 
-          This property is always set by the server, and is readOnly for the client 
+        description: The URI of the domain name at which this Environment can be found. 
         type: string
       description:
-        description: >
-          A description of the Environment 
+        description: A description of the Environment 
         type: string
       requested_state:
         description: >
@@ -56,18 +54,21 @@ entities:
         readOnly: true
         enum: [initial, started, stopped, retired]
       valid_requests:
-        description:  A list of valid requests given the current requested_state
+        description: > 
+          A list of valid requests given the current requested_state. This property is always set 
+          by the server, and is readOnly for the client
         type: array
+        readOnly: true
         items:
           type: string
           format: uri
-          enum: ["#EnvironmentStartRequest", "#EnvironmentStopRequest", "#EnvironmentRetirementRequest"]
+          enum: [EnvironmentStartRequest, EnvironmentStopRequest, EnvironmentRetirementRequest]
       requests:
         description: >
           The  URI of the collection of Requests for this Environment. New requests can be POSTed 
           to this collection to change the requested (desired) state of the Environment.
           These requests will typically change the state of the runtime. Valid request types are:
-          #EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest 
+          EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
         format: uri
         type: string
         readOnly: true
@@ -80,13 +81,21 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
-        type: string
+         description: >
+          This value must always be the string "EnvironmentStartRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
+       type: string
         enum: [EnvironmentStartRequest]    
   EnvironmentRetirementRequest:
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "EnvironmentStopRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [EnvironmentStopRequest]    
   EnvironmentStopRequest:
@@ -94,6 +103,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "EnvironmentStopRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [EnvironmentStopRequest]    
   Deployment:
@@ -133,21 +146,23 @@ entities:
         readOnly: true
         enum: [initial, started, stopped, offline, online, temporarily_online]
       valid_requests:
-        description:  A list of valid requests given the current requested_state
+        description:  > 
+          A list of valid requests given the current requested_state. This property is always set 
+          by the server, and is readOnly for the client
         type: array
         items:
           type: string
           format: uri
-          enum: ["#DeploymentStartRequest", "#DeploymentStopRequest", "#DeploymentOnlineRequest", 
-                 "#DeploymentOfflineRequest", "#DeploymentStatisticsRequest", 
-                 "#DeploymentScalingRequest", "#DeploymentRetirementRequest"]
+          enum: [DeploymentStartRequest, DeploymentStopRequest, DeploymentOnlineRequest, 
+                 DeploymentOfflineRequest, DeploymentStatisticsRequest, 
+                 DeploymentScalingRequest, DeploymentRetirementRequest]
       requests:
         description: >
           The URI of the collection of Requests for this Deployment. New requests can be POSTed to this 
           collection to change the requested (desired) state of the Deployment. These requests will 
-          typically change the state of the runtime. Valid request types are: #DeploymentStartRequest 
-          #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
-          #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest 
+          typically change the state of the runtime. Valid request types are: DeploymentStartRequest 
+          DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest 
+          DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
         format: uri
         type: string
         readOnly: true
@@ -161,7 +176,11 @@ entities:
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
-      kind:
+      kind: 
+        description: >
+          This value must always be the string "DeploymentStartRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentStartRequest]    
       replicas:
@@ -171,6 +190,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentStopRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentStopRequest]    
   DeploymentOfflineRequest:
@@ -178,6 +201,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentOfflineRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentOfflineRequest]    
   DeploymentOnlineRequest:
@@ -185,6 +212,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentOnlineRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentOnlineRequest]   
       hosts:
@@ -196,6 +227,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentStatisticsRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentStatisticsRequest]
       hosts:
@@ -216,6 +251,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentScalingRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentScalingRequest]  
       replicas: 
@@ -226,6 +265,10 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
+        description: >
+          This value must always be the string "DeploymentRetirementRequest". The kind property is always set by 
+          the server in responses to GET. The kind property must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [DeploymentRetirementRequest]    
   System:
@@ -234,8 +277,7 @@ entities:
     properties:
       kind:
         description: >
-          The value of the kind property must always be the string "System". 
-          The kind property is always set by the server in responses to GET.
+          The value must always be the string "System". The kind property is always set by the server in responses to GET.
           The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
         enum: [System]
