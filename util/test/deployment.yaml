@@ -81,11 +81,11 @@ entities:
     - $ref: '#/entities/PersistentResource'
     properties:
       kind:
-         description: >
+        description: >
           This value must always be the string "EnvironmentStartRequest". The kind property is always set by 
           the server in responses to GET. The kind property must be set by the client on POST, 
           and must not be set by the client on PATCH. (PUT is not supported) 
-       type: string
+        type: string
         enum: [EnvironmentStartRequest]    
   EnvironmentRetirementRequest:
     allOf:

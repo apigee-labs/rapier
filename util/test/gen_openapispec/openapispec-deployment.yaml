@@ -33,8 +33,8 @@ definitions:
       realizes:
         description: "The the URI of the System of which this Environment is a running\
           \ examplar.  This property is always set by the server in responses to GET.\
-          \ It must be set by the client on POST, and must not  be set by the client\
-          \ on PATCH. (PUT is not supported) \n"
+          \ It must be set by the client on POST, and may only be set by the client\
+          \ on PATCH if the requested_state is initial. (PUT is not supported) \n"
         format: uri
         type: string
         x-interface: '#/x-interfaces/System'
@@ -44,14 +44,13 @@ definitions:
           \ for the client \n"
         format: uri
         type: string
+        readOnly: true
         x-interface: '#/x-interfaces/Environment.comprises'
       domain_name:
-        description: "The URI of the collection of Deployments that are part of this\
-          \ Environment.  This property is always set by the server, and is readOnly\
-          \ for the client \n"
+        description: The URI of the domain name at which this Environment can be found.
         type: string
       description:
-        description: "A description of the Environment \n"
+        description: A description of the Environment
         type: string
       requested_state:
         description: "The requested, or 'desired' state of the Environment. A string\
@@ -67,21 +66,25 @@ definitions:
         - stopped
         - retired
       valid_requests:
-        description: A list of valid requests given the current requested_state
+        description: 'A list of valid requests given the current requested_state.
+          This property is always set  by the server, and is readOnly for the client
+
+          '
         type: array
+        readOnly: true
         items:
           type: string
           format: uri
           enum:
-          - '#EnvironmentStartRequest'
-          - '#EnvironmentStopRequest'
-          - '#EnvironmentRetirementRequest'
+          - EnvironmentStartRequest
+          - EnvironmentStopRequest
+          - EnvironmentRetirementRequest
       requests:
         description: "The  URI of the collection of Requests for this Environment.\
           \ New requests can be POSTed  to this collection to change the requested\
           \ (desired) state of the Environment. These requests will typically change\
-          \ the state of the runtime. Valid request types are: #EnvironmentStartRequest\
-          \ #EnvironmentStopRequest #EnvironmentRetirementRequest \n"
+          \ the state of the runtime. Valid request types are: EnvironmentStartRequest\
+          \ EnvironmentStopRequest EnvironmentRetirementRequest \n"
         format: uri
         type: string
         readOnly: true
@@ -92,6 +95,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"EnvironmentStartRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - EnvironmentStartRequest
@@ -101,6 +108,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"EnvironmentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - EnvironmentStopRequest
@@ -110,6 +121,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"EnvironmentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - EnvironmentStopRequest
@@ -158,27 +173,39 @@ definitions:
         - offline
         - online
         - temporarily_online
+      requested_replicas:
+        type: integer
+        readOnly: true
+      requested_hosts:
+        type: string
+        readOnly: true
+      requested_percentage:
+        type: number
+        readOnly: true
       valid_requests:
-        description: A list of valid requests given the current requested_state
+        description: 'A list of valid requests given the current requested_state.
+          This property is always set  by the server, and is readOnly for the client
+
+          '
         type: array
         items:
           type: string
           format: uri
           enum:
-          - '#DeploymentStartRequest'
-          - '#DeploymentStopRequest'
-          - '#DeploymentOnlineRequest'
-          - '#DeploymentOfflineRequest'
-          - '#DeploymentStatisticsRequest'
-          - '#DeploymentScalingRequest'
-          - '#DeploymentRetirementRequest'
+          - DeploymentStartRequest
+          - DeploymentStopRequest
+          - DeploymentOnlineRequest
+          - DeploymentOfflineRequest
+          - DeploymentStatisticsRequest
+          - DeploymentScalingRequest
+          - DeploymentRetirementRequest
       requests:
         description: "The URI of the collection of Requests for this Deployment. New\
           \ requests can be POSTed to this  collection to change the requested (desired)\
           \ state of the Deployment. These requests will  typically change the state\
-          \ of the runtime. Valid request types are: #DeploymentStartRequest  #DeploymentStopRequest\
-          \ #DeploymentOnlineRequest #DeploymentOfflineRequest  #DeploymentStatisticsRequest\
-          \ #DeploymentScalingRequest #DeploymentRetirementRequest \n"
+          \ of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest\
+          \ DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest\
+          \ DeploymentScalingRequest DeploymentRetirementRequest \n"
         format: uri
         type: string
         readOnly: true
@@ -189,6 +216,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentStartRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentStartRequest
@@ -200,6 +231,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentStopRequest
@@ -209,6 +244,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentOfflineRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentOfflineRequest
@@ -218,6 +257,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentOnlineRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentOnlineRequest
@@ -231,6 +274,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentStatisticsRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentStatisticsRequest
@@ -253,6 +300,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentScalingRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentScalingRequest
@@ -265,6 +316,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
+        description: "This value must always be the string \"DeploymentRetirementRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
         - DeploymentRetirementRequest
@@ -274,10 +329,10 @@ definitions:
     - $ref: '#/definitions/PersistentResource'
     properties:
       kind:
-        description: "The value of the kind property must always be the string \"\
-          System\".  The kind property is always set by the server in responses to\
-          \ GET. The kind property must be set by the client on POST, and must not\
-          \ be set by the client on PATCH. (PUT is not supported) \n"
+        description: "The value must always be the string \"System\". The kind property\
+          \ is always set by the server in responses to GET. The kind property must\
+          \ be set by the client on POST, and must not be set by the client on PATCH.\
+          \ (PUT is not supported) \n"
         type: string
         enum:
         - System
