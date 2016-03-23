@@ -357,6 +357,43 @@ entities:
   StatisticsResults:
     type: object
     readOnly: true
+  Apigee:
+    readonly: true
+    well_known_URLs: /
+    query_paths: systems environments components revisions
+    properties:
+      systems:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#System'        
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Environment'        
+      components:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Component'        
+      revisions:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: '#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Revision'
   MultiValuedRelationship:
     oneOf:
     - $ref: '#/entities/Collection'
