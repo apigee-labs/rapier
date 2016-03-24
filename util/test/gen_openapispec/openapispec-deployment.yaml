@@ -333,7 +333,7 @@ definitions:
         type: number
     x-interface: '#/x-interfaces/DeploymentOnlineRequest'
   DeploymentStatisticsRequest:
-    description: 'An DeploymentStatisticsRequest is direct traffic for to a deployment
+    description: 'A DeploymentStatisticsRequest is used to direct traffic to a deployment
       for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest
       that times out. During a DeploymentStatisticsRequest the requested_state of
       the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest,
@@ -368,10 +368,8 @@ definitions:
     readOnly: true
     x-interface: '#/x-interfaces/DeploymentStatisticsRequest'
   DeploymentScalingRequest:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: A DeploymentScalingRequest is used to increase or decrease the number
+      of replicas associated with a deployment
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -388,10 +386,11 @@ definitions:
     readOnly: true
     x-interface: '#/x-interfaces/DeploymentScalingRequest'
   DeploymentRetirementRequest:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: 'A DeploymentScalingRequest is used to mark a Deployment as no longer
+      being current. After a Deployment has been marked as retired, it can be deleted,
+      or it can be kept around as a historic record.
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -405,10 +404,9 @@ definitions:
         - DeploymentRetirementRequest
     x-interface: '#/x-interfaces/DeploymentRetirementRequest'
   System:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: "A System represents a set of Components that work together. Systems\
+      \ are defined in development. Systems are deployed by creating Environments\
+      \ that run them. Multiple Environments may run the same System. \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -437,10 +435,11 @@ definitions:
         x-interface: '#/x-interfaces/System.has_components'
     x-interface: '#/x-interfaces/System'
   Component:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: "A Component is a unit of implementation that can be indpeendently\
+      \ deployed. Components are aggregated into systems. Components are deployed\
+      \ by creating a Deployment entity inside some Environment for a particular Revision\
+      \ of the Component, and then issuing a DeploymentStartRequest for that Deployment.\
+      \  \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -459,10 +458,8 @@ definitions:
         x-interface: '#/x-interfaces/Component.has_revisions'
     x-interface: '#/x-interfaces/Component'
   Revision:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: "Revisions model successive snapshots of an implementation Component,\
+      \ as produced by a Development organization. \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -481,18 +478,16 @@ definitions:
         x-interface: '#/x-interfaces/Revision.has_deployments'
     x-interface: '#/x-interfaces/Revision'
   StatisticsResults:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: "A StatisiticsResult is an entity that holds the metrics produced\
+      \ during a DeploymenStatisticsRequest. \n"
     type: object
     readOnly: true
     x-interface: '#/x-interfaces/StatisticsResults'
   Apigee:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
+    description: 'An Apigee is the root of the tree of resources in an Apigee Environment
+      (that is, an Environment that contains Apigee''s own software)
+
+      '
     properties:
       systems:
         format: uri

@@ -281,7 +281,7 @@ entities:
         maximum: 100
   DeploymentStatisticsRequest:
     description: >
-      An DeploymentStatisticsRequest is direct traffic for to a deployment for a limited period of time.
+      A DeploymentStatisticsRequest is used to direct traffic to a deployment for a limited period of time.
       A DeploymentStatisticsRequest is like a DeploymentOnlineRequest that times out. During a DeploymentStatisticsRequest
       the requested_state of the Deployment will be set to temporarily_online. At the end of successful 
       DeploymentStatisticsRequest, the requested_state will revert to offline.
@@ -313,10 +313,7 @@ entities:
         relationship: '#StatisticsResults'
     readOnly: true
   DeploymentScalingRequest:
-    description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+    description: A DeploymentScalingRequest is used to increase or decrease the number of replicas associated with a deployment 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -331,10 +328,9 @@ entities:
         type: integer
     readOnly: true
   DeploymentRetirementRequest:
-    description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+    description: > 
+      A DeploymentScalingRequest is used to mark a Deployment as no longer being current. After a Deployment has been
+      marked as retired, it can be deleted, or it can be kept around as a historic record.
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -347,9 +343,8 @@ entities:
         enum: [DeploymentRetirementRequest]    
   System:
     description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+      A System represents a set of Components that work together. Systems are defined in development. Systems
+      are deployed by creating Environments that run them. Multiple Environments may run the same System. 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -381,9 +376,9 @@ entities:
           entities: '#Component'
   Component:
     description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+      A Component is a unit of implementation that can be indpeendently deployed. Components are aggregated into systems.
+      Components are deployed by creating a Deployment entity inside some Environment for a particular Revision of the Component,
+      and then issuing a DeploymentStartRequest for that Deployment.  
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -404,9 +399,7 @@ entities:
           entities: '#Revision'
   Revision:
     description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+      Revisions model successive snapshots of an implementation Component, as produced by a Development organization. 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -427,16 +420,12 @@ entities:
           entities: '#Deployment'        
   StatisticsResults:
     description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+      A StatisiticsResult is an entity that holds the metrics produced during a DeploymenStatisticsRequest. 
     type: object
     readOnly: true
   Apigee:
     description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
+      An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
     readonly: true
     well_known_URLs: /
     query_paths: systems environments components revisions
