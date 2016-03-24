@@ -567,6 +567,7 @@ def main(args):
     validator.set_rapier_spec_from_filename(*args)
 
     validator.validate()
+    return validator.rapier_spec, validator.errors
 
 if __name__ == "__main__":
     main(sys.argv[1:])

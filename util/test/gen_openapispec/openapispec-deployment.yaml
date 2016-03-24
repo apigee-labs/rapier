@@ -19,6 +19,22 @@ definitions:
   ErrorResponse:
     type: string
   Environment:
+    description: 'An environment represents a set of running components accessible
+      at a single domain name or IP address. Depending on the context, an environment
+      might correspond to:
+
+      - A set of Apigee Message Processors that handle the same set of customer domain
+      names. (This is similar to the existing Apigee "pod" concept) - A set of customer
+      proxies deployed to the same Apigee "environment" - A set of Apigee routers
+      deployed to the same AWS region/AZ - A Kubernetes cluster or namespace dedicated
+      to a domain name belonging to an Apigee customer or Apigee itself.
+
+      The state of an Environment is controlled by POSTing requests to the URL provided
+      in its requests property The Deployment Service stores Environments that are
+      currently (intended to be) running, but also stores Environments that once ran,
+      and Environments that will run in the future.
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -62,7 +78,7 @@ definitions:
         readOnly: true
         enum:
         - initial
-        - started
+        - running
         - stopped
         - retired
       valid_requests:
@@ -91,6 +107,11 @@ definitions:
         x-interface: '#/x-interfaces/Environment.requests'
     x-interface: '#/x-interfaces/Environment'
   EnvironmentStartRequest:
+    description: 'An EnvironmentStartRequest is used to initiate the creation of the
+      runtime infrastructure required by an Environment. It can only be used if the
+      requested_state of the Environment is initial or stopped
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -104,6 +125,11 @@ definitions:
         - EnvironmentStartRequest
     x-interface: '#/x-interfaces/EnvironmentStartRequest'
   EnvironmentRetirementRequest:
+    description: 'An EnvironmentRetirementRequest is used to retire an Environment
+      that is no longer needed. required by an Environment. It can only be used if
+      the requested_state of the Environment is initial or stopped
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -114,9 +140,14 @@ definitions:
           \ by the client on PATCH. (PUT is not supported) \n"
         type: string
         enum:
-        - EnvironmentStopRequest
+        - EnvironmentRetirementRequest
     x-interface: '#/x-interfaces/EnvironmentRetirementRequest'
   EnvironmentStopRequest:
+    description: 'An EnvironmentStopRequest is used to delete the runtime infrastructure
+      required by an Environment. It can only be used if the requested_state of the
+      Environment is running
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -130,6 +161,14 @@ definitions:
         - EnvironmentStopRequest
     x-interface: '#/x-interfaces/EnvironmentStopRequest'
   Deployment:
+    description: "A deployment represents a set of running instances of the same component.\
+      \ Each deployment runs in an environment. Depending on the context, a deployment\
+      \ might correspond to:\n- An auto-scaling group for Message Processors running\
+      \ in an AWS region - A Kubernetes replicationController in a Kubernetes namespace/cluster\
+      \ - The deployment of a single customer proxy in an Edge environment.\n\n The\
+      \ Deployment Service stores Deployments that are currently (intended to be)\
+      \ running, but also stores Deployments that once ran, and Deployments that will\
+      \ run in the future.\n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -168,7 +207,6 @@ definitions:
         readOnly: true
         enum:
         - initial
-        - started
         - stopped
         - offline
         - online
@@ -212,6 +250,12 @@ definitions:
         x-interface: '#/x-interfaces/Deployment.requests'
     x-interface: '#/x-interfaces/Deployment'
   DeploymentStartRequest:
+    description: 'An DeploymentStartRequest is used to initiate the creation of the
+      runtime infrastructure required by an Deployment. It can only be used if the
+      requested_state of the Deployment is initial or stopped. A successful DeploymentStartRequest
+      will change the requested_state of the Deployment to offline
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -227,6 +271,12 @@ definitions:
         type: integer
     x-interface: '#/x-interfaces/DeploymentStartRequest'
   DeploymentStopRequest:
+    description: 'An DeploymentStopRequest is used to delete the runtime infrastructure
+      required by an Deployment. It can only be used if the requested_state of the
+      Deployment is offline A successful DeploymentStopRequest will change the requested_state
+      of the Deployment to stopped
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -240,6 +290,12 @@ definitions:
         - DeploymentStopRequest
     x-interface: '#/x-interfaces/DeploymentStopRequest'
   DeploymentOfflineRequest:
+    description: 'An DeploymentOfflineRequest is used to stop any traffic going to
+      [instances of] the deployment. It can only be used if the requested_state of
+      the Deployment is online. A successful DeploymentStopRequest will change the
+      requested_state of the Deployment to offline
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -253,6 +309,13 @@ definitions:
         - DeploymentOfflineRequest
     x-interface: '#/x-interfaces/DeploymentOfflineRequest'
   DeploymentOnlineRequest:
+    description: 'An DeploymentOnlineRequest is used to direct traffic to a deployment.
+      The optional hosts and  percentage properties can be used to control which traffic
+      and how much of it. A successful DeploymentOnlineRequest will change the requested_state
+      of the Deployment to online. DeploymentOnlineRequest can only be used if the
+      requested_state of the Deployment is offline.
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -270,6 +333,15 @@ definitions:
         type: number
     x-interface: '#/x-interfaces/DeploymentOnlineRequest'
   DeploymentStatisticsRequest:
+    description: 'An DeploymentStatisticsRequest is direct traffic for to a deployment
+      for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest
+      that times out. During a DeploymentStatisticsRequest the requested_state of
+      the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest,
+      the requested_state will revert to offline. A successful DeploymentStopRequest
+      will change the requested_state of the Deployment back to offline. DeploymenStatisticsRequest
+      can only be used if the requested_state of the Deployment is offline.
+
+      '
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -296,6 +368,10 @@ definitions:
     readOnly: true
     x-interface: '#/x-interfaces/DeploymentStatisticsRequest'
   DeploymentScalingRequest:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -312,6 +388,10 @@ definitions:
     readOnly: true
     x-interface: '#/x-interfaces/DeploymentScalingRequest'
   DeploymentRetirementRequest:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -325,6 +405,10 @@ definitions:
         - DeploymentRetirementRequest
     x-interface: '#/x-interfaces/DeploymentRetirementRequest'
   System:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -353,6 +437,10 @@ definitions:
         x-interface: '#/x-interfaces/System.has_components'
     x-interface: '#/x-interfaces/System'
   Component:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -371,6 +459,10 @@ definitions:
         x-interface: '#/x-interfaces/Component.has_revisions'
     x-interface: '#/x-interfaces/Component'
   Revision:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -389,10 +481,18 @@ definitions:
         x-interface: '#/x-interfaces/Revision.has_deployments'
     x-interface: '#/x-interfaces/Revision'
   StatisticsResults:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     type: object
     readOnly: true
     x-interface: '#/x-interfaces/StatisticsResults'
   Apigee:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     properties:
       systems:
         format: uri
@@ -416,10 +516,18 @@ definitions:
         x-interface: '#/x-interfaces/Apigee.revisions'
     x-interface: '#/x-interfaces/Apigee'
   MultiValuedRelationship:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     x-oneOf:
     - $ref: '#/definitions/Collection'
     - $ref: '#/definitions/Page'
   Collection:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
@@ -433,6 +541,10 @@ definitions:
           type: object
     readOnly: true
   Page:
+    description: "The value must always be the string \"Environment\". This property\
+      \ is always set  by the server in responses to GET. It must be set by the client\
+      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
+      \ \n"
     allOf:
     - $ref: '#/definitions/Resource'
     properties:

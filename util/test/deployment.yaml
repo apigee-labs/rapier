@@ -8,6 +8,16 @@ conventions:
     type: string
 entities:
   Environment:
+    description: >
+      An environment represents a set of running components accessible at a single domain name or IP address. Depending on the context, an environment might correspond to:
+      
+      - A set of Apigee Message Processors that handle the same set of customer domain names. (This is similar to the existing Apigee "pod" concept)
+      - A set of customer proxies deployed to the same Apigee "environment"
+      - A set of Apigee routers deployed to the same AWS region/AZ
+      - A Kubernetes cluster or namespace dedicated to a domain name belonging to an Apigee customer or Apigee itself.
+      
+      The state of an Environment is controlled by POSTing requests to the URL provided in its requests property
+      The Deployment Service stores Environments that are currently (intended to be) running, but also stores Environments that once ran, and Environments that will run in the future.
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -52,7 +62,7 @@ entities:
           the value of requested_state by POSTing requests to the URL in the requests property. 
         type: string
         readOnly: true
-        enum: [initial, started, stopped, retired]
+        enum: [initial, running, stopped, retired]
       valid_requests:
         description: > 
           A list of valid requests given the current requested_state. This property is always set 
@@ -77,6 +87,9 @@ entities:
           multiplicity: 0:n
           entities: '#EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest'  
   EnvironmentStartRequest:
+    description: >
+      An EnvironmentStartRequest is used to initiate the creation of the runtime infrastructure
+      required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -88,6 +101,9 @@ entities:
         type: string
         enum: [EnvironmentStartRequest]    
   EnvironmentRetirementRequest:
+    description: >
+      An EnvironmentRetirementRequest is used to retire an Environment that is no longer needed.
+      required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -97,8 +113,11 @@ entities:
           the server in responses to GET. The kind property must be set by the client on POST, 
           and must not be set by the client on PATCH. (PUT is not supported) 
         type: string
-        enum: [EnvironmentStopRequest]    
+        enum: [EnvironmentRetirementRequest]    
   EnvironmentStopRequest:
+    description: >
+      An EnvironmentStopRequest is used to delete the runtime infrastructure
+      required by an Environment. It can only be used if the requested_state of the Environment is running
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -110,6 +129,14 @@ entities:
         type: string
         enum: [EnvironmentStopRequest]    
   Deployment:
+    description: >
+      A deployment represents a set of running instances of the same component. Each deployment runs in an environment. Depending on the context, a deployment might correspond to:
+      
+      - An auto-scaling group for Message Processors running in an AWS region
+      - A Kubernetes replicationController in a Kubernetes namespace/cluster
+      - The deployment of a single customer proxy in an Edge environment.
+      
+       The Deployment Service stores Deployments that are currently (intended to be) running, but also stores Deployments that once ran, and Deployments that will run in the future.
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -144,7 +171,7 @@ entities:
           requested_state by POSTing requests to the URL in the requests property. 
         type: string
         readOnly: true
-        enum: [initial, started, stopped, offline, online, temporarily_online]
+        enum: [initial, stopped, offline, online, temporarily_online]
       requested_replicas:
         type: integer
         readOnly: true
@@ -184,6 +211,10 @@ entities:
             #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
             #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest
   DeploymentStartRequest:
+    description: >
+      An DeploymentStartRequest is used to initiate the creation of the runtime infrastructure
+      required by an Deployment. It can only be used if the requested_state of the Deployment is initial or stopped.
+      A successful DeploymentStartRequest will change the requested_state of the Deployment to offline
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -197,6 +228,10 @@ entities:
       replicas:
         type: integer
   DeploymentStopRequest:
+    description: >
+      An DeploymentStopRequest is used to delete the runtime infrastructure
+      required by an Deployment. It can only be used if the requested_state of the Deployment is offline
+      A successful DeploymentStopRequest will change the requested_state of the Deployment to stopped
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -208,6 +243,10 @@ entities:
         type: string
         enum: [DeploymentStopRequest]    
   DeploymentOfflineRequest:
+    description: >
+      An DeploymentOfflineRequest is used to stop any traffic going to [instances of] the deployment.
+      It can only be used if the requested_state of the Deployment is online.
+      A successful DeploymentStopRequest will change the requested_state of the Deployment to offline
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -219,6 +258,11 @@ entities:
         type: string
         enum: [DeploymentOfflineRequest]    
   DeploymentOnlineRequest:
+    description: >
+      An DeploymentOnlineRequest is used to direct traffic to a deployment. The optional hosts and 
+      percentage properties can be used to control which traffic and how much of it.
+      A successful DeploymentOnlineRequest will change the requested_state of the Deployment to online.
+      DeploymentOnlineRequest can only be used if the requested_state of the Deployment is offline.
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -236,6 +280,13 @@ entities:
         minimum: 0
         maximum: 100
   DeploymentStatisticsRequest:
+    description: >
+      An DeploymentStatisticsRequest is direct traffic for to a deployment for a limited period of time.
+      A DeploymentStatisticsRequest is like a DeploymentOnlineRequest that times out. During a DeploymentStatisticsRequest
+      the requested_state of the Deployment will be set to temporarily_online. At the end of successful 
+      DeploymentStatisticsRequest, the requested_state will revert to offline.
+      A successful DeploymentStopRequest will change the requested_state of the Deployment back to offline.
+      DeploymenStatisticsRequest can only be used if the requested_state of the Deployment is offline.
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -262,6 +313,10 @@ entities:
         relationship: '#StatisticsResults'
     readOnly: true
   DeploymentScalingRequest:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -276,6 +331,10 @@ entities:
         type: integer
     readOnly: true
   DeploymentRetirementRequest:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -287,6 +346,10 @@ entities:
         type: string
         enum: [DeploymentRetirementRequest]    
   System:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -317,6 +380,10 @@ entities:
           multiplicity: 0:n
           entities: '#Component'
   Component:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -336,6 +403,10 @@ entities:
           multiplicity: 0:n
           entities: '#Revision'
   Revision:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/PersistentResource'
     properties:
@@ -355,9 +426,17 @@ entities:
           multiplicity: 0:n
           entities: '#Deployment'        
   StatisticsResults:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     type: object
     readOnly: true
   Apigee:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     readonly: true
     well_known_URLs: /
     query_paths: systems environments components revisions
@@ -395,10 +474,18 @@ entities:
           multiplicity: 0:n
           entities: '#Revision'
   MultiValuedRelationship:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     oneOf:
     - $ref: '#/entities/Collection'
     - $ref: '#/entities/Page'      
   Collection:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/Resource'
     properties:
@@ -428,6 +515,10 @@ entities:
       enum: ['ascending', 'descending']
     readOnly: true
   Page:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
     allOf:
     - $ref: '#/entities/Resource'
     properties:
