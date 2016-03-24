@@ -9,16 +9,20 @@ class HTMLGenerator(object):
         rslt = property.get('description', '')
         return rslt
     
+    def create_link(self, name):
+        return '<a href="{}">{}</a>'.format(name, name[1:])
+    
     def generate_property_type(self, property):
         if 'relationship' in property:
             relationship = property['relationship']
             if isinstance(relationship, basestring):
-                entities = relationship
+                entity_urls = relationship.split()
                 multiplicity = '0:1'
             else:
-                entities = relationship['entities']
+                entity_urls = relationship['entities'].split()
                 multiplicity = relationship.get('multiplicity', '0:1')
-            return '%s(%s)' % (multiplicity, entities)
+            entity_links = [self.create_link(entity_url) for entity_url in entity_urls]
+            return '%s(%s)' % (multiplicity, ' '.join(entity_links))
         type = property.get('type', '')
         if type == 'array':
             items = property['items']
@@ -60,6 +64,9 @@ class HTMLGenerator(object):
             rslt += self.generate_properties_table(properties)
         return rslt
     
+    def create_anchor(self, name):
+        return '<a name="{0}"></a>{0}'.format(name)
+    
     def generate_entity_rows(self, entities):
         rslt = ''
         for entity_name, entity in entities.iteritems():
@@ -67,7 +74,7 @@ class HTMLGenerator(object):
           <tr>
             <td>%s</td>
             <td>%s            </td>
-          </tr>\n''' % (entity_name, self.generate_entity_cell(entity))
+          </tr>\n''' % (self.create_anchor(entity_name), self.generate_entity_cell(entity))
         return rslt
 
     def generate_entities_table(self, spec):

@@ -20,7 +20,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>Environment</td>
+            <td><a name="Environment"></a>Environment</td>
             <td>An environment represents a set of running components accessible at a single domain name or IP address. Depending on the context, an environment might correspond to: <ul>
   <li> A set of Apigee Message Processors that handle the same set of customer domain names. (This is similar to the existing Apigee "pod" concept)</li>
   <li> A set of customer proxies deployed to the same Apigee "environment" </li>
@@ -45,13 +45,13 @@
                   </tr>
                   <tr>
                     <td>realizes</td>
-                    <td>0:1(#System)</td>
+                    <td>0:1(<a href="#System">System</a>)</td>
                     <td>The the URI of the System of which this Environment is a running examplar.  This property is always set by the server in responses to GET. It must be set by the client on POST, and may only be set by the client on PATCH if the requested_state is initial. (PUT is not supported) 
                     </td>
                   </tr>
                   <tr>
                     <td>comprises</td>
-                    <td>0:n(#Deployment)</td>
+                    <td>0:n(<a href="#Deployment">Deployment</a>)</td>
                     <td>The URI of the collection of Deployments that are part of this Environment.  This property is always set by the server, and is readOnly for the client 
                     </td>
                   </tr>
@@ -79,7 +79,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n(#EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest)</td>
+                    <td>0:n(<a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>)</td>
                     <td>The  URI of the collection of Requests for this Environment. New requests can be POSTed  to this collection to change the requested (desired) state of the Environment. These requests will typically change the state of the runtime. Valid request types are: EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
                     </td>
                   </tr>
@@ -88,7 +88,7 @@
           </tr>
 
           <tr>
-            <td>EnvironmentStartRequest</td>
+            <td><a name="EnvironmentStartRequest"></a>EnvironmentStartRequest</td>
             <td>An EnvironmentStartRequest is used to initiate the creation of the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
 
               <table class="table">
@@ -111,7 +111,7 @@
           </tr>
 
           <tr>
-            <td>EnvironmentRetirementRequest</td>
+            <td><a name="EnvironmentRetirementRequest"></a>EnvironmentRetirementRequest</td>
             <td>An EnvironmentRetirementRequest is used to retire an Environment that is no longer needed. required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
 
               <table class="table">
@@ -134,7 +134,7 @@
           </tr>
 
           <tr>
-            <td>EnvironmentStopRequest</td>
+            <td><a name="EnvironmentStopRequest"></a>EnvironmentStopRequest</td>
             <td>An EnvironmentStopRequest is used to delete the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is running
 
               <table class="table">
@@ -157,7 +157,7 @@
           </tr>
 
           <tr>
-            <td>Deployment</td>
+            <td><a name="Deployment"></a>Deployment</td>
             <td>A deployment represents a set of running instances of the same component. Each deployment runs in an environment. Depending on the context, a deployment might correspond to: <ul>
   <li> An auto-scaling group for Message Processors running in an AWS region </li>
   <li> A Kubernetes replicationController in a Kubernetes namespace/cluster </li>
@@ -182,13 +182,13 @@
                   </tr>
                   <tr>
                     <td>deploys</td>
-                    <td>0:1(#Revision)</td>
+                    <td>0:1(<a href="#Revision">Revision</a>)</td>
                     <td>The URI of the Revision that the deployment executes. This property is always set by the  server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
                     </td>
                   </tr>
                   <tr>
                     <td>runs_in</td>
-                    <td>0:1(#Environment)</td>
+                    <td>0:1(<a href="#Environment">Environment</a>)</td>
                     <td>The URI of the Environment that the deployment is part of. This property is always set by  the server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
                     </td>
                   </tr>
@@ -221,8 +221,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n(#DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest  #DeploymentStatisticsRequest #DeploymentScalingRequest #DeploymentRetirementRequest
-)</td>
+                    <td>0:n(<a href="#DeploymentStartRequest">DeploymentStartRequest</a> <a href="#DeploymentStopRequest">DeploymentStopRequest</a> <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>)</td>
                     <td>The URI of the collection of Requests for this Deployment. New requests can be POSTed to this  collection to change the requested (desired) state of the Deployment. These requests will  typically change the state of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
                     </td>
                   </tr>
@@ -231,7 +230,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentStartRequest</td>
+            <td><a name="DeploymentStartRequest"></a>DeploymentStartRequest</td>
             <td>An DeploymentStartRequest is used to initiate the creation of the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is initial or stopped. A successful DeploymentStartRequest will change the requested_state of the Deployment to offline
 
               <table class="table">
@@ -259,7 +258,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentStopRequest</td>
+            <td><a name="DeploymentStopRequest"></a>DeploymentStopRequest</td>
             <td>An DeploymentStopRequest is used to delete the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is offline A successful DeploymentStopRequest will change the requested_state of the Deployment to stopped
 
               <table class="table">
@@ -282,7 +281,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentOfflineRequest</td>
+            <td><a name="DeploymentOfflineRequest"></a>DeploymentOfflineRequest</td>
             <td>An DeploymentOfflineRequest is used to stop any traffic going to [instances of] the deployment. It can only be used if the requested_state of the Deployment is online. A successful DeploymentStopRequest will change the requested_state of the Deployment to offline
 
               <table class="table">
@@ -305,7 +304,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentOnlineRequest</td>
+            <td><a name="DeploymentOnlineRequest"></a>DeploymentOnlineRequest</td>
             <td>An DeploymentOnlineRequest is used to direct traffic to a deployment. The optional hosts and  percentage properties can be used to control which traffic and how much of it. A successful DeploymentOnlineRequest will change the requested_state of the Deployment to online. DeploymentOnlineRequest can only be used if the requested_state of the Deployment is offline.
 
               <table class="table">
@@ -338,7 +337,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentStatisticsRequest</td>
+            <td><a name="DeploymentStatisticsRequest"></a>DeploymentStatisticsRequest</td>
             <td>A DeploymentStatisticsRequest is used to direct traffic to a deployment for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest that times out. During a DeploymentStatisticsRequest the requested_state of the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest, the requested_state will revert to offline. A successful DeploymentStopRequest will change the requested_state of the Deployment back to offline. DeploymenStatisticsRequest can only be used if the requested_state of the Deployment is offline.
 
               <table class="table">
@@ -378,7 +377,7 @@
                   </tr>
                   <tr>
                     <td>results</td>
-                    <td>0:1(#StatisticsResults)</td>
+                    <td>0:1(<a href="#StatisticsResults">StatisticsResults</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -386,7 +385,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentScalingRequest</td>
+            <td><a name="DeploymentScalingRequest"></a>DeploymentScalingRequest</td>
             <td>A DeploymentScalingRequest is used to increase or decrease the number of replicas associated with a deployment
               <table class="table">
                 <thead>
@@ -413,7 +412,7 @@
           </tr>
 
           <tr>
-            <td>DeploymentRetirementRequest</td>
+            <td><a name="DeploymentRetirementRequest"></a>DeploymentRetirementRequest</td>
             <td>A DeploymentScalingRequest is used to mark a Deployment as no longer being current. After a Deployment has been marked as retired, it can be deleted, or it can be kept around as a historic record.
 
               <table class="table">
@@ -436,7 +435,7 @@
           </tr>
 
           <tr>
-            <td>System</td>
+            <td><a name="System"></a>System</td>
             <td>A System represents a set of Components that work together. Systems are defined in development. Systems are deployed by creating Environments that run them. Multiple Environments may run the same System. 
 
               <table class="table">
@@ -456,13 +455,13 @@
                   </tr>
                   <tr>
                     <td>has_environments</td>
-                    <td>0:n(#Environment)</td>
+                    <td>0:n(<a href="#Environment">Environment</a>)</td>
                     <td>The value of the has_environments property is the URI of the collection of Environments where this System is deployed.  New Environments can be POSTed to this collection—alternatively,  a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
                     </td>
                   </tr>
                   <tr>
                     <td>has_components</td>
-                    <td>0:n(#Component)</td>
+                    <td>0:n(<a href="#Component">Component</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -470,7 +469,7 @@
           </tr>
 
           <tr>
-            <td>Component</td>
+            <td><a name="Component"></a>Component</td>
             <td>A Component is a unit of implementation that can be indpeendently deployed. Components are aggregated into systems. Components are deployed by creating a Deployment entity inside some Environment for a particular Revision of the Component, and then issuing a DeploymentStartRequest for that Deployment.  
 
               <table class="table">
@@ -489,12 +488,12 @@
                   </tr>
                   <tr>
                     <td>is_component_of</td>
-                    <td>0:1(#System)</td>
+                    <td>0:1(<a href="#System">System</a>)</td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>has_revisions</td>
-                    <td>0:n(#Revision)</td>
+                    <td>0:n(<a href="#Revision">Revision</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -502,7 +501,7 @@
           </tr>
 
           <tr>
-            <td>Revision</td>
+            <td><a name="Revision"></a>Revision</td>
             <td>Revisions model successive snapshots of an implementation Component, as produced by a Development organization. 
 
               <table class="table">
@@ -521,12 +520,12 @@
                   </tr>
                   <tr>
                     <td>revises</td>
-                    <td>0:1(#Component)</td>
+                    <td>0:1(<a href="#Component">Component</a>)</td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>has_deployments</td>
-                    <td>0:n(#Deployment)</td>
+                    <td>0:n(<a href="#Deployment">Deployment</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -534,13 +533,13 @@
           </tr>
 
           <tr>
-            <td>StatisticsResults</td>
+            <td><a name="StatisticsResults"></a>StatisticsResults</td>
             <td>A StatisiticsResult is an entity that holds the metrics produced during a DeploymenStatisticsRequest. 
             </td>
           </tr>
 
           <tr>
-            <td>Apigee</td>
+            <td><a name="Apigee"></a>Apigee</td>
             <td>An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
 
               <table class="table">
@@ -554,22 +553,22 @@
                 <tbody>
                   <tr>
                     <td>systems</td>
-                    <td>0:n(#System)</td>
+                    <td>0:n(<a href="#System">System</a>)</td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td>0:n(#Environment)</td>
+                    <td>0:n(<a href="#Environment">Environment</a>)</td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>components</td>
-                    <td>0:n(#Component)</td>
+                    <td>0:n(<a href="#Component">Component</a>)</td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>revisions</td>
-                    <td>0:n(#Revision)</td>
+                    <td>0:n(<a href="#Revision">Revision</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -577,13 +576,13 @@
           </tr>
 
           <tr>
-            <td>MultiValuedRelationship</td>
+            <td><a name="MultiValuedRelationship"></a>MultiValuedRelationship</td>
             <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
             </td>
           </tr>
 
           <tr>
-            <td>Collection</td>
+            <td><a name="Collection"></a>Collection</td>
             <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
 
               <table class="table">
@@ -610,7 +609,7 @@
           </tr>
 
           <tr>
-            <td>Page</td>
+            <td><a name="Page"></a>Page</td>
             <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
 
               <table class="table">
@@ -642,7 +641,7 @@
           </tr>
 
           <tr>
-            <td>Resource</td>
+            <td><a name="Resource"></a>Resource</td>
             <td>
               <table class="table">
                 <thead>
@@ -668,7 +667,7 @@
           </tr>
 
           <tr>
-            <td>PersistentResource</td>
+            <td><a name="PersistentResource"></a>PersistentResource</td>
             <td>
               <table class="table">
                 <thead>
