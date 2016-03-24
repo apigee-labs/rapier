@@ -531,6 +531,7 @@ class OASValidator(object):
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
+        return self.rapier_spec, self.errors
 
     def marked_load(self, stream):
         def construct_mapping(loader, node):

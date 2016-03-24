@@ -14,12 +14,12 @@ entities:
   Environment:
     description: >
       An environment represents a set of running components accessible at a single domain name or IP address. Depending on the context, an environment might correspond to:
-      
-      - A set of Apigee Message Processors that handle the same set of customer domain names. (This is similar to the existing Apigee "pod" concept)
-      - A set of customer proxies deployed to the same Apigee "environment"
-      - A set of Apigee routers deployed to the same AWS region/AZ
-      - A Kubernetes cluster or namespace dedicated to a domain name belonging to an Apigee customer or Apigee itself.
-      
+      <ul>
+        <li> A set of Apigee Message Processors that handle the same set of customer domain names. (This is similar to the existing Apigee "pod" concept)</li>
+        <li> A set of customer proxies deployed to the same Apigee "environment" </li>
+        <li> A set of Apigee routers deployed to the same AWS region/AZ </li>
+        <li> A Kubernetes cluster or namespace dedicated to a domain name belonging to an Apigee customer or Apigee itself. </li>
+      </ul>
       The state of an Environment is controlled by POSTing requests to the URL provided in its requests property
       The Deployment Service stores Environments that are currently (intended to be) running, but also stores Environments that once ran, and Environments that will run in the future.
     allOf:
@@ -135,11 +135,11 @@ entities:
   Deployment:
     description: >
       A deployment represents a set of running instances of the same component. Each deployment runs in an environment. Depending on the context, a deployment might correspond to:
-      
-      - An auto-scaling group for Message Processors running in an AWS region
-      - A Kubernetes replicationController in a Kubernetes namespace/cluster
-      - The deployment of a single customer proxy in an Edge environment.
-      
+      <ul>
+        <li> An auto-scaling group for Message Processors running in an AWS region </li>
+        <li> A Kubernetes replicationController in a Kubernetes namespace/cluster </li>
+        <li> The deployment of a single customer proxy in an Edge environment. </li>
+      </ul>
        The Deployment Service stores Deployments that are currently (intended to be) running, but also stores Deployments that once ran, and Deployments that will run in the future.
     allOf:
     - $ref: '#/entities/PersistentResource'
