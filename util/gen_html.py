@@ -94,8 +94,7 @@ class HTMLGenerator(object):
         
     def generate_html(self, spec):
         entities = spec.get('entities')
-        rslt = '''
-<!DOCTYPE html>
+        rslt = '''<!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
