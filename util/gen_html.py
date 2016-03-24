@@ -9,14 +9,33 @@ class HTMLGenerator(object):
         rslt = property.get('description', '')
         return rslt
     
+    def generate_property_type(self, property):
+        if 'relationship' in property:
+            relationship = property['relationship']
+            if isinstance(relationship, basestring):
+                entities = relationship
+                multiplicity = '0:1'
+            else:
+                entities = relationship['entities']
+                multiplicity = relationship.get('multiplicity', '0:1')
+            return '%s(%s)' % (multiplicity, entities)
+        type = property.get('type', '')
+        if type == 'array':
+            items = property['items']
+            rslt = 'array(%s)' % self.generate_property_type(items)
+        else:
+            rslt = type
+        return rslt
+    
     def generate_property_rows(self, properties):
         rslt = ''
         for property_name, property in properties.iteritems():
             rslt += '''
                   <tr>
                     <td>%s</td>
+                    <td>%s</td>
                     <td>%s                    </td>
-                  </tr>''' % (property_name, self.generate_property_cell(property))
+                  </tr>''' % (property_name, self.generate_property_type(property), self.generate_property_cell(property))
         return rslt
 
     def generate_properties_table(self, properties):
@@ -26,6 +45,7 @@ class HTMLGenerator(object):
                 <thead>
                   <tr>
                     <th>Property Name</th>
+                    <th>Property Type</th>
                     <th>Property Description</th>
                   </tr>
                 </thead>
