@@ -1,5 +1,13 @@
 swagger: '2.0'
 info:
+  description: 'This service implements the entities that are needed to perform deployments
+    of software. The same service is used to deploy customer software (proxies/bundles/Node.js
+    apps)  to the Apigee cloud as well as Apigee infrastructure components (message
+    processors, routers, SSO, Edge management server and so on) to the AWS cloud.
+    In the future, this service will support deployment of both customer software
+    and Apigee software to an Apigee-managed Kubernetes cloud.
+
+    '
   title: Deployment Service API
   version: '0.1'
 consumes:
@@ -488,6 +496,7 @@ definitions:
       (that is, an Environment that contains Apigee''s own software)
 
       '
+    readOnly: true
     properties:
       systems:
         format: uri
@@ -613,47 +622,6 @@ x-interfaces:
           $ref: '#/responses/404'
         '406':
           $ref: '#/responses/406'
-        default:
-          $ref: '#/responses/default'
-    patch:
-      consumes:
-      - application/merge-patch+json
-      description: Update an Apigee entity
-      parameters:
-      - $ref: '#/parameters/If-Match'
-      - description: The subset of properties of the Apigee being updated
-        in: body
-        name: body
-        schema:
-          $ref: '#/definitions/Apigee'
-      responses:
-        '200':
-          description: successful
-          headers:
-            Content-Location:
-              description: perma-link URL of resource
-              type: string
-            Content-Type:
-              description: The media type of the returned body
-              type: string
-            ETag:
-              description: this value must be echoed in the If-Match header of every
-                PATCH or PUT
-              type: string
-          schema:
-            $ref: '#/definitions/Apigee'
-        '400':
-          $ref: '#/responses/400'
-        '401':
-          $ref: '#/responses/401'
-        '403':
-          $ref: '#/responses/403'
-        '404':
-          $ref: '#/responses/404'
-        '406':
-          $ref: '#/responses/406'
-        '409':
-          $ref: '#/responses/409'
         default:
           $ref: '#/responses/default'
     head:

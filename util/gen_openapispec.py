@@ -85,6 +85,9 @@ class OASGenerator(object):
         self.openapispec['responses'] = dict()
         self.openapispec['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
+        description = spec.get('description')
+        if description is not None:
+            self.openapispec['info']['description'] = description
 
         if 'entities' in spec:
             entities = spec['entities']

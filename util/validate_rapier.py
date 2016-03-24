@@ -449,6 +449,10 @@ class OASValidator(object):
         else:
             if not isinstance(consumes, basestring):
                 self.error('relationship consumes must be a list, string or relationship_consumes object: %s' % consumes, key)
+                
+    def validate_rapier_description(self, key, description):
+        if not isinstance(description, basestring):
+            self.error('description must be a string: %s' % description, key)
     
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -459,7 +463,8 @@ class OASValidator(object):
         'produces': validate_rapier_produces,
         'securityDefinitions': validate_rapier_security_definitions,
         'security': validate_rapier_security,
-        'implementation_private_information': validate_implementation_private_information}
+        'implementation_private_information': validate_implementation_private_information,
+        'description': validate_rapier_description}
     schema_keywords =  {
         'id': validate_id, 
         'type': validate_property_type, 
