@@ -45,7 +45,7 @@ class HTMLGenerator(object):
     def generate_properties_table(self, properties):
         property_rows = self.generate_property_rows(properties)
         return '''
-              <table class="table">
+              <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th>Property Name</th>
@@ -81,7 +81,7 @@ class HTMLGenerator(object):
         entities = spec.get('entities')
         entity_rows = self.generate_entity_rows(entities) if entities is not None else ''
         return \
-'''    <table class="table table.striped table.bordered">
+'''    <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Entity Name</th>
@@ -99,8 +99,6 @@ class HTMLGenerator(object):
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -119,9 +117,8 @@ class HTMLGenerator(object):
 
 def main(args):
     validator = validate_rapier.OASValidator()
-    validator.set_rapier_spec_from_filename(*args)
 
-    spec, errors = validator.validate()
+    spec, errors = validator.validate(*args)
     if errors == 0:
         html_generator = HTMLGenerator()
         entities = spec.get('entities')
