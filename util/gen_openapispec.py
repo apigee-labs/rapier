@@ -39,7 +39,7 @@ class OASGenerator(object):
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
         self.suppress_annotations = '--suppress-annotations' in self.opts_keys or '-s' in self.opts_keys
 
-    def openapispec_from_rapier(self, filename= None):
+    def openAPI_spec_from_rapier(self, filename= None):
         if filename:
             self.set_rapier_spec_from_filename(filename)
         spec = self.rapier_spec 
@@ -1298,7 +1298,10 @@ def main(args):
     if False: #'--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
-    print str.replace(yaml.dump(generator.openapispec_from_rapier(*args), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
+    openAPI_spec = generator.openAPI_spec_from_rapier(*args)
+    openAPI_spec_yaml = yaml.dump(openAPI_spec, default_flow_style=False, Dumper=Dumper)
+    openAPI_spec_yaml = str.replace(openAPI_spec_yaml, "'<<':", '<<:')
+    print openAPI_spec_yaml
     
 def article(name):
     return 'an' if name[0].lower() in 'aeiou' else 'a'
