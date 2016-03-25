@@ -22,7 +22,7 @@ class HTMLGenerator(object):
                 entity_urls = relationship['entities'].split()
                 multiplicity = relationship.get('multiplicity', '0:1')
             entity_links = [self.create_link(entity_url) for entity_url in entity_urls]
-            return '%s(%s)' % (multiplicity, ' '.join(entity_links))
+            return '%s (%s)' % (multiplicity, ' '.join(entity_links))
         type = property.get('type', '')
         if type == 'array':
             items = property['items']
