@@ -2,36 +2,14 @@
 
 import yaml, sys, getopt, itertools, string, re
 from collections import OrderedDict
-
-class PresortedList(list):
-    def sort(self, *args, **kwargs):
-        pass
-
-class PresortedOrderedDict(OrderedDict):
-    def items(self, *args, **kwargs):
-        return PresortedList(OrderedDict.items(self, *args, **kwargs))
-
-def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=PresortedOrderedDict):
-    class OrderedLoader(Loader):
-        pass
-    def construct_mapping(loader, node):
-        loader.flatten_mapping(node)
-        return object_pairs_hook(loader.construct_pairs(node))
-    OrderedLoader.add_constructor(
-        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
-        construct_mapping)
-    return yaml.load(stream, OrderedLoader)
+import validate_rapier
+from validate_rapier import PresortedOrderedDict
 
 class OASGenerator(object):
 
     def __init__(self):
         pass
 
-    def set_rapier_spec_from_filename(self, filename):
-        self.filename = filename
-        with open(filename) as f:
-            self.rapier_spec = ordered_load(f.read(), yaml.SafeLoader)
-            
     def set_opts(self, opts):
         self.opts = opts
         self.opts_keys = [k for k,v in opts]
@@ -39,10 +17,13 @@ class OASGenerator(object):
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
         self.suppress_annotations = '--suppress-annotations' in self.opts_keys or '-s' in self.opts_keys
 
-    def openAPI_spec_from_rapier(self, filename= None):
-        if filename:
-            self.set_rapier_spec_from_filename(filename)
-        spec = self.rapier_spec 
+    def openAPI_spec_from_rapier(self, filename):
+        validator = validate_rapier.OASValidator()
+        spec, errors = validator.validate(filename)
+        if errors > 0:
+            sys.exit('Validation of %s failed. OpenAPI spec genenration not attempted' % filename)
+        else:
+            self.rapier_spec = spec
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
@@ -1298,6 +1279,8 @@ def main(args):
     if False: #'--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
+    Dumper.add_representer(validate_rapier.unicode_node, yaml.representer.SafeRepresenter.represent_unicode)
+    Dumper.add_representer(validate_rapier.list_node, yaml.representer.SafeRepresenter.represent_list)
     openAPI_spec = generator.openAPI_spec_from_rapier(*args)
     openAPI_spec_yaml = yaml.dump(openAPI_spec, default_flow_style=False, Dumper=Dumper)
     openAPI_spec_yaml = str.replace(openAPI_spec_yaml, "'<<':", '<<:')

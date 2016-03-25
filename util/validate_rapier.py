@@ -527,7 +527,10 @@ class OASValidator(object):
         elif entity_url not in self.entities:
             self.error('entity not found %s' % entity_url, key)
 
-    def validate(self):
+    def validate(self, filename):
+        self.filename = filename
+        with open(filename) as f:
+            self.rapier_spec = self.marked_load(f.read())
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
@@ -548,11 +551,6 @@ class OASValidator(object):
             construct_mapping)
         return MarkedLoader(stream).get_single_data()
         
-    def set_rapier_spec_from_filename(self, filename):
-        self.filename = filename
-        with open(filename) as f:
-            self.rapier_spec = self.marked_load(f.read())
-            
     def fatal_error(self, message):
         sys.exit(' '. join(['FATAL ERROR -', message, 'in', self.filename]))
 
@@ -570,9 +568,7 @@ class OASValidator(object):
 
 def main(args):
     validator = OASValidator()
-    validator.set_rapier_spec_from_filename(*args)
-
-    validator.validate()
+    validator.validate(*args)
     return validator.rapier_spec, validator.errors
 
 if __name__ == "__main__":
