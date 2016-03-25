@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+  <div class="container">
+    <div class="table-responsive">
+        <table class="table table.striped table.bordered">
+        <thead>
+            <tr>
+                <th>Entity Name</th>
+                <th>Entity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a name="Environment"></a>Environment</td>
+            <td>An environment represents a set of running components accessible at a single domain name or IP address. Depending on the context, an environment might correspond to: <ul>
+  <li> A set of Apigee Message Processors that handle the same set of customer domain names. (This is similar to the existing Apigee "pod" concept)</li>
+  <li> A set of customer proxies deployed to the same Apigee "environment" </li>
+  <li> A set of Apigee routers deployed to the same AWS region/AZ </li>
+  <li> A Kubernetes cluster or namespace dedicated to a domain name belonging to an Apigee customer or Apigee itself. </li>
+</ul> The state of an Environment is controlled by POSTing requests to the URL provided in its requests property The Deployment Service stores Environments that are currently (intended to be) running, but also stores Environments that once ran, and Environments that will run in the future.
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>realizes</td>
+                    <td>0:1(<a href="#System">System</a>)</td>
+                    <td>The the URI of the System of which this Environment is a running examplar.  This property is always set by the server in responses to GET. It must be set by the client on POST, and may only be set by the client on PATCH if the requested_state is initial. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>comprises</td>
+                    <td>0:n(<a href="#Deployment">Deployment</a>)</td>
+                    <td>The URI of the collection of Deployments that are part of this Environment.  This property is always set by the server, and is readOnly for the client 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>domain_name</td>
+                    <td>string</td>
+                    <td>The URI of the domain name at which this Environment can be found.                    </td>
+                  </tr>
+                  <tr>
+                    <td>description</td>
+                    <td>string</td>
+                    <td>A description of the Environment                    </td>
+                  </tr>
+                  <tr>
+                    <td>requested_state</td>
+                    <td>string</td>
+                    <td>The requested, or 'desired' state of the Environment. A string (URLs would be cooler)  representing the last requested state of the Deployment. This property is always set by  the server in responses to GET. It may never be set directly by the client. Clients affect  the value of requested_state by POSTing requests to the URL in the requests property. 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>valid_requests</td>
+                    <td>array(string)</td>
+                    <td>A list of valid requests given the current requested_state. This property is always set  by the server, and is readOnly for the client
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>requests</td>
+                    <td>0:n(<a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>)</td>
+                    <td>The  URI of the collection of Requests for this Environment. New requests can be POSTed  to this collection to change the requested (desired) state of the Environment. These requests will typically change the state of the runtime. Valid request types are: EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="EnvironmentStartRequest"></a>EnvironmentStartRequest</td>
+            <td>An EnvironmentStartRequest is used to initiate the creation of the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "EnvironmentStartRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="EnvironmentRetirementRequest"></a>EnvironmentRetirementRequest</td>
+            <td>An EnvironmentRetirementRequest is used to retire an Environment that is no longer needed. required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "EnvironmentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="EnvironmentStopRequest"></a>EnvironmentStopRequest</td>
+            <td>An EnvironmentStopRequest is used to delete the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is running
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "EnvironmentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Deployment"></a>Deployment</td>
+            <td>A deployment represents a set of running instances of the same component. Each deployment runs in an environment. Depending on the context, a deployment might correspond to: <ul>
+  <li> An auto-scaling group for Message Processors running in an AWS region </li>
+  <li> A Kubernetes replicationController in a Kubernetes namespace/cluster </li>
+  <li> The deployment of a single customer proxy in an Edge environment. </li>
+</ul>
+ The Deployment Service stores Deployments that are currently (intended to be) running, but also stores Deployments that once ran, and Deployments that will run in the future.
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "Deployment". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>deploys</td>
+                    <td>0:1(<a href="#Revision">Revision</a>)</td>
+                    <td>The URI of the Revision that the deployment executes. This property is always set by the  server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>runs_in</td>
+                    <td>0:1(<a href="#Environment">Environment</a>)</td>
+                    <td>The URI of the Environment that the deployment is part of. This property is always set by  the server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>requested_state</td>
+                    <td>string</td>
+                    <td>The requested, or 'desired' state of the Deployment. The value is a string (URLs would be cooler)  representing the last requested state of the Deployment. This property is always set by the server  in responses to GET. It may never be set directly by the client. Clients affect the value of  requested_state by POSTing requests to the URL in the requests property. 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>requested_replicas</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>requested_hosts</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>requested_percentage</td>
+                    <td>number</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>valid_requests</td>
+                    <td>array(string)</td>
+                    <td>A list of valid requests given the current requested_state. This property is always set  by the server, and is readOnly for the client
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>requests</td>
+                    <td>0:n(<a href="#DeploymentStartRequest">DeploymentStartRequest</a> <a href="#DeploymentStopRequest">DeploymentStopRequest</a> <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>)</td>
+                    <td>The URI of the collection of Requests for this Deployment. New requests can be POSTed to this  collection to change the requested (desired) state of the Deployment. These requests will  typically change the state of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentStartRequest"></a>DeploymentStartRequest</td>
+            <td>An DeploymentStartRequest is used to initiate the creation of the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is initial or stopped. A successful DeploymentStartRequest will change the requested_state of the Deployment to offline
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentStartRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>replicas</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentStopRequest"></a>DeploymentStopRequest</td>
+            <td>An DeploymentStopRequest is used to delete the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is offline A successful DeploymentStopRequest will change the requested_state of the Deployment to stopped
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentOfflineRequest"></a>DeploymentOfflineRequest</td>
+            <td>An DeploymentOfflineRequest is used to stop any traffic going to [instances of] the deployment. It can only be used if the requested_state of the Deployment is online. A successful DeploymentStopRequest will change the requested_state of the Deployment to offline
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentOfflineRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentOnlineRequest"></a>DeploymentOnlineRequest</td>
+            <td>An DeploymentOnlineRequest is used to direct traffic to a deployment. The optional hosts and  percentage properties can be used to control which traffic and how much of it. A successful DeploymentOnlineRequest will change the requested_state of the Deployment to online. DeploymentOnlineRequest can only be used if the requested_state of the Deployment is offline.
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentOnlineRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>hosts</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>percentage</td>
+                    <td>number</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentStatisticsRequest"></a>DeploymentStatisticsRequest</td>
+            <td>A DeploymentStatisticsRequest is used to direct traffic to a deployment for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest that times out. During a DeploymentStatisticsRequest the requested_state of the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest, the requested_state will revert to offline. A successful DeploymentStopRequest will change the requested_state of the Deployment back to offline. DeploymenStatisticsRequest can only be used if the requested_state of the Deployment is offline.
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentStatisticsRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>hosts</td>
+                    <td>string</td>
+                    <td>The value is a space-separated list of domain names or IP addresses. If this property is provided, then only traffic originating from those clients will be forwarded to this deployment. 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>percentage</td>
+                    <td>number</td>
+                    <td>If present, this value specifies the percentage of traffic this deployment should receive. If no value is given for this property, the instances correspopnding to this deployment will be added to the general load-balancer pool and so will receive traffic in proportion to the total number of instance or load, depending on the load-balancer algorithm. This property may be used in conjunction with the hosts field to select traffic based on both hostnames and percentages. 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>duration</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>state</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>results</td>
+                    <td>0:1(<a href="#StatisticsResults">StatisticsResults</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentScalingRequest"></a>DeploymentScalingRequest</td>
+            <td>A DeploymentScalingRequest is used to increase or decrease the number of replicas associated with a deployment
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentScalingRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>replicas</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="DeploymentRetirementRequest"></a>DeploymentRetirementRequest</td>
+            <td>A DeploymentScalingRequest is used to mark a Deployment as no longer being current. After a Deployment has been marked as retired, it can be deleted, or it can be kept around as a historic record.
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>This value must always be the string "DeploymentRetirementRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="System"></a>System</td>
+            <td>A System represents a set of Components that work together. Systems are defined in development. Systems are deployed by creating Environments that run them. Multiple Environments may run the same System. 
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>The value must always be the string "System". The kind property is always set by the server in responses to GET. The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>has_environments</td>
+                    <td>0:n(<a href="#Environment">Environment</a>)</td>
+                    <td>The value of the has_environments property is the URI of the collection of Environments where this System is deployed.  New Environments can be POSTed to this collection—alternatively,  a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>has_components</td>
+                    <td>0:n(<a href="#Component">Component</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Component"></a>Component</td>
+            <td>A Component is a unit of implementation that can be indpeendently deployed. Components are aggregated into systems. Components are deployed by creating a Deployment entity inside some Environment for a particular Revision of the Component, and then issuing a DeploymentStartRequest for that Deployment.  
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>is_component_of</td>
+                    <td>0:1(<a href="#System">System</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>has_revisions</td>
+                    <td>0:n(<a href="#Revision">Revision</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Revision"></a>Revision</td>
+            <td>Revisions model successive snapshots of an implementation Component, as produced by a Development organization. 
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>revises</td>
+                    <td>0:1(<a href="#Component">Component</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>has_deployments</td>
+                    <td>0:n(<a href="#Deployment">Deployment</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="StatisticsResults"></a>StatisticsResults</td>
+            <td>A StatisiticsResult is an entity that holds the metrics produced during a DeploymenStatisticsRequest. 
+            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Apigee"></a>Apigee</td>
+            <td>An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>systems</td>
+                    <td>0:n(<a href="#System">System</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>environments</td>
+                    <td>0:n(<a href="#Environment">Environment</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>components</td>
+                    <td>0:n(<a href="#Component">Component</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>revisions</td>
+                    <td>0:n(<a href="#Revision">Revision</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="MultiValuedRelationship"></a>MultiValuedRelationship</td>
+            <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Collection"></a>Collection</td>
+            <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>items</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Page"></a>Page</td>
+            <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>items</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>collection</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Resource"></a>Resource</td>
+            <td>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>self</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="PersistentResource"></a>PersistentResource</td>
+            <td>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>created</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>creator</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modified</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modifier</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+        </tbody>
+    </table>          
+    </div>
+  </div>
+
+</body>
+</html>
+
