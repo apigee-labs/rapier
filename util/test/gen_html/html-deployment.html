@@ -78,7 +78,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n (<a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>)</td>
+                    <td>0:n (<a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> or <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> or <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>)</td>
                     <td>The  URI of the collection of Requests for this Environment. New requests can be POSTed  to this collection to change the requested (desired) state of the Environment. These requests will typically change the state of the runtime. Valid request types are: EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
                     </td>
                   </tr>
@@ -220,7 +220,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n (<a href="#DeploymentStartRequest">DeploymentStartRequest</a> <a href="#DeploymentStopRequest">DeploymentStopRequest</a> <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>)</td>
+                    <td>0:n (<a href="#DeploymentStartRequest">DeploymentStartRequest</a> or <a href="#DeploymentStopRequest">DeploymentStopRequest</a> or <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> or <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> or <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> or <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> or <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>)</td>
                     <td>The URI of the collection of Requests for this Deployment. New requests can be POSTed to this  collection to change the requested (desired) state of the Deployment. These requests will  typically change the state of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
                     </td>
                   </tr>
