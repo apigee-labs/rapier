@@ -1292,14 +1292,13 @@ def main(args):
     except getopt.GetoptError as err:
         usage = '\nusage: gen_openapispec.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
         sys.exit(str(err) + usage)
-    generator.set_rapier_spec_from_filename(*args)
     generator.set_opts(opts)
     Dumper = CustomAnchorDumper
     opts_keys = [k for k,v in opts]
     if False: #'--yaml-alias' not in opts_keys and '-m' not in opts_keys:
         Dumper.ignore_aliases = lambda self, data: True
     Dumper.add_representer(PresortedOrderedDict, yaml.representer.SafeRepresenter.represent_dict)
-    print str.replace(yaml.dump(generator.openapispec_from_rapier(), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
+    print str.replace(yaml.dump(generator.openapispec_from_rapier(*args), default_flow_style=False, Dumper=Dumper), "'<<':", '<<:')
     
 def article(name):
     return 'an' if name[0].lower() in 'aeiou' else 'a'

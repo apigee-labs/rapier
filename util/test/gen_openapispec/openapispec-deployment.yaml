@@ -27,22 +27,18 @@ definitions:
   ErrorResponse:
     type: string
   Environment:
-    description: 'An environment represents a set of running components accessible
-      at a single domain name or IP address. Depending on the context, an environment
-      might correspond to:
-
-      - A set of Apigee Message Processors that handle the same set of customer domain
-      names. (This is similar to the existing Apigee "pod" concept) - A set of customer
-      proxies deployed to the same Apigee "environment" - A set of Apigee routers
-      deployed to the same AWS region/AZ - A Kubernetes cluster or namespace dedicated
-      to a domain name belonging to an Apigee customer or Apigee itself.
-
-      The state of an Environment is controlled by POSTing requests to the URL provided
-      in its requests property The Deployment Service stores Environments that are
-      currently (intended to be) running, but also stores Environments that once ran,
-      and Environments that will run in the future.
-
-      '
+    description: "An environment represents a set of running components accessible\
+      \ at a single domain name or IP address. Depending on the context, an environment\
+      \ might correspond to: <ul>\n  <li> A set of Apigee Message Processors that\
+      \ handle the same set of customer domain names. (This is similar to the existing\
+      \ Apigee \"pod\" concept)</li>\n  <li> A set of customer proxies deployed to\
+      \ the same Apigee \"environment\" </li>\n  <li> A set of Apigee routers deployed\
+      \ to the same AWS region/AZ </li>\n  <li> A Kubernetes cluster or namespace\
+      \ dedicated to a domain name belonging to an Apigee customer or Apigee itself.\
+      \ </li>\n</ul> The state of an Environment is controlled by POSTing requests\
+      \ to the URL provided in its requests property The Deployment Service stores\
+      \ Environments that are currently (intended to be) running, but also stores\
+      \ Environments that once ran, and Environments that will run in the future.\n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -171,12 +167,12 @@ definitions:
   Deployment:
     description: "A deployment represents a set of running instances of the same component.\
       \ Each deployment runs in an environment. Depending on the context, a deployment\
-      \ might correspond to:\n- An auto-scaling group for Message Processors running\
-      \ in an AWS region - A Kubernetes replicationController in a Kubernetes namespace/cluster\
-      \ - The deployment of a single customer proxy in an Edge environment.\n\n The\
-      \ Deployment Service stores Deployments that are currently (intended to be)\
-      \ running, but also stores Deployments that once ran, and Deployments that will\
-      \ run in the future.\n"
+      \ might correspond to: <ul>\n  <li> An auto-scaling group for Message Processors\
+      \ running in an AWS region </li>\n  <li> A Kubernetes replicationController\
+      \ in a Kubernetes namespace/cluster </li>\n  <li> The deployment of a single\
+      \ customer proxy in an Edge environment. </li>\n</ul>\n The Deployment Service\
+      \ stores Deployments that are currently (intended to be) running, but also stores\
+      \ Deployments that once ran, and Deployments that will run in the future.\n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -362,9 +358,19 @@ definitions:
         enum:
         - DeploymentStatisticsRequest
       hosts:
+        description: "The value is a space-separated list of domain names or IP addresses.\
+          \ If this property is provided, then only traffic originating from those\
+          \ clients will be forwarded to this deployment. \n"
         type: string
       percentage:
-        type: integer
+        description: "If present, this value specifies the percentage of traffic this\
+          \ deployment should receive. If no value is given for this property, the\
+          \ instances correspopnding to this deployment will be added to the general\
+          \ load-balancer pool and so will receive traffic in proportion to the total\
+          \ number of instance or load, depending on the load-balancer algorithm.\
+          \ This property may be used in conjunction with the hosts field to select\
+          \ traffic based on both hostnames and percentages. \n"
+        type: number
       duration:
         type: integer
       state:
