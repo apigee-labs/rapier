@@ -73,7 +73,7 @@ class OASGenerator(object):
         if 'entities' in spec:
             entities = spec['entities']
             self.interfaces = dict()
-            self.uri_map = {'#/entities/%s' % name: entity for name, entity in entities.iteritems()}
+            self.uri_map = validator.uri_map()
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             if 'implementation_private_information' in spec:
                 for entity_name, entity in spec['implementation_private_information'].iteritems():
@@ -125,7 +125,7 @@ class OASGenerator(object):
                         self.interfaces[rel_property_spec.interface_id()] = interface
                     else:
                         self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
-            for entity_name, entity_spec in entities.iteritems():
+            for entity_name, entity_spec in validator.entity_iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
             for entity_spec in entities.itervalues():
@@ -882,7 +882,7 @@ class OASGenerator(object):
             return [self.to_openapispec(i, entity_spec, property_name) for i in node]
         else:
             return node
-
+            
 class SegmentSpec(object):
             
     def __eq__(self, other):

@@ -13,6 +13,7 @@ from yaml.parser import Parser
 from yaml.constructor import Constructor, BaseConstructor, SafeConstructor
 from urlparse import urlsplit
 from numbers import Number
+from os import path
 
 class PresortedList(list):
     def sort(self, *args, **kwargs):
@@ -85,7 +86,7 @@ class OASValidator(object):
         self.errors = 0
         self.similarity_ratio = 0.7
         self.checked_id_uniqueness = False
-        self.validated_nodes = set()
+        self.external_spec_validators = dict()
 
     def validate_title(self, key, title):
         if not isinstance(title, basestring):
@@ -214,41 +215,21 @@ class OASValidator(object):
     def similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio() > self.similarity_ratio
     
-    def resolve_json_ref(self, json_ref, key):
-        # for now support only refs in the same document
-        if isinstance(json_ref, basestring):
-            if json_ref.startswith('#/'):
-                parts = json_ref[2:].split('/')
-                spec = self.rapier_spec
-                for part in parts:
-                    spec = spec.get(part)
-                    if spec is None:
-                        return self.error('json ref segment value not found: %s' % part, key)
-                return spec
-            else:
-                self.error('json ref value must begin with "#/": %s' % json_ref, key)
-        else:
-            self.error('json ref value must be a string: %s' % json_ref, key)
-
     def check_and_validate_keywords(self, keyword_validators, node, node_key):
         if hasattr(node, 'keys'):
-            if id(node) not in self.validated_nodes:
-                self.validated_nodes.add(id(node))
-                if '$ref' in node:
-                    ref_key = [item for item in node.iteritems() if item[0] == '$ref'][0][0]
-                    node = self.resolve_json_ref(node['$ref'], ref_key)
-                    if node is not None:
-                        self.check_and_validate_keywords(keyword_validators, node, node_key)
-                else:
-                    for key, value in node.iteritems():
-                        if key not in keyword_validators:
-                            similar_keywords = [keyword for keyword in keyword_validators.iterkeys() if self.similar(key, keyword)]
-                            message = 'unrecognized keyword %s at line %s, column %s' % (key, key.start_mark.line + 1, key.start_mark.column + 1)
-                            if similar_keywords:
-                                message += ' - did you mean %s?' % ' or '.join(similar_keywords)
-                            self.info(message)
-                        else:
-                            keyword_validators[key](self, key, value)        
+            if '$ref' in node:
+                ref_key = [item for item in node.iteritems() if item[0] == '$ref'][0][0]
+                node = self.resolve_json_ref(node['$ref'], ref_key)
+            else:
+                for key, value in node.iteritems():
+                    if key not in keyword_validators:
+                        similar_keywords = [keyword for keyword in keyword_validators.iterkeys() if self.similar(key, keyword)]
+                        message = 'unrecognized keyword %s' % key
+                        if similar_keywords:
+                            message += ' - did you mean %s?' % ' or '.join(similar_keywords)
+                        self.info(message, key)
+                    else:
+                        keyword_validators[key](self, key, value)        
         else:
             self.error('spec must be a map: %s' % spec, spec_key)
 
@@ -268,7 +249,7 @@ class OASValidator(object):
         if hasattr(relationship, 'keys'):
             self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship, key)
         elif isinstance(relationship, basestring):
-            self.check_and_validate_keywords(self.__class__.relationship_keywords, {'entities': relationship}, key)            
+            self.validate_relationship_entities(key, relationship)
         else:
             self.error('relationship must be a string or a map %s' % relationship)        
             
@@ -520,21 +501,87 @@ class OASValidator(object):
         'template': validate_permalink_template_template,
         'type': validate_permalink_template_type}
 
+    def resolve_external_url(self, entity_url):
+        abs_entity_url = path.abspath(path.join(self.abs_filename, entity_url))
+        if abs_entity_url not in self.external_spec_validators:
+            validator = OASValidator()
+            spec, errors = validator.validate(abs_entity_url)
+            if errors > 0:
+                self.fatal_error('errors reading file: %s' % abs_entity_url)
+            self.external_spec_validators[abs_entity_url] = validator
+        return self.external_spec_validators[abs_entity_url]
+
+    def resolve_json_ref(self, json_ref, key, spec=None):
+        if isinstance(json_ref, basestring):
+            if json_ref.startswith('#/'):
+                parts = json_ref[2:].split('/')
+                spec = spec or self.rapier_spec
+                for part in parts:
+                    spec = spec.get(part)
+                    if spec is None:
+                        return self.error('json ref segment value not found: %s' % part, key)
+                return spec
+            else:
+                if json_ref.startswith('..'):
+                    split_entity_uri_reference = json_ref.split('#')
+                    if len(split_entity_uri_reference) < 2:
+                        self.error('entity missing fragment %s' % entity_url, key)
+                    else:
+                        entity_url = split_entity_uri_reference[0]
+                        validator = self.resolve_external_url(split_entity_uri_reference[0])
+                        return self.resolve_json_ref(json_ref[len(entity_url):], key, validator.rapier_spec)
+                else:
+                    self.error('json ref value must begin with "#/" or "..": %s' % json_ref, key)
+        else:
+            self.error('json ref value must be a string: %s' % json_ref, key)
+
     def validate_entity_url(self, entity_url, key):
-        # in the future, handle URLs outisde the current document. for now assume fragment URLs
         if not isinstance(entity_url, basestring):
             self.error('entity URL must be a string %s' % entity_url, key)
-        elif entity_url not in self.entities:
-            self.error('entity not found %s' % entity_url, key)
+        else:
+            if entity_url.startswith('#'):
+                if entity_url not in self.entities:
+                    self.error('entity not found %s' % entity_url, key)
+            elif entity_url.startswith('..'):
+                split_entity_uri_reference = entity_url.split('#')
+                if len(split_entity_uri_reference) < 2:
+                    self.error('entity URL missing fragment %s' % entity_url, key)
+                else:
+                    vaidator = self.resolve_external_url(split_entity_uri_reference[0])
+                    entity_url_fragment = split_entity_uri_reference[1]
+                    if validator.rapier_spec.get('entities', {}).get(entity_url_fragment) is None:
+                        self.error('entity not found %s' % entity_url, key)
+            else:
+                self.error('entity not found %s' % entity_url, key)
 
     def validate(self, filename):
         self.filename = filename
-        with open(filename) as f:
-            self.rapier_spec = self.marked_load(f.read())
+        self.abs_filename = path.abspath(filename)
+        try:
+            with open(filename) as f:
+                self.rapier_spec = self.marked_load(f.read())
+        except IOError as e:
+            self.fatal_error('error reading file: %s %s' % (filename, e.strerror))
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
         return self.rapier_spec, self.errors
+
+    def entity_iteritems(self):
+        for entity_item in self.rapier_spec.get('entities', {}).iteritems():
+            yield entity_item
+        for validator in self.external_spec_validators.itervalues():
+            for entity_item in validator.entity_iteritems():
+                yield entity_item
+
+    def uri_map(self, base=''):
+        entities = self.rapier_spec.get('entities', {})
+        if base:
+            print >> sys.stderr, ['%s#/entities/%s' % (base, name) for name in entities.iterkeys()]
+        result = {'%s#/entities/%s' % (base, name): entity for name, entity in entities.iteritems()}
+        for base, validator in self.external_spec_validators.iteritems():
+            result.update(validator.uri_map(base))
+        return result
 
     def marked_load(self, stream):
         def construct_mapping(loader, node):
@@ -560,10 +607,14 @@ class OASValidator(object):
             message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['ERROR -', message, 'in', self.filename])
 
-    def warning(self, message):
+    def warning(self, message, key_node=None):
+        if key_node:
+            message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['WARNING -', message, 'in', self.filename])
 
-    def info(self, message):
+    def info(self, message, key_node=None):
+        if key_node:
+            message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['INFO -', message, 'in', self.filename])
 
 def main(args):

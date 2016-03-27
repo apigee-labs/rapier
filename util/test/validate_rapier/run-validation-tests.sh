@@ -13,6 +13,6 @@ cd $ROOT_DIR
 ./rapier/util/validate_rapier.py rapier/util/test/spec-hub.yaml
 ./rapier/util/validate_rapier.py rapier/util/test/ssl.yaml
 ./rapier/util/validate_rapier.py rapier/util/test/deployment.yaml
-#./rapier/util/validate_rapier.py rapier/util/test/site-webmaster.yaml
-#./rapier/util/validate_rapier.py rapier/util/test/deployment-primitives.yaml
-#./rapier/util/validate_rapier.py rapier/util/test/deployment-primitives-simplified.yaml
+./rapier/util/validate_rapier.py rapier/util/test/site-webmaster.yaml
+./rapier/util/validate_rapier.py rapier/util/test/deployment-primitives.yaml
+./rapier/util/validate_rapier.py rapier/util/test/deployment-primitives-simplified.yaml

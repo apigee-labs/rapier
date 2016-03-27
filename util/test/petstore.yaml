@@ -115,9 +115,9 @@ entities:
   Inventory:
     type: object
     additionalProperties:
-        type: string
-        format: uri
-        relationship: '#Pet'
+      type: string
+      format: uri
+      relationship: '#Pet'
   Session:
     type: object
     properties:
