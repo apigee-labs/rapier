@@ -65,7 +65,7 @@ class OASGenerator(object):
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()
-        self.openapispec['info']['title'] = spec['title'] if 'title' in spec else 'untitled'
+        self.openapispec['info']['title'] = spec.get('title', 'untitled')
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
         description = spec.get('description')
         if description is not None:

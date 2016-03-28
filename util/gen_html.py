@@ -18,8 +18,13 @@ class HTMLGenerator(object):
             if isinstance(relationship, basestring):
                 entity_urls = relationship.split()
                 multiplicity = '0:1'
+            elif isinstance(relationship, list):
+                entity_urls = relationship
+                multiplicity = '0:1'                
             else:
-                entity_urls = relationship['entities'].split()
+                entity_urls = relationship['entities']
+                if isinstance(entity_urls, basestring):
+                    entity_urls = entity_urls.split()
                 multiplicity = relationship.get('multiplicity', '0:1')
             entity_links = [self.create_link(entity_url) for entity_url in entity_urls]
             return '%s (%s)' % (multiplicity, ' or '.join(entity_links))
@@ -116,14 +121,17 @@ class HTMLGenerator(object):
         return rslt
 
 def main(args):
-    validator = validate_rapier.OASValidator()
+    try:
+        validator = validate_rapier.OASValidator()
 
-    spec, errors = validator.validate(*args)
-    if errors == 0:
-        html_generator = HTMLGenerator()
-        entities = spec.get('entities')
-        rslt = html_generator.generate_html(spec)
-        print rslt
+        spec, errors = validator.validate(*args)
+        if errors == 0:
+            html_generator = HTMLGenerator()
+            entities = spec.get('entities')
+            rslt = html_generator.generate_html(spec)
+            print rslt
+    except Exception as e:
+        print >>sys.stderr, 'HTML generation of %s failed' % args
 
 if __name__ == "__main__":
     main(sys.argv[1:])

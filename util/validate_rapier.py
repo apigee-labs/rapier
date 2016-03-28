@@ -101,12 +101,13 @@ class OASValidator(object):
     def check_id_uniqueness(self):
         self.entities = {}
         for name, entity in self.rapier_spec.get('entities',{}).iteritems():
-            id = self.abs_url(entity.get('id', '#%s'%name))
-            if id in self.entities:
-                self.info('information about %s is provided in multiple places - is this what you meant?' % id)
-            else:
-                self.entities[id] = entity
-                self.entities[self.abs_url('#/entities/%s' % name)] = entity
+            if entity is not None:
+                id = self.abs_url(entity.get('id', '#%s'%name))
+                if id in self.entities:
+                    self.info('information about %s is provided in multiple places - is this what you meant?' % id)
+                else:
+                    self.entities[id] = entity
+                    self.entities[self.abs_url('#/entities/%s' % name)] = entity
         self.checked_id_uniqueness = True
             
     def validate_entities(self, node, key, entities):
@@ -239,7 +240,7 @@ class OASValidator(object):
                         else:
                             keyword_validators[key](self, node, key, value)        
         else:
-            self.error('spec must be a map: %s' % spec, spec_key)
+            self.error('node must be a map: %s' % node, node_key)
 
     def validate_property_type(self, node, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
@@ -580,7 +581,6 @@ class OASValidator(object):
             with open(filename) as f:
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
-            1/0
             self.fatal_error('error reading file: %s %s' % (filename, e.strerror))
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
@@ -605,12 +605,13 @@ class OASValidator(object):
                 else:
                     entities[entity_name] = entity
         for entity_name, entity in entities.iteritems():
-            if 'name' in entity:
-                self.error('"name" property not allowed in entity: %s' % entity_name)
-            else:
-                entity['name'] = entity_name
-            if 'id' not in entity:
-                entity['id'] = self.abs_url('#%s' % entity_name)
+            if entity is not None:
+                if 'name' in entity:
+                    self.error('"name" property not allowed in entity: %s' % entity_name)
+                else:
+                    entity['name'] = entity_name
+                if 'id' not in entity:
+                    entity['id'] = self.abs_url('#%s' % entity_name)
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
         return self.rapier_spec, self.errors
 
