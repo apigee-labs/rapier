@@ -74,8 +74,8 @@ class OASGenerator(object):
         if 'entities' in spec:
             entities = spec['entities']
             self.interfaces = dict()
-            self.uri_map = self.validator.uri_map()
-            self.openapispec_uri_map = self.validator.oas_definition_map()
+            self.entity_map = self.validator.entity_map()
+            self.openapispec_uri_map = self.oas_definition_map(self.validator)
             self.openapispec['definitions'] = self.definitions
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
             if 'error_response' in self.conventions:
@@ -682,7 +682,7 @@ class OASGenerator(object):
         collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
             sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.filename))
-        if collection_entity_uri not in self.uri_map:
+        if collection_entity_uri not in self.entity_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
             collection_entity = self.resolve_entity(collection_entity_uri)
@@ -794,13 +794,13 @@ class OASGenerator(object):
             return self.resolve_entity(ref_uri)
     
     def resolve_entity(self, uri):
-        return self.uri_map[self.abs_url(uri)]
+        return self.entity_map[self.abs_url(uri)]
 
     def resolve_entity_ref(self, ref):
         return self.resolve_entity(ref['$ref'])
 
     def resolve_entity_name(self, uri):
-        return self.uri_map[uri]['name']
+        return self.entity_map[uri]['name']
 
     def resolve_property(self, entity_uri, property_name):
         entity = self.resolve_entity(entity_uri)
@@ -863,6 +863,14 @@ class OASGenerator(object):
         split_url = url.split('#')
         split_url[0] = path.abspath(path.join(self.validator.abs_filename, split_url[0]))
         return '#'.join(split_url)
+     
+    def oas_definition_map(self, validator):
+        entities = validator.rapier_spec.get('entities', {})
+        result = {'%s#/entities/%s' % (validator.abs_filename, name): '#/definitions/%s' % name for name in entities.iterkeys()}
+        result.update({entity['id']: '#/definitions/%s' % name for name, entity in entities.iteritems()})
+        for nested_validator in validator.external_spec_validators.itervalues():
+            result.update(self.oas_definition_map(nested_validator))
+        return result
             
 class SegmentSpec(object):
             

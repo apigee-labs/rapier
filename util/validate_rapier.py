@@ -617,20 +617,12 @@ class OASValidator(object):
             for entity_item in validator.entity_iteritems():
                 yield entity_item
 
-    def uri_map(self):
+    def entity_map(self):
         entities = self.rapier_spec.get('entities', {})
         result = {'%s#/entities/%s' % (self.abs_filename, name): entity for name, entity in entities.iteritems()}
         result.update({entity['id']: entity for entity in entities.itervalues()})
         for validator in self.external_spec_validators.itervalues():
-            result.update(validator.uri_map())
-        return result
-
-    def oas_definition_map(self):
-        entities = self.rapier_spec.get('entities', {})
-        result = {'%s#/entities/%s' % (self.abs_filename, name): '#/definitions/%s' % name for name in entities.iterkeys()}
-        result.update({entity['id']: '#/definitions/%s' % name for name, entity in entities.iteritems()})
-        for validator in self.external_spec_validators.itervalues():
-            result.update(validator.oas_definition_map())
+            result.update(validator.entity_map())
         return result
 
     def marked_load(self, stream):
