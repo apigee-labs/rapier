@@ -75,7 +75,7 @@ class OASGenerator(object):
             entities = spec['entities']
             self.interfaces = dict()
             self.uri_map = self.validator.uri_map()
-            self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
+            self.openapispec_uri_map = self.validator.oas_definition_map()
             if 'implementation_private_information' in spec:
                 for entity_name, entity in spec['implementation_private_information'].iteritems():
                     if 'properties' in entity:
@@ -104,7 +104,7 @@ class OASGenerator(object):
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
-                self.openapispec_uri_map['#ErrorResponse'] = '#/definitions/ErrorResponse'
+                self.openapispec_uri_map[self.abs_url('#ErrorResponse')] = '#/definitions/ErrorResponse'
                 self.error_response = self.global_definition_ref('#ErrorResponse')
             else:
                 self.error_response = {}

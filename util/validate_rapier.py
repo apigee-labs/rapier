@@ -222,7 +222,8 @@ class OASValidator(object):
                 self.validated_nodes.add(id(node))
                 if '$ref' in node:
                     ref_key = [key for key in node.iterkeys() if key == '$ref'][0]
-                    node = self.resolve_json_ref(node['$ref'], ref_key)
+                    self.resolve_json_ref(node['$ref'], ref_key)
+                    node['$ref'] = self.abs_url(node['$ref'])
                 else:
                     for key, value in node.iteritems():
                         if key not in keyword_validators:
@@ -590,6 +591,13 @@ class OASValidator(object):
         result = {'%s#/entities/%s' % (self.abs_filename, name): entity for name, entity in entities.iteritems()}
         for validator in self.external_spec_validators.itervalues():
             result.update(validator.uri_map())
+        return result
+
+    def oas_definition_map(self):
+        entities = self.rapier_spec.get('entities', {})
+        result = {'%s#/entities/%s' % (self.abs_filename, name): '#/definitions/%s' % name for name in entities.iterkeys()}
+        for validator in self.external_spec_validators.itervalues():
+            result.update(validator.definition_ref_map())
         return result
 
     def marked_load(self, stream):
