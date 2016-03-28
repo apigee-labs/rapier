@@ -74,7 +74,7 @@ class OASGenerator(object):
         if 'entities' in spec:
             entities = spec['entities']
             self.interfaces = dict()
-            self.entity_map = self.validator.entity_map()
+            self.entity_map = self.validator.build_entity_map()
             self.openapispec_uri_map = self.oas_definition_map(self.validator)
             self.openapispec['definitions'] = self.definitions
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}

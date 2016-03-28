@@ -482,7 +482,8 @@ class OASValidator(object):
         'consumes': validate_entity_consumes,
         'produces': validate_entity_produces,
         'query_parameters': validate_query_parameters,
-        'name': validate_ignore}
+        'name': validate_ignore,
+        'permalink_template': validate_ignore}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -617,12 +618,12 @@ class OASValidator(object):
             for entity_item in validator.entity_iteritems():
                 yield entity_item
 
-    def entity_map(self):
+    def build_entity_map(self):
         entities = self.rapier_spec.get('entities', {})
         result = {'%s#/entities/%s' % (self.abs_filename, name): entity for name, entity in entities.iteritems()}
         result.update({entity['id']: entity for entity in entities.itervalues()})
         for validator in self.external_spec_validators.itervalues():
-            result.update(validator.entity_map())
+            result.update(validator.build_entity_map())
         return result
 
     def marked_load(self, stream):
