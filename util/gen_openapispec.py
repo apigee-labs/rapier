@@ -4,6 +4,7 @@ import yaml, sys, getopt, itertools, string, re
 from collections import OrderedDict
 import validate_rapier
 from validate_rapier import PresortedOrderedDict
+from os import path
 
 class OASGenerator(object):
 
@@ -18,8 +19,8 @@ class OASGenerator(object):
         self.suppress_annotations = '--suppress-annotations' in self.opts_keys or '-s' in self.opts_keys
 
     def openAPI_spec_from_rapier(self, filename):
-        validator = validate_rapier.OASValidator()
-        spec, errors = validator.validate(filename)
+        self.validator = validate_rapier.OASValidator()
+        spec, errors = self.validator.validate(filename)
         if errors > 0:
             sys.exit('Validation of %s failed. OpenAPI spec genenration not attempted' % filename)
         else:
@@ -73,7 +74,7 @@ class OASGenerator(object):
         if 'entities' in spec:
             entities = spec['entities']
             self.interfaces = dict()
-            self.uri_map = validator.uri_map()
+            self.uri_map = self.validator.uri_map()
             self.openapispec_uri_map = {'#/entities/%s' % name: '#/definitions/%s' % name for name in entities.iterkeys()}
             if 'implementation_private_information' in spec:
                 for entity_name, entity in spec['implementation_private_information'].iteritems():
@@ -94,13 +95,12 @@ class OASGenerator(object):
                             entities[entity_name]['permalink_template'] = entity['permalink_template']
                     else:
                         entities[entity_name] = entity
-            self.uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: entity for name, entity in entities.iteritems()})
-            self.openapispec_uri_map.update({entity['id'] if 'id' in entity else '#%s' % name: '#/definitions/%s' % name for name, entity in entities.iteritems()})
+            self.uri_map.update({self.abs_url(entity['id'] if 'id' in entity else '#%s' % name): entity for name, entity in entities.iteritems()})
+            self.openapispec_uri_map.update({self.abs_url(entity['id'] if 'id' in entity else '#%s' % name): '#/definitions/%s' % name for name, entity in entities.iteritems()})
             self.openapispec['definitions'] = self.definitions
             for entity_name, entity_spec in entities.iteritems():
                 entity_spec['name'] = entity_name
-                if not 'id' in entity_spec:
-                    entity_spec['id'] = '#%s' % entity_name
+                entity_spec['id'] = self.abs_url(entity_spec.get('id','#%s' % entity_name))
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
@@ -125,7 +125,7 @@ class OASGenerator(object):
                         self.interfaces[rel_property_spec.interface_id()] = interface
                     else:
                         self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
-            for entity_name, entity_spec in validator.entity_iteritems():
+            for entity_name, entity_spec in self.validator.entity_iteritems():
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
             for entity_spec in entities.itervalues():
@@ -818,7 +818,7 @@ class OASGenerator(object):
             return self.resolve_entity(ref_uri)
     
     def resolve_entity(self, uri):
-        return self.uri_map[uri]
+        return self.uri_map[self.abs_url(uri)]
 
     def resolve_entity_ref(self, ref):
         return self.resolve_entity(ref['$ref'])
@@ -882,6 +882,11 @@ class OASGenerator(object):
             return [self.to_openapispec(i, entity_spec, property_name) for i in node]
         else:
             return node
+        
+    def abs_url(self, url):
+        split_url = url.split('#')
+        split_url[0] = path.abspath(path.join(self.validator.abs_filename, split_url[0]))
+        return '#'.join(split_url)
             
 class SegmentSpec(object):
             
@@ -986,7 +991,7 @@ class RelMVPropertySpec(SegmentSpec):
         self._entity_spec = entity_spec
         self._property = property
         self._relationship = relationship
-        self._collection_resource = relationship.get('collection_resource', True)
+        self._collection_resource = relationship.get('collection_resource', True)        
         self._consumes = relationship.get('consumes')
         self._generator = generator
         self._entity_uri = entity_uri
