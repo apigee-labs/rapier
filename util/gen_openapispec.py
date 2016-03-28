@@ -87,7 +87,7 @@ class OASGenerator(object):
             self.responses = self.build_standard_responses()
             self.response_sets = self.build_standard_response_sets()
             self.methods = self.build_standard_methods()
-            for entity_name, entity_spec in entities.iteritems():
+            for entity_name, entity_spec in self.validator.entity_iteritems():
                 entity_uri = entity_spec['id']
                 entity_url_spec = EntityURLSpec(entity_uri, self)
                 interface = self.build_entity_interface(entity_url_spec)

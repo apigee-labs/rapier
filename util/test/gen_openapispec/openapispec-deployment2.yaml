@@ -1,0 +1,4103 @@
+swagger: '2.0'
+info:
+  description: 'This service implements the entities that are needed to perform deployments
+    of software. The same service is used to deploy customer software (proxies/bundles/Node.js
+    apps)  to the Apigee cloud as well as Apigee infrastructure components (message
+    processors, routers, SSO, Edge management server and so on) to the AWS cloud.
+    In the future, this service will support deployment of both customer software
+    and Apigee software to an Apigee-managed Kubernetes cloud.
+
+    '
+  title: Deployment Service API
+  version: '0.1'
+consumes:
+- application/json
+produces:
+- application/json
+- text/html
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: password
+    tokenUrl: whatever
+security:
+- sso: []
+definitions:
+  ErrorResponse:
+    type: string
+  Environment:
+    description: "An environment represents a set of running components accessible\
+      \ at a single domain name or IP address. Depending on the context, an environment\
+      \ might correspond to: <ul>\n  <li> A set of Apigee Message Processors that\
+      \ handle the same set of customer domain names. (This is similar to the existing\
+      \ Apigee \"pod\" concept)</li>\n  <li> A set of customer proxies deployed to\
+      \ the same Apigee \"environment\" </li>\n  <li> A set of Apigee routers deployed\
+      \ to the same AWS region/AZ </li>\n  <li> A Kubernetes cluster or namespace\
+      \ dedicated to a domain name belonging to an Apigee customer or Apigee itself.\
+      \ </li>\n</ul> The state of an Environment is controlled by POSTing requests\
+      \ to the URL provided in its requests property The Deployment Service stores\
+      \ Environments that are currently (intended to be) running, but also stores\
+      \ Environments that once ran, and Environments that will run in the future.\n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "The value must always be the string \"Environment\". This property\
+          \ is always set  by the server in responses to GET. It must be set by the\
+          \ client on POST,  and must not be set by the client on PATCH. (PUT is not\
+          \ supported) \n"
+        type: string
+        enum:
+        - Environment
+      realizes:
+        description: "The the URI of the System of which this Environment is a running\
+          \ examplar.  This property is always set by the server in responses to GET.\
+          \ It must be set by the client on POST, and may only be set by the client\
+          \ on PATCH if the requested_state is initial. (PUT is not supported) \n"
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/System'
+      comprises:
+        description: "The URI of the collection of Deployments that are part of this\
+          \ Environment.  This property is always set by the server, and is readOnly\
+          \ for the client \n"
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.comprises'
+      domain_name:
+        description: The URI of the domain name at which this Environment can be found.
+        type: string
+      description:
+        description: A description of the Environment
+        type: string
+      requested_state:
+        description: "The requested, or 'desired' state of the Environment. A string\
+          \ (URLs would be cooler)  representing the last requested state of the Deployment.\
+          \ This property is always set by  the server in responses to GET. It may\
+          \ never be set directly by the client. Clients affect  the value of requested_state\
+          \ by POSTing requests to the URL in the requests property. \n"
+        type: string
+        readOnly: true
+        enum:
+        - initial
+        - running
+        - stopped
+        - retired
+      valid_requests:
+        description: 'A list of valid requests given the current requested_state.
+          This property is always set  by the server, and is readOnly for the client
+
+          '
+        type: array
+        readOnly: true
+        items:
+          type: string
+          format: uri
+          enum:
+          - EnvironmentStartRequest
+          - EnvironmentStopRequest
+          - EnvironmentRetirementRequest
+      requests:
+        description: "The  URI of the collection of Requests for this Environment.\
+          \ New requests can be POSTed  to this collection to change the requested\
+          \ (desired) state of the Environment. These requests will typically change\
+          \ the state of the runtime. Valid request types are: EnvironmentStartRequest\
+          \ EnvironmentStopRequest EnvironmentRetirementRequest \n"
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.requests'
+    x-interface: '#/x-interfaces/Environment'
+  EnvironmentStartRequest:
+    description: 'An EnvironmentStartRequest is used to initiate the creation of the
+      runtime infrastructure required by an Environment. It can only be used if the
+      requested_state of the Environment is initial or stopped
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"EnvironmentStartRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - EnvironmentStartRequest
+    x-interface: '#/x-interfaces/EnvironmentStartRequest'
+  EnvironmentRetirementRequest:
+    description: 'An EnvironmentRetirementRequest is used to retire an Environment
+      that is no longer needed. required by an Environment. It can only be used if
+      the requested_state of the Environment is initial or stopped
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"EnvironmentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - EnvironmentRetirementRequest
+    x-interface: '#/x-interfaces/EnvironmentRetirementRequest'
+  EnvironmentStopRequest:
+    description: 'An EnvironmentStopRequest is used to delete the runtime infrastructure
+      required by an Environment. It can only be used if the requested_state of the
+      Environment is running
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"EnvironmentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - EnvironmentStopRequest
+    x-interface: '#/x-interfaces/EnvironmentStopRequest'
+  Deployment:
+    description: "A deployment represents a set of running instances of the same component.\
+      \ Each deployment runs in an environment. Depending on the context, a deployment\
+      \ might correspond to: <ul>\n  <li> An auto-scaling group for Message Processors\
+      \ running in an AWS region </li>\n  <li> A Kubernetes replicationController\
+      \ in a Kubernetes namespace/cluster </li>\n  <li> The deployment of a single\
+      \ customer proxy in an Edge environment. </li>\n</ul>\n The Deployment Service\
+      \ stores Deployments that are currently (intended to be) running, but also stores\
+      \ Deployments that once ran, and Deployments that will run in the future.\n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"Deployment\". The kind\
+          \ property is always set by  the server in responses to GET. The kind property\
+          \ must be set by the client on POST,  and must not be set by the client\
+          \ on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - Deployment
+      deploys:
+        description: "The URI of the Revision that the deployment executes. This property\
+          \ is always set by the  server in responses to GET. It must be set by the\
+          \ client on POST, and must not be set  by the client on PATCH. (PUT is not\
+          \ supported) \n"
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Revision'
+      runs_in:
+        description: "The URI of the Environment that the deployment is part of. This\
+          \ property is always set by  the server in responses to GET. It must be\
+          \ set by the client on POST, and must not be set  by the client on PATCH.\
+          \ (PUT is not supported) \n"
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Environment'
+      requested_state:
+        description: "The requested, or 'desired' state of the Deployment. The value\
+          \ is a string (URLs would be cooler)  representing the last requested state\
+          \ of the Deployment. This property is always set by the server  in responses\
+          \ to GET. It may never be set directly by the client. Clients affect the\
+          \ value of  requested_state by POSTing requests to the URL in the requests\
+          \ property. \n"
+        type: string
+        readOnly: true
+        enum:
+        - initial
+        - stopped
+        - offline
+        - online
+        - temporarily_online
+      requested_replicas:
+        type: integer
+        readOnly: true
+      requested_hosts:
+        type: string
+        readOnly: true
+      requested_percentage:
+        type: number
+        readOnly: true
+      valid_requests:
+        description: 'A list of valid requests given the current requested_state.
+          This property is always set  by the server, and is readOnly for the client
+
+          '
+        type: array
+        items:
+          type: string
+          format: uri
+          enum:
+          - DeploymentStartRequest
+          - DeploymentStopRequest
+          - DeploymentOnlineRequest
+          - DeploymentOfflineRequest
+          - DeploymentStatisticsRequest
+          - DeploymentScalingRequest
+          - DeploymentRetirementRequest
+      requests:
+        description: "The URI of the collection of Requests for this Deployment. New\
+          \ requests can be POSTed to this  collection to change the requested (desired)\
+          \ state of the Deployment. These requests will  typically change the state\
+          \ of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest\
+          \ DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest\
+          \ DeploymentScalingRequest DeploymentRetirementRequest \n"
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Deployment.requests'
+    x-interface: '#/x-interfaces/Deployment'
+  DeploymentStartRequest:
+    description: 'An DeploymentStartRequest is used to initiate the creation of the
+      runtime infrastructure required by an Deployment. It can only be used if the
+      requested_state of the Deployment is initial or stopped. A successful DeploymentStartRequest
+      will change the requested_state of the Deployment to offline
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentStartRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentStartRequest
+      replicas:
+        type: integer
+    x-interface: '#/x-interfaces/DeploymentStartRequest'
+  DeploymentStopRequest:
+    description: 'An DeploymentStopRequest is used to delete the runtime infrastructure
+      required by an Deployment. It can only be used if the requested_state of the
+      Deployment is offline A successful DeploymentStopRequest will change the requested_state
+      of the Deployment to stopped
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentStopRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentStopRequest
+    x-interface: '#/x-interfaces/DeploymentStopRequest'
+  DeploymentOfflineRequest:
+    description: 'An DeploymentOfflineRequest is used to stop any traffic going to
+      [instances of] the deployment. It can only be used if the requested_state of
+      the Deployment is online. A successful DeploymentStopRequest will change the
+      requested_state of the Deployment to offline
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentOfflineRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentOfflineRequest
+    x-interface: '#/x-interfaces/DeploymentOfflineRequest'
+  DeploymentOnlineRequest:
+    description: 'An DeploymentOnlineRequest is used to direct traffic to a deployment.
+      The optional hosts and  percentage properties can be used to control which traffic
+      and how much of it. A successful DeploymentOnlineRequest will change the requested_state
+      of the Deployment to online. DeploymentOnlineRequest can only be used if the
+      requested_state of the Deployment is offline.
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentOnlineRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentOnlineRequest
+      hosts:
+        type: string
+      percentage:
+        type: number
+    x-interface: '#/x-interfaces/DeploymentOnlineRequest'
+  DeploymentStatisticsRequest:
+    description: 'A DeploymentStatisticsRequest is used to direct traffic to a deployment
+      for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest
+      that times out. During a DeploymentStatisticsRequest the requested_state of
+      the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest,
+      the requested_state will revert to offline. A successful DeploymentStopRequest
+      will change the requested_state of the Deployment back to offline. DeploymenStatisticsRequest
+      can only be used if the requested_state of the Deployment is offline.
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentStatisticsRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentStatisticsRequest
+      hosts:
+        description: "The value is a space-separated list of domain names or IP addresses.\
+          \ If this property is provided, then only traffic originating from those\
+          \ clients will be forwarded to this deployment. \n"
+        type: string
+      percentage:
+        description: "If present, this value specifies the percentage of traffic this\
+          \ deployment should receive. If no value is given for this property, the\
+          \ instances correspopnding to this deployment will be added to the general\
+          \ load-balancer pool and so will receive traffic in proportion to the total\
+          \ number of instance or load, depending on the load-balancer algorithm.\
+          \ This property may be used in conjunction with the hosts field to select\
+          \ traffic based on both hostnames and percentages. \n"
+        type: number
+      duration:
+        type: integer
+      state:
+        type: string
+      results:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/StatisticsResults'
+    readOnly: true
+    x-interface: '#/x-interfaces/DeploymentStatisticsRequest'
+  DeploymentScalingRequest:
+    description: A DeploymentScalingRequest is used to increase or decrease the number
+      of replicas associated with a deployment
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentScalingRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentScalingRequest
+      replicas:
+        type: integer
+    readOnly: true
+    x-interface: '#/x-interfaces/DeploymentScalingRequest'
+  DeploymentRetirementRequest:
+    description: 'A DeploymentScalingRequest is used to mark a Deployment as no longer
+      being current. After a Deployment has been marked as retired, it can be deleted,
+      or it can be kept around as a historic record.
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "This value must always be the string \"DeploymentRetirementRequest\"\
+          . The kind property is always set by  the server in responses to GET. The\
+          \ kind property must be set by the client on POST,  and must not be set\
+          \ by the client on PATCH. (PUT is not supported) \n"
+        type: string
+        enum:
+        - DeploymentRetirementRequest
+    x-interface: '#/x-interfaces/DeploymentRetirementRequest'
+  System:
+    description: "A System represents a set of Components that work together. Systems\
+      \ are defined in development. Systems are deployed by creating Environments\
+      \ that run them. Multiple Environments may run the same System. \n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "The value must always be the string \"System\". The kind property\
+          \ is always set by the server in responses to GET. The kind property must\
+          \ be set by the client on POST, and must not be set by the client on PATCH.\
+          \ (PUT is not supported) \n"
+        type: string
+        enum:
+        - System
+      has_environments:
+        description: "The value of the has_environments property is the URI of the\
+          \ collection of Environments where this System is deployed.  New Environments\
+          \ can be POSTed to this collection\u2014alternatively,  a new Environment\
+          \ can be added to the collection by creating the Environment with a value\
+          \ of 'realizes' that references this System.\n"
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/System.has_environments'
+      has_components:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/System.has_components'
+    x-interface: '#/x-interfaces/System'
+  Component:
+    description: "A Component is a unit of implementation that can be indpeendently\
+      \ deployed. Components are aggregated into systems. Components are deployed\
+      \ by creating a Deployment entity inside some Environment for a particular Revision\
+      \ of the Component, and then issuing a DeploymentStartRequest for that Deployment.\
+      \  \n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Component
+      is_component_of:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/System'
+      has_revisions:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Component.has_revisions'
+    x-interface: '#/x-interfaces/Component'
+  Revision:
+    description: "Revisions model successive snapshots of an implementation Component,\
+      \ as produced by a Development organization. \n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Revision
+      revises:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Component'
+      has_deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Revision.has_deployments'
+    x-interface: '#/x-interfaces/Revision'
+  StatisticsResults:
+    description: "A StatisiticsResult is an entity that holds the metrics produced\
+      \ during a DeploymenStatisticsRequest. \n"
+    type: object
+    readOnly: true
+    x-interface: '#/x-interfaces/StatisticsResults'
+  Apigee:
+    description: 'An Apigee is the root of the tree of resources in an Apigee Environment
+      (that is, an Environment that contains Apigee''s own software)
+
+      '
+    readOnly: true
+    properties:
+      systems:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.systems'
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.environments'
+      components:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.components'
+      revisions:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.revisions'
+    x-interface: '#/x-interfaces/Apigee'
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Page
+      items:
+        type: array
+        items:
+          type: object
+      collection:
+        type: string
+        format: uri
+      next_page:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Page'
+      previous_page:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Page'
+    readOnly: true
+    x-interface: '#/x-interfaces/Page'
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+  MultiValuedRelationship:
+    readOnly: true
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+x-interfaces:
+  Apigee:
+    get:
+      description: Retrieve an Apigee
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Apigee'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Apigee
+  Apigee.components:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Component
+      parameters:
+      - description: The representation of the new Component being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Component'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Component
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Component
+              type: string
+          schema:
+            $ref: '#/definitions/Component'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Apigee.components
+  Apigee.environments:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Environment
+      parameters:
+      - description: The representation of the new Environment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Environment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Environment
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Apigee.environments
+  Apigee.revisions:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Revision
+      parameters:
+      - description: The representation of the new Revision being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Revision'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Revision
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Revision
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Apigee.revisions
+  Apigee.systems:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new System
+      parameters:
+      - description: The representation of the new System being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/System'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new System
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created System
+              type: string
+          schema:
+            $ref: '#/definitions/System'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Apigee.systems
+  Component:
+    get:
+      description: Retrieve a Component
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Component'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Component entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Component being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Component'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Component'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Component
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Component'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Component
+  Component.has_revisions:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Revision
+      parameters:
+      - description: The representation of the new Revision being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Revision'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Revision
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Revision
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Component.has_revisions
+  Deployment:
+    get:
+      description: Retrieve a Deployment
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Deployment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Deployment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Deployment
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment
+  Deployment.requests:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new DeploymentStartRequest or DeploymentStopRequest or
+        DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
+        or DeploymentScalingRequest or DeploymentRetirementRequest
+      parameters:
+      - description: The representation of the new DeploymentStartRequest or DeploymentStopRequest
+          or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
+          or DeploymentScalingRequest or DeploymentRetirementRequest being created
+        in: body
+        name: body
+        schema:
+          x-oneOf:
+          - $ref: '#/definitions/DeploymentStartRequest'
+          - $ref: '#/definitions/DeploymentStopRequest'
+          - $ref: '#/definitions/DeploymentOnlineRequest'
+          - $ref: '#/definitions/DeploymentOfflineRequest'
+          - $ref: '#/definitions/DeploymentStatisticsRequest'
+          - $ref: '#/definitions/DeploymentScalingRequest'
+          - $ref: '#/definitions/DeploymentRetirementRequest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new DeploymentStartRequest or DeploymentStopRequest
+            or DeploymentOnlineRequest or DeploymentOfflineRequest or DeploymentStatisticsRequest
+            or DeploymentScalingRequest or DeploymentRetirementRequest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created DeploymentStartRequest
+                or DeploymentStopRequest or DeploymentOnlineRequest or DeploymentOfflineRequest
+                or DeploymentStatisticsRequest or DeploymentScalingRequest or DeploymentRetirementRequest
+              type: string
+          schema:
+            x-oneOf:
+            - $ref: '#/definitions/DeploymentStartRequest'
+            - $ref: '#/definitions/DeploymentStopRequest'
+            - $ref: '#/definitions/DeploymentOnlineRequest'
+            - $ref: '#/definitions/DeploymentOfflineRequest'
+            - $ref: '#/definitions/DeploymentStatisticsRequest'
+            - $ref: '#/definitions/DeploymentScalingRequest'
+            - $ref: '#/definitions/DeploymentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Deployment.requests
+  DeploymentOfflineRequest:
+    get:
+      description: Retrieve a DeploymentOfflineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOfflineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentOfflineRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentOfflineRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOfflineRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOfflineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentOfflineRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOfflineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentOfflineRequest
+  DeploymentOnlineRequest:
+    get:
+      description: Retrieve a DeploymentOnlineRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentOnlineRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentOnlineRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentOnlineRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentOnlineRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentOnlineRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentOnlineRequest
+  DeploymentRetirementRequest:
+    get:
+      description: Retrieve a DeploymentRetirementRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentRetirementRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentRetirementRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentRetirementRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentRetirementRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentRetirementRequest
+  DeploymentScalingRequest:
+    get:
+      description: Retrieve a DeploymentScalingRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentScalingRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentScalingRequest
+  DeploymentStartRequest:
+    get:
+      description: Retrieve a DeploymentStartRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentStartRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentStartRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStartRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentStartRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStartRequest
+  DeploymentStatisticsRequest:
+    get:
+      description: Retrieve a DeploymentStatisticsRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStatisticsRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStatisticsRequest
+  DeploymentStopRequest:
+    get:
+      description: Retrieve a DeploymentStopRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a DeploymentStopRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the DeploymentStopRequest being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/DeploymentStopRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a DeploymentStopRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/DeploymentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: DeploymentStopRequest
+  Environment:
+    get:
+      description: Retrieve an Environment
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an Environment entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Environment being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an Environment
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment
+  Environment.comprises:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Deployment
+      parameters:
+      - description: The representation of the new Deployment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Deployment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment.comprises
+  Environment.requests:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new EnvironmentStartRequest or EnvironmentStopRequest
+        or EnvironmentRetirementRequest
+      parameters:
+      - description: The representation of the new EnvironmentStartRequest or EnvironmentStopRequest
+          or EnvironmentRetirementRequest being created
+        in: body
+        name: body
+        schema:
+          x-oneOf:
+          - $ref: '#/definitions/EnvironmentStartRequest'
+          - $ref: '#/definitions/EnvironmentStopRequest'
+          - $ref: '#/definitions/EnvironmentRetirementRequest'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new EnvironmentStartRequest or EnvironmentStopRequest
+            or EnvironmentRetirementRequest
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created EnvironmentStartRequest
+                or EnvironmentStopRequest or EnvironmentRetirementRequest
+              type: string
+          schema:
+            x-oneOf:
+            - $ref: '#/definitions/EnvironmentStartRequest'
+            - $ref: '#/definitions/EnvironmentStopRequest'
+            - $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Environment.requests
+  EnvironmentRetirementRequest:
+    get:
+      description: Retrieve an EnvironmentRetirementRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an EnvironmentRetirementRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the EnvironmentRetirementRequest
+          being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentRetirementRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an EnvironmentRetirementRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentRetirementRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: EnvironmentRetirementRequest
+  EnvironmentStartRequest:
+    get:
+      description: Retrieve an EnvironmentStartRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStartRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an EnvironmentStartRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the EnvironmentStartRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentStartRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an EnvironmentStartRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStartRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: EnvironmentStartRequest
+  EnvironmentStopRequest:
+    get:
+      description: Retrieve an EnvironmentStopRequest
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStopRequest'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update an EnvironmentStopRequest entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the EnvironmentStopRequest being
+          updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/EnvironmentStopRequest'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete an EnvironmentStopRequest
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/EnvironmentStopRequest'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: EnvironmentStopRequest
+  Page:
+    get:
+      description: Retrieve a Page
+      parameters:
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Page'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Page
+  Revision:
+    get:
+      description: Retrieve a Revision
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a Revision entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the Revision being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Revision'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a Revision
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/Revision'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Revision
+  Revision.has_deployments:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Deployment
+      parameters:
+      - description: The representation of the new Deployment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Deployment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Deployment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Deployment
+              type: string
+          schema:
+            $ref: '#/definitions/Deployment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: Revision.has_deployments
+  StatisticsResults:
+    get:
+      description: Retrieve a StatisticsResults
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/StatisticsResults'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: StatisticsResults
+  System:
+    get:
+      description: Retrieve a System
+      parameters:
+      - $ref: '#/parameters/Accept'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/System'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    patch:
+      consumes:
+      - application/merge-patch+json
+      description: Update a System entity
+      parameters:
+      - $ref: '#/parameters/If-Match'
+      - description: The subset of properties of the System being updated
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/System'
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/System'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        '409':
+          $ref: '#/responses/409'
+        default:
+          $ref: '#/responses/default'
+    delete:
+      description: Delete a System
+      responses:
+        '200':
+          description: successful
+          headers:
+            Content-Location:
+              description: perma-link URL of resource
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: this value must be echoed in the If-Match header of every
+                PATCH or PUT
+              type: string
+          schema:
+            $ref: '#/definitions/System'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: System
+  System.has_components:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Component
+      parameters:
+      - description: The representation of the new Component being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Component'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Component
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Component
+              type: string
+          schema:
+            $ref: '#/definitions/Component'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: System.has_components
+  System.has_environments:
+    get:
+      parameters:
+      - in: query
+        name: orderBy
+        required: false
+        type: string
+      - enum:
+        - ascending
+        - descending
+        in: query
+        name: direction
+        required: false
+        type: string
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      responses:
+        '200':
+          description: description
+          headers:
+            Content-Location:
+              description: perma-link URL of collection
+              type: string
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+          schema:
+            $ref: '#/definitions/MultiValuedRelationship'
+        '303':
+          $ref: '#/responses/303'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    post:
+      description: Create a new Environment
+      parameters:
+      - description: The representation of the new Environment being created
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/Environment'
+      - description: The media type of the body
+        in: header
+        name: Content-Type
+        required: true
+        type: string
+      responses:
+        '201':
+          description: Created new Environment
+          headers:
+            Content-Type:
+              description: The media type of the returned body
+              type: string
+            ETag:
+              description: Value of ETag required for subsequent updates
+              type: string
+            Location:
+              description: perma-link URL of newly-created Environment
+              type: string
+          schema:
+            $ref: '#/definitions/Environment'
+        '400':
+          $ref: '#/responses/400'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        '406':
+          $ref: '#/responses/406'
+        default:
+          $ref: '#/responses/default'
+    head:
+      description: Retrieve HEAD
+      responses:
+        '200':
+          $ref: '#/responses/standard_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    options:
+      description: Retrieve OPTIONS
+      parameters:
+      - $ref: '#/parameters/Access-Control-Request-Method'
+      - $ref: '#/parameters/Access-Control-Request-Headers'
+      responses:
+        '200':
+          $ref: '#/responses/options_200'
+        '401':
+          $ref: '#/responses/401'
+        '403':
+          $ref: '#/responses/403'
+        '404':
+          $ref: '#/responses/404'
+        default:
+          $ref: '#/responses/default'
+    x-id: System.has_environments
+x-templates:
+  '{Apigee-URL}':
+    $ref: '#/x-interfaces/Apigee'
+  '{Apigee-URL}/components':
+    $ref: '#/x-interfaces/Apigee.components'
+  '{Apigee-URL}/environments':
+    $ref: '#/x-interfaces/Apigee.environments'
+  '{Apigee-URL}/revisions':
+    $ref: '#/x-interfaces/Apigee.revisions'
+  '{Apigee-URL}/systems':
+    $ref: '#/x-interfaces/Apigee.systems'
+paths:
+  /:
+    $ref: '#/x-templates/{Apigee-URL}'
+  /systems:
+    $ref: '#/x-templates/{Apigee-URL}~1systems'
+  /environments:
+    $ref: '#/x-templates/{Apigee-URL}~1environments'
+  /components:
+    $ref: '#/x-templates/{Apigee-URL}~1components'
+  /revisions:
+    $ref: '#/x-templates/{Apigee-URL}~1revisions'
+parameters:
+  Accept:
+    description: specifies the requested media type - required
+    in: header
+    name: Accept
+    required: true
+    type: string
+  Access-Control-Request-Headers:
+    description: specifies the custom headers the client wishes to use
+    in: header
+    name: Access-Control-Request-Headers
+    required: true
+    type: string
+  Access-Control-Request-Method:
+    description: specifies the method the client wishes to use
+    in: header
+    name: Access-Control-Request-Method
+    required: true
+    type: string
+  If-Match:
+    description: specifies the last known ETag value of the resource being modified
+    in: header
+    name: If-Match
+    required: true
+    type: string
+responses:
+  '303':
+    description: See other. Server is redirecting client to a different resource
+    headers:
+      Location:
+        description: URL of other resource
+        type: string
+  '400':
+    description: Bad Request. Client request in error
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '401':
+    description: Unauthorized. Client authentication token missing from request
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '403':
+    description: Forbidden. Client authentication token does not permit this method
+      on this resource
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '404':
+    description: Not Found. Resource not found
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '406':
+    description: Not Acceptable. Requested media type not available
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  '409':
+    description: Conflict. Value provided in If-Match header does not match current
+      ETag value of resource
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  default:
+    description: 5xx errors and other stuff
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  options_200:
+    description: successful
+    headers:
+      Access-Control-Allow-Headers:
+        description: headers allowed
+        type: string
+      Access-Control-Allow-Methods:
+        description: methods allowed
+        type: string
+      Access-Control-Allow-Origin:
+        description: origins allowed
+        type: string
+      Access-Control-Max-Age:
+        description: length of time response can be cached
+        type: string
+  standard_200:
+    description: successful
+    headers:
+      Content-Location:
+        description: perma-link URL of resource
+        type: string
+      Content-Type:
+        description: The media type of the returned body
+        type: string
+      ETag:
+        description: this value must be echoed in the If-Match header of every PATCH
+          or PUT
+        type: string
+
