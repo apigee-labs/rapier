@@ -358,6 +358,9 @@ class OASValidator(object):
     def invalid(self, node, key, value):
         self.error('%s is not allowed: value' %key, key)
     
+    def validate_ignore(self, node, key, value):
+        pass
+    
     def validate_starOf(self, node, key, starOf, keyword_validators):
         if isinstance(starOf, list):
             for one in starOf:
@@ -478,7 +481,8 @@ class OASValidator(object):
         'well_known_URLs': validate_well_known_URLs,
         'consumes': validate_entity_consumes,
         'produces': validate_entity_produces,
-        'query_parameters': validate_query_parameters}
+        'query_parameters': validate_query_parameters,
+        'name': validate_ignore}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -539,7 +543,7 @@ class OASValidator(object):
                 validator = self.resolve_validator(json_ref_split[0])
                 json_ref_fragment = json_ref_split[1]
                 if json_ref_fragment.startswith('/'):
-                    parts = json_ref[2:].split('/')
+                    parts = json_ref_fragment[1:].split('/')
                     spec = validator.rapier_spec
                     for part in parts:
                         spec = spec.get(part)
@@ -576,6 +580,33 @@ class OASValidator(object):
             self.fatal_error('error reading file: %s %s' % (filename, e.strerror))
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
+        entities = self.rapier_spec.setdefault('entities', {})
+        if 'implementation_private_information' in self.rapier_spec:
+            for entity_name, entity in self.rapier_spec['implementation_private_information'].iteritems():
+                if 'properties' in entity:
+                    for property in entity['properties'].itervalues():
+                        property['implementation_private'] = True
+                if entity_name in entities:
+                    if 'properties' in entity:
+                        properties = entity['properties']
+                        if 'properties' in entities[entity_name]:
+                            entities[entity_name]['properties'].update(properties)
+                        else:
+                            entities[entity_name]['properties'] = properties
+                    if 'query_paths' in entity:
+                        entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
+                        entities[entity_name]['query_paths'].extend(entity['query_paths'])
+                    if 'permalink_template' in entity:
+                        entities[entity_name]['permalink_template'] = entity['permalink_template']
+                else:
+                    entities[entity_name] = entity
+        for entity_name, entity in entities.iteritems():
+            if 'name' in entity:
+                self.error('"name" property not allowed in entity: %s' % entity_name)
+            else:
+                entity['name'] = entity_name
+            if 'id' not in entity:
+                entity['id'] = self.abs_url('#%s' % entity_name)
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
         return self.rapier_spec, self.errors
 
@@ -589,6 +620,7 @@ class OASValidator(object):
     def uri_map(self):
         entities = self.rapier_spec.get('entities', {})
         result = {'%s#/entities/%s' % (self.abs_filename, name): entity for name, entity in entities.iteritems()}
+        result.update({entity['id']: entity for entity in entities.itervalues()})
         for validator in self.external_spec_validators.itervalues():
             result.update(validator.uri_map())
         return result
@@ -596,8 +628,9 @@ class OASValidator(object):
     def oas_definition_map(self):
         entities = self.rapier_spec.get('entities', {})
         result = {'%s#/entities/%s' % (self.abs_filename, name): '#/definitions/%s' % name for name in entities.iterkeys()}
+        result.update({entity['id']: '#/definitions/%s' % name for name, entity in entities.iteritems()})
         for validator in self.external_spec_validators.itervalues():
-            result.update(validator.definition_ref_map())
+            result.update(validator.oas_definition_map())
         return result
 
     def marked_load(self, stream):
@@ -620,17 +653,17 @@ class OASValidator(object):
 
     def error(self, message, key_node=None):
         self.errors += 1
-        if key_node:
+        if key_node and hasattr(key_node, 'start_mark'):
             message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['ERROR -', message, 'in', self.filename])
 
     def warning(self, message, key_node=None):
-        if key_node:
+        if key_node and hasattr(key_node, 'start_mark'):
             message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['WARNING -', message, 'in', self.filename])
 
     def info(self, message, key_node=None):
-        if key_node:
+        if key_node and hasattr(key_node, 'start_mark'):
             message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
         print >> sys.stderr, ' '. join(['INFO -', message, 'in', self.filename])
 

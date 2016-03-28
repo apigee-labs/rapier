@@ -22,7 +22,7 @@ class OASGenerator(object):
         self.validator = validate_rapier.OASValidator()
         spec, errors = self.validator.validate(filename)
         if errors > 0:
-            sys.exit('Validation of %s failed. OpenAPI spec genenration not attempted' % filename)
+            sys.exit('Validation of %s failed. OpenAPI spec generation not attempted' % filename)
         else:
             self.rapier_spec = spec
         self.conventions = spec['conventions'] if 'conventions' in spec else {}     
@@ -76,31 +76,7 @@ class OASGenerator(object):
             self.interfaces = dict()
             self.uri_map = self.validator.uri_map()
             self.openapispec_uri_map = self.validator.oas_definition_map()
-            if 'implementation_private_information' in spec:
-                for entity_name, entity in spec['implementation_private_information'].iteritems():
-                    if 'properties' in entity:
-                        for property in entity['properties'].itervalues():
-                            property['implementation_private'] = True
-                    if entity_name in entities:
-                        if 'properties' in entity:
-                            properties = entity['properties']
-                            if 'properties' in entities[entity_name]:
-                                entities[entity_name]['properties'].update(properties)
-                            else:
-                                entities[entity_name]['properties'] = properties
-                        if 'query_paths' in entity:
-                            entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
-                            entities[entity_name]['query_paths'].extend(entity['query_paths'])
-                        if 'permalink_template' in entity:
-                            entities[entity_name]['permalink_template'] = entity['permalink_template']
-                    else:
-                        entities[entity_name] = entity
-            self.uri_map.update({self.abs_url(entity['id'] if 'id' in entity else '#%s' % name): entity for name, entity in entities.iteritems()})
-            self.openapispec_uri_map.update({self.abs_url(entity['id'] if 'id' in entity else '#%s' % name): '#/definitions/%s' % name for name, entity in entities.iteritems()})
             self.openapispec['definitions'] = self.definitions
-            for entity_name, entity_spec in entities.iteritems():
-                entity_spec['name'] = entity_name
-                entity_spec['id'] = self.abs_url(entity_spec.get('id','#%s' % entity_name))
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']

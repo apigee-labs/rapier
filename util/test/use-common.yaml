@@ -1,0 +1,33 @@
+title: Test of using common definitions
+version: "0.1"
+consumes: application/json
+produces: application/json text/html
+conventions:
+  patch_consumes: application/merge-patch+json
+  error_response:
+    type: string
+entities:
+  Environment:
+    allOf:
+    - $ref: '../common.yaml#/entities/PersistentResource'
+    properties:
+      kind:
+        description: >
+          The value must always be the string "Environment". This property is always set 
+          by the server in responses to GET. It must be set by the client on POST, 
+          and must not be set by the client on PATCH. (PUT is not supported) 
+        type: string
+        enum: [Environment]
+  Apigee:
+   readOnly: true
+   well_known_URLs: /
+   query_paths:  environments 
+   properties:
+     environments:
+       format: uri
+       type: string
+       readOnly: true
+       relationship:
+         collection_resource: '../common.yaml#MultiValuedRelationship'
+         multiplicity: 0:n
+         entities: '#Environment'

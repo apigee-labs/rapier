@@ -1,0 +1,102 @@
+title: Common entities used in multiple API specifications
+version: "0.1"
+entities:
+  MultiValuedRelationship:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
+    oneOf:
+    - $ref: '#/entities/Collection'
+    - $ref: '#/entities/Page'      
+  Collection:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Collection]
+      items:
+        type: array
+        items: 
+          type: object
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    - name: orderby
+      type: string
+    - name: direction
+      type: string
+      required: false
+      enum: ['ascending', 'descending']
+    readOnly: true
+  Page:
+    description: >
+      The value must always be the string "Environment". This property is always set 
+      by the server in responses to GET. It must be set by the client on POST, 
+      and must not be set by the client on PATCH. (PUT is not supported) 
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      kind:
+        type: string
+        enum: [Page]
+      items:
+        type: array
+        items: 
+          type: object
+      collection:
+        type: string
+        format: uri
+    query_parameters:
+    - name: properties
+      items:
+        type: string
+      type: array
+      required: false
+    - name: limit
+      type: integer
+      minimum: 1
+      maximum: 1000
+      required: false
+    readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/entities/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
