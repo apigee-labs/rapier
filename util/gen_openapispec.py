@@ -105,7 +105,7 @@ class OASGenerator(object):
             if 'error_response' in self.conventions:
                 self.definitions['ErrorResponse'] = self.conventions['error_response']
                 self.openapispec_uri_map[self.abs_url('#ErrorResponse')] = '#/definitions/ErrorResponse'
-                self.error_response = self.global_definition_ref('#ErrorResponse')
+                self.error_response = self.global_definition_ref(self.abs_url('#ErrorResponse'))
             else:
                 self.error_response = {}
             self.responses = self.build_standard_responses()
