@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Entity Name</th>
+                <th>Entity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a name="Environment"></a>Environment</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>keystores</td>
+                    <td>0:n (<a href="#Keystore">Keystore</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Keystore"></a>Keystore</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>aliases</td>
+                    <td>0:n (<a href="#Alias">Alias</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Alias"></a>Alias</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>key</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>certsInfo</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>certificate</td>
+                    <td>0:1 (<a href="#Certificate">Certificate</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>csr</td>
+                    <td>0:1 (<a href="#CSR">CSR</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>selfSignedCertificate</td>
+                    <td>0:1 (<a href="#Certificate">Certificate</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Certificate"></a>Certificate</td>
+            <td>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="CSR"></a>CSR</td>
+            <td>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Pkcs12Alias"></a>Pkcs12Alias</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>password</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>ignoreExpiryValidation</td>
+                    <td>boolean</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>pkcs12File</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="SelfSignedCertAlias"></a>SelfSignedCertAlias</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>alias</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>keySize</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>certValidityInDays</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>sigAlg</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>issuer</td>
+                    <td></td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>subject</td>
+                    <td></td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>subjectAlternativeDNSNames</td>
+                    <td>array(string)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="KeyCertFileAlias"></a>KeyCertFileAlias</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>password</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>ignoreExpiryValidation</td>
+                    <td>boolean</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>keyFile</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>certFile</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="KeyCertJarAlias"></a>KeyCertJarAlias</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>password</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>ignoreExpiryValidation</td>
+                    <td>boolean</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>keyCertJar</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="X500Name"></a>X500Name</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>countryCode</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>state</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>locality</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>orgName</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>orgUnitName</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>email</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="PersistentResource"></a>PersistentResource</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>created</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>creator</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modified</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modifier</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Resource"></a>Resource</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>self</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Collection"></a>Collection</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>items</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+        </tbody>
+    </table>          
+    </div>
+  </div>
+
+</body>
+</html>
+

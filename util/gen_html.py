@@ -9,8 +9,12 @@ class HTMLGenerator(object):
         rslt = property.get('description', '')
         return rslt
     
-    def create_link(self, name):
-        return '<a href="{}">{}</a>'.format(name, name[1:])
+    def create_link(self, url):
+        split_url = url.split('#')
+        name = split_url[1]
+        if split_url[0] == self.validator.abs_filename:
+            url = '#%s' % name
+        return '<a href="{}">{}</a>'.format(url, name)
     
     def generate_property_type(self, property):
         if 'relationship' in property:
@@ -97,9 +101,12 @@ class HTMLGenerator(object):
         </tbody>
     </table>''' % entity_rows
         
-    def generate_html(self, spec):
-        entities = spec.get('entities')
-        rslt = '''<!DOCTYPE html>
+    def generate_html(self, filename):
+        self.validator = validate_rapier.OASValidator()
+        spec, errors = self.validator.validate(filename)
+        if errors == 0:
+            entities = spec.get('entities')
+            rslt = '''<!DOCTYPE html>
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -116,22 +123,19 @@ class HTMLGenerator(object):
 </body>
 </html>
 ''' % self.generate_entities_table(spec) if entities is not None else ''
-        UTF8Writer = codecs.getwriter('utf8')
-        sys.stdout = UTF8Writer(sys.stdout)
-        return rslt
+            UTF8Writer = codecs.getwriter('utf8')
+            sys.stdout = UTF8Writer(sys.stdout)
+            return rslt
+        else:
+            print >>sys.stderr, 'HTML generation of %s failed' % filename
 
 def main(args):
-    try:
-        validator = validate_rapier.OASValidator()
-
-        spec, errors = validator.validate(*args)
-        if errors == 0:
-            html_generator = HTMLGenerator()
-            entities = spec.get('entities')
-            rslt = html_generator.generate_html(spec)
-            print rslt
-    except Exception as e:
-        print >>sys.stderr, 'HTML generation of %s failed' % args
+    #try:
+    html_generator = HTMLGenerator()
+    rslt = html_generator.generate_html(*args)
+    print rslt
+    #except Exception as e:
+    #    print >>sys.stderr, 'HTML generation of %s failed: %s' % (args, e)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

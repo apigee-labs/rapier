@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Entity Name</th>
+                <th>Entity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a name="PropertyTracker"></a>PropertyTracker</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>dogs</td>
+                    <td>0:n (<a href="#Dog">Dog</a>)</td>
+                    <td>URL of a Collection of Dogs                    </td>
+                  </tr>
+                  <tr>
+                    <td>people</td>
+                    <td>0:n (<a href="#Person">Person</a>)</td>
+                    <td>URL of a Collection of Persons                    </td>
+                  </tr>
+                  <tr>
+                    <td>bicycles</td>
+                    <td>0:n (<a href="#Bicycle">Bicycle</a>)</td>
+                    <td>URL of a Collection of Bicycles                    </td>
+                  </tr>
+                  <tr>
+                    <td>institutions</td>
+                    <td>0:n (<a href="#Institution">Institution</a>)</td>
+                    <td>URL of a Collection of Institutions                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Dog"></a>Dog</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>birth_date</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>fur_color</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>owner</td>
+                    <td>0:1 (<a href="#Person">Person</a> or <a href="#Institution">Institution</a>)</td>
+                    <td>URL of a Person or Institution                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Bicycle"></a>Bicycle</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>purchase_date</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>paint_color</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>owner</td>
+                    <td>0:1 (<a href="#Person">Person</a> or <a href="#Institution">Institution</a>)</td>
+                    <td>URL of a Person or Institution                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Person"></a>Person</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>birth-date</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>possessions</td>
+                    <td>0:n (<a href="#Dog">Dog</a> or <a href="#Bicycle">Bicycle</a>)</td>
+                    <td>URL of a Collection of Dogs and Bicycles                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Institution"></a>Institution</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>foundation-date</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>assets</td>
+                    <td>0:n (<a href="#Dog">Dog</a> or <a href="#Bicycle">Bicycle</a>)</td>
+                    <td>URL of a Collection of Dogs and Bicycles                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Resource"></a>Resource</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>self</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="PersistentResource"></a>PersistentResource</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>created</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>creator</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modified</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>modifier</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Collection"></a>Collection</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>items</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+        </tbody>
+    </table>          
+    </div>
+  </div>
+
+</body>
+</html>
+

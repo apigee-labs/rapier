@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+</head>
+<body>
+
+  <div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Entity Name</th>
+                <th>Entity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a name="Store"></a>Store</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>pets</td>
+                    <td>n (<a href="#Pet">Pet</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>orders</td>
+                    <td>n (<a href="#Order">Order</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>users</td>
+                    <td>n (<a href="#User">User</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>logins</td>
+                    <td>n (<a href="#Session">Session</a>)</td>
+                    <td>POST a Login to log yourself in. You will get back the URL of a Session. DELETE the Session to log out                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Order"></a>Order</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>pet</td>
+                    <td>0:1 (<a href="#Pet">Pet</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>quantity</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>shipDate</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td>string</td>
+                    <td>Order Status                    </td>
+                  </tr>
+                  <tr>
+                    <td>complete</td>
+                    <td>boolean</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="User"></a>User</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>username</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>firstName</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>lastName</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>email</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>password</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>phone</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>userStatus</td>
+                    <td>integer</td>
+                    <td>User Status                    </td>
+                  </tr>
+                  <tr>
+                    <td>session</td>
+                    <td>0:1 (<a href="#Session">Session</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Image"></a>Image</td>
+            <td>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Pet"></a>Pet</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>category</td>
+                    <td></td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>tags</td>
+                    <td>array()</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td>string</td>
+                    <td>pet status in the store                    </td>
+                  </tr>
+                  <tr>
+                    <td>images</td>
+                    <td>n (<a href="#Image">Image</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Inventory"></a>Inventory</td>
+            <td>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Session"></a>Session</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>rate_limit</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>expires_after</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Login"></a>Login</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>username</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>password</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Tag"></a>Tag</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>id</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Category"></a>Category</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>id</td>
+                    <td>integer</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Collection"></a>Collection</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>items</td>
+                    <td>array(object)</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="PetCollection"></a>PetCollection</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>items</td>
+                    <td>array()</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+        </tbody>
+    </table>          
+    </div>
+  </div>
+
+</body>
+</html>
+
