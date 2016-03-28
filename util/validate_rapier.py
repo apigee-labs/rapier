@@ -93,7 +93,7 @@ class OASValidator(object):
         if not isinstance(title, basestring):
             self.error('title must be a string', key)
 
-    def validate_version(self, key, version):
+    def validate_version(self, node, key, version):
         if not isinstance(version, basestring):
             self.error('version must be a string ', key)
         
@@ -252,7 +252,7 @@ class OASValidator(object):
         if hasattr(relationship, 'keys'):
             self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship, key)
         elif isinstance(relationship, basestring):
-            self.validate_relationship_entities(key, relationship)
+            self.validate_relationship_entities(node, key, relationship)
         else:
             self.error('relationship must be a string or a map %s' % relationship)        
             
@@ -310,7 +310,7 @@ class OASValidator(object):
         if not isinstance(enum, list):
             self.error('enum must be a list: %s' % enum, key) 
         for enum_val in enum:
-            self.validate_enum_val(enum_val, key)
+            self.validate_enum_val(node, enum_val, key)
                         
     def validate_relationship_name(self, node, key, name):
         if not isinstance(name, basestring):
@@ -365,10 +365,10 @@ class OASValidator(object):
             self.error('oneOf value must be a list: %s' % value, key)
 
     def validate_schema_allOf(self, node, key, value):
-        self.validate_starOf(key, value, self.__class__.schema_keywords)
+        self.validate_starOf(node, key, value, self.__class__.schema_keywords)
                                     
     def validate_schema_oneOf(self, node, key, value):
-        self.validate_starOf(key, value, self.__class__.schema_keywords)
+        self.validate_starOf(node, key, value, self.__class__.schema_keywords)
                                     
     def validate_query_parameter_allOf(self, node, key, value):
         self.validate_starOf(key, value, self.__class__.schema_keywords)
@@ -423,16 +423,19 @@ class OASValidator(object):
     def validate_relationship_consumes(self, node, key, consumes):
         if hasattr(consumes, 'keys'):
             for media_type, entities in consumes.iteritems():
-                self.validate_media_type(media_type, media_type)
-                if isinstance(entities, list):
+                self.validate_media_type(node, media_type, media_type)
+                if isinstance(entities, basestring):
+                    entities = entities.split()
+                elif isinstance(entities, list):
                     for entity in entities:
                         if not isinstance(entity, basestring):
                             self.error('entity URL must be a string: %s' % entity, media_type)
-                elif not isinstance(entities, basestring):
+                else:
                     self.error('entity URLs associated with media_type must be string or list: %s' % entities, media_type)
+                consumes[media_type] = [self.abs_url(entity) for entity in entities]
         elif isinstance(consumes, list):
             for media_type in consumes:
-                self.validate_media_type(media_type, media_type)
+                self.validate_media_type(node, media_type, media_type)
         else:
             if not isinstance(consumes, basestring):
                 self.error('relationship consumes must be a list, string or relationship_consumes object: %s' % consumes, key)
