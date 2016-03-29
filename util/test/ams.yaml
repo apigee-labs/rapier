@@ -5,7 +5,7 @@ entities:
       APIs define sets of HTTP URL paths available on the World-wide Web
       <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an amalgam of the API and APIProduct concepts
     allOf:
-    - '../common.yaml/#/entities/PersistentResource'
+    - '$ref': '../common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "API"
@@ -29,7 +29,7 @@ entities:
         items:
           type: string
           format: uri
-          relationship: '#Environment'
+          relationship: '../deployment2.yaml#Environment'
       uriPaths:
         description: > 
           Defines the URI paths to which this API gives access. May include wildcard characters, for example "/a/*", or "/a/**"
@@ -49,7 +49,7 @@ entities:
       APIProducts define a set of rules, such as quota, constraining client access to a specific API. 
       <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an amalgam of the API and ApiProduct concepts
     allOf:
-    - '../common.yaml/#/entities/PersistentResource'
+    - '$ref': '../common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"
@@ -65,7 +65,7 @@ entities:
         description: >
           The name to be used to display to humans for this APIProduct. Used in the UI.
       description:
-        description: A textual description of the Subscription
+        description: A textual description of the APIProduct
         type: string
       api:
         description: >
@@ -95,7 +95,7 @@ entities:
       <p>Historical Note: The App concept in Apigee Edge (circa 2016) is similar to the Subscription concept,
       to the point where it can be considered a renaming.
     allOf:
-    - '../common.yaml/#/entities/PersistentResource'
+    - '$ref': '../common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Subscription"
@@ -118,14 +118,11 @@ entities:
         type:
           properties:
             apiProducts:
-              type:
-                properties:
-                  product:
-                    type: string
-                    format: uri
-                    relationship: '#APIProduct'
-                approved:
-                  type: boolean
+              properties:
+                product:
+                  type: string
+                  format: uri
+                  relationship: '#APIProduct'
             key:
               type: string
             secret:
@@ -143,4 +140,3 @@ entities:
         relationship: '../users.yaml#User'
       approved:
         type: boolean
-  Credential:     

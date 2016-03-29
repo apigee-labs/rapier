@@ -87,7 +87,8 @@ class OASValidator(object):
         self.similarity_ratio = 0.7
         self.checked_id_uniqueness = False
         self.validated_nodes = set()
-        self.external_spec_validators = dict()
+        self.included_spec_validators = dict()
+        self.referenced_spec_validators = dict()
         self.relationship_targets = dict() 
 
     def validate_title(self, key, title):
@@ -225,7 +226,7 @@ class OASValidator(object):
                 self.validated_nodes.add(id(node))
                 if '$ref' in node:
                     ref_key = [key for key in node.iterkeys() if key == '$ref'][0]
-                    resolved_node = self.resolve_json_ref(node['$ref'], ref_key)
+                    resolved_node = keyword_validators[key](self, node, ref_key, node['$ref']) 
                     node['$ref'] = self.abs_url(node['$ref'])
                     if node is not None:
                         node['resolved_node'] = resolved_node
@@ -243,7 +244,9 @@ class OASValidator(object):
             self.error('node must be a map: %s' % node, node_key)
 
     def validate_property_type(self, node, key, p_type):
-        if not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
+        if hasattr(p_type, 'keys'): #nested schema
+            self.check_and_validate_keywords(self.__class__.property_keywords, p_type, key)
+        elif not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
             self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
             
     def validate_query_parameter_property_type(self, node, key, p_type):
@@ -379,6 +382,12 @@ class OASValidator(object):
     def validate_schema_oneOf(self, node, key, value):
         self.validate_starOf(node, key, value, self.__class__.schema_keywords)
                                     
+    def validate_entity_allOf(self, node, key, value):
+        self.validate_starOf(node, key, value, self.__class__.entity_keywords)
+                                    
+    def validate_entity_oneOf(self, node, key, value):
+        self.validate_starOf(node, key, value, self.__class__.entity_keywords)
+                                    
     def validate_query_parameter_allOf(self, node, key, value):
         self.validate_starOf(key, value, self.__class__.schema_keywords)
                                     
@@ -452,6 +461,12 @@ class OASValidator(object):
     def validate_rapier_description(self, node, key, description):
         if not isinstance(description, basestring):
             self.error('description must be a string: %s' % description, key)
+            
+    def validate_entity_ref(self, node, key, json_pointer):
+         return self.resolve_json_ref(json_pointer, key)
+
+    def validate_schema_ref(self, node, key, json_pointer):    
+         return self.resolve_json_ref(json_pointer, key)
     
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -477,7 +492,8 @@ class OASValidator(object):
         'title': validate_title,
         'description': validate_description,
         'minimum': validate_number,
-        'maximum': validate_number}
+        'maximum': validate_number, 
+        '$ref': validate_schema_ref}
     property_keywords = {
         'relationship': validate_property_relationship}
     property_keywords.update(schema_keywords)
@@ -488,7 +504,10 @@ class OASValidator(object):
         'produces': validate_entity_produces,
         'query_parameters': validate_query_parameters,
         'name': validate_ignore,
-        'permalink_template': validate_ignore}
+        'permalink_template': validate_ignore,
+        'oneOf': validate_entity_oneOf, 
+        'allOf': validate_entity_allOf, 
+        '$ref': validate_entity_ref}
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -526,19 +545,21 @@ class OASValidator(object):
         split_url[0] = path.abspath(path.join(self.abs_filename, split_url[0]))
         return '#'.join(split_url)
             
-    def resolve_validator(self, entity_url):
+    def resolve_validator(self, entity_url, validators):
         abs_url = self.abs_url(entity_url)
         abs_namespace_url = abs_url.split('#')[0]
         if abs_namespace_url == self.abs_filename:
             return self
         else:
-            if abs_namespace_url not in self.external_spec_validators:
+            if abs_namespace_url not in validators:
                 validator = OASValidator()
                 spec, errors = validator.validate(abs_namespace_url)
+                if spec is None:
+                    return None
                 if errors > 0:
-                    self.fatal_error('errors reading file: %s' % abs_namespace_url)
-                self.external_spec_validators[abs_namespace_url] = validator
-            return self.external_spec_validators[abs_namespace_url]
+                    self.error('errors reading file: %s' % abs_namespace_url)
+                validators[abs_namespace_url] = validator
+            return validators[abs_namespace_url]
 
     def resolve_json_ref(self, json_ref, key, spec=None):
         if isinstance(json_ref, basestring):
@@ -546,7 +567,9 @@ class OASValidator(object):
             if len(json_ref_split) < 2:
                 self.error('entity missing fragment %s' % json_ref, key)
             else:
-                validator = self.resolve_validator(json_ref_split[0])
+                validator = self.resolve_validator(json_ref_split[0], self.included_spec_validators)
+                if validator is None:
+                    self.fatal_error('unable to open file: %s' % json_ref_split[0], key)
                 json_ref_fragment = json_ref_split[1]
                 if json_ref_fragment.startswith('/'):
                     parts = json_ref_fragment[1:].split('/')
@@ -566,7 +589,9 @@ class OASValidator(object):
             self.error('entity URL must be a string %s' % entity_url, key)
         else:
             abs_entity_url = self.abs_url(entity_url)
-            validator = self.resolve_validator(entity_url)
+            validator = self.resolve_validator(entity_url, self.referenced_spec_validators)
+            if validator is None:
+                return abs_entity_url, None
             entity = validator.entities.get(abs_entity_url)
             if entity is not None:
                 return abs_entity_url, entity  
@@ -581,7 +606,8 @@ class OASValidator(object):
             with open(filename) as f:
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
-            self.fatal_error('error reading file: %s %s' % (filename, e.strerror))
+            self.warning('unable to read file: %s %s' % (filename, e.strerror))
+            return None, 0
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         entities = self.rapier_spec.setdefault('entities', {})
@@ -615,17 +641,17 @@ class OASValidator(object):
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
         return self.rapier_spec, self.errors
 
-    def entity_iteritems(self):
+    def included_entity_iteritems(self):
         for entity_item in self.rapier_spec.get('entities', {}).iteritems():
             yield entity_item
-        for validator in self.external_spec_validators.itervalues():
-            for entity_item in validator.entity_iteritems():
+        for validator in self.included_spec_validators.itervalues():
+            for entity_item in validator.included_entity_iteritems():
                 yield entity_item
 
-    def build_entity_map(self):
+    def build_included_entity_map(self):
         result = {}
         result.update(self.entities)
-        for validator in self.external_spec_validators.itervalues():
+        for validator in self.included_spec_validators.itervalues():
             result.update(validator.entities)
         return result
 
@@ -635,7 +661,6 @@ class OASValidator(object):
             for item, count in Counter(keys).items():
                 if count > 1:
                     key_nodes = [node_tuple[0] for node_tuple in node.value if node_tuple[0].value == item]
-                    self.errors += 1
                     self.warning('%s occurs %s times, at %s' % (item, count, ' and '.join(['line %s, column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1) for key_node in key_nodes])))            
             loader.flatten_mapping(node)
             return PresortedOrderedDict(loader.construct_pairs(node))
