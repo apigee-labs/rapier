@@ -33,7 +33,7 @@ entities:
           relationship: '../deployment2.yaml#Environment'
       uriPaths:
         description: > 
-          Defines the URI paths to which this API gives access. May include wildcard characters, for example "/a/*", or "/a/**"
+          Defines the URI paths to which this API gives access. May include wildcard characters, for example /a/*, or /a/**
         type: array
         items:
           type: string
@@ -129,6 +129,8 @@ entities:
         type: object
         properties:
           apiProducts:
+            description: >
+              The list of APIProducts to which this Subscription gives access
             type: array
             items:
               properties:
@@ -137,13 +139,21 @@ entities:
                   format: uri
                   relationship: '#APIProduct'
           key:
+            description: >
+              The API key
             type: string
           secret:
+            description: >
+              The API secret
             type: string
           issued:
+            description: >
+              The date when the key and secret were issued
             type: string
             format: date-time
           approved:
+            description: >
+              Whether or not the credentials have been approved by the API owner 
             type: boolean
       subscriber:
         description: >
@@ -152,4 +162,6 @@ entities:
         format: uri
         relationship: '../users.yaml#User'
       approved:
+        description: >
+          Whether or not the subscription has been approved by the API owner 
         type: boolean
