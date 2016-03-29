@@ -873,6 +873,7 @@ class OASGenerator(object):
         result.update({entity['id']: '#/definitions/%s' % name for name, entity in entities.iteritems()})
         for nested_validator in validator.included_spec_validators.itervalues():
             result.update(self.oas_definition_map(nested_validator))
+        print >>sys.stderr, set(result.keys()) - set(self.included_entity_map.keys())
         return result
             
 class SegmentSpec(object):

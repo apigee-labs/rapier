@@ -143,7 +143,8 @@ class HTMLGenerator(object):
             rslt = '''<!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://design.apigee.com/ui-framework/latest/css/ui-framework-core.css">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic,300,300italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
