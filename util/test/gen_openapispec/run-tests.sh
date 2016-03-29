@@ -14,7 +14,6 @@ cd $ROOT_DIR
 ./util/gen_openapispec.py -is util/test/spec-hub.yaml > util/test/gen_openapispec/spec-hub-with-impl.yaml
 ./util/gen_openapispec.py -s util/test/ssl.yaml > util/test/gen_openapispec/ssl.yaml
 ./util/gen_openapispec.py util/test/deployment.yaml > util/test/gen_openapispec/deployment.yaml
-./util/gen_openapispec.py util/test/deployment2.yaml > util/test/gen_openapispec/deployment2.yaml
 ./util/gen_openapispec.py util/test/site-webmaster.yaml > util/test/gen_openapispec/site-webmaster.yaml
 ./util/gen_openapispec.py util/test/deployment-primitives.yaml > util/test/gen_openapispec/deployment-primitives.yaml
 ./util/gen_openapispec.py util/test/deployment-primitives-simplified.yaml > util/test/gen_openapispec/deployment-primitives-simplified.yaml

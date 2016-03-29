@@ -14,7 +14,6 @@ cd $ROOT_DIR
 ./util/gen_html.py util/test/spec-hub.yaml > util/test/gen_html/spec-hub-with-impl.html
 ./util/gen_html.py util/test/ssl.yaml > util/test/gen_html/ssl.html
 ./util/gen_html.py util/test/deployment.yaml > util/test/gen_html/deployment.html
-./util/gen_html.py util/test/deployment2.yaml > util/test/gen_html/deployment2.html
 ./util/gen_html.py util/test/site-webmaster.yaml > util/test/gen_html/site-webmaster.html
 ./util/gen_html.py util/test/deployment-primitives.yaml > util/test/gen_html/deployment-primitives.html
 ./util/gen_html.py util/test/deployment-primitives-simplified.yaml > util/test/gen_html/deployment-primitives-simplified.html

@@ -23,7 +23,7 @@ entities:
       The state of an Environment is controlled by POSTing requests to the URL provided in its requests property
       The Deployment Service stores Environments that are currently (intended to be) running, but also stores Environments that once ran, and Environments that will run in the future.
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -49,7 +49,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Deployment'
       domain_name:
@@ -87,7 +87,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#EnvironmentStartRequest #EnvironmentStopRequest #EnvironmentRetirementRequest'  
   EnvironmentStartRequest:
@@ -95,7 +95,7 @@ entities:
       An EnvironmentStartRequest is used to initiate the creation of the runtime infrastructure
       required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -109,7 +109,7 @@ entities:
       An EnvironmentRetirementRequest is used to retire an Environment that is no longer needed.
       required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -123,7 +123,7 @@ entities:
       An EnvironmentStopRequest is used to delete the runtime infrastructure
       required by an Environment. It can only be used if the requested_state of the Environment is running
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -142,7 +142,7 @@ entities:
       </ul>
        The Deployment Service stores Deployments that are currently (intended to be) running, but also stores Deployments that once ran, and Deployments that will run in the future.
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -209,7 +209,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: > 
             #DeploymentStartRequest #DeploymentStopRequest #DeploymentOnlineRequest #DeploymentOfflineRequest 
@@ -220,7 +220,7 @@ entities:
       required by an Deployment. It can only be used if the requested_state of the Deployment is initial or stopped.
       A successful DeploymentStartRequest will change the requested_state of the Deployment to offline
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind: 
         description: >
@@ -237,7 +237,7 @@ entities:
       required by an Deployment. It can only be used if the requested_state of the Deployment is offline
       A successful DeploymentStopRequest will change the requested_state of the Deployment to stopped
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -252,7 +252,7 @@ entities:
       It can only be used if the requested_state of the Deployment is online.
       A successful DeploymentStopRequest will change the requested_state of the Deployment to offline
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -268,7 +268,7 @@ entities:
       A successful DeploymentOnlineRequest will change the requested_state of the Deployment to online.
       DeploymentOnlineRequest can only be used if the requested_state of the Deployment is offline.
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -292,7 +292,7 @@ entities:
       A successful DeploymentStopRequest will change the requested_state of the Deployment back to offline.
       DeploymenStatisticsRequest can only be used if the requested_state of the Deployment is offline.
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -327,7 +327,7 @@ entities:
   DeploymentScalingRequest:
     description: A DeploymentScalingRequest is used to increase or decrease the number of replicas associated with a deployment 
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -344,7 +344,7 @@ entities:
       A DeploymentScalingRequest is used to mark a Deployment as no longer being current. After a Deployment has been
       marked as retired, it can be deleted, or it can be kept around as a historic record.
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -358,7 +358,7 @@ entities:
       A System represents a set of Components that work together. Systems are defined in development. Systems
       are deployed by creating Environments that run them. Multiple Environments may run the same System. 
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -375,7 +375,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Environment'
       has_components:
@@ -383,7 +383,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Component'
   Component:
@@ -392,7 +392,7 @@ entities:
       Components are deployed by creating a Deployment entity inside some Environment for a particular Revision of the Component,
       and then issuing a DeploymentStartRequest for that Deployment.  
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -406,14 +406,14 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Revision'
   Revision:
     description: >
       Revisions model successive snapshots of an implementation Component, as produced by a Development organization. 
     allOf:
-    - $ref: '#/entities/PersistentResource'
+    - $ref: './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         type: string
@@ -427,7 +427,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Deployment'        
   StatisticsResults:
@@ -447,7 +447,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#System'        
       environments:
@@ -455,7 +455,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Environment'        
       components:
@@ -463,7 +463,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Component'        
       revisions:
@@ -471,108 +471,9 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#MultiValuedRelationship'
+          collection_resource: './common.yaml/#MultiValuedRelationship'
           multiplicity: 0:n
           entities: '#Revision'
-  MultiValuedRelationship:
-    description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
-    oneOf:
-    - $ref: '#/entities/Collection'
-    - $ref: '#/entities/Page'      
-  Collection:
-    description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Collection]
-      items:
-        type: array
-        items: 
-          type: object
-    query_parameters:
-    - name: properties
-      items:
-        type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
-    - name: orderby
-      type: string
-    - name: direction
-      type: string
-      required: false
-      enum: ['ascending', 'descending']
-    readOnly: true
-  Page:
-    description: >
-      The value must always be the string "Environment". This property is always set 
-      by the server in responses to GET. It must be set by the client on POST, 
-      and must not be set by the client on PATCH. (PUT is not supported) 
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      kind:
-        type: string
-        enum: [Page]
-      items:
-        type: array
-        items: 
-          type: object
-      collection:
-        type: string
-        format: uri
-    query_parameters:
-    - name: properties
-      items:
-        type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
-    readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/entities/Resource'
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
 securityDefinitions:
   sso:
     type: oauth2
