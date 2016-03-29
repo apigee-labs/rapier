@@ -9,12 +9,15 @@ class HTMLGenerator(object):
         rslt = property.get('description', '')
         return rslt
     
-    def create_link(self, url):
-        split_url = url.split('#')
-        name = split_url[1]
-        if split_url[0] == self.validator.abs_filename:
-            url = '#%s' % name
-        return '<a href="{}">{}</a>'.format(url, name)
+    def create_link(self, uri_ref):
+        uri_ref = self.validator.relative_url(uri_ref)
+        split_ref = uri_ref.split('#')
+        name = split_ref[1]
+        url = split_ref[0]
+        if url.endswith('.yaml'):
+            split_ref[0] = url[:-4] + 'html'
+            uri_ref = '#'.join(split_ref)
+        return '<a href="{}">{}</a>'.format(uri_ref, name)
     
     def generate_property_type(self, property):
         if 'relationship' in property:
@@ -78,24 +81,19 @@ class HTMLGenerator(object):
             rslt = '''
                 <div> 
                 Includes properties and other constraints from all of:
-                <ul><a href="{0}">{0}</a>
+                <ul><{0}</a>
                 </ul>
                 </div>'''
             row = '''
                     <li>%s
                     </li>'''
-            rows = [row.format(replace_dot_yaml(self.validator.relative_url(ref['$ref']))) for ref in allOf]
+            rows = [row.format(self.create_link(ref['$ref'])) for ref in allOf]
             return rslt % ''.join(rows)
         else:
-            rel_entity_url = self.validator.relative_url(self.entities[allOf[0]['$ref']]['id'])
-            split_rel_entity_url = rel_entity_url.split('#')
-            if split_rel_entity_url[0].endswith('.yaml'):
-                split_rel_entity_url[0] = split_rel_entity_url[0][:-4] + 'html'
-                rel_entity_url = '#'.join(split_rel_entity_url)
             return '''
                 <div> 
-                Includes properties and other constraints from <a href="{0}">{0}</a>
-                </div>'''.format(rel_entity_url)
+                Includes properties and other constraints from {0}
+                </div>'''.format(self.create_link(self.entities[allOf[0]['$ref']]['id']))
              
     def generate_entity_cell(self, entity):
         rslt = entity.get('description', '')

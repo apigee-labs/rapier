@@ -26,7 +26,7 @@
 </ul> The state of an Environment is controlled by POSTing requests to the URL provided in its requests property The Deployment Service stores Environments that are currently (intended to be) running, but also stores Environments that once ran, and Environments that will run in the future.
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -92,7 +92,7 @@
             <td>An EnvironmentStartRequest is used to initiate the creation of the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -118,7 +118,7 @@
             <td>An EnvironmentRetirementRequest is used to retire an Environment that is no longer needed. required by an Environment. It can only be used if the requested_state of the Environment is initial or stopped
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -144,7 +144,7 @@
             <td>An EnvironmentStopRequest is used to delete the runtime infrastructure required by an Environment. It can only be used if the requested_state of the Environment is running
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -175,7 +175,7 @@
  The Deployment Service stores Deployments that are currently (intended to be) running, but also stores Deployments that once ran, and Deployments that will run in the future.
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -246,7 +246,7 @@
             <td>An DeploymentStartRequest is used to initiate the creation of the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is initial or stopped. A successful DeploymentStartRequest will change the requested_state of the Deployment to offline
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -277,7 +277,7 @@
             <td>An DeploymentStopRequest is used to delete the runtime infrastructure required by an Deployment. It can only be used if the requested_state of the Deployment is offline A successful DeploymentStopRequest will change the requested_state of the Deployment to stopped
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -303,7 +303,7 @@
             <td>An DeploymentOfflineRequest is used to stop any traffic going to [instances of] the deployment. It can only be used if the requested_state of the Deployment is online. A successful DeploymentStopRequest will change the requested_state of the Deployment to offline
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -329,7 +329,7 @@
             <td>An DeploymentOnlineRequest is used to direct traffic to a deployment. The optional hosts and  percentage properties can be used to control which traffic and how much of it. A successful DeploymentOnlineRequest will change the requested_state of the Deployment to online. DeploymentOnlineRequest can only be used if the requested_state of the Deployment is offline.
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -365,7 +365,7 @@
             <td>A DeploymentStatisticsRequest is used to direct traffic to a deployment for a limited period of time. A DeploymentStatisticsRequest is like a DeploymentOnlineRequest that times out. During a DeploymentStatisticsRequest the requested_state of the Deployment will be set to temporarily_online. At the end of successful  DeploymentStatisticsRequest, the requested_state will revert to offline. A successful DeploymentStopRequest will change the requested_state of the Deployment back to offline. DeploymenStatisticsRequest can only be used if the requested_state of the Deployment is offline.
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -417,7 +417,7 @@
             <td><a name="DeploymentScalingRequest"></a>DeploymentScalingRequest</td>
             <td>A DeploymentScalingRequest is used to increase or decrease the number of replicas associated with a deployment
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -448,7 +448,7 @@
             <td>A DeploymentScalingRequest is used to mark a Deployment as no longer being current. After a Deployment has been marked as retired, it can be deleted, or it can be kept around as a historic record.
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -474,7 +474,7 @@
             <td>A System represents a set of Components that work together. Systems are defined in development. Systems are deployed by creating Environments that run them. Multiple Environments may run the same System. 
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -511,7 +511,7 @@
             <td>A Component is a unit of implementation that can be indpeendently deployed. Components are aggregated into systems. Components are deployed by creating a Deployment entity inside some Environment for a particular Revision of the Component, and then issuing a DeploymentStartRequest for that Deployment.  
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -546,7 +546,7 @@
             <td>Revisions model successive snapshots of an implementation Component, as produced by a Development organization. 
 
                 <div> 
-                Includes properties and other constraints from <a href="common.html#PersistentResource">common.html#PersistentResource</a>
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>

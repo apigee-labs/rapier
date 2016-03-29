@@ -550,13 +550,14 @@ class OASValidator(object):
             split_url[0] = os.path.abspath(os.path.join(self.abs_directoryname, split_url[0]))
         return '#'.join(split_url)
             
-    def relative_url(self, url):
-        split_url = url.split('#')
-        if split_url[0] == self.abs_filename:
-            split_url[0] = ''
-        else:
-            split_url[0] = os.path.relpath(split_url[0], self.abs_directoryname)
-        return '#'.join(split_url)
+    def relative_url(self, uri_ref):
+        split_ref = uri_ref.split('#')
+        url = split_ref[0]
+        if url == self.abs_filename:
+            split_ref[0] = ''
+        elif url != '':
+            split_ref[0] = os.path.relpath(url, self.abs_directoryname)
+        return '#'.join(split_ref)
             
     def resolve_validator(self, entity_url, validators):
         abs_url = self.abs_url(entity_url)
