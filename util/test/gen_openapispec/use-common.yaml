@@ -32,36 +32,7 @@ definitions:
         readOnly: true
         x-interface: '#/x-interfaces/Apigee.environments'
     x-interface: '#/x-interfaces/Apigee'
-  MultiValuedRelationship:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
-    x-oneOf:
-    - $ref: '#/definitions/Collection'
-    - $ref: '#/definitions/Page'
-  Collection:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
   Page:
-    description: "The value must always be the string \"Environment\". This property\
-      \ is always set  by the server in responses to GET. It must be set by the client\
-      \ on POST,  and must not be set by the client on PATCH. (PUT is not supported)\
-      \ \n"
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
@@ -76,7 +47,34 @@ definitions:
       collection:
         type: string
         format: uri
+      next_page:
+        type: string
+        format: uri
+        x-interface: ../common.yaml#/x-interfaces/Page
+      previous_page:
+        type: string
+        format: uri
+        x-interface: ../common.yaml#/x-interfaces/Page
     readOnly: true
+    x-interface: ../common.yaml#/x-interfaces/Page
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+  MultiValuedRelationship:
+    readOnly: true
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
   Resource:
     type: object
     properties:
@@ -171,7 +169,8 @@ x-interfaces:
     get:
       parameters:
       - in: query
-        name: orderby
+        name: orderBy
+        required: false
         type: string
       - enum:
         - ascending
