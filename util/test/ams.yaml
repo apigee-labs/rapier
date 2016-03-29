@@ -5,7 +5,7 @@ entities:
       APIs define sets of HTTP URL paths available on the World-wide Web
       <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an amalgam of the API and APIProduct concepts
     allOf:
-    - '$ref': '../common.yaml/#/entities/PersistentResource'
+    - '$ref': './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "API"
@@ -30,7 +30,7 @@ entities:
         items:
           type: string
           format: uri
-          relationship: '../deployment2.yaml#Environment'
+          relationship: './deployment2.yaml#Environment'
       uriPaths:
         description: > 
           Defines the URI paths to which this API gives access. May include wildcard characters, for example /a/*, or /a/**
@@ -50,7 +50,7 @@ entities:
       APIProducts define a set of rules, such as quota, constraining client access to a specific API. 
       <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an amalgam of the API and APIProduct concepts
     allOf:
-    - '$ref': '../common.yaml/#/entities/PersistentResource'
+    - '$ref': './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"
@@ -102,7 +102,7 @@ entities:
       one of these subscriptions per app is only a suggestion—it is not possible to know whether customers use 
       a single subscription for a single app, a single subscription for many apps, or a many subscriptions for one app. 
     allOf:
-    - '$ref': '../common.yaml/#/entities/PersistentResource'
+    - '$ref': './common.yaml/#/entities/PersistentResource'
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Subscription"
@@ -160,7 +160,7 @@ entities:
           The User who is subscribing.
         type: string
         format: uri
-        relationship: '../users.yaml#User'
+        relationship: './users.yaml#User'
       approved:
         description: >
           Whether or not the subscription has been approved by the API owner 

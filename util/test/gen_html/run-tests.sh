@@ -22,3 +22,4 @@ cd $ROOT_DIR
 ./util/gen_html.py util/test/build-and-push.yaml > util/test/gen_html/build-and-push.html
 ./util/gen_html.py util/test/build.yaml > util/test/gen_html/build.html
 ./util/gen_html.py util/test/ams.yaml > util/test/gen_html/ams.html
+./util/gen_html.py util/test/common.yaml > util/test/gen_html/common.html

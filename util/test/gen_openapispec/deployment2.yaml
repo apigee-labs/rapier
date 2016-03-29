@@ -543,13 +543,13 @@ definitions:
       next_page:
         type: string
         format: uri
-        x-interface: ../common.yaml#/x-interfaces/Page
+        x-interface: common.yaml#/x-interfaces/Page
       previous_page:
         type: string
         format: uri
-        x-interface: ../common.yaml#/x-interfaces/Page
+        x-interface: common.yaml#/x-interfaces/Page
     readOnly: true
-    x-interface: ../common.yaml#/x-interfaces/Page
+    x-interface: common.yaml#/x-interfaces/Page
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'

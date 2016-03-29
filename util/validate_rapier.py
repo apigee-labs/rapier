@@ -13,7 +13,7 @@ from yaml.parser import Parser
 from yaml.constructor import Constructor, BaseConstructor, SafeConstructor
 from urlparse import urlsplit
 from numbers import Number
-from os import path
+import os
 
 class PresortedList(list):
     def sort(self, *args, **kwargs):
@@ -544,7 +544,18 @@ class OASValidator(object):
 
     def abs_url(self, url):
         split_url = url.split('#')
-        split_url[0] = path.abspath(path.join(self.abs_filename, split_url[0]))
+        if split_url[0] == '':
+            split_url[0] = self.abs_filename
+        else:
+            split_url[0] = os.path.abspath(os.path.join(self.abs_directoryname, split_url[0]))
+        return '#'.join(split_url)
+            
+    def relative_url(self, url):
+        split_url = url.split('#')
+        if split_url[0] == self.abs_filename:
+            split_url[0] = ''
+        else:
+            split_url[0] = os.path.relpath(split_url[0], self.abs_directoryname)
         return '#'.join(split_url)
             
     def resolve_validator(self, entity_url, validators):
@@ -571,7 +582,7 @@ class OASValidator(object):
             else:
                 validator = self.resolve_validator(json_ref_split[0], self.included_spec_validators)
                 if validator is None:
-                    self.fatal_error('unable to open file: %s' % json_ref_split[0], key)
+                    self.fatal_error('unable to open file: %s' % json_ref_split[0])
                 json_ref_fragment = json_ref_split[1]
                 if json_ref_fragment.startswith('/'):
                     parts = json_ref_fragment[1:].split('/')
@@ -603,7 +614,8 @@ class OASValidator(object):
 
     def validate(self, filename):
         self.filename = filename
-        self.abs_filename = path.abspath(filename)
+        self.abs_filename = os.path.abspath(filename)
+        self.abs_directoryname = os.path.dirname(self.abs_filename)
         try:
             with open(filename) as f:
                 self.rapier_spec = self.marked_load(f.read())

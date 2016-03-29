@@ -16,7 +16,7 @@
         </thead>
         <tbody>
           <tr>
-            <td><a name="Builder"></a>Builder</td>
+            <td><a name="Page"></a>Page</td>
             <td>
                 <div> 
                 Includes properties and other constraints from <a href="#Resource">#Resource</a>
@@ -36,8 +36,23 @@
                     <td>                    </td>
                   </tr>
                   <tr>
-                    <td>buildRequests</td>
-                    <td>0:n (<a href="#BuildRequest">BuildRequest</a>)</td>
+                    <td>items</td>
+                    <td>[object]</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>collection</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>next_page</td>
+                    <td>0:1 (<a href="#Page">Page</a>)</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>previous_page</td>
+                    <td>0:1 (<a href="#Page">Page</a>)</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -45,10 +60,10 @@
           </tr>
 
           <tr>
-            <td><a name="BuildRequest"></a>BuildRequest</td>
+            <td><a name="Collection"></a>Collection</td>
             <td>
                 <div> 
-                Includes properties and other constraints from <a href="#PersistentResource">#PersistentResource</a>
+                Includes properties and other constraints from <a href="#Resource">#Resource</a>
                 </div>
               <table class="table table-striped table-bordered">
                 <thead>
@@ -65,23 +80,8 @@
                     <td>                    </td>
                   </tr>
                   <tr>
-                    <td>environment</td>
-                    <td>0:1 (<a href="#Environment">Environment</a>)</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>zip_contents</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>status</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>spec</td>
-                    <td>0:1 (<a href="#PodTemplateSpec">PodTemplateSpec</a>)</td>
+                    <td>items</td>
+                    <td>[object]</td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -89,13 +89,34 @@
           </tr>
 
           <tr>
-            <td><a name="Environment"></a>Environment</td>
+            <td><a name="MultiValuedRelationship"></a>MultiValuedRelationship</td>
             <td>            </td>
           </tr>
 
           <tr>
-            <td><a name="PodTemplateSpec"></a>PodTemplateSpec</td>
-            <td>            </td>
+            <td><a name="Resource"></a>Resource</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Type</th>
+                    <th>Property Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>self</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                  <tr>
+                    <td>kind</td>
+                    <td>string</td>
+                    <td>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
           </tr>
 
           <tr>
@@ -131,61 +152,6 @@
                   <tr>
                     <td>modifier</td>
                     <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
-            <td><a name="Resource"></a>Resource</td>
-            <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Type</th>
-                    <th>Property Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>self</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>kind</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
-            <td><a name="Collection"></a>Collection</td>
-            <td>
-                <div> 
-                Includes properties and other constraints from <a href="#Resource">#Resource</a>
-                </div>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Type</th>
-                    <th>Property Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>kind</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>items</td>
-                    <td>[object]</td>
                     <td>                    </td>
                   </tr>
                 </tbody>

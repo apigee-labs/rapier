@@ -32,7 +32,7 @@ definitions:
         type: string
       displayName:
         description: 'The name to be used to display to humans for this API. Used
-          in the UI.
+          in the UI. type: string
 
           '
       description:
@@ -45,10 +45,10 @@ definitions:
         items:
           type: string
           format: uri
-          x-interface: ../deployment2.yaml#/x-interfaces/Environment
+          x-interface: deployment2.yaml#/x-interfaces/Environment
       uriPaths:
         description: 'Defines the URI paths to which this API gives access. May include
-          wildcard characters, for example "/a/*", or "/a/**"
+          wildcard characters, for example /a/*, or /a/**
 
           '
         type: array
@@ -69,7 +69,7 @@ definitions:
   APIProduct:
     description: 'APIProducts define a set of rules, such as quota, constraining client
       access to a specific API.  <p>Historical Note: The APIProduct concept in Apigee
-      Edge (circa 2016) is an amalgam of the API and ApiProduct concepts
+      Edge (circa 2016) is an amalgam of the API and APIProduct concepts
 
       '
     allOf:
@@ -93,6 +93,7 @@ definitions:
           Used in the UI.
 
           '
+        type: string
       description:
         description: A textual description of the APIProduct
         type: string
@@ -111,6 +112,9 @@ definitions:
         items:
           type: string
       quota:
+        description: 'Defines the quota of requests allowed by this APIProduct.
+
+          '
         type: object
         properties:
           limit:
@@ -126,11 +130,14 @@ definitions:
             - month
     x-interface: '#/x-interfaces/APIProduct'
   Subscription:
-    description: 'Subscriptions record the usage of an Subscription by a subscriber.  <p>Historical
-      Note: The App concept in Apigee Edge (circa 2016) is similar to the Subscription
-      concept, to the point where it can be considered a renaming.
-
-      '
+    description: "Subscriptions record the usage of an Subscription by a subscriber.\
+      \  <p>Historical Note: The App concept in Apigee Edge (circa 2016) is similar\
+      \ to the Subscription concept, to the point where it can be considered a renaming.\
+      \ App was not the best choice of name because the concept  being modelled is\
+      \ not an app, it is just a key-protected usage of an APIProduct. Using one of\
+      \ these subscriptions per app is only a suggestion\u2014it is not possible to\
+      \ know whether customers use  a single subscription for a single app, a single\
+      \ subscription for many apps, or a many subscriptions for one app. \n"
     allOf:
     - $ref: '#/definitions/PersistentResource'
     properties:
@@ -143,7 +150,7 @@ definitions:
       name:
         description: 'The name of the Subscription. Must be unique amongst Subscription
           of the same org.  The name of the Subscription, along with the name of the
-          org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/Subscription/{Subscription-name}
+          org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/subscription/{Subscription-name}
 
           '
         type: string
@@ -155,24 +162,48 @@ definitions:
       description:
         description: A textual description of the Subscription
         type: string
-      credential:
-        description: The Key and the products it applies to
+      credentials:
+        description: 'The Key/Secret and the products they apply to. Unlike The 2016
+          Edge "App" concept, only one key per Subscription is supported. Edge was
+          motiviated to allow many because they thought they were modeling apps, and
+          apps may use multiple keys. Since subscriptions are not apps, and apps are
+          free to use as many subscriptions as they like, there is no need to support
+          multiples keys per Subscription
+
+          '
         type: object
         properties:
           apiProducts:
-            properties:
-              product:
-                type: string
-                format: uri
-                x-interface: '#/x-interfaces/APIProduct'
+            description: 'The list of APIProducts to which this Subscription gives
+              access
+
+              '
+            type: array
+            items:
+              properties:
+                product:
+                  type: string
+                  format: uri
+                  x-interface: '#/x-interfaces/APIProduct'
           key:
+            description: 'The API key
+
+              '
             type: string
           secret:
+            description: 'The API secret
+
+              '
             type: string
           issued:
+            description: 'The date when the key and secret were issued
+
+              '
             type: string
             format: date-time
           approved:
+            description: "Whether or not the credentials have been approved by the\
+              \ API owner \n"
             type: boolean
       subscriber:
         description: 'The User who is subscribing.
@@ -180,8 +211,10 @@ definitions:
           '
         type: string
         format: uri
-        x-interface: ../users.yaml#/x-interfaces/User
+        x-interface: users.yaml#/x-interfaces/User
       approved:
+        description: "Whether or not the subscription has been approved by the API\
+          \ owner \n"
         type: boolean
   Page:
     allOf:
@@ -201,13 +234,13 @@ definitions:
       next_page:
         type: string
         format: uri
-        x-interface: ../common.yaml#/x-interfaces/Page
+        x-interface: common.yaml#/x-interfaces/Page
       previous_page:
         type: string
         format: uri
-        x-interface: ../common.yaml#/x-interfaces/Page
+        x-interface: common.yaml#/x-interfaces/Page
     readOnly: true
-    x-interface: ../common.yaml#/x-interfaces/Page
+    x-interface: common.yaml#/x-interfaces/Page
   Collection:
     allOf:
     - $ref: '#/definitions/Resource'

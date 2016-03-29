@@ -255,7 +255,7 @@ class OASGenerator(object):
                 self.openapispec_interfaces[path] = self.interfaces[prefix.entity_uri]
             return {'$ref': '#/x-interfaces/%s' % path}
         else:
-            rel_path = os.path.relpath(split_entity_uri[0], self.validator.abs_filename)
+            rel_path = self.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
 
     def build_entity_interface(self, entity_url_spec):

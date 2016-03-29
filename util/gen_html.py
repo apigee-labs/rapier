@@ -69,6 +69,11 @@ class HTMLGenerator(object):
               </table>''' % property_rows
 
     def allOf(self, allOf):
+        def replace_dot_yaml(url):
+            split_url = url.split('#')
+            if split_url[0].endswith('.yaml'):
+                split_url[0] = split_url[0][:-4] + 'html'
+                url = '#'.join(split_url)
         if len(allOf) > 1:
             rslt = '''
                 <div> 
@@ -79,13 +84,18 @@ class HTMLGenerator(object):
             row = '''
                     <li>%s
                     </li>'''
-            rows = [row.format(os.path.relpath(ref['$ref'], self.validator.abs_filename)) for ref in allOf]
+            rows = [row.format(replace_dot_yaml(self.validator.relative_url(ref['$ref']))) for ref in allOf]
             return rslt % ''.join(rows)
         else:
+            rel_entity_url = self.validator.relative_url(self.entities[allOf[0]['$ref']]['id'])
+            split_rel_entity_url = rel_entity_url.split('#')
+            if split_rel_entity_url[0].endswith('.yaml'):
+                split_rel_entity_url[0] = split_rel_entity_url[0][:-4] + 'html'
+                rel_entity_url = '#'.join(split_rel_entity_url)
             return '''
                 <div> 
                 Includes properties and other constraints from <a href="{0}">{0}</a>
-                </div>'''.format(os.path.relpath(allOf[0]['$ref'], self.validator.abs_filename))
+                </div>'''.format(rel_entity_url)
              
     def generate_entity_cell(self, entity):
         rslt = entity.get('description', '')
@@ -128,6 +138,7 @@ class HTMLGenerator(object):
         self.validator = validate_rapier.OASValidator()
         spec, errors = self.validator.validate(filename)
         if errors == 0:
+            self.entities = self.validator.build_included_entity_map()
             entities = spec.get('entities')
             rslt = '''<!DOCTYPE html>
 <html>

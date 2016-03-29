@@ -9,7 +9,7 @@ conventions:
 entities:
   Environment:
     allOf:
-    - $ref: '../common.yaml#/entities/PersistentResource'
+    - $ref: './common.yaml#/entities/PersistentResource'
     properties:
       kind:
         description: >
@@ -28,6 +28,6 @@ entities:
        type: string
        readOnly: true
        relationship:
-         collection_resource: '../common.yaml#MultiValuedRelationship'
+         collection_resource: './common.yaml#MultiValuedRelationship'
          multiplicity: 0:n
          entities: '#Environment'
