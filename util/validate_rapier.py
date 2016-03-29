@@ -189,6 +189,8 @@ class OASValidator(object):
                     self.error('produces value must be a media_type string: %s' % media_type, key)
     
     def validate_properties(self, node, key, properties):
+        if properties is None:
+            return self.error('properties value must be a map, not null', key)
         for property_name, property in properties.iteritems():
             if hasattr(property, 'keys'):
                 p_type = property.get('type')
@@ -244,8 +246,8 @@ class OASValidator(object):
             self.error('node must be a map: %s' % node, node_key)
 
     def validate_property_type(self, node, key, p_type):
-        if hasattr(p_type, 'keys'): #nested schema
-            self.check_and_validate_keywords(self.__class__.property_keywords, p_type, key)
+        if hasattr(p_type, 'keys'): #nested schema done wrong?
+            self.error('type may not be a yaml map - use "type: object" and place other schema elements as siblings of type', key)
         elif not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
             self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
             

@@ -111,19 +111,20 @@ definitions:
         items:
           type: string
       quota:
-        type:
-          properties:
-            limit:
-              type: integer
-            interval:
-              type: integer
-            timeunit:
-              type: string
-              enum:
-              - minute
-              - hour
-              - day
-              - month
+        type: object
+        properties:
+          limit:
+            type: integer
+          interval:
+            type: integer
+          timeunit:
+            type: string
+            enum:
+            - minute
+            - hour
+            - day
+            - month
+    x-interface: '#/x-interfaces/APIProduct'
   Subscription:
     description: 'Subscriptions record the usage of an Subscription by a subscriber.  <p>Historical
       Note: The App concept in Apigee Edge (circa 2016) is similar to the Subscription
@@ -156,23 +157,23 @@ definitions:
         type: string
       credential:
         description: The Key and the products it applies to
-        type:
-          properties:
-            apiProducts:
-              properties:
-                product:
-                  type: string
-                  format: uri
-                  x-interface: '#/x-interfaces/APIProduct'
-            key:
-              type: string
-            secret:
-              type: string
-            issued:
-              type: string
-              format: date-time
-            approved:
-              type: boolean
+        type: object
+        properties:
+          apiProducts:
+            properties:
+              product:
+                type: string
+                format: uri
+                x-interface: '#/x-interfaces/APIProduct'
+          key:
+            type: string
+          secret:
+            type: string
+          issued:
+            type: string
+            format: date-time
+          approved:
+            type: boolean
       subscriber:
         description: 'The User who is subscribing.
 
