@@ -118,11 +118,13 @@ entities:
         type: object
         properties:
           apiProducts:
-            properties:
-              product:
-                type: string
-                format: uri
-                relationship: '#APIProduct'
+            type: array
+            items:
+              properties:
+                product:
+                  type: string
+                  format: uri
+                  relationship: '#APIProduct'
           key:
             type: string
           secret:

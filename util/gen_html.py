@@ -35,7 +35,9 @@ class HTMLGenerator(object):
         type = property.get('type', '')
         if type == 'array':
             items = property['items']
-            rslt = 'array(%s)' % self.generate_property_type(items)
+            rslt = '[%s]' % self.generate_property_type(items)
+        elif 'properties' in property:
+            rslt = self.generate_properties_table(property['properties'])
         else:
             rslt = type
         return rslt
