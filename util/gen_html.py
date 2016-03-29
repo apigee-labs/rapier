@@ -1,6 +1,6 @@
 #!/usr/bin/env python 
 
-import sys, codecs
+import sys, codecs, os
 import validate_rapier
 
 class HTMLGenerator(object):
@@ -68,8 +68,29 @@ class HTMLGenerator(object):
                 </tbody>
               </table>''' % property_rows
 
+    def allOf(self, allOf):
+        if len(allOf) > 1:
+            rslt = '''
+                <div> 
+                Includes properties and other constraints from all of:
+                <ul><a href="{0}">{0}</a>
+                </ul>
+                </div>'''
+            row = '''
+                    <li>%s
+                    </li>'''
+            rows = [row.format(os.path.relpath(ref['$ref'], self.validator.abs_filename)) for ref in allOf]
+            return rslt % ''.join(rows)
+        else:
+            return '''
+                <div> 
+                Includes properties and other constraints from <a href="{0}">{0}</a>
+                </div>'''.format(os.path.relpath(allOf[0]['$ref'], self.validator.abs_filename))
+             
     def generate_entity_cell(self, entity):
         rslt = entity.get('description', '')
+        if 'allOf' in entity:
+            rslt = rslt + self.allOf(entity['allOf'])
         properties = entity.get('properties')
         if properties is not None:
             rslt += self.generate_properties_table(properties)
@@ -111,7 +132,6 @@ class HTMLGenerator(object):
             rslt = '''<!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 </head>
 <body>
