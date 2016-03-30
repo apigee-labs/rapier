@@ -344,10 +344,10 @@ class OASValidator(object):
             self.error('produces name must be a string: %s' % produces, key) 
 
     def validate_rapier_security_definitions(self, node, key, security_definitions):
-        self.info('Security definitions not yet validated')
+        pass #self.info('Security definitions not yet validated')
 
     def validate_rapier_security(self, node, key, security):
-        self.info('Security not yet validated')
+        pass #self.info('Security not yet validated')
 
     def validate_query_parameters(self, node, key, query_parameters):
         if not isinstance(query_parameters, list):
@@ -488,7 +488,6 @@ class OASValidator(object):
         if collection_format not in ['csv', 'ssv', 'tsv', 'pipes', 'multi']:
             self.error("collection_format must be one of 'csv', 'ssv', 'tsv', 'pipes', 'multi': %s" % additional_properties, key)
             
-    
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
