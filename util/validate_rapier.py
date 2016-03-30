@@ -478,6 +478,12 @@ class OASValidator(object):
                 if not isinstance(property_name, basestring):
                     self.warning('required value must be a string: %s' % property_name, key)
 
+    def validate_additional_properties(self, node, key, additional_properties):
+        if hasattr(additional_properties, 'keys'):
+            self.check_and_validate_keywords(self.__class__.property_keywords, additional_properties, None)
+        elif additional_properties is not False:
+            self.error('additionalProperties must be false or a schema: %s' % additional_properties, key)
+
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -504,7 +510,8 @@ class OASValidator(object):
         'minimum': validate_number,
         'maximum': validate_number, 
         '$ref': validate_schema_ref,
-        'required': validate_required}
+        'required': validate_required,
+        'additionalProperties': validate_additional_properties}
     property_keywords = {
         'relationship': validate_property_relationship,
         'default': validate_ignore}
