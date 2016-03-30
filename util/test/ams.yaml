@@ -30,7 +30,7 @@ entities:
         items:
           type: string
           format: uri
-          relationship: './deployment2.yaml#Environment'
+          relationship: './deployment.yaml#Environment'
       uriPaths:
         description: > 
           Defines the URI paths to which this API gives access. May include wildcard characters, for example /a/*, or /a/**

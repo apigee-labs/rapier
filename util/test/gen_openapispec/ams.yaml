@@ -45,7 +45,7 @@ definitions:
         items:
           type: string
           format: uri
-          x-interface: deployment2.yaml#/x-interfaces/Environment
+          x-interface: deployment.yaml#/x-interfaces/Environment
       uriPaths:
         description: 'Defines the URI paths to which this API gives access. May include
           wildcard characters, for example /a/*, or /a/**

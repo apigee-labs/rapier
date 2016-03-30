@@ -469,7 +469,15 @@ class OASValidator(object):
 
     def validate_schema_ref(self, node, key, json_pointer):    
          return self.resolve_json_ref(json_pointer, key)
-    
+
+    def validate_required(self, node, key, required):
+        if not isinstance(required, list):
+            self.warning('value of required must be a list', key)
+        else:
+            for property_name in required:
+                if not isinstance(property_name, basestring):
+                    self.warning('required value must be a string: %s' % property_name, key)
+
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -495,9 +503,11 @@ class OASValidator(object):
         'description': validate_description,
         'minimum': validate_number,
         'maximum': validate_number, 
-        '$ref': validate_schema_ref}
+        '$ref': validate_schema_ref,
+        'required': validate_required}
     property_keywords = {
-        'relationship': validate_property_relationship}
+        'relationship': validate_property_relationship,
+        'default': validate_ignore}
     property_keywords.update(schema_keywords)
     entity_keywords = {
         'query_paths': validate_query_paths, 
@@ -563,17 +573,17 @@ class OASValidator(object):
         abs_url = self.abs_url(entity_url)
         abs_namespace_url = abs_url.split('#')[0]
         if abs_namespace_url == self.abs_filename:
-            return self
+            return self, None
         else:
             if abs_namespace_url not in validators:
                 validator = OASValidator()
                 spec, errors = validator.validate(abs_namespace_url)
                 if spec is None:
-                    return None
+                    return None, errors
                 if errors > 0:
                     self.error('errors reading file: %s' % abs_namespace_url)
                 validators[abs_namespace_url] = validator
-            return validators[abs_namespace_url]
+            return validators[abs_namespace_url], None
 
     def resolve_json_ref(self, json_ref, key, spec=None):
         if isinstance(json_ref, basestring):
@@ -581,9 +591,9 @@ class OASValidator(object):
             if len(json_ref_split) < 2:
                 self.error('entity missing fragment %s' % json_ref, key)
             else:
-                validator = self.resolve_validator(json_ref_split[0], self.included_spec_validators)
+                validator, errors = self.resolve_validator(json_ref_split[0], self.included_spec_validators)
                 if validator is None:
-                    self.fatal_error('unable to open file: %s' % json_ref_split[0])
+                    self.fatal_error('unable to open file: %s' % json_ref_split[0], key)
                 json_ref_fragment = json_ref_split[1]
                 if json_ref_fragment.startswith('/'):
                     parts = json_ref_fragment[1:].split('/')
@@ -603,8 +613,10 @@ class OASValidator(object):
             self.error('entity URL must be a string %s' % entity_url, key)
         else:
             abs_entity_url = self.abs_url(entity_url)
-            validator = self.resolve_validator(entity_url, self.referenced_spec_validators)
-            if validator is None:
+            validator, errors = self.resolve_validator(entity_url, self.referenced_spec_validators)
+            if errors is not None:
+                if isinstance(errors, IOError):
+                    self.warning('unable to read file: %s %s' % (entity_url, errors), key)
                 return abs_entity_url, None
             entity = validator.entities.get(abs_entity_url)
             if entity is not None:
@@ -621,8 +633,7 @@ class OASValidator(object):
             with open(filename) as f:
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
-            self.warning('unable to read file: %s %s' % (filename, e.strerror))
-            return None, 0
+            return None, e
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         entities = self.rapier_spec.setdefault('entities', {})
