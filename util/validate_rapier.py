@@ -484,6 +484,11 @@ class OASValidator(object):
         elif additional_properties is not False:
             self.error('additionalProperties must be false or a schema: %s' % additional_properties, key)
 
+    def validate_query_parameter_collection_format(self, node, key, collection_format):
+        if collection_format not in ['csv', 'ssv', 'tsv', 'pipes', 'multi']:
+            self.error("collection_format must be one of 'csv', 'ssv', 'tsv', 'pipes', 'multi': %s" % additional_properties, key)
+            
+    
     rapier_spec_keywords = {
         'title': validate_title, 
         'entities': validate_entities, 
@@ -514,7 +519,8 @@ class OASValidator(object):
         'additionalProperties': validate_additional_properties}
     property_keywords = {
         'relationship': validate_property_relationship,
-        'default': validate_ignore}
+        'default': validate_ignore,
+        'example': validate_ignore}
     property_keywords.update(schema_keywords)
     entity_keywords = {
         'query_paths': validate_query_paths, 
@@ -552,7 +558,8 @@ class OASValidator(object):
         'name': validate_query_parameter_name,
         'required': validate_query_parameter_required,
         'minimum': validate_number,
-        'maximum': validate_number}
+        'maximum': validate_number,
+        'collectionFormat': validate_query_parameter_collection_format}
     implementation_private_keywords =  {
         'permalink_template': validate_permalink_template}
     permalink_template_keywords =  {
