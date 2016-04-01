@@ -141,6 +141,7 @@ class HTMLGenerator(object):
             rslt = '''<!DOCTYPE html>
 <html>
 <head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <link rel="stylesheet" href="http://design.apigee.com/ui-framework/latest/css/ui-framework-core.css">
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic,300,300italic' rel='stylesheet' type='text/css'>
 </head>
