@@ -13,7 +13,7 @@ entities:
           The name of the Organization. Must be unique
         type: string
       description:
-      	description: >
+        description: >
           A textual description of the Organization
         type: string
       displayName:
@@ -26,13 +26,13 @@ entities:
         type: string
         enum: [trail, revenue]
       properties:
-      	type: array
+        type: array
         items:
           type: string
   Environment:
-  	well_known_URLs: /organizaions/{org}/envs
-  	description: >
-  		An environment represents a set of running components accessible at a single namespace
+    well_known_URLs: /organizaions/{org}/envs
+    description: >
+      An environment represents a set of running components accessible at a single namespace
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "ENVIRONMENT"
@@ -43,7 +43,7 @@ entities:
           The name of the Environment. Must be unique within the pertaining Organization
         type: string
       description:
-      	description: >
+        description: >
           A textual description of the Environment
         type: string
       displayName:
@@ -51,12 +51,12 @@ entities:
           The name to be used to display to humans for this Environment. Used in the UI.
         type: string
       properties:
-      	type: array
+        type: array
         items:
           type: string
   ApiProduct:
-  	well_known_URLs: 
-  	description: >
+    well_known_URLs: 
+    description: >
   		
     properties:
       kind:
