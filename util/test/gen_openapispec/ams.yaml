@@ -38,6 +38,15 @@ definitions:
       description:
         description: A textual description of the API
         type: string
+      machine_readable_description:
+        description: 'Defines the URI paths to which this API gives access. The format
+          of the description is variable. The simplest is  a fragment URI that points
+          to an array of paths in the same document. An alternative is to point to
+          an OpenAPI Specification.
+
+          '
+        type: string
+        format: uri
       environments:
         description: Environments where this API is available. Defines the domain
           names where the paths of the API will be available
@@ -46,14 +55,6 @@ definitions:
           type: string
           format: uri
           x-interface: deployment.yaml#/x-interfaces/Environment
-      uriPaths:
-        description: 'Defines the URI paths to which this API gives access. May include
-          wildcard characters, for example /a/*, or /a/**
-
-          '
-        type: array
-        items:
-          type: string
       ui_namesOfProxiesProvidingPaths:
         description: 'The API is specified by the uriPaths property, which defines
           the paths of the API. As a convenience, the UI allows the uriPaths to be
