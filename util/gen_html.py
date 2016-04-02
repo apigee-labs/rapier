@@ -12,12 +12,12 @@ class HTMLGenerator(object):
     def create_link(self, uri_ref):
         uri_ref = self.validator.relative_url(uri_ref)
         split_ref = uri_ref.split('#')
-        name = split_ref[1]
+        split_ref[1] = split_ref[1].split('/')[-1]
         url = split_ref[0]
         if url.endswith('.yaml'):
             split_ref[0] = url[:-4] + 'html'
-            uri_ref = '#'.join(split_ref)
-        return '<a href="{}">{}</a>'.format(uri_ref, name)
+        uri_ref = '#'.join(split_ref)
+        return '<a href="{}">{}</a>'.format(uri_ref, split_ref[1])
     
     def generate_property_type(self, property):
         if 'relationship' in property:
@@ -37,15 +37,19 @@ class HTMLGenerator(object):
             upper_bound = multiplicity.split(':')[-1]
             multi_valued = upper_bound == 'n' or int(upper_bound) == 1
             return '%s (%s)' % (multiplicity, ' or '.join(entity_links)) if upper_bound == 1 else 'url of %s' % ' or '.join(entity_links)
-        type = property.get('type', '')
-        if type == 'array':
-            items = property['items']
-            rslt = '[%s]' % self.generate_property_type(items)
-        elif 'properties' in property:
-            rslt = self.generate_properties_table(property['properties'])
+        elif '$ref' in property:
+            ref = property['$ref']
+            return self.create_link(ref)
         else:
-            rslt = type
-        return rslt
+            type = property.get('type', '')
+            if type == 'array':
+                items = property['items']
+                rslt = '[%s]' % self.generate_property_type(items)
+            elif 'properties' in property:
+                rslt = self.generate_properties_table(property['properties'])
+            else:
+                rslt = type
+            return rslt
     
     def generate_property_rows(self, properties):
         rslt = ''
@@ -55,7 +59,7 @@ class HTMLGenerator(object):
                     <td>%s</td>
                     <td>%s</td>
                     <td>%s                    </td>
-                  </tr>''' % (property_name, self.generate_property_type(property), self.generate_property_cell(property))
+                  </tr>''' % (property_name, self.generate_property_cell(property), self.generate_property_type(property))
         return rslt
 
     def generate_properties_table(self, properties):
@@ -65,8 +69,8 @@ class HTMLGenerator(object):
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>%s

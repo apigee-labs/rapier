@@ -28,49 +28,49 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "API"                    </td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "API"</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
-                    <td>string</td>
                     <td>The name of the API. Must be unique amongst APIs of the same org.  The name of the product, along with the name of the org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/apis/{api-name}
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>displayName</td>
-                    <td></td>
                     <td>The name to be used to display to humans for this API. Used in the UI. type: string
-                    </td>
+</td>
+                    <td>                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
-                    <td>string</td>
-                    <td>A textual description of the API                    </td>
+                    <td>A textual description of the API</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>machine_readable_description</td>
-                    <td>string</td>
                     <td>Defines the URI paths to which this API gives access. The format of the description is variable. The simplest is  a fragment URI that points to an array of paths in the same document. An alternative is to point to an OpenAPI Specification.
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td>[url of <a href="deployment.html#Environment">Environment</a>]</td>
-                    <td>Environments where this API is available. Defines the domain names where the paths of the API will be available                    </td>
+                    <td>Environments where this API is available. Defines the domain names where the paths of the API will be available</td>
+                    <td>[url of <a href="deployment.html#Environment">Environment</a>]                    </td>
                   </tr>
                   <tr>
                     <td>ui_namesOfProxiesProvidingPaths</td>
-                    <td>[string]</td>
                     <td>The API is specified by the uriPaths property, which defines the paths of the API. As a convenience, the UI allows the uriPaths to be specified by picking from the list of paths supported by a particular proxy. If the user does this, the UI will use this  property to remember the names of proxies that were used as sources
-                    </td>
+</td>
+                    <td>[string]                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -87,81 +87,55 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"                    </td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
-                    <td>string</td>
                     <td>The name of the APIProduct. Must be unique amongst APIProduct of the same org.  The name of the APIProduct, along with the name of the org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/apiproduct/{apiproduct-name}
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>displayName</td>
-                    <td>string</td>
                     <td>The name to be used to display to humans for this APIProduct. Used in the UI.
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
-                    <td>string</td>
-                    <td>A textual description of the APIProduct                    </td>
+                    <td>A textual description of the APIProduct</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>api</td>
-                    <td>url of <a href="#API">API</a></td>
                     <td>The API exposed by this APIProduct.
-                    </td>
+</td>
+                    <td>url of <a href="#API">API</a>                    </td>
                   </tr>
                   <tr>
                     <td>scopes</td>
-                    <td>[string]</td>
                     <td>Defines the OAUTH scopes to which this APIProduct gives access
-                    </td>
+</td>
+                    <td>[string]                    </td>
                   </tr>
                   <tr>
                     <td>quota</td>
-                    <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Type</th>
-                    <th>Property Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>limit</td>
-                    <td>integer</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>interval</td>
-                    <td>integer</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>timeunit</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                </tbody>
-              </table></td>
                     <td>Defines the quota of requests allowed by this APIProduct.
-                    </td>
+</td>
+                    <td><a href="#Quota">Quota</a>                    </td>
                   </tr>
                   <tr>
                     <td>ratePlan</td>
-                    <td>url of <a href="../mint.html#RatePlan">RatePlan</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="../mint.html#RatePlan">RatePlan</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -178,42 +152,42 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"                    </td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
-                    <td>string</td>
                     <td>The name of the Bundle. Must be unique amongst Bundles of the same org.  The name of the Bundle, along with the name of the org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/bundle/{bundle-name}
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>displayName</td>
-                    <td>string</td>
                     <td>The name to be used to display to humans for this APIProduct. Used in the UI.
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
-                    <td>string</td>
-                    <td>A textual description of the Bundle                    </td>
+                    <td>A textual description of the Bundle</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>apiProducts</td>
-                    <td>[url of <a href="#APIProduct">APIProduct</a>]</td>
-                    <td>The list of APIProducts in the bundle                    </td>
+                    <td>The list of APIProducts in the bundle</td>
+                    <td>[url of <a href="#APIProduct">APIProduct</a>]                    </td>
                   </tr>
                   <tr>
                     <td>ratePlan</td>
-                    <td>url of <a href="../mint.html#RatePlan">RatePlan</a></td>
-                    <td>The ratePlan for the bundle. Overrides the individual ratePlans in the APIProducts                    </td>
+                    <td>The ratePlan for the bundle. Overrides the individual ratePlans in the APIProducts</td>
+                    <td>url of <a href="../mint.html#RatePlan">RatePlan</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -230,129 +204,132 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Subscription"                    </td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Subscription"</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
-                    <td>string</td>
                     <td>The name of the Subscription. Must be unique amongst Subscription of the same org.  The name of the Subscription, along with the name of the org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/subscription/{Subscription-name}
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>displayName</td>
-                    <td></td>
                     <td>The name to be used to display to humans for this Subscription. Used in the UI.
-                    </td>
+</td>
+                    <td>                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
-                    <td>string</td>
-                    <td>A textual description of the Subscription                    </td>
+                    <td>A textual description of the Subscription</td>
+                    <td>string                    </td>
                   </tr>
-                  <tr>
-                    <td>credentials</td>
-                    <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Type</th>
-                    <th>Property Description</th>
-                  </tr>
-                </thead>
-                <tbody>
                   <tr>
                     <td>apiProducts</td>
-                    <td>[
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Type</th>
-                    <th>Property Description</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>product</td>
-                    <td>url of <a href="#APIProduct">APIProduct</a></td>
-                    <td>                    </td>
-                  </tr>
-                </tbody>
-              </table>]</td>
                     <td>The list of APIProducts to which this Subscription gives access
-                    </td>
+</td>
+                    <td>[url of <a href="#APIProduct">APIProduct</a>]                    </td>
                   </tr>
                   <tr>
                     <td>keys</td>
-                    <td>[
+                    <td>Subscriptions may include an arbitrary number of keys. Each key unlocks the same APIProducts with the same quotas and ratePlans, so from a functional perspective, the keys are completely interchangeable. Managing multiple keys allows subscribers to track the usage of their subscriptions in different contexts. For example, a developer of a client app may wish to use the same subscription  in multiple editions of the same application, so all usage counts against the same quota. Using different keys allows the developer to track which users are using the iOS version versus the Android version versus the web site, or which users are using a new experimental version versus the classic version. This information is available (presumably) to the developer through the provider's API portal.git 
+</td>
+                    <td>[<a href="#Key">Key</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>subscriber</td>
+                    <td>The User who is subscribing.
+</td>
+                    <td>url of <a href="users.html#User">User</a> or <a href="users.html#Group">Group</a> or <a href="permissions.html#team">team</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>account</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>approved</td>
+                    <td>Whether or not the subscription has been approved by the API owner 
+</td>
+                    <td>boolean                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Key"></a>Key</td>
+            <td>
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>key</td>
-                    <td>string</td>
                     <td>The API key
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>issued</td>
-                    <td>string</td>
                     <td>The date when the key and secret were issued
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>tags</td>
-                    <td>[string]</td>
                     <td>tags are an array of strings that may be associated with the key. Tags will be displayed in analytics, allowing client application developers to track which applications or application editions/versions genenrated traffic.
-                    </td>
+</td>
+                    <td>[string]                    </td>
                   </tr>
                   <tr>
                     <td>approved</td>
-                    <td>boolean</td>
                     <td>Whether or not the credentials have been approved by the API owner 
-                    </td>
+</td>
+                    <td>object                    </td>
                   </tr>
                 </tbody>
-              </table>]</td>
-                    <td>Subscriptions may include an arbitrary number of keys. Each key unlocks the same APIProducts with the same quotas and ratePlans, so from a functional perspective, the keys are completely interchangeable. Managing multiple keys allows subscribers to track the usage of their subscriptions in different contexts. For example, a developer of a client app may wish to use the same subscription  in multiple editions of the same application, so all usage counts against the same quota. Using different keys allows the developer to track which users are using the iOS version versus the Android version versus the web site, or which users are using a new experimental version versus the classic version. This information is available (presumably) to the developer through the provider's API portal.git 
-                    </td>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Quota"></a>Quota</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
-                </tbody>
-              </table></td>
-                    <td>The Key/Secret and the products they apply to. Unlike The 2016 Edge "App" concept, only one key per Subscription is supported. Edge was motiviated to allow many because they thought they were modeling apps, and apps may use multiple keys. Since subscriptions are not apps, and apps are free to use as many subscriptions as they like, there is no need to support multiples keys per Subscription
-                    </td>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>limit</td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                   <tr>
-                    <td>subscriber</td>
-                    <td>url of <a href="users.html#User">User</a> or <a href="users.html#Group">Group</a> or <a href="permissions.html#team">team</a></td>
-                    <td>The User who is subscribing.
-                    </td>
+                    <td>interval</td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                   <tr>
-                    <td>account</td>
-                    <td>string</td>
-                    <td>                    </td>
-                  </tr>
-                  <tr>
-                    <td>approved</td>
-                    <td>boolean</td>
-                    <td>Whether or not the subscription has been approved by the API owner 
-                    </td>
+                    <td>timeunit</td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>

@@ -33,56 +33,56 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>The value must always be the string "Environment". This property is always set  by the server in responses to GET. It must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>realizes</td>
-                    <td>url of <a href="#System">System</a></td>
                     <td>The the URI of the System of which this Environment is a running examplar.  This property is always set by the server in responses to GET. It must be set by the client on POST, and may only be set by the client on PATCH if the requested_state is initial. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>url of <a href="#System">System</a>                    </td>
                   </tr>
                   <tr>
                     <td>comprises</td>
-                    <td>url of <a href="#Deployment">Deployment</a></td>
                     <td>The URI of the collection of Deployments that are part of this Environment.  This property is always set by the server, and is readOnly for the client 
-                    </td>
+</td>
+                    <td>url of <a href="#Deployment">Deployment</a>                    </td>
                   </tr>
                   <tr>
                     <td>domain_name</td>
-                    <td>string</td>
-                    <td>The URI of the domain name at which this Environment can be found.                    </td>
+                    <td>The URI of the domain name at which this Environment can be found.</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
-                    <td>string</td>
-                    <td>A description of the Environment                    </td>
+                    <td>A description of the Environment</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>requested_state</td>
-                    <td>string</td>
                     <td>The requested, or 'desired' state of the Environment. A string (URLs would be cooler)  representing the last requested state of the Deployment. This property is always set by  the server in responses to GET. It may never be set directly by the client. Clients affect  the value of requested_state by POSTing requests to the URL in the requests property. 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>valid_requests</td>
-                    <td>[string]</td>
                     <td>A list of valid requests given the current requested_state. This property is always set  by the server, and is readOnly for the client
-                    </td>
+</td>
+                    <td>[string]                    </td>
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>url of <a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> or <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> or <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a></td>
                     <td>The  URI of the collection of Requests for this Environment. New requests can be POSTed  to this collection to change the requested (desired) state of the Environment. These requests will typically change the state of the runtime. Valid request types are: EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
-                    </td>
+</td>
+                    <td>url of <a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> or <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> or <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -99,16 +99,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "EnvironmentStartRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -125,16 +125,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "EnvironmentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -151,16 +151,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "EnvironmentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -182,61 +182,61 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "Deployment". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>deploys</td>
-                    <td>url of <a href="#Revision">Revision</a></td>
                     <td>The URI of the Revision that the deployment executes. This property is always set by the  server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>url of <a href="#Revision">Revision</a>                    </td>
                   </tr>
                   <tr>
                     <td>runs_in</td>
-                    <td>url of <a href="#Environment">Environment</a></td>
                     <td>The URI of the Environment that the deployment is part of. This property is always set by  the server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>url of <a href="#Environment">Environment</a>                    </td>
                   </tr>
                   <tr>
                     <td>requested_state</td>
-                    <td>string</td>
                     <td>The requested, or 'desired' state of the Deployment. The value is a string (URLs would be cooler)  representing the last requested state of the Deployment. This property is always set by the server  in responses to GET. It may never be set directly by the client. Clients affect the value of  requested_state by POSTing requests to the URL in the requests property. 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>requested_replicas</td>
-                    <td>integer</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                   <tr>
                     <td>requested_hosts</td>
-                    <td>string</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>requested_percentage</td>
-                    <td>number</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>number                    </td>
                   </tr>
                   <tr>
                     <td>valid_requests</td>
-                    <td>[string]</td>
                     <td>A list of valid requests given the current requested_state. This property is always set  by the server, and is readOnly for the client
-                    </td>
+</td>
+                    <td>[string]                    </td>
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>url of <a href="#DeploymentStartRequest">DeploymentStartRequest</a> or <a href="#DeploymentStopRequest">DeploymentStopRequest</a> or <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> or <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> or <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> or <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> or <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a></td>
                     <td>The URI of the collection of Requests for this Deployment. New requests can be POSTed to this  collection to change the requested (desired) state of the Deployment. These requests will  typically change the state of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
-                    </td>
+</td>
+                    <td>url of <a href="#DeploymentStartRequest">DeploymentStartRequest</a> or <a href="#DeploymentStopRequest">DeploymentStopRequest</a> or <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> or <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> or <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> or <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> or <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -253,21 +253,21 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentStartRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>replicas</td>
-                    <td>integer</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -284,16 +284,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentStopRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -310,16 +310,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentOfflineRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -336,26 +336,26 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentOnlineRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>hosts</td>
-                    <td>string</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>percentage</td>
-                    <td>number</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>number                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -372,43 +372,43 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentStatisticsRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>hosts</td>
-                    <td>string</td>
                     <td>The value is a space-separated list of domain names or IP addresses. If this property is provided, then only traffic originating from those clients will be forwarded to this deployment. 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>percentage</td>
-                    <td>number</td>
                     <td>If present, this value specifies the percentage of traffic this deployment should receive. If no value is given for this property, the instances correspopnding to this deployment will be added to the general load-balancer pool and so will receive traffic in proportion to the total number of instance or load, depending on the load-balancer algorithm. This property may be used in conjunction with the hosts field to select traffic based on both hostnames and percentages. 
-                    </td>
+</td>
+                    <td>number                    </td>
                   </tr>
                   <tr>
                     <td>duration</td>
-                    <td>integer</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                   <tr>
                     <td>state</td>
-                    <td>string</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>results</td>
-                    <td>url of <a href="#StatisticsResults">StatisticsResults</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#StatisticsResults">StatisticsResults</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -424,21 +424,21 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentScalingRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>replicas</td>
-                    <td>integer</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>integer                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -455,16 +455,16 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>This value must always be the string "DeploymentRetirementRequest". The kind property is always set by  the server in responses to GET. The kind property must be set by the client on POST,  and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -481,27 +481,27 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
                     <td>The value must always be the string "System". The kind property is always set by the server in responses to GET. The kind property must be set by the client on POST, and must not be set by the client on PATCH. (PUT is not supported) 
-                    </td>
+</td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>has_environments</td>
-                    <td>url of <a href="#Environment">Environment</a></td>
                     <td>The value of the has_environments property is the URI of the collection of Environments where this System is deployed.  New Environments can be POSTed to this collection—alternatively,  a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
-                    </td>
+</td>
+                    <td>url of <a href="#Environment">Environment</a>                    </td>
                   </tr>
                   <tr>
                     <td>has_components</td>
-                    <td>url of <a href="#Component">Component</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Component">Component</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -518,25 +518,25 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>is_component_of</td>
-                    <td>url of <a href="#System">System</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#System">System</a>                    </td>
                   </tr>
                   <tr>
                     <td>has_revisions</td>
-                    <td>url of <a href="#Revision">Revision</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Revision">Revision</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -553,25 +553,25 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>kind</td>
-                    <td>string</td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>string                    </td>
                   </tr>
                   <tr>
                     <td>revises</td>
-                    <td>url of <a href="#Component">Component</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Component">Component</a>                    </td>
                   </tr>
                   <tr>
                     <td>has_deployments</td>
-                    <td>url of <a href="#Deployment">Deployment</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Deployment">Deployment</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -591,30 +591,30 @@
                 <thead>
                   <tr>
                     <th>Property Name</th>
-                    <th>Property Type</th>
                     <th>Property Description</th>
+                    <th>Property Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td>systems</td>
-                    <td>url of <a href="#System">System</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#System">System</a>                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td>url of <a href="#Environment">Environment</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Environment">Environment</a>                    </td>
                   </tr>
                   <tr>
                     <td>components</td>
-                    <td>url of <a href="#Component">Component</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Component">Component</a>                    </td>
                   </tr>
                   <tr>
                     <td>revisions</td>
-                    <td>url of <a href="#Revision">Revision</a></td>
-                    <td>                    </td>
+                    <td></td>
+                    <td>url of <a href="#Revision">Revision</a>                    </td>
                   </tr>
                 </tbody>
               </table>            </td>

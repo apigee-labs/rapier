@@ -84,15 +84,7 @@ entities:
       quota:
         description: > 
           Defines the quota of requests allowed by this APIProduct.
-        type: object
-        properties:
-          limit:
-            type: integer
-          interval:
-            type: integer
-          timeunit:
-            type: string
-            enum: [minute, hour, day, month]     
+        $ref: '#/entities/Quota'
       ratePlan:
         type: string
         format: uri
@@ -160,56 +152,26 @@ entities:
       description:
         description: A textual description of the Subscription
         type: string
-      credentials:
+      apiProducts:
         description: >
-          The Key/Secret and the products they apply to. Unlike The 2016 Edge "App" concept, only one key per Subscription
-          is supported. Edge was motiviated to allow many because they thought they were modeling apps, and apps
-          may use multiple keys. Since subscriptions are not apps, and apps are free to use as many subscriptions as
-          they like, there is no need to support multiples keys per Subscription
-        type: object
-        properties:
-          apiProducts:
-            description: >
-              The list of APIProducts to which this Subscription gives access
-            type: array
-            items:
-              properties:
-                product:
-                  type: string
-                  format: uri
-                  relationship: '#APIProduct'
-          keys:
-            description: >
-              Subscriptions may include an arbitrary number of keys. Each key unlocks the same APIProducts with the same quotas and ratePlans,
-              so from a functional perspective, the keys are completely interchangeable. Managing multiple keys allows subscribers to
-              track the usage of their subscriptions in different contexts. For example, a developer of a client app may wish to use the same subscription 
-              in multiple editions of the same application, so all usage counts against the same quota. Using different keys
-              allows the developer to track which users are using the iOS version versus the Android version versus the web site, or which users are using
-              a new experimental version versus the classic version. This information is available (presumably) to the developer through
-              the provider's API portal.git 
-            type: array
-            items:
-              properties:      
-                key:
-                  description: >
-                    The API key
-                  type: string
-                issued:
-                  description: >
-                    The date when the key and secret were issued
-                  type: string
-                  format: date-time
-                tags:
-                  description: >
-                    tags are an array of strings that may be associated with the key. Tags will be displayed in analytics, allowing
-                    client application developers to track which applications or application editions/versions genenrated traffic.
-                  type: array
-                  items: 
-                    type: string
-                approved:
-                  description: >
-                    Whether or not the credentials have been approved by the API owner 
-                  type: boolean
+          The list of APIProducts to which this Subscription gives access
+        type: array
+        items:
+          type: string
+          format: uri
+          relationship: '#APIProduct'
+      keys:
+        description: >
+          Subscriptions may include an arbitrary number of keys. Each key unlocks the same APIProducts with the same quotas and ratePlans,
+          so from a functional perspective, the keys are completely interchangeable. Managing multiple keys allows subscribers to
+          track the usage of their subscriptions in different contexts. For example, a developer of a client app may wish to use the same subscription 
+          in multiple editions of the same application, so all usage counts against the same quota. Using different keys
+          allows the developer to track which users are using the iOS version versus the Android version versus the web site, or which users are using
+          a new experimental version versus the classic version. This information is available (presumably) to the developer through
+          the provider's API portal.git 
+        type: array
+        items:
+          $ref: '#/entities/Key'
       subscriber:
         description: >
           The User who is subscribing.
@@ -223,6 +185,39 @@ entities:
         description: >
           Whether or not the subscription has been approved by the API owner 
         type: boolean
+  Key:
+    properties:      
+      key:
+        description: >
+          The API key
+        type: string
+      issued:
+        description: >
+          The date when the key and secret were issued
+        type: string
+        format: date-time
+      tags:
+        description: >
+          tags are an array of strings that may be associated with the key. Tags will be displayed in analytics, allowing
+          client application developers to track which applications or application editions/versions genenrated traffic.
+        type: array
+        items: 
+          type: string
+      approved:
+        description: >
+          Whether or not the credentials have been approved by the API owner 
+        type: boolean
+        type: object
+  Quota:
+    properties:
+      limit:
+        type: integer
+      interval:
+        type: integer
+      timeunit:
+        type: string
+        enum: [minute, hour, day, month]     
+
 #  Apigee:
 #    description: >
 #      An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
