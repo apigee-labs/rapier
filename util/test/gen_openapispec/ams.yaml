@@ -295,22 +295,6 @@ definitions:
         description: "Whether or not the subscription has been approved by the API\
           \ owner \n"
         type: boolean
-  Apigee:
-    description: "An Apigee is the root of the tree of resources in an Apigee Environment\
-      \ (that is, an Environment that contains Apigee's own software)\n  readOnly:\
-      \ true\n  well_known_URLs: /\n  query_paths: apiProducts apis subscriptions\
-      \ bundles\n  properties:\n  apiProducts:\n      format: uri\n      type: string\n\
-      \      readOnly: true\n      relationship:\n      collection_resource: './common.yaml/#MultiValuedRelationship'\n\
-      \      multiplicity: 0:n\n      entities: '#APIProduct'        \n  bundles:\n\
-      \      format: uri\n      type: string\n      readOnly: true\n      relationship:\n\
-      \      collection_resource: './common.yaml/#MultiValuedRelationship'\n     \
-      \ multiplicity: 0:n\n      entities: '#Bundle'        \n  subscriptions:\n \
-      \     format: uri\n      type: string\n      readOnly: true\n      relationship:\n\
-      \      collection_resource: './common.yaml/#MultiValuedRelationship'\n     \
-      \ multiplicity: 0:n\n      entities: '#Subscription'        \n  apis:\n    \
-      \  format: uri\n      type: string\n      readOnly: true\n      relationship:\n\
-      \      collection_resource: './common.yaml/#MultiValuedRelationship'\n     \
-      \ multiplicity: 0:n\n      entities: '#API'\n"
   Page:
     allOf:
     - $ref: '#/definitions/Resource'
