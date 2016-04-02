@@ -93,9 +93,49 @@ entities:
           timeunit:
             type: string
             enum: [minute, hour, day, month]     
+      ratePlan:
+        type: string
+        format: uri
+        relationship: ../mint.yaml#RatePlan
+  Bundle:
+    description: >
+      Bundles allow providers to offer a set of APIProducts under a new ratePlan
+    allOf:
+    - '$ref': './common.yaml/#/entities/PersistentResource'
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"
+        type: string
+        enum: [APIProduct]
+      name:
+        description: >
+          The name of the Bundle. Must be unique amongst Bundles of the same org. 
+          The name of the Bundle, along with the name of the org, may be used to perform queries using URI templates of the form:
+          https://api.enterprise.apigee.com/v1/organizations/{org-name}/bundle/{bundle-name}
+        type: string
+      displayName:
+        description: >
+          The name to be used to display to humans for this APIProduct. Used in the UI.
+        type: string
+      description:
+        description: A textual description of the Bundle
+        type: string
+      apiProducts:
+        description: The list of APIProducts in the bundle
+        type: array
+        items:
+          type: string
+          format: uri
+          relationship: '#APIProduct'
+      ratePlan:
+        description: The ratePlan for the bundle. Overrides the individual ratePlans in the APIProducts
+        type: string
+        format: uri
+        relationship: ../mint.yaml#RatePlan
   Subscription:
     description: >
-      Subscriptions record the usage of an Subscription by a subscriber. 
+      Subscriptions record the usage of an <a href="#APIProduct">APIProduct</a> or <a href="#Bundle">Bundle</a> by a
+      subscriber (a <a href="users/#User">User</a> or <a href="users/#Group">Group</a> or <a href="permissions/#Team">Team</a>). 
       <p>Historical Note: The App concept in Apigee Edge (circa 2016) is similar to the Subscription concept,
       to the point where it can be considered a renaming. App was not the best choice of name because the concept 
       being modelled is not an app, it is just a key-protected usage of an APIProduct. Using
@@ -138,30 +178,87 @@ entities:
                   type: string
                   format: uri
                   relationship: '#APIProduct'
-          key:
+          keys:
             description: >
-              The API key
-            type: string
-          secret:
-            description: >
-              The API secret
-            type: string
-          issued:
-            description: >
-              The date when the key and secret were issued
-            type: string
-            format: date-time
-          approved:
-            description: >
-              Whether or not the credentials have been approved by the API owner 
-            type: boolean
+              Subscriptions may include an arbitrary number of keys. Each key unlocks the same APIProducts with the same quotas and ratePlans,
+              so from a functional perspective, the keys are completely interchangeable. Managing multiple keys allows subscribers to
+              track the usage of their subscriptions in different contexts. For example, a developer of a client app may wish to use the same subscription 
+              in multiple editions of the same application, so all usage counts against the same quota. Using different keys
+              allows the developer to track which users are using the iOS version versus the Android version versus the web site, or which users are using
+              a new experimental version versus the classic version. This information is available (presumably) to the developer through
+              the provider's API portal.git 
+            type: array
+            items:
+              properties:      
+                key:
+                  description: >
+                    The API key
+                  type: string
+                issued:
+                  description: >
+                    The date when the key and secret were issued
+                  type: string
+                  format: date-time
+                tags:
+                  description: >
+                    tags are an array of strings that may be associated with the key. Tags will be displayed in analytics, allowing
+                    client application developers to track which applications or application editions/versions genenrated traffic.
+                  type: array
+                  items: 
+                    type: string
+                approved:
+                  description: >
+                    Whether or not the credentials have been approved by the API owner 
+                  type: boolean
       subscriber:
         description: >
           The User who is subscribing.
         type: string
         format: uri
-        relationship: './users.yaml#User'
+        relationship: ./users.yaml#User ./users.yaml#Group ./permissions.yaml#team
+      account:
+        type: string
+        format: uri
       approved:
         description: >
           Whether or not the subscription has been approved by the API owner 
         type: boolean
+  Apigee:
+    description: >
+      An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
+        readOnly: true
+        well_known_URLs: /
+        query_paths: apiProducts apis subscriptions bundles
+        properties:
+        apiProducts:
+            format: uri
+            type: string
+            readOnly: true
+            relationship:
+            collection_resource: './common.yaml/#MultiValuedRelationship'
+            multiplicity: 0:n
+            entities: '#APIProduct'        
+        bundles:
+            format: uri
+            type: string
+            readOnly: true
+            relationship:
+            collection_resource: './common.yaml/#MultiValuedRelationship'
+            multiplicity: 0:n
+            entities: '#Bundle'        
+        subscriptions:
+            format: uri
+            type: string
+            readOnly: true
+            relationship:
+            collection_resource: './common.yaml/#MultiValuedRelationship'
+            multiplicity: 0:n
+            entities: '#Subscription'        
+        apis:
+            format: uri
+            type: string
+            readOnly: true
+            relationship:
+            collection_resource: './common.yaml/#MultiValuedRelationship'
+            multiplicity: 0:n
+            entities: '#API'

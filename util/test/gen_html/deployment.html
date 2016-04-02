@@ -46,13 +46,13 @@
                   </tr>
                   <tr>
                     <td>realizes</td>
-                    <td>0:1 (<a href="#System">System</a>)</td>
+                    <td>url of <a href="#System">System</a></td>
                     <td>The the URI of the System of which this Environment is a running examplar.  This property is always set by the server in responses to GET. It must be set by the client on POST, and may only be set by the client on PATCH if the requested_state is initial. (PUT is not supported) 
                     </td>
                   </tr>
                   <tr>
                     <td>comprises</td>
-                    <td>0:n (<a href="#Deployment">Deployment</a>)</td>
+                    <td>url of <a href="#Deployment">Deployment</a></td>
                     <td>The URI of the collection of Deployments that are part of this Environment.  This property is always set by the server, and is readOnly for the client 
                     </td>
                   </tr>
@@ -80,7 +80,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n (<a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> or <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> or <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a>)</td>
+                    <td>url of <a href="#EnvironmentStartRequest">EnvironmentStartRequest</a> or <a href="#EnvironmentStopRequest">EnvironmentStopRequest</a> or <a href="#EnvironmentRetirementRequest">EnvironmentRetirementRequest</a></td>
                     <td>The  URI of the collection of Requests for this Environment. New requests can be POSTed  to this collection to change the requested (desired) state of the Environment. These requests will typically change the state of the runtime. Valid request types are: EnvironmentStartRequest EnvironmentStopRequest EnvironmentRetirementRequest 
                     </td>
                   </tr>
@@ -195,13 +195,13 @@
                   </tr>
                   <tr>
                     <td>deploys</td>
-                    <td>0:1 (<a href="#Revision">Revision</a>)</td>
+                    <td>url of <a href="#Revision">Revision</a></td>
                     <td>The URI of the Revision that the deployment executes. This property is always set by the  server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
                     </td>
                   </tr>
                   <tr>
                     <td>runs_in</td>
-                    <td>0:1 (<a href="#Environment">Environment</a>)</td>
+                    <td>url of <a href="#Environment">Environment</a></td>
                     <td>The URI of the Environment that the deployment is part of. This property is always set by  the server in responses to GET. It must be set by the client on POST, and must not be set  by the client on PATCH. (PUT is not supported) 
                     </td>
                   </tr>
@@ -234,7 +234,7 @@
                   </tr>
                   <tr>
                     <td>requests</td>
-                    <td>0:n (<a href="#DeploymentStartRequest">DeploymentStartRequest</a> or <a href="#DeploymentStopRequest">DeploymentStopRequest</a> or <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> or <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> or <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> or <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> or <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a>)</td>
+                    <td>url of <a href="#DeploymentStartRequest">DeploymentStartRequest</a> or <a href="#DeploymentStopRequest">DeploymentStopRequest</a> or <a href="#DeploymentOnlineRequest">DeploymentOnlineRequest</a> or <a href="#DeploymentOfflineRequest">DeploymentOfflineRequest</a> or <a href="#DeploymentStatisticsRequest">DeploymentStatisticsRequest</a> or <a href="#DeploymentScalingRequest">DeploymentScalingRequest</a> or <a href="#DeploymentRetirementRequest">DeploymentRetirementRequest</a></td>
                     <td>The URI of the collection of Requests for this Deployment. New requests can be POSTed to this  collection to change the requested (desired) state of the Deployment. These requests will  typically change the state of the runtime. Valid request types are: DeploymentStartRequest  DeploymentStopRequest DeploymentOnlineRequest DeploymentOfflineRequest  DeploymentStatisticsRequest DeploymentScalingRequest DeploymentRetirementRequest 
                     </td>
                   </tr>
@@ -407,7 +407,7 @@
                   </tr>
                   <tr>
                     <td>results</td>
-                    <td>0:1 (<a href="#StatisticsResults">StatisticsResults</a>)</td>
+                    <td>url of <a href="#StatisticsResults">StatisticsResults</a></td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -494,13 +494,13 @@
                   </tr>
                   <tr>
                     <td>has_environments</td>
-                    <td>0:n (<a href="#Environment">Environment</a>)</td>
+                    <td>url of <a href="#Environment">Environment</a></td>
                     <td>The value of the has_environments property is the URI of the collection of Environments where this System is deployed.  New Environments can be POSTed to this collection—alternatively,  a new Environment can be added to the collection by creating the Environment with a value of 'realizes' that references this System.
                     </td>
                   </tr>
                   <tr>
                     <td>has_components</td>
-                    <td>0:n (<a href="#Component">Component</a>)</td>
+                    <td>url of <a href="#Component">Component</a></td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -530,12 +530,12 @@
                   </tr>
                   <tr>
                     <td>is_component_of</td>
-                    <td>0:1 (<a href="#System">System</a>)</td>
+                    <td>url of <a href="#System">System</a></td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>has_revisions</td>
-                    <td>0:n (<a href="#Revision">Revision</a>)</td>
+                    <td>url of <a href="#Revision">Revision</a></td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -565,12 +565,12 @@
                   </tr>
                   <tr>
                     <td>revises</td>
-                    <td>0:1 (<a href="#Component">Component</a>)</td>
+                    <td>url of <a href="#Component">Component</a></td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>has_deployments</td>
-                    <td>0:n (<a href="#Deployment">Deployment</a>)</td>
+                    <td>url of <a href="#Deployment">Deployment</a></td>
                     <td>                    </td>
                   </tr>
                 </tbody>
@@ -598,22 +598,22 @@
                 <tbody>
                   <tr>
                     <td>systems</td>
-                    <td>0:n (<a href="#System">System</a>)</td>
+                    <td>url of <a href="#System">System</a></td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td>0:n (<a href="#Environment">Environment</a>)</td>
+                    <td>url of <a href="#Environment">Environment</a></td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>components</td>
-                    <td>0:n (<a href="#Component">Component</a>)</td>
+                    <td>url of <a href="#Component">Component</a></td>
                     <td>                    </td>
                   </tr>
                   <tr>
                     <td>revisions</td>
-                    <td>0:n (<a href="#Revision">Revision</a>)</td>
+                    <td>url of <a href="#Revision">Revision</a></td>
                     <td>                    </td>
                   </tr>
                 </tbody>

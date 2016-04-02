@@ -34,7 +34,9 @@ class HTMLGenerator(object):
                     entity_urls = entity_urls.split()
                 multiplicity = relationship.get('multiplicity', '0:1')
             entity_links = [self.create_link(entity_url) for entity_url in entity_urls]
-            return '%s (%s)' % (multiplicity, ' or '.join(entity_links))
+            upper_bound = multiplicity.split(':')[-1]
+            multi_valued = upper_bound == 'n' or int(upper_bound) == 1
+            return '%s (%s)' % (multiplicity, ' or '.join(entity_links)) if upper_bound == 1 else 'url of %s' % ' or '.join(entity_links)
         type = property.get('type', '')
         if type == 'array':
             items = property['items']
