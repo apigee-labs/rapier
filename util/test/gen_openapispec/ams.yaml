@@ -237,7 +237,7 @@ definitions:
           oneOf:
           - users.yaml#/x-interfaces/User
           - users.yaml#/x-interfaces/Group
-          - permissions.yaml#/x-interfaces/team
+          - permissions.yaml#/x-interfaces/Team
       account:
         type: string
         format: uri

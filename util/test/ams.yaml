@@ -177,7 +177,7 @@ entities:
           The User who is subscribing.
         type: string
         format: uri
-        relationship: ./users.yaml#User ./users.yaml#Group ./permissions.yaml#team
+        relationship: ./users.yaml#User ./users.yaml#Group ./permissions.yaml#Team
       account:
         type: string
         format: uri
