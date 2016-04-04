@@ -694,6 +694,22 @@ class OASValidator(object):
             result.update(validator.entities)
         return result
 
+    def resolve_referenced_entity(self, uri):
+        abs_uri = self.abs_url(uri)
+        result = self.entities.get(abs_uri)
+        if not result:
+            for validator in self.included_spec_validators.itervalues():
+                result = validator.entities.get(abs_uri)
+                if result:
+                    break
+        return result
+
+    def resolve_referenced_entity_ref(self, ref):
+        return self.resolve_referenced_entity(ref['$ref'])
+
+    def resolve_referenced_entity_name(self, uri):
+        return self.resolve_referenced_entity(uri)['name']
+
     def marked_load(self, stream):
         def construct_mapping(loader, node):
             keys = [node_tuple[0].value for node_tuple in node.value]

@@ -218,42 +218,42 @@ entities:
         type: string
         enum: [minute, hour, day, month]     
 
-#  Apigee:
-#    description: >
-#      An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
-#    readOnly: true
-#    well_known_URLs: /
-#    query_paths: apiProducts apis subscriptions bundles
-#    properties:
-#      apiProducts:
-#        format: uri
-#        type: string
-#        readOnly: true
-#        relationship:
-#          collection_resource: './common.yaml/#MultiValuedRelationship'
-#          multiplicity: 0:n
-#          entities: '#APIProduct'        
-#      bundles:
-#        format: uri
-#        type: string
-#        readOnly: true
-#        relationship:
-#          collection_resource: './common.yaml/#MultiValuedRelationship'
-#          multiplicity: 0:n
-#          entities: '#Bundle'        
-#      subscriptions:
-#        format: uri
-#        type: string
-#        readOnly: true
-#        relationship:
-#          collection_resource: './common.yaml/#MultiValuedRelationship'
-#          multiplicity: 0:n
-#          entities: '#Subscription'        
-#      apis:
-#        format: uri
-#        type: string
-#        readOnly: true
-#        relationship:
-#          collection_resource: './common.yaml/#MultiValuedRelationship'
-#          multiplicity: 0:n
-#          entities: '#API'
+  Apigee:
+    description: >
+      An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
+    readOnly: true
+    well_known_URLs: /
+    query_paths: apiProducts apis subscriptions bundles
+    properties:
+      apiProducts:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: './common.yaml/#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#APIProduct'        
+      bundles:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: './common.yaml/#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Bundle'        
+      subscriptions:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: './common.yaml/#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#Subscription'        
+      apis:
+        format: uri
+        type: string
+        readOnly: true
+        relationship:
+          collection_resource: './common.yaml/#MultiValuedRelationship'
+          multiplicity: 0:n
+          entities: '#API'

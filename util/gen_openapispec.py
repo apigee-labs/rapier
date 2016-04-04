@@ -179,17 +179,18 @@ class OASGenerator(object):
         rapier_spec = self.rapier_spec
         rel_property_spec = rel_property_spec_stack[-1]
         target_entity_uri = rel_property_spec.target_entity_uri
-        target_entity_spec = self.resolve_included_entity(target_entity_uri)
-        rel_property_specs = self.get_entity_relationship_property_specs(target_entity_uri, target_entity_spec)
-        for query_path in query_paths[:]:
-            if query_path.matches(rel_property_spec_stack):
-                self.emit_query_path(prefix, query_path, rel_property_spec_stack, prev_rel_property_specs)
-                query_paths.remove(query_path)
-        for rel_spec in rel_property_specs:
-            if rel_spec not in rel_property_spec_stack:
-                rel_property_spec_stack.append(rel_spec)
-                self.add_query_paths(query_paths, prefix, rel_property_spec_stack, rel_property_specs)
-                rel_property_spec_stack.pop()
+        target_entity_spec = self.validator.resolve_referenced_entity(target_entity_uri)
+        if target_entity_spec: # if it is external, it may not be found
+            rel_property_specs = self.get_entity_relationship_property_specs(target_entity_uri, target_entity_spec)
+            for query_path in query_paths[:]:
+                if query_path.matches(rel_property_spec_stack):
+                    self.emit_query_path(prefix, query_path, rel_property_spec_stack, prev_rel_property_specs)
+                    query_paths.remove(query_path)
+            for rel_spec in rel_property_specs:
+                if rel_spec not in rel_property_spec_stack:
+                    rel_property_spec_stack.append(rel_spec)
+                    self.add_query_paths(query_paths, prefix, rel_property_spec_stack, rel_property_specs)
+                    rel_property_spec_stack.pop()
                 
     def emit_query_path(self, prefix, query_path, rel_property_spec_stack, rel_property_specs):
         for inx, spec in enumerate(rel_property_spec_stack):
@@ -260,7 +261,7 @@ class OASGenerator(object):
 
     def build_entity_interface(self, entity_url_spec):
         entity_uri = entity_url_spec.entity_uri
-        entity_spec = self.resolve_included_entity(entity_uri)
+        entity_spec = self.validator.resolve_referenced_entity(entity_uri)
         parameters = self.build_parameters(entity_url_spec)
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
@@ -288,7 +289,7 @@ class OASGenerator(object):
         if parameters:
             interface['parameters'] = parameters
         interface['get'] = {
-                'description': 'Retrieve %s' % articled(self.resolve_included_entity_name(entity_uri)),
+                'description': 'Retrieve %s' % articled(self.validator.resolve_referenced_entity_name(entity_uri)),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
                     '200': build_response_200(), 
@@ -308,15 +309,15 @@ class OASGenerator(object):
                 update_verb = 'patch'
                 description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
-                body_desciption =  'The subset of properties of the %s being updated' % self.resolve_included_entity_name(entity_uri)
+                body_desciption =  'The subset of properties of the %s being updated' % self.validator.resolve_referenced_entity_name(entity_uri)
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
-                body_desciption =  'The representation of the %s being replaced' % self.resolve_included_entity_name(entity_uri)
+                body_desciption =  'The representation of the %s being replaced' % self.validator.resolve_referenced_entity_name(entity_uri)
             schema = self.global_definition_ref(entity_uri)
-            description = description % articled(self.resolve_included_entity_name(entity_uri))
+            description = description % articled(self.validator.resolve_referenced_entity_name(entity_uri))
             interface[update_verb] = {
                 'description': description,
                 'parameters': [
@@ -339,12 +340,12 @@ class OASGenerator(object):
                 interface['patch']['consumes'] = self.patch_consumes if self.yaml_merge else self.patch_consumes[:]
             else:
                 interface['put']['responses']['201'] = {
-                    'description': 'Created new %s' % self.resolve_included_entity_name(entity_uri),
+                    'description': 'Created new %s' % self.validator.resolve_referenced_entity_name(entity_uri),
                     'schema': self.global_definition_ref(entity_uri),
                     'headers': {
                         'Location': {
                             'type': 'string',
-                            'description': 'perma-link URL of newly-created %s'  % self.resolve_included_entity_name(entity_uri)
+                            'description': 'perma-link URL of newly-created %s'  % self.validator.resolve_referenced_entity_name(entity_uri)
                             },
                         'Content-Type': {
                             'type': 'string',
@@ -360,7 +361,7 @@ class OASGenerator(object):
         well_known = entity_spec.get('well_known_URLs')
         if not well_known and not immutable:        
             interface['delete'] = {
-                'description': 'Delete %s' % articled(self.resolve_included_entity_name(entity_uri)),
+                'description': 'Delete %s' % articled(self.validator.resolve_referenced_entity_name(entity_uri)),
                 'responses': {
                     '200': response_200
                     }
@@ -392,7 +393,7 @@ class OASGenerator(object):
         parameters = self.build_parameters(entity_url_spec, query_path) 
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
-        entity_spec = self.resolve_included_entity(entity_uri)
+        entity_spec = self.validator.resolve_referenced_entity(entity_uri)
         interface = PresortedOrderedDict()
         is_private = rel_property_spec.is_private() or entity_url_spec.is_private()
         if is_private:
@@ -409,21 +410,21 @@ class OASGenerator(object):
             if len(rel_property_specs) > 1:
                 schema = {}
                 schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
-                i201_description = 'Created new %s' % ' or '.join([self.resolve_included_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
-                location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.resolve_included_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
-                body_desciption =  'The representation of the new %s being created' % ' or '.join([self.resolve_included_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+                i201_description = 'Created new %s' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+                location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
+                body_desciption =  'The representation of the new %s being created' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
             else:    
                 schema = self.global_definition_ref(entity_uri)
-                i201_description = 'Created new %s' % self.resolve_included_entity_name(entity_uri)
-                location_desciption = 'perma-link URL of newly-created %s'  % self.resolve_included_entity_name(entity_uri)
-                body_desciption =  'The representation of the new %s being created' % self.resolve_included_entity_name(entity_uri) 
+                i201_description = 'Created new %s' % self.validator.resolve_referenced_entity_name(entity_uri)
+                location_desciption = 'perma-link URL of newly-created %s'  % self.validator.resolve_referenced_entity_name(entity_uri)
+                body_desciption =  'The representation of the new %s being created' % self.validator.resolve_referenced_entity_name(entity_uri) 
             if len(consumes_entities) > 1:
                 post_schema = {}
                 post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
-                description = 'Create a new %s' % ' or '.join([self.resolve_included_entity_name(rel_prop_spec.target_entity_uri) for rel_prop_spec in rel_property_specs])
+                description = 'Create a new %s' % ' or '.join([self.validator.resolve_referenced_entity_name(rel_prop_spec.target_entity_uri) for rel_prop_spec in rel_property_specs])
             else:
                 post_schema = self.global_definition_ref(consumes_entities[0])
-                description = 'Create a new %s' % self.resolve_included_entity_name(consumes_entities[0])
+                description = 'Create a new %s' % self.validator.resolve_referenced_entity_name(consumes_entities[0])
             interface['post'] = {
                 'description': description,
                 'parameters': [
@@ -688,7 +689,7 @@ class OASGenerator(object):
         if collection_entity_uri not in self.included_entity_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
-            collection_entity = self.resolve_included_entity(collection_entity_uri)
+            collection_entity = self.validator.resolve_referenced_entity(collection_entity_uri)
         rslt = {
             'responses': {
                 '200': {
@@ -734,7 +735,7 @@ class OASGenerator(object):
                 query_params.extend(new_params)
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
-                    add_query_parameters(self.resolve_included_entity_ref(entity_ref), query_params) 
+                    add_query_parameters(self.validator.resolve_referenced_entity_ref(entity_ref), query_params) 
         query_parameters = []
         add_query_parameters(collection_entity, query_parameters)
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
@@ -803,7 +804,7 @@ class OASGenerator(object):
         return self.resolve_included_entity(ref['$ref'])
 
     def resolve_included_entity_name(self, uri):
-        return self.included_entity_map[uri]['name']
+        return self.resolve_included_entity(uri)['name']
 
     def resolve_property(self, entity_uri, property_name):
         entity = self.resolve_included_entity(entity_uri)
@@ -969,7 +970,7 @@ class RelSVPropertySpec(SegmentSpec):
         return self.target_entity_uri.split('#')[1]
 
     def template_id(self):
-        return '{%s-URL}' % self._generator.resolve_included_entity_name(self._entity_uri)
+        return '{%s-URL}' % self._generator.resolve_referenced_entity_name(self._entity_uri)
       
 class RelMVPropertySpec(SegmentSpec):
     
@@ -1019,7 +1020,7 @@ class RelMVPropertySpec(SegmentSpec):
         return '%s.%s' % (self._entity_spec['name'], self.relationship_name)
         
     def template_id(self):
-        return '{%s}' % self._generator.resolve_included_entity_name(self._entity_uri)
+        return '{%s}' % self._generator.resolve_referenced_entity_name(self._entity_uri)
       
     def source_entity_name(self):
         return self._entity_spec['name']
@@ -1206,7 +1207,7 @@ class EntityURLSpec(PathPrefix):
         self.generator = generator
 
     def path_segment(self, select_one_of_many = False):
-        return self.generator.resolve_included_entity_name(self.entity_uri)
+        return self.generator.resolve_referenced_entity_name(self.entity_uri)
 
     def build_param(self):
         return None
