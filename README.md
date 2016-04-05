@@ -530,12 +530,12 @@ type | "string" or "integer" or "number" | The type of the variable
 
 ## <a name="oas_generator">OpenAPI Generator
 
-The Rapier OpenAPI generator is implemented by `gen_openapispec.py` in the util directory. It is written in python. It has a single external dependency - pyYAML. If you do not have pyYAML installed on you machine, you can install it using
+The Rapier OpenAPI generator is implemented by `gen_openapispec.py` in the util directory. It is written in python. It has a single external dependency—pyYAML. If you do not have pyYAML installed on you machine, you can install it using
 `pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the generator.
 
 `usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] filename`
 
-The generated OpenAPI specification is written to stdout. The normal usage patter is to pipe this output to a file, like this: `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
+The generated OpenAPI specification is written to stdout. The normal usage pattern is to pipe this output to a file, like this: `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
 The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate extra information from the implementation_private_information
 section that is otherwise ommitted from the output.
 
