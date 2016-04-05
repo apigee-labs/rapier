@@ -386,6 +386,8 @@ view of the API to be generated instead of the client view. It can be found [her
 - test-servers - a directory contains some simple servers used to test the genenrated SDKs
 - util - directory containing the sdk generators and the OpenAPI generator. This directory is a Python module
   - gen_openapispec.py - the OpenAPI generator
+  - gen_html.py - the HTML generator
+  - validate_rapier.py - the rapier validator
   - gen_js_sdk.py - the Javascript SDK generator
   - gen_py_sdk.py - the Python SDK generator
   - requirements.txt - the pip file with the python dependencies for these generators
