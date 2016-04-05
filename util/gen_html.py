@@ -170,6 +170,9 @@ class HTMLGenerator(object):
 
 def main(args):
     #try:
+    if not len(args) == 1:
+        usage = 'usage: gen_html.py filename'
+        sys.exit(usage)
     html_generator = HTMLGenerator()
     rslt = html_generator.generate_html(*args)
     print rslt

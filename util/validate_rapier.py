@@ -745,6 +745,9 @@ class OASValidator(object):
 
 def main(args):
     validator = OASValidator()
+    if not len(args) == 1:
+        usage = 'usage: validate_rapier.py filename'
+        sys.exit(usage)
     validator.validate(*args)
     return validator.rapier_spec, validator.errors
 
