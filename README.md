@@ -1,6 +1,5 @@
 # Rapier - REST APIs from Entities and Relationships
 
-## Table of Contents
 | | | | |
 |---|---|---|---|
 [Introduction](#introduction) | [News](#news) | [Tutorial](#tutorial) | [Specification](#specification)
