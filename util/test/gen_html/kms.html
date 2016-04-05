@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="http://design.apigee.com/ui-framework/latest/css/ui-framework-core.css">
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic,300,300italic' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+  <div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Entity Name</th>
+                <th>Entity Description</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a name="Attribute"></a>Attribute</td>
+            <td>A key value properties
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Attribute"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>name of a property</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>value</td>
+                    <td>value of a property</td>
+                    <td>string                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="CredentialMethod"></a>CredentialMethod</td>
+            <td>organization's CredentialMethod
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "CredentialMethod"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>id</td>
+                    <td></td>
+                    <td>number                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>apiProducts</td>
+                    <td></td>
+                    <td>[url of <a href="#ApiProduct">ApiProduct</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>attributes</td>
+                    <td></td>
+                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>scopes</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="AppCredentialsRequest"></a>AppCredentialsRequest</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsRequest"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>app</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerKey</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerSecret</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>credentialMethod</td>
+                    <td></td>
+                    <td>url of <a href="#CredentialMethod">CredentialMethod</a>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="AppCredentialsResponse"></a>AppCredentialsResponse</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsResponse"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerKey</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerSecret</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>app</td>
+                    <td></td>
+                    <td>url of <a href="#App">App</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>scopes</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Organization"></a>Organization</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Organization"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>The name of the Organization. Must be unique
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>description</td>
+                    <td>A textual description of the Organization
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>displayName</td>
+                    <td>The name to be used to display to humans for this Organization. Used in the UI.
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>flavour</td>
+                    <td>(Note: "type" is the key word) Type of the Organization which describe whether it's a trail or revenue Organization
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>properties</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Environment"></a>Environment</td>
+            <td>An environment represents a set of running components accessible at a single namespace
+
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "ENVIRONMENT"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>The name of the Environment. Must be unique within the pertaining Organization
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>description</td>
+                    <td>A textual description of the Environment
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>displayName</td>
+                    <td>The name to be used to display to humans for this Environment. Used in the UI.
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>properties</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="ApiProduct"></a>ApiProduct</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIPRODUCT"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>The name of the API product. Must be unique within the pertaining Organization
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>description</td>
+                    <td>A textual description of the API Product
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>displayName</td>
+                    <td>The name to be used to display to humans for this API Product. Used in the UI.
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>organizaion</td>
+                    <td>The APIProduct within this Organization
+</td>
+                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>attributes</td>
+                    <td></td>
+                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>apiResources</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                  <tr>
+                    <td>environments</td>
+                    <td>Environments where this API is available. Defines the domain names where the paths of the API will be available</td>
+                    <td>[string]                    </td>
+                  </tr>
+                  <tr>
+                    <td>scopes</td>
+                    <td>Defines the OAUTH scopes to which this APIProduct gives access
+</td>
+                    <td>[string]                    </td>
+                  </tr>
+                  <tr>
+                    <td>proxies</td>
+                    <td></td>
+                    <td>[string]                    </td>
+                  </tr>
+                  <tr>
+                    <td>quota</td>
+                    <td>Defines the quota of requests allowed by this APIProduct.
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>quotaInterval</td>
+                    <td></td>
+                    <td>integer                    </td>
+                  </tr>
+                  <tr>
+                    <td>quotaTimeUnit</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>approvalType</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="App"></a>App</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APP"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>appId</td>
+                    <td>uniquely generated ID</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>The name of the App. Must be unique within the pertaining Organization
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>organizaion</td>
+                    <td>The APIProduct within this Organization
+</td>
+                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>accessType</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>callbackUrl</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>appStatus</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>appFamily</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>appParentStatus</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>appType</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>keyExpiresIn</td>
+                    <td></td>
+                    <td>number                    </td>
+                  </tr>
+                  <tr>
+                    <td>appParent</td>
+                    <td></td>
+                    <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>uniqueId</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>organizaion</td>
+                    <td></td>
+                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                  </tr>
+                </tbody>
+              </table>                    </td>
+                  </tr>
+                  <tr>
+                    <td>attributes</td>
+                    <td></td>
+                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>appCredentialsRequest</td>
+                    <td></td>
+                    <td>[url of <a href="#AppCredentialsRequest">AppCredentialsRequest</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>appCredentialsResponse</td>
+                    <td></td>
+                    <td>[url of <a href="#AppCredentialsResponse">AppCredentialsResponse</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>scopes</td>
+                    <td>Defines the OAUTH scopes to which this APIProduct gives access
+</td>
+                    <td>[string]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="AppCredential"></a>AppCredential</td>
+            <td>Token key for an app
+
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APPCRENDENTIAL"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>id</td>
+                    <td></td>
+                    <td>number                    </td>
+                  </tr>
+                  <tr>
+                    <td>app</td>
+                    <td></td>
+                    <td>url of <a href="#App">App</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerKey</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>consumerSecret</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>apiProduct</td>
+                    <td></td>
+                    <td>url of <a href="#ApiProduct">ApiProduct</a>                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Company"></a>Company</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "COMPANY"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>organization</td>
+                    <td></td>
+                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>displayName</td>
+                    <td>The name to be used to display to humans for this API Product. Used in the UI.
+</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>apps</td>
+                    <td></td>
+                    <td>[url of <a href="#App">App</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>attributes</td>
+                    <td></td>
+                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Developer"></a>Developer</td>
+            <td>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "DEVELOPER"</td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>userId</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>organization</td>
+                    <td></td>
+                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                  </tr>
+                  <tr>
+                    <td>userName</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>firstName</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>lastName</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>email</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>encryptedPassword</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>status</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>apps</td>
+                    <td></td>
+                    <td>[url of <a href="#App">App</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>companies</td>
+                    <td></td>
+                    <td>[url of <a href="#Company">Company</a>]                    </td>
+                  </tr>
+                  <tr>
+                    <td>salt</td>
+                    <td></td>
+                    <td>string                    </td>
+                  </tr>
+                  <tr>
+                    <td>attributes</td>
+                    <td></td>
+                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+        </tbody>
+    </table>          
+    </div>
+  </div>
+
+</body>
+</html>
+

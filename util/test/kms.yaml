@@ -1,13 +1,85 @@
 title: KMS APIs
 entities:
+  Attribute:
+    description: A key value properties
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Attribute"
+        type: string
+        enum: [Attribute]
+      name:
+        description: name of a property
+        type: string
+      value:
+        description: value of a property
+        type: string
+  CredentialMethod:
+    description: organization's CredentialMethod
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "CredentialMethod"
+        type: string
+        enum: [CredentialMethod]
+      id:
+        type: number
+      name:
+        type: string
+      apiProducts:
+        type: array
+        items:
+          type: object
+          relationship: "#ApiProduct"
+      attributes:
+        type: array
+        items:
+          type: object
+          relationship: "#Attribute"
+      scopes:
+        type: array
+        items:
+          type: string
+  AppCredentialsRequest:
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsRequest"
+        type: string
+        enum: [AppCredentialsRequest]
+      app:
+        type: string
+      consumerKey:
+        type: string
+      consumerSecret:
+        type: string
+      credentialMethod:
+        type: object
+        relationship: "#CredentialMethod"
+  AppCredentialsResponse:
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsResponse"
+        type: string
+        enum: [AppCredentialsResponse]
+      consumerKey:
+        type: string
+      consumerSecret:
+        type: string
+      status:
+        type: string
+      app:
+        type: object
+        relationship: "#App"
+      scopes:
+        type: array
+        items:
+          type: string
   Organization:
     well_known_URLs: /organizations
     description: >
     properties:
       kind:
-        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "ORGANIZATION"
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Organization"
         type: string
-        enum: [ORGANIZATION]
+        enum: [Organization]
       name:
         description: >
           The name of the Organization. Must be unique
@@ -20,9 +92,9 @@ entities:
         description: >
           The name to be used to display to humans for this Organization. Used in the UI.
         type: string
-      type:
+      flavour:
         description: >
-          Type of the Organization which describe whether it's a trail or revenue Organization
+          (Note: "type" is the key word) Type of the Organization which describe whether it's a trail or revenue Organization
         type: string
         enum: [trail, revenue]
       properties:
@@ -37,7 +109,7 @@ entities:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "ENVIRONMENT"
         type: string
-        enum: [ENVIRONMENT]
+        enum: [Environment]
       name:
         description: >
           The name of the Environment. Must be unique within the pertaining Organization
@@ -55,21 +127,20 @@ entities:
         items:
           type: string
   ApiProduct:
-    well_known_URLs: 
+    well_known_URLs: /organizaions/{org}/api-product
     description: >
-  		
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIPRODUCT"
         type: string
-        enum: [APIPRODUCT]
+        enum: [ApiProduct]
       name:
         description: >
           The name of the API product. Must be unique within the pertaining Organization
         type: string
       description:
-      	description: >
-      	  A textual description of the API Product
+        description: >
+          A textual description of the API Product
         type: string
       displayName:
         description: >
@@ -78,34 +149,30 @@ entities:
       organizaion:
         description: >
           The APIProduct within this Organization
-        type: string
-        relationship: '#Organization'
+        type: object
+        relationship: "#Organization"
       attributes:
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            name:
-              type: string
-            value:
-              type: string
+          relationship: "#Attribute"
       apiResources:
-      	type: array
+        type: array
         items:
           type: string
       environments:
-      	description: Environments where this API is available. Defines the domain names where the paths of the API will be available
-      	type: array
+        description: Environments where this API is available. Defines the domain names where the paths of the API will be available
+        type: array
         items:
           type: string
       scopes:
-      	description: > 
-      	  Defines the OAUTH scopes to which this APIProduct gives access
-      	type: array
+        description: > 
+          Defines the OAUTH scopes to which this APIProduct gives access
+        type: array
         items:
           type: string
       proxies:
-      	type: array
+        type: array
         items:
           type: string
       quota:
@@ -113,25 +180,25 @@ entities:
           Defines the quota of requests allowed by this APIProduct.
         type: string
       quotaInterval:
-      	type: integer
+        type: integer
       quotaTimeUnit:
-      	type: string
+        type: string
         enum: [second, minute, hour, day, month]
       approvalType:
-      	type: string
-      	enum: [manual, auto]
+        type: string
+        enum: [manual, auto]
   App:
-  	well_known_URLs: 
-  	description: >
-  		
+    well_known_URLs: /organizaions/{org}/apps
+    description: >
+      
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APP"
         type: string
-        enum: [APP]
+        enum: [App]
       appId:
         description: uniquely generated ID
-        type: uuid
+        type: string
       name:
         description: >
           The name of the App. Must be unique within the pertaining Organization
@@ -139,8 +206,8 @@ entities:
       organizaion:
         description: >
           The APIProduct within this Organization
-        type: string
-        relationship: '#Organization'
+        type: object
+        relationship: "#Organization"
       accessType:
         type: string
       callbackUrl:
@@ -157,97 +224,52 @@ entities:
         type: string
         enum: [approved, revoked, pending]
       appType:
-      	type: string
+        type: string
       keyExpiresIn:
-        type: long
+        type: number
       appParent:
         type: object
         properties:
           uniqueId:
             type: string
           organizaion:
-            type: string
+            type: object
             relationship: "#Organization"
       attributes:
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            name:
-              type: string
-            value:
-              type: string
+          relationship: "#Attribute"
       appCredentialsRequest:
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            app:
-              type: string
-              relationship: "#APP"
-            consumerKey:
-              type: string
-            consumerSecret:
-              type: string
-            credentialMethod:
-              type: object
-              properties:
-            	id:
-            	  type: long
-            	name:
-            	  type: string
-                apiProducts:
-            	  type: array
-                  items:
-                    type: string
-                    relationship: "#APIProduct"
-          		attributes:
-	      	      type: array
-	              items:
-	                type: string
-	            scopes:
-	      	      type: array
-	              items:
-	          		type: string
+          relationship: "#AppCredentialsRequest"
       appCredentialsResponse:
-      	description: 
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            consumerKey:
-              type: string
-            consumerSecret:
-              type: string
-            status:
-              type: string
-            app:
-              type: object
-              relationship: "#APP"
-            scopes:
-	      	   type: array
-	           items:
-	             type: string
+          relationship: "#AppCredentialsResponse"
       scopes:
-      	description: > 
-      	  Defines the OAUTH scopes to which this APIProduct gives access
-      	type: array
+        description: > 
+          Defines the OAUTH scopes to which this APIProduct gives access
+        type: array
         items:
           type: string
   AppCredential:
-    well_known_URLs: 
-  	description: >
-  		
+    well_known_URLs: /organizaions/{org}/apps/{app}/keys
+    description: >
+      Token key for an app
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APPCRENDENTIAL"
         type: string
-        enum: [APPCRENDENTIAL]
+        enum: [AppCredential]
       id:
-        type: long
+        type: number
       app:
         type: object
-        relationship: "#APP"
+        relationship: "#App"
       consumerKey:
         type: string
       consumerSecret:
@@ -256,14 +278,14 @@ entities:
         type: object
         relationship: "#ApiProduct"
   Company:
-    well_known_URLs: 
-  	description: >
-  		
+    well_known_URLs: /organizaions/{org}/companies
+    description: >
+      
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "COMPANY"
         type: string
-        enum: [COMPANY]
+        enum: [Company]
       organization:
         type: object
         relationship: "#Organization"
@@ -279,25 +301,22 @@ entities:
       apps:
         type: array
         items:
-          type: "#APP"
+          type: object
+          relationship: "#App"
       attributes:
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            name:
-              type: string
-            value:
-              type: string
+          relationship: "#Attribute"
   Developer:
-    well_known_URLs: 
-  	description: >
-  		
+    well_known_URLs: /organizaions/{org}/companies/{company}/developers 
+    description: >
+      
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "DEVELOPER"
         type: string
-        enum: [DEVELOPER]
+        enum: [Developer]
       userId:
         type: string
       organization:
@@ -319,19 +338,17 @@ entities:
       apps:
         type: array
         items:
-          type: "#APP"
+          type: object
+          relationship: "#App"
       companies:
         type: array
         items:
-          type: "#COMPANY"
+          type: object
+          relationship: "#Company"
       salt:
         type: string
       attributes:
-      	type: array
+        type: array
         items:
           type: object
-          properties:
-            name:
-              type: string
-            value:
-              type: string
+          relationship: "#Attribute"
