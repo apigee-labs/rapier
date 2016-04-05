@@ -2,10 +2,13 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
+- [Introduction](#introduction)
 - [Tutorial](#tutorial)
 - [Navigating the Repository](#navigating)
 - [Specification](#specification)
 - [OpenAPI Generator](#oas_generator)
+- [HTML Generator](#html_generator)
+- [Validator](#validator)
 
 ## <a name="introduction">Introduction
 
@@ -40,6 +43,18 @@ Rapier also includes SDK generators for Javascript and Python. A validator is in
 <a name="footnote1">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
+
+## <a name="news">News
+
+April 4 2016:
+
+A validator and an html generator are now provided. The implementations of both are in the util directory. Prerequisites are the same as for the
+OpenAPI Specification genenrator, which now uses the validator.
+
+Usage of the validator is `validate_rapier.py filename` where filename is the name of the rapier file. Errors and warnings are written to stderr.
+
+Uage of the HTML generator is `gen_html.py filename` where filename is the name of the rapier file. The generated HTML is written to stdout,
+so the typical usage is to pipe the output to a file, like this: `gen_html.py my-rapier-file.yaml > my-html-file.html`. 
 
 ## <a name="tutorial">Tutorial
 
@@ -535,7 +550,24 @@ The Rapier OpenAPI generator is implemented by `gen_openapispec.py` in the util 
 
 `usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] filename`
 
-The generated OpenAPI specification is written to stdout. The normal usage pattern is to pipe this output to a file, like this: `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
+The generated OpenAPI specification is written to stdout. Errors and warnings are written to stderr. The normal usage pattern is to pipe this output to a file, like this: `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
 The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate extra information from the implementation_private_information
 section that is otherwise ommitted from the output.
 
+## <a name="html_generator">HTML Generator
+
+The Rapier HTML generator is implemented by `gen_html.py` in the util directory. It is written in python. It has a single external dependency—pyYAML. If you do not have pyYAML installed on you machine, you can install it using
+`pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the generator.
+
+`usage: gen_html.py filename`
+
+The generated OpenAPI specification is written to stdout. Errors and warnings are written to stderr. The normal usage pattern is to pipe this output to a file, like this: `gen_html.py my-rapier-spec.yaml > my-html.html`
+
+## <a name="validator">Validator
+
+The Rapier validator is implemented by `validate_rapier.py` in the util directory. It is written in python. It has a single external dependency—pyYAML. If you do not have pyYAML installed on you machine, you can install it using
+`pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the generator.
+
+`usage: validate_rapier.py filename`
+
+Errors and warnings are written to stderr.
