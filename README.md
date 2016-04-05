@@ -46,7 +46,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 
 ## <a name="news">News
 
-April 4 2016:
+April 2 2016:
 
 A validator and an html generator are now provided. The implementations of both are in the util directory. Prerequisites are the same as for the
 OpenAPI Specification generator, which now uses the validator.
@@ -54,7 +54,13 @@ OpenAPI Specification generator, which now uses the validator.
 Usage of the validator is `validate_rapier.py filename` where filename is the name of the rapier file. Errors and warnings are written to stderr.
 
 Uage of the HTML generator is `gen_html.py filename` where filename is the name of the rapier file. The generated HTML is written to stdout,
-so the typical usage is to pipe the output to a file, like this: `gen_html.py my-rapier-file.yaml > my-html-file.html`. 
+so the typical usage is to pipe the output to a file, like this: `gen_html.py my-rapier-file.yaml > my-html-file.html`.
+
+April 4 2016:
+
+The utilities now support relative references between files on the same file-system. HTTP URL references
+are not yet supported.
+ 
 
 ## <a name="tutorial">Tutorial
 
