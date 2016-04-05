@@ -213,7 +213,7 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `well_known_URLS` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
+The combination of the `well_known_URLs` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /to-dos/items
     /to-dos/items/{id}
