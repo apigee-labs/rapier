@@ -1261,11 +1261,13 @@ class CustomAnchorDumper(yaml.SafeDumper):
 
 def main(args):
     generator = OASGenerator()
+    usage = 'usage: gen_openapispec.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'maivs', ['yaml-merge', 'yaml-alias', 'include-impl', 'suppress-annotations'])
     except getopt.GetoptError as err:
-        usage = '\nusage: gen_openapispec.py [-m, --yaml-merge] [-a, --yaml-alias] [-i, --include-impl] [-n, --suppress-annotations] filename'
-        sys.exit(str(err) + usage)
+        sys.exit(str(err) + '\n' + usage)
+    if not len(args) == 1:
+        sys.exit(usage)        
     generator.set_opts(opts)
     Dumper = CustomAnchorDumper
     opts_keys = [k for k,v in opts]
