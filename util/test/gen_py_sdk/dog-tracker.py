@@ -16,16 +16,19 @@ class APIClass(object):
 class Person(BaseEntity, APIClass):            
     pass
 
+class Resource(BaseEntity, APIClass):            
+    pass
+
+class PersistentResource(BaseEntity, APIClass):            
+    pass
+
 class DogTracker(BaseEntity, APIClass):            
     pass
 
 class Dog(BaseEntity, APIClass):            
     pass
 
-class Resource(BaseEntity, APIClass):            
-    pass
-
-class PersistentResource(BaseEntity, APIClass):            
+class Collection(BaseEntity, APIClass):            
     pass
 
 class Collection(BaseCollection, APIClass):            
@@ -33,9 +36,10 @@ class Collection(BaseCollection, APIClass):
 
 classToKindMap = {
     'Person': Person,
-    'DogTracker': DogTracker,
-    'Dog': Dog,
     'Resource': Resource,
     'PersistentResource': PersistentResource,
+    'DogTracker': DogTracker,
+    'Dog': Dog,
+    'Collection': Collection,
     'Collection': Collection
     }

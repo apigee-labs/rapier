@@ -49,7 +49,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 April 4 2016:
 
 A validator and an html generator are now provided. The implementations of both are in the util directory. Prerequisites are the same as for the
-OpenAPI Specification genenrator, which now uses the validator.
+OpenAPI Specification generator, which now uses the validator.
 
 Usage of the validator is `validate_rapier.py filename` where filename is the name of the rapier file. Errors and warnings are written to stderr.
 
@@ -380,8 +380,8 @@ view of the API to be generated instead of the client view. It can be found [her
 - test-servers - a directory contains some simple servers used to test the genenrated SDKs
 - util - directory containing the sdk generators and the OpenAPI generator. This directory is a Python module
   - gen_openapispec.py - the OpenAPI generator
-  - gen_js_sdk.py - the Javascript SDK genenrator
-  - gen_py_sdk.py - the Python SDK genenrator
+  - gen_js_sdk.py - the Javascript SDK generator
+  - gen_py_sdk.py - the Python SDK generator
   - requirements.txt - the pip file with the python dependencies for these generators
   - test - a directory containing tests for the generators. This directory contains numerous samples.
     - gen_openapispec - a directory containing openapispec files generated from the samples
