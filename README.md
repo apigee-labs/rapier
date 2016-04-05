@@ -2,7 +2,7 @@
 
 ## Table of Contents
 - [Introduction](#introduction)
-- [Introduction](#introduction)
+- [News](#news)
 - [Tutorial](#tutorial)
 - [Navigating the Repository](#navigating)
 - [Specification](#specification)
