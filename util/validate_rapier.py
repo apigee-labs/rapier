@@ -249,7 +249,7 @@ class OASValidator(object):
         if hasattr(p_type, 'keys'): #nested schema done wrong?
             self.error('type may not be a yaml map - use "type: object" and place other schema elements as siblings of type', key)
         elif not p_type in ['array', 'boolean', 'integer', 'number', 'null', 'object', 'string']:
-            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': " % p_type, key)   
+            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'null', 'object', 'string': %s" % p_type, key)   
             
     def validate_query_parameter_property_type(self, node, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'string']:
