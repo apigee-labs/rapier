@@ -724,8 +724,11 @@ class OASValidator(object):
             construct_mapping)
         return MarkedLoader(stream).get_single_data()
         
-    def fatal_error(self, message):
-        sys.exit(' '. join(['FATAL ERROR -', message, 'in', self.filename]))
+    def fatal_error(self, message, key_node=None):
+        message = ' '. join(['FATAL ERROR -', message, 'in', self.filename])
+        if key_node and hasattr(key_node, 'start_mark'):
+            message += ' after line %s column %s to line %s column %s' % (key_node.start_mark.line + 1, key_node.start_mark.column + 1, key_node.end_mark.line + 1, key_node.end_mark.column + 1)
+        sys.exit(message)
 
     def error(self, message, key_node=None):
         self.errors += 1

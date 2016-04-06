@@ -684,7 +684,7 @@ class OASGenerator(object):
     def build_collection_get(self, rel_property_spec, produces):
         collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
-            sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.filename))
+            sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.validator.filename))
         if collection_entity_uri not in self.included_entity_map:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
         else:
