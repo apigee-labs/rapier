@@ -443,6 +443,7 @@ readOnly | `boolean` | Indicates that resources of this Entity type can be read 
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 query_parameters | `sequence` of [Query Parameter](#query_parameter)s
+usage | `string` or `sequence of string` | [Usage](#usage)s
 
 #### <a name="properties"></a>Properties
 
@@ -459,7 +460,18 @@ TODO: Support the common case of a 'write-once' property that can be set on POST
 Field Name | Type | Description
 ---|:---:|---
 relationship | [Relationship](#relationship) | States that the property is a relationship property. If this property is present, the type of the property must be `string` with a `format` of `uri`. 
+usage | `string` or `sequence of string` | [Usage](#usage)s
  
+#### <a name="usage"></a>Usage
+
+Specifies with which methods an entity or property may be used. The value may be a YAML sequence of strings, or a space-delimited list in a single string.
+Values are case-insensitive. Valid values are: 
+- 'c' | 'create' - Can be use by the client with POST to create a new entity
+- 'r' | 'read' | 'retrieve' | 'g' | 'get' - May be provided by the server on GET
+- 'u' | 'update' | 'put' | 'patch' - Can be use by the client with PUT or PATCH to create a new entity
+- 'd' | 'delete' - Can be use by the client with DELETE to delete a new entity
+
+
 #### <a name="relationship"></a>Relationship
 
 Describes a relationship to one or more other entities
