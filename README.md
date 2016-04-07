@@ -485,12 +485,13 @@ usage:
 The default is 
 ```yaml
 'c r u d'
-```—all methods allowed. The following two examples are equivalent:
+```
+i.e. all methods allowed. The following two examples are equivalent:
 ```yaml
 ---
 readOnly: true
 ---
-usage: create read delete
+usage: create read
 ```
 
 #### <a name="relationship"></a>Relationship
