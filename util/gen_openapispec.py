@@ -22,9 +22,11 @@ class OASGenerator(object):
         spec, errors = self.validator.validate(filename)
         if errors > 0:
             sys.exit('Validation of %s failed. OpenAPI spec generation not attempted' % filename)
+        elif spec is None:
+            sys.exit('Empty spec: %s - no OpenAPI spec generated' % filename)        
         else:
             self.rapier_spec = spec
-        self.conventions = spec['conventions'] if 'conventions' in spec else {}     
+        self.conventions = spec.get('conventions',{})     
         if 'selector_location' in self.conventions:
             if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
                 sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
@@ -77,10 +79,14 @@ class OASGenerator(object):
             self.openapispec_uri_map = self.oas_definition_map(self.validator)
             self.openapispec['definitions'] = self.definitions
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
-            if 'error_response' in self.conventions:
-                self.definitions['ErrorResponse'] = self.conventions['error_response']
-                self.openapispec_uri_map[self.abs_url('#ErrorResponse')] = '#/definitions/ErrorResponse'
-                self.error_response = self.global_definition_ref(self.abs_url('#ErrorResponse'))
+            error_response = self.conventions.get('error_response')
+            if error_response:
+                if isinstance(error_response, basestring):
+                    self.error_response = self.global_definition_ref(self.abs_url(error_response))                   
+                else:
+                    self.definitions['ErrorResponse'] = self.conventions['error_response']
+                    self.openapispec_uri_map[self.abs_url('#ErrorResponse')] = '#/definitions/ErrorResponse'
+                    self.error_response = self.global_definition_ref(self.abs_url('#ErrorResponse'))
             else:
                 self.error_response = {}
             self.responses = self.build_standard_responses()
@@ -260,7 +266,7 @@ class OASGenerator(object):
 
     def build_entity_interface(self, entity_url_spec):
         entity_uri = entity_url_spec.entity_uri
-        entity_spec = self.validator.resolve_referenced_entity(entity_uri)
+        entity_spec = self.validator.resolve_included_entity(entity_uri)
         parameters = self.build_parameters(entity_url_spec)
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
@@ -288,7 +294,7 @@ class OASGenerator(object):
         if parameters:
             interface['parameters'] = parameters
         interface['get'] = {
-                'description': 'Retrieve %s' % articled(self.validator.resolve_referenced_entity_name(entity_uri)),
+                'description': 'Retrieve %s' % articled(self.validator.resolve_included_entity_name(entity_uri)),
                 'parameters': [{'$ref': '#/parameters/Accept'}],
                 'responses': {
                     '200': build_response_200(), 
@@ -308,15 +314,15 @@ class OASGenerator(object):
                 update_verb = 'patch'
                 description = 'Update %s entity'
                 parameter_ref = '#/parameters/If-Match'
-                body_desciption =  'The subset of properties of the %s being updated' % self.validator.resolve_referenced_entity_name(entity_uri)
+                body_desciption =  'The subset of properties of the %s being updated' % self.validator.resolve_included_entity_name(entity_uri)
             else:
                 update_verb = 'put'
                 description = 'Create or Update %s entity'
                 self.define_put_if_match_header()
                 parameter_ref = '#/parameters/Put-If-Match'
-                body_desciption =  'The representation of the %s being replaced' % self.validator.resolve_referenced_entity_name(entity_uri)
+                body_desciption =  'The representation of the %s being replaced' % self.validator.resolve_included_entity_name(entity_uri)
             schema = self.global_definition_ref(entity_uri)
-            description = description % articled(self.validator.resolve_referenced_entity_name(entity_uri))
+            description = description % articled(self.validator.resolve_included_entity_name(entity_uri))
             interface[update_verb] = {
                 'description': description,
                 'parameters': [
@@ -339,12 +345,12 @@ class OASGenerator(object):
                 interface['patch']['consumes'] = self.patch_consumes if self.yaml_merge else self.patch_consumes[:]
             else:
                 interface['put']['responses']['201'] = {
-                    'description': 'Created new %s' % self.validator.resolve_referenced_entity_name(entity_uri),
+                    'description': 'Created new %s' % self.validator.resolve_included_entity_name(entity_uri),
                     'schema': self.global_definition_ref(entity_uri),
                     'headers': {
                         'Location': {
                             'type': 'string',
-                            'description': 'perma-link URL of newly-created %s'  % self.validator.resolve_referenced_entity_name(entity_uri)
+                            'description': 'perma-link URL of newly-created %s'  % self.validator.resolve_included_entity_name(entity_uri)
                             },
                         'Content-Type': {
                             'type': 'string',
@@ -360,7 +366,7 @@ class OASGenerator(object):
         well_known = entity_spec.get('well_known_URLs')
         if not well_known and not immutable:        
             interface['delete'] = {
-                'description': 'Delete %s' % articled(self.validator.resolve_referenced_entity_name(entity_uri)),
+                'description': 'Delete %s' % articled(self.validator.resolve_included_entity_name(entity_uri)),
                 'responses': {
                     '200': response_200
                     }
@@ -685,10 +691,9 @@ class OASGenerator(object):
         collection_entity_uri = rel_property_spec.collection_resource
         if not collection_entity_uri:
             sys.exit('must provide collection_resource for property %s in entity %s in spec %s' % (rel_property_spec.relationship_name, rel_property_spec.source_entity_name(), self.validator.filename))
-        if collection_entity_uri not in self.included_entity_map:
+        collection_entity = self.validator.resolve_included_entity(collection_entity_uri)
+        if collection_entity is None:
             sys.exit('error: must define entity %s' % collection_entity_uri)   
-        else:
-            collection_entity = self.validator.resolve_referenced_entity(collection_entity_uri)
         rslt = {
             'responses': {
                 '200': {
@@ -734,7 +739,7 @@ class OASGenerator(object):
                 query_params.extend(new_params)
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
-                    add_query_parameters(self.validator.resolve_referenced_entity_ref(entity_ref), query_params) 
+                    add_query_parameters(self.validator.resolve_included_entity_ref(entity_ref), query_params) 
         query_parameters = []
         add_query_parameters(collection_entity, query_parameters)
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates

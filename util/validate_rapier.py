@@ -99,9 +99,9 @@ class OASValidator(object):
         if not isinstance(version, basestring):
             self.error('version must be a string ', key)
         
-    def check_id_uniqueness(self):
+    def check_id_uniqueness(self, entities):
         self.entities = {}
-        for name, entity in self.rapier_spec.get('entities',{}).iteritems():
+        for name, entity in entities.iteritems():
             if entity is not None:
                 id = self.abs_url(entity.get('id', '#%s'%name))
                 if id in self.entities:
@@ -112,8 +112,6 @@ class OASValidator(object):
         self.checked_id_uniqueness = True
             
     def validate_entities(self, node, key, entities):
-        if not self.checked_id_uniqueness:
-            self.check_id_uniqueness()
         for key, entity in entities.iteritems():
             self.check_and_validate_keywords(self.__class__.entity_keywords, entity, key)
 
@@ -217,7 +215,12 @@ class OASValidator(object):
             self.error('patch_consumes must be a string: %s' % patch_consumes)
 
     def validate_conventions_error_response(self, node, key, error_response):
-        self.check_and_validate_keywords(self.__class__.schema_keywords, error_response, key)
+        if isinstance(error_response, basestring):
+            self.validate_included_entity_url(error_response, key)
+        elif hasattr(error_response, 'keys'):
+            self.check_and_validate_keywords(self.__class__.schema_keywords, error_response, key)
+        else:
+            self.error('error_response must be URL of entity or schema: %s' % error_response, key)
 
     def similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio() > self.similarity_ratio
@@ -278,7 +281,7 @@ class OASValidator(object):
                 return self.error('entities must be a string or list %s' % s, key)
             else:
                 entity_urls = entities
-        entity_map = [self.validate_entity_url(entity_url, key) for entity_url in entity_urls]
+        entity_map = [self.validate_referenced_entity_url(entity_url, key) for entity_url in entity_urls]
         node[key] = [item[0] for item in entity_map]
         self.relationship_targets.update(entity_map) 
             
@@ -305,7 +308,7 @@ class OASValidator(object):
                         self.error('multiplicity upper bound must be greater than or equal to lower bound %s %s' % (upper_bound, lower_bound), key)
                         
     def validate_relationship_collection_resource(self, node, key, collection_resource):
-        abs_url, _ = self.validate_entity_url(collection_resource, key)
+        abs_url, _ = self.validate_included_entity_url(collection_resource, key)
         if abs_url:
             node[key] = abs_url
 
@@ -598,6 +601,23 @@ class OASValidator(object):
                 validators[abs_namespace_url] = validator
             return validators[abs_namespace_url], None
 
+    def validate_entity_url(self, entity_url, key, validators):
+        if isinstance(entity_url, basestring):
+            abs_entity_url = self.abs_url(entity_url)
+            validator, errors = self.resolve_validator(entity_url, validators)
+            if errors is not None:
+                if isinstance(errors, IOError):
+                    self.warning('unable to read file: %s %s' % (entity_url, errors), key)
+                return abs_entity_url, None
+            entity = validator.entities.get(abs_entity_url)
+            if entity is not None:
+                return abs_entity_url, entity  
+            else:
+                self.error('entity not found %s' % entity_url, key)
+        else:
+            self.error('entity URL must be a string %s' % entity_url, key)
+        return None, None
+
     def resolve_json_ref(self, json_ref, key, spec=None):
         if isinstance(json_ref, basestring):
             json_ref_split = json_ref.split('#')
@@ -621,22 +641,11 @@ class OASValidator(object):
         else:
             self.error('json ref value must be a string: %s' % json_ref, key)
 
-    def validate_entity_url(self, entity_url, key):
-        if not isinstance(entity_url, basestring):
-            self.error('entity URL must be a string %s' % entity_url, key)
-        else:
-            abs_entity_url = self.abs_url(entity_url)
-            validator, errors = self.resolve_validator(entity_url, self.referenced_spec_validators)
-            if errors is not None:
-                if isinstance(errors, IOError):
-                    self.warning('unable to read file: %s %s' % (entity_url, errors), key)
-                return abs_entity_url, None
-            entity = validator.entities.get(abs_entity_url)
-            if entity is not None:
-                return abs_entity_url, entity  
-            else:
-                self.error('entity not found %s' % entity_url, key)
-        return None, None
+    def validate_referenced_entity_url(self, entity_url, key):
+        return self.validate_entity_url(entity_url, key, self.referenced_spec_validators)
+
+    def validate_included_entity_url(self, entity_url, key):
+        return self.validate_entity_url(entity_url, key, self.included_spec_validators)
 
     def validate(self, filename):
         self.filename = filename
@@ -647,9 +656,12 @@ class OASValidator(object):
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
             return None, e
+        if self.rapier_spec is None:
+            return None
         if not hasattr(self.rapier_spec, 'keys'):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         entities = self.rapier_spec.setdefault('entities', {})
+        self.check_id_uniqueness(entities)
         if 'implementation_private_information' in self.rapier_spec:
             for entity_name, entity in self.rapier_spec['implementation_private_information'].iteritems():
                 if 'properties' in entity:
@@ -694,21 +706,37 @@ class OASValidator(object):
             result.update(validator.entities)
         return result
 
+    def resolve_included_entity(self, uri):
+        abs_uri = self.abs_url(uri)
+        result = self.entities.get(abs_uri)
+        if result is None:
+            for validator in self.included_spec_validators.itervalues():
+                result = validator.resolve_included_entity(abs_uri)
+                if result is not None:
+                    break
+        return result
+    
     def resolve_referenced_entity(self, uri):
         abs_uri = self.abs_url(uri)
         result = self.entities.get(abs_uri)
-        if not result:
-            for validator in self.included_spec_validators.itervalues():
+        if result is None:
+            for validator in self.referenced_spec_validators.itervalues():
                 result = validator.entities.get(abs_uri)
-                if result:
+                if result is not None:
                     break
         return result
 
     def resolve_referenced_entity_ref(self, ref):
         return self.resolve_referenced_entity(ref['$ref'])
 
+    def resolve_included_entity_ref(self, ref):
+        return self.resolve_included_entity(ref['$ref'])
+
     def resolve_referenced_entity_name(self, uri):
         return self.resolve_referenced_entity(uri)['name']
+
+    def resolve_included_entity_name(self, uri):
+        return self.resolve_included_entity(uri)['name']
 
     def marked_load(self, stream):
         def construct_mapping(loader, node):
