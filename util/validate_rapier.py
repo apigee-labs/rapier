@@ -206,6 +206,10 @@ class OASValidator(object):
         if not (readOnly is True or readOnly is False) :
             self.error('id must be a boolean: %s' % readOnly, key)
 
+    def validate_entity_readOnly(self, node, key, readOnly):
+        if not (readOnly is True or readOnly is False) :
+            self.error('readOnly must be a boolean: %s' % readOnly, key)
+
     def validate_conventions_selector_location(self, node, key, location):
         if not location in ['path-segment', 'path-parameter']:
             self.error('%s must be either the string "path-segment" or "path-parameter"' % location)
@@ -481,6 +485,25 @@ class OASValidator(object):
                 if not isinstance(property_name, basestring):
                     self.warning('required value must be a string: %s' % property_name, key)
 
+    def validate_usage(self, node, key, usage):
+        if isinstance(usage, basestring):
+            usage_values = usage.split()
+        elif isinstance(usage, list):
+            usage_values = usage
+        else:
+            return self.error('usage must be a string or list: %s' % usage, key)
+        unrecognized_values = [u_val for u_val in usage_values if u_val not in self.__class__.usage_values]
+        if len(unrecognized_values) > 0:
+            return self.error('unrecognized usage values: %s' % unrecognized_values, key)
+        if len([u_val for u_val in usage_values if u_val in self.__class__.c_usage_values]) > 1:
+            self.error('create usage value specified more than once', key)
+        if len([u_val for u_val in usage_values if u_val in self.__class__.r_usage_values]) > 1:
+            self.error('retrieve usage value specified more than once', key)
+        if len([u_val for u_val in usage_values if u_val in self.__class__.u_usage_values]) > 1:
+            self.error('update usage value specified more than once', key)
+        if len([u_val for u_val in usage_values if u_val in self.__class__.d_usage_values]) > 1:
+            self.error('delete usage value specified more than once', key)
+
     def validate_additional_properties(self, node, key, additional_properties):
         if hasattr(additional_properties, 'keys'):
             self.check_and_validate_keywords(self.__class__.property_keywords, additional_properties, None)
@@ -490,6 +513,16 @@ class OASValidator(object):
     def validate_query_parameter_collection_format(self, node, key, collection_format):
         if collection_format not in ['csv', 'ssv', 'tsv', 'pipes', 'multi']:
             self.error("collection_format must be one of 'csv', 'ssv', 'tsv', 'pipes', 'multi': %s" % additional_properties, key)
+    
+    c_usage_values = {'c', 'create'}
+    r_usage_values = {'r', 'read', 'retrieve', 'g', 'get'}
+    u_usage_values = {'u', 'update', 'put', 'patch'}
+    d_usage_values = {'d', 'delete'}
+    usage_values = set()
+    usage_values.update(c_usage_values)
+    usage_values.update(r_usage_values)
+    usage_values.update(u_usage_values)
+    usage_values.update(d_usage_values)
             
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -518,13 +551,15 @@ class OASValidator(object):
         'maximum': validate_number, 
         '$ref': validate_schema_ref,
         'required': validate_required,
-        'additionalProperties': validate_additional_properties}
+        'additionalProperties': validate_additional_properties,
+        'usage': validate_usage}
     property_keywords = {
         'relationship': validate_property_relationship,
         'default': validate_ignore,
         'example': validate_ignore}
     property_keywords.update(schema_keywords)
-    entity_keywords = {
+    entity_keywords = schema_keywords.copy()
+    entity_keywords.update({
         'query_paths': validate_query_paths, 
         'well_known_URLs': validate_well_known_URLs,
         'consumes': validate_entity_consumes,
@@ -534,7 +569,8 @@ class OASValidator(object):
         'permalink_template': validate_ignore,
         'oneOf': validate_entity_oneOf, 
         'allOf': validate_entity_allOf, 
-        '$ref': validate_entity_ref}
+        'readOnly': validate_entity_readOnly, 
+        '$ref': validate_entity_ref})
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,

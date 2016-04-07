@@ -207,7 +207,6 @@ entities:
         description: >
           Whether or not the credentials have been approved by the API owner 
         type: boolean
-        type: object
   Quota:
     properties:
       limit:

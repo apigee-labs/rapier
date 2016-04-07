@@ -272,7 +272,7 @@ definitions:
       approved:
         description: "Whether or not the credentials have been approved by the API\
           \ owner \n"
-        type: object
+        type: boolean
   Quota:
     properties:
       limit:

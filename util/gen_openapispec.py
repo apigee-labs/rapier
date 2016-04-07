@@ -309,6 +309,8 @@ class OASGenerator(object):
         else:
             interface['get']['responses']['<<'] = self.response_sets['entity_get_responses']
         immutable = entity_spec.get('readOnly', False)
+        usage_set = as_list(entity_spec.get('usage', ['u']))
+        immutable = immutable or len(self.validator.__class__.u_usage_values & set(usage_set)) == 0
         if not immutable:
             if structured:
                 update_verb = 'patch'
