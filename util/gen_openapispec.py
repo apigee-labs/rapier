@@ -308,11 +308,15 @@ class OASGenerator(object):
             interface['get']['responses'].update(self.build_entity_get_responses())
         else:
             interface['get']['responses']['<<'] = self.response_sets['entity_get_responses']
-        immutable = entity_spec.get('readOnly', False)
-        usage_set = as_list(entity_spec.get('usage', ['u']))
+        usage_set = as_list(entity_spec.get('usage', ['c', 'r', 'u', 'd']))
         usage_set = [v.lower() for v in usage_set]
-        immutable = immutable or len(self.validator.__class__.u_usage_values & set(usage_set)) == 0
-        if not immutable:
+        if 'readOnly' in entity_spec:
+            updatable = False
+            deletable = False
+        else:
+            updatable = len(self.validator.__class__.u_usage_values & set(usage_set)) > 0
+            deletable = len(self.validator.__class__.d_usage_values & set(usage_set)) > 0
+        if updatable:
             if structured:
                 update_verb = 'patch'
                 description = 'Update %s entity'
@@ -367,7 +371,7 @@ class OASGenerator(object):
             if produces:
                 interface[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
         well_known = entity_spec.get('well_known_URLs')
-        if not well_known and not immutable:        
+        if not well_known and deletable:        
             interface['delete'] = {
                 'description': 'Delete %s' % articled(self.validator.resolve_included_entity_name(entity_uri)),
                 'responses': {

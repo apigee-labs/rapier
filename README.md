@@ -471,6 +471,27 @@ Values are case-insensitive. Valid values are:
 - 'u' | 'update' | 'put' | 'patch' - Can be use by the client with PUT or PATCH to create a new entity
 - 'd' | 'delete' - Can be use by the client with DELETE to delete a new entity
 
+Examples are:
+```yaml
+---
+usage: c r u d
+---
+usage:
+-POST
+-r
+-DeLeTe
+```
+
+The default is 
+```yaml
+'c r u d'
+```—all methods allowed. The following two examples are equivalent:
+```yaml
+---
+readOnly: true
+---
+usage: create read delete
+```
 
 #### <a name="relationship"></a>Relationship
 
