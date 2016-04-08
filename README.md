@@ -517,8 +517,9 @@ i.e. all methods allowed. The following two examples are equivalent:
 ---
 readOnly: true
 ---
-usage: create read
+usage: read
 ```
+For an Entity, whether or not it can be used in a POST for create is determined by the relationships that reference it, rather than the usage. For properties, whether it can be set on a POST is determined by the value of usage.
 
 #### <a name="relationship"></a>Relationship
 
