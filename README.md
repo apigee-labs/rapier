@@ -162,7 +162,7 @@ entities of the relationship. This is specified in the `collection_resource` pro
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
 
-In JSON, the `To_do_list` at `/to-dos` will look like this:
+In JSON, the `To_do_list` at `/` will look like this:
 ```json
     {"todos": "http://example.org/xxxxx"}
 ```
