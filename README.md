@@ -345,7 +345,7 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
     }
 ```
 It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
-[From a JSON perspective, this pattern looks convoluted to us—perhaps a reader can offer a explanation of its merits.]
+[From a JSON perspective, this pattern looks convoluted to us—perhaps someone can offer a explanation of its merits.]
 
 ### Query Parameters
 
