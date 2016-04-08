@@ -338,6 +338,7 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
     {"links": [
         {"rel": "todos",
          "href": "http://example.org/xxxxx"}
+        ]
     }
 ```
 It is a bit harder to express this pattern in JSON Schema, but it is possible, as shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml)
