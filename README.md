@@ -239,7 +239,7 @@ hyperlinks in the resources themselves reduces the need for query URLs compared 
 The meaning of the first URL is "the resource that is referenced by the `todos` property of the resource at `/`". In other words, we are starting at `/`
 and following the `todos` relationship declared in the data model, but without having to retrieve the resource at `/`. 
 The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
-of the URL `/todos` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
+of the URL `/todos` to form a URL that will identify a single `Item` amongst the collection of items at `/todos`. 
 
 `/todos` and `/todos/{id}` are valid because there is a TodoList at `/`, but the template is valid for any TodoList URL, like this:
 
