@@ -304,11 +304,6 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `todos;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client the information it needed to form the URL that is now included in the `self` property.
-The format of the `self` URL should be opaque to the API clients,
-and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
-
 In JSON, the `To_do_list` at `/` will look like this:
 ```json
     {"todos": "http://example.org/xxxxx"}
@@ -323,6 +318,11 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
       ]
     }
 ``` 
+
+The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `todos;{id}` query path. 
+We don't need this query path any more because its only purpose was to give the client the information it needed to form the URL that is now included in the `self` property.
+The format of the `self` URL should be opaque to the API clients,
+and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
