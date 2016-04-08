@@ -11,10 +11,10 @@ definitions:
   TodoList:
     readOnly: true
     properties:
-      items:
+      todos:
         type: string
         format: uri
-        x-interface: '#/x-interfaces/TodoList.items'
+        x-interface: '#/x-interfaces/TodoList.todos'
     x-interface: '#/x-interfaces/TodoList'
   Item:
     properties:
@@ -30,7 +30,7 @@ definitions:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items:
           $ref: '#/definitions/Item'
@@ -228,7 +228,7 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: TodoList
-  TodoList.items:
+  TodoList.todos:
     get:
       responses:
         '200':
@@ -323,13 +323,13 @@ x-interfaces:
           $ref: '#/responses/404'
         default:
           $ref: '#/responses/default'
-    x-id: TodoList.items
+    x-id: TodoList.todos
 x-templates:
   '{TodoList-URL}':
     $ref: '#/x-interfaces/TodoList'
-  '{TodoList-URL}/items':
-    $ref: '#/x-interfaces/TodoList.items'
-  '{TodoList-URL}/items/{id}':
+  '{TodoList-URL}/todos':
+    $ref: '#/x-interfaces/TodoList.todos'
+  '{TodoList-URL}/todos/{id}':
     parameters:
     - in: path
       name: id
@@ -337,12 +337,12 @@ x-templates:
       type: string
     <<: *Item
 paths:
-  /to-dos:
+  /:
     $ref: '#/x-templates/{TodoList-URL}'
-  /to-dos/items:
-    $ref: '#/x-templates/{TodoList-URL}~1items'
-  /to-dos/items/{id}:
-    $ref: '#/x-templates/{TodoList-URL}~1items~1{id}'
+  /todos:
+    $ref: '#/x-templates/{TodoList-URL}~1todos'
+  /todos/{id}:
+    $ref: '#/x-templates/{TodoList-URL}~1todos~1{id}'
 parameters:
   Accept:
     description: specifies the requested media type - required

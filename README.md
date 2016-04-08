@@ -128,16 +128,17 @@ The example above shows how to declare a single-valued realtionship. Here is wha
 title: Todo List API
 entities:
   TodoList:
-    well_known_URLs: /to-dos
+    well_known_URLs: /
     readOnly: true
     properties:
-      items:
+      todos:
         type: string
         format: uri
         relationship:
           collection_resource: '#Collection'
           entities: '#Item'
-          multiplicity: O:n
+          multiplicity: 0:n
+    query_paths: todos
   Item:
     properties:
       description:
@@ -148,26 +149,26 @@ entities:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items: 
           $ref: '#/entities/Item'
 ```
 
-This API defines a single resource at the well_known_URL `/to-dos` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
-property called `items`. In this case, the declaration of the relationship property is a bit more complex.
+This API defines a single resource at the well_known_URL `/` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
+property called `todos`. In this case, the declaration of the relationship property is a bit more complex.
 In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
-entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the relationship property (`items` in this case) is assumed to be
+entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the relationship property (`todos` in this case) is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
 
 In JSON, the `To_do_list` at `/to-dos` will look like this:
 ```json
-    {"items": "http://example.org/xxxxx"}
+    {"todos": "http://example.org/xxxxx"}
 ```
 The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 ```json
-    {"items": [{
+    {"contents": [{
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
          }
@@ -199,17 +200,17 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /to-dos
-    query_paths: [items, "items;{id}"]
+    well_known_URLs: /
+    query_paths: [todos, "todos;{id}"]
     readOnly: true
     properties:
-      items:
+      todos:
         type: string
         format: uri
         relationship:
           collection_resource: '#Collection'
           entities: '#Item'
-          multiplicity: O:n
+          multiplicity: 0:n
   Item:
     properties:
       id:
@@ -223,7 +224,7 @@ entities:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items: 
           $ref: '#/entities/Item'
@@ -231,23 +232,23 @@ entities:
 
 The combination of the `well_known_URLs` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
-    /to-dos/items
-    /to-dos/items/{id}
+    /todos
+    /todos/{id}
 
 The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
-The meaning of the first URL is "the resource that is referenced by the items property of the resource at `/todos`". In other words, we are starting at `/todos`
-and following the `items` relationship declared in the data model, but without having to retrieve the resource at `/todos`. 
+The meaning of the first URL is "the resource that is referenced by the `todos` property of the resource at `/`". In other words, we are starting at `/`
+and following the `todos` relationship declared in the data model, but without having to retrieve the resource at `/`. 
 The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
-of the URL `todos/items` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
+of the URL `/todos` to form a URL that will identify a single `Item` amongst the collection of items at `todos/items`. 
 
-`/to-dos/items` and `/to-dos/items/{id}` are valid because there is a TodoList at `/to-dos`, but the template is valid for any TodoList URL, like this:
+`/todos` and `/todos/{id}` are valid because there is a TodoList at `/`, but the template is valid for any TodoList URL, like this:
 
-    {TodoList-URL}/items
-    {TodoList-URL}/items/{id}
+    {TodoList-URL}/todos
+    {TodoList-URL}/todos/{id}
     
-In the [To-do List example](#to_do_list) above, the value of the items property of the TodoList at `/to-dos` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
-`http://example.org/to-dos/items` must be aliases of each other, and a particular implementation may choose to make them the same (or not).
+In the [To-do List example](#to_do_list) above, the value of the `todos` property of the TodoList at `/` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
+`http://example.org/todos` must be aliases of each other, and a particular implementation may choose to make them the same (or not).
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
 
@@ -255,7 +256,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
 
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation by providing the client of the API with an opaque URL to use rather than an `id` property value and a URL template. 
-This avoids the need for the client to plug an `id` value into a template to get the URL of an entity—this job has already been done by the server. 
+This avoids the need for the client programmer to find the template in the API documentation and plug an `id` value into the template to get the URL of an entity—this job has already been done by the server. 
 The entity URL can also be used in other URL templates, in the same maner that an `id` value can be used, so there is no loss of function in the API.
 The URL of each entity is already available to the API client in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
 when entities appear nested in collection resources, no header value is available to identify the nested resources, so it's useful to
@@ -268,11 +269,11 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /to-dos
-    query_paths: [items]
+    well_known_URLs: /
+    query_paths: [todos]
     readOnly: true
     properties:
-      items:
+      todos:
         type: string
         format: uri
         relationship:
@@ -293,24 +294,24 @@ entities:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items: 
           $ref: '#/entities/Item'
 ```                
 
-The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `items;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client this information it needed to form the URL that is now included in the `self` property.
+The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `todos;{id}` query path. 
+We don't need this query path any more because its only purpose was to give the client the information it needed to form the URL that is now included in the `self` property.
 The format of the `self` URL should be opaque to the API clients,
 and it is a reasonable practice to obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
 
-In JSON, the `To_do_list` at `/to-dos` will look like this:
+In JSON, the `To_do_list` at `/` will look like this:
 ```json
-    {"items": "http://example.org/xxxxx"}
+    {"todos": "http://example.org/xxxxx"}
 ```
 The Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
-    {"items": [{
+    {"contents": [{
          "self": "http://example.org/yyyyy",
          "description": "Get milk on the way home",
          "due": "2016-10-30T09:30:10Z"
@@ -349,8 +350,8 @@ This definition comes from the Pet Store example. The full Rapier document [is h
 
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
-- a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid valid values would be declared properties of the entity
-- parameters that select entities from a collection that match a particular property value. In this case the parameter is really a property of the the entity that defines the elements of the collection
+- a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity
+- parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
 
 Given this structure, we may model query parameters more carefully in the future.
 

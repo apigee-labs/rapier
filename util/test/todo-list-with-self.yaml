@@ -3,11 +3,11 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /to-dos
-    query_paths: [items]
+    well_known_URLs: /
+    query_paths: [todos]
     readOnly: true
     properties:
-      items:
+      todos:
         type: string
         format: uri
         relationship:
@@ -28,7 +28,7 @@ entities:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items: 
           $ref: '#/entities/Item'

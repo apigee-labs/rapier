@@ -8,8 +8,8 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /to-dos
-    query_paths: [items]
+    well_known_URLs: /
+    query_paths: [todos]
     readOnly: true
     properties:
       links:
@@ -20,12 +20,12 @@ entities:
             properties:
               rel:
                 type: string
-                enum: [items] 
+                enum: [todos] 
               href:
                 type: string 
                 format: uri
                 relationship:
-                  name: items
+                  name: todos
                   collection_resource: '#Collection'
                   entities: '#Item'
                   multiplicity: 0:n
@@ -41,7 +41,7 @@ entities:
   Collection:
     readOnly: true
     properties:
-      items:
+      contents:
         type: array
         items: 
           $ref: '#/entities/Item'
