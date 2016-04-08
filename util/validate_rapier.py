@@ -485,24 +485,26 @@ class OASValidator(object):
                 if not isinstance(property_name, basestring):
                     self.warning('required value must be a string: %s' % property_name, key)
 
-    def validate_usage(self, node, key, usage):
+    def validate_usage(self, node, key, usage, valid_usage_values_dict):
         if isinstance(usage, basestring):
             usage_values = usage.split()
         elif isinstance(usage, list):
             usage_values = usage
         else:
             return self.error('usage must be a string or list: %s' % usage, key)
-        unrecognized_values = [u_val for u_val in usage_values if u_val not in self.__class__.usage_values]
+        valid_usage_values = [v for aliases in valid_usage_values_dict.itervalues() for v in aliases]
+        unrecognized_values = [u_val for u_val in usage_values if u_val not in valid_usage_values]
         if len(unrecognized_values) > 0:
             return self.error('unrecognized usage values: %s' % unrecognized_values, key)
-        if len([u_val for u_val in usage_values if u_val in self.__class__.c_usage_values]) > 1:
-            self.error('create usage value specified more than once', key)
-        if len([u_val for u_val in usage_values if u_val in self.__class__.r_usage_values]) > 1:
-            self.error('retrieve usage value specified more than once', key)
-        if len([u_val for u_val in usage_values if u_val in self.__class__.u_usage_values]) > 1:
-            self.error('update usage value specified more than once', key)
-        if len([u_val for u_val in usage_values if u_val in self.__class__.d_usage_values]) > 1:
-            self.error('delete usage value specified more than once', key)
+        for op, valid_values in valid_usage_values_dict.iteritems():
+            if len([u_val for u_val in usage_values if u_val in valid_values]) > 1:
+                self.error('%s usage value specified more than once' % op, key)
+
+    def validate_schema_usage(self, node, key, usage):
+        return self.validate_usage(node, key, usage, self.__class__.usage_schema_values)
+
+    def validate_entity_usage(self, node, key, usage):
+        return self.validate_usage(node, key, usage, self.__class__.usage_entity_values)
 
     def validate_additional_properties(self, node, key, additional_properties):
         if hasattr(additional_properties, 'keys'):
@@ -518,11 +520,9 @@ class OASValidator(object):
     r_usage_values = {'r', 'read', 'retrieve', 'g', 'get'}
     u_usage_values = {'u', 'update', 'put', 'patch'}
     d_usage_values = {'d', 'delete'}
-    usage_values = set()
-    usage_values.update(c_usage_values)
-    usage_values.update(r_usage_values)
-    usage_values.update(u_usage_values)
-    usage_values.update(d_usage_values)
+    usage_entity_values = {'retrieve': r_usage_values, 'update': u_usage_values, 'delete': d_usage_values}
+    usage_schema_values = {'create': c_usage_values}
+    usage_schema_values.update(usage_entity_values)
             
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -552,7 +552,7 @@ class OASValidator(object):
         '$ref': validate_schema_ref,
         'required': validate_required,
         'additionalProperties': validate_additional_properties,
-        'usage': validate_usage}
+        'usage': validate_schema_usage}
     property_keywords = {
         'relationship': validate_property_relationship,
         'default': validate_ignore,
@@ -570,7 +570,8 @@ class OASValidator(object):
         'oneOf': validate_entity_oneOf, 
         'allOf': validate_entity_allOf, 
         'readOnly': validate_entity_readOnly, 
-        '$ref': validate_entity_ref})
+        '$ref': validate_entity_ref,
+        'usage': validate_entity_usage})
     entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
