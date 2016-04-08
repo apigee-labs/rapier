@@ -519,7 +519,7 @@ readOnly: true
 ---
 usage: read
 ```
-For an Entity, whether or not it can be used in a POST for create is determined by the relationships that reference it, rather than the usage. For properties, whether it can be set on a POST is determined by the value of usage.
+For an Entity, whether or not it can be used in a POST for create is determined by the relationships that reference it, rather than the value of usage. For properties, whether it can be set on a POST is determined by the value of usage.
 
 #### <a name="relationship"></a>Relationship
 
