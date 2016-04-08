@@ -494,8 +494,8 @@ Specifies with which methods an entity or property may be used. The value may be
 Values are case-insensitive. Valid values are: 
 - 'c' | 'create' - Can be use by the client with POST to create a new entity
 - 'r' | 'read' | 'retrieve' | 'g' | 'get' - May be provided by the server on GET
-- 'u' | 'update' | 'put' | 'patch' - Can be use by the client with PUT or PATCH to create a new entity
-- 'd' | 'delete' - Can be use by the client with DELETE to delete a new entity
+- 'u' | 'update' | 'put' | 'patch' - Can be use by the client with PUT or PATCH to update an entity
+- 'd' | 'delete' - Can be use by the client with DELETE to delete an entity
 
 Examples are:
 ```yaml
