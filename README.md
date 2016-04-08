@@ -254,6 +254,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
 
 ### Hiding the implementation detail
 
+This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the previous example. If you are not interested in this opinion, you can [skip to the next section](#representing-urls)
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation by providing the client of the API with an opaque URL to use rather than an `id` property value and a URL template. 
 This avoids the need for the client programmer to find the template in the API documentation and plug an `id` value into the template to get the URL of an entity—this job has already been done by the server. 
@@ -322,7 +323,7 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
-### Representing URLs in JSON
+### <a name="representing-urls"></a>Representing URLs in JSON
 
 JSON has no built-in type for URLs. In the examples above, we exposed "links", as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
 can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—you
