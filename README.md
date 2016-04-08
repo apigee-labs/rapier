@@ -322,6 +322,27 @@ The Collection at `http://example.org/xxxxx` will look like this in JSON:
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
  
+### Representing URLs in JSON
+
+In the examples above, we exposed "links", as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
+can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—you
+cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
+```json
+    {"todos": {"href": "http://example.org/xxxxx"}
+    }
+```
+This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
+It is trivial to express this pattern in JSON Schema/Rapier.
+Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. This pattern looks like this:
+```json
+    {"links": [
+        {"rel": "todos",
+         "href": "http://example.org/xxxxx"}
+    }
+```
+It is a bit harder to express this pattern in JSON Schema, but it is possible, as shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml)
+[Using this pattern in JSON looks convoluted to us—perhaps a reader can offer a explanation of its merits.]
+
 ### Query Parameters
 
 Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
