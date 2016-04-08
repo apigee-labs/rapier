@@ -616,8 +616,8 @@ The Rapier OpenAPI generator is implemented by `gen_openapispec.py` in the util 
 `usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] filename`
 
 The generated OpenAPI specification is written to stdout. Errors and warnings are written to stderr. The normal usage pattern is to pipe this output to a file, like this: `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
-The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate extra information from the implementation_private_information
-section that is otherwise ommitted from the output.
+The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate extra information that is otherwise ommitted from the output 
+from the implementation_private_information section if it is present.
 
 ## <a name="html_generator">HTML Generator
 
