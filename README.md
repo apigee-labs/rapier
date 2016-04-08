@@ -618,8 +618,8 @@ The generated OpenAPI specification is written to stdout. Errors and warnings ar
 
 `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
 
-The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate extra information that is otherwise ommitted from the output 
-from the implementation_private_information section if it is present.
+The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate, from the optional implementation_private_information section,
+extra information that is otherwise ommitted from the output.
 
 ## <a name="html_generator">HTML Generator
 
