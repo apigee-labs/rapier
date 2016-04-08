@@ -333,7 +333,7 @@ cannot tell which properties are URL-valued versus string-valued without out-of-
 ```
 This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
 It is trivial to express this pattern in JSON Schema/Rapier.
-Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. This pattern looks like this:
+Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. The pattern looks like this:
 ```json
     {"links": [
         {"rel": "todos",
@@ -342,7 +342,7 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
     }
 ```
 It is a bit harder to express this pattern precisely in JSON Schema, but we think it is possible, as shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml)
-[Using this pattern in JSON looks convoluted to us—perhaps a reader can offer a explanation of its merits.]
+[From a JSON perspective, this pattern looks convoluted to us—perhaps a reader can offer a explanation of its merits.]
 
 ### Query Parameters
 
