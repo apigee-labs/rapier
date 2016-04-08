@@ -396,7 +396,7 @@ This example strains the expressive power of OpenAPI - you can see a generated [
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee-labs/rapier/blob/master/util/test/spec-hub.yaml) 
 shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub.yaml).
-The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OpenAPI generator supports a -i command-line option that allows the implementation
+The SpecHub API includes some 'internal' URL templates that are used in the implementation but are not part of the API. The Rapier OpenAPI generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub-with-impl.yaml).
 
 ## <a name="navigating"></a>Navigating the Repository
