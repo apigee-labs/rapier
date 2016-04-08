@@ -116,8 +116,7 @@ In JSON, the `Site` at `/` will look like this:
 ```
 The `Person` at `http://example.org/xxxxx` will look like this in JSON:
 ```json
-    {"name": "Jane Doe"
-    }
+    {"name": "Jane Doe"}
 ``` 
 
 ### <a name="to_do_list"></a>To-do List
