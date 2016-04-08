@@ -155,7 +155,7 @@ entities:
 ```
 
 This API defines a single resource at the well_known_URL `/` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
-property called `todos`. In addition to declaring the entity type at the end of the relationship, it declares the type of the resource that will be used to hold the list of 
+property called `todos`. In addition to declaring the entity type at the end of the relationship, we declare the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collection_resource` property. When `collection_resource` is present, the relationship property (`todos` in this case) is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
