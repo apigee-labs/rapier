@@ -673,7 +673,7 @@ class OASValidator(object):
                             return self.error('json ref segment value not found: %s' % part, key)
                     return spec
                 else:
-                    self.error('json ref value must begin with "#/" or "..": %s' % json_ref, key)
+                    self.error('json ref fragment must begin with "#/": %s' % json_ref, key)
         else:
             self.error('json ref value must be a string: %s' % json_ref, key)
 
