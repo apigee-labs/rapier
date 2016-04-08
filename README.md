@@ -324,7 +324,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
  
 ### Representing URLs in JSON
 
-In the examples above, we exposed "links", as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
+JSON has no built-in type for URLs. In the examples above, we exposed "links", as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
 can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—you
 cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
 ```json
