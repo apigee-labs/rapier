@@ -82,7 +82,7 @@ The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-hello-message.yaml). 
+The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 
 [\[2\]](#footnote2) Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
@@ -108,7 +108,7 @@ entities:
 
 Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml) generated from this example spells out all the detail.
+that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml) generated from this example spells out all the detail.
 
 In JSON, the `Site` at `/` will look like this:
 ```json
@@ -178,7 +178,7 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-basic.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml)
 
 ### Query Paths
  
@@ -250,7 +250,7 @@ of the URL `/todos` to form a URL that will identify a single `Item` amongst the
 In the [To-do List example](#to_do_list) above, the value of the `todos` property of the TodoList at `/` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
 `http://example.org/todos` must be aliases of each other, and a particular implementation may choose to make them the same (or not).
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-id.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-id.yaml)
 
 ### Hiding the implementation detail
 
@@ -324,7 +324,7 @@ We don't need this query path any more because its only purpose was to give the 
 The format of the `self` URL should be opaque to the API clients,
 and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-todo-list-with-self.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml)
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
 
@@ -372,7 +372,7 @@ query string portion of URLs? Rapier allows you to specify this on entities usin
       required: false
     readOnly: true
 ```
-This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-petstore.yaml). 
+This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
@@ -385,21 +385,21 @@ Given this structure, we may model query parameters more carefully in the future
  
 Another popular API example is the 'Dog Tracker' example. The Rapier spec for it [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/dog-tracker.yaml). 
 It shows a more complete example using the techniques we have already seen.
-The generated OpenAPI document for this API specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-dog-tracker.yaml)
+The generated OpenAPI document for this API specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/dog-tracker.yaml)
 
 ### Property Tracker
  
 The next example shows a more complex set of relationships. In this example, a Dog can be owned by a Person or an Institution and People and Institutions can own Bicycles as well as Dogs.
 The [source for this example is here](https://github.com/apigee-labs/rapier/blob/master/util/test/property-tracker.yaml). 
-This example strains the expressive power of OpenAPI - you can see a generated [OpenAPI document here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-property-tracker.yaml).
+This example strains the expressive power of OpenAPI - you can see a generated [OpenAPI document here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/property-tracker.yaml).
 
 ### Spec Repo
 
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee-labs/rapier/blob/master/util/test/spec-hub.yaml) 
-shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub.yaml).
+shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub.yaml).
 The SpecHub API includes some 'internal' URL tamplates that are used in the implementation but are not part of the API. The Rapier OpenAPI generator supports a -i command-line option that allows the implementation
-view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/openapispec-spec-hub-with-impl.yaml).
+view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub-with-impl.yaml).
 
 ## <a name="navigating"></a>Navigating the Repository
 
