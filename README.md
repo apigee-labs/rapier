@@ -635,7 +635,7 @@ The generated OpenAPI specification is written to stdout. Errors and warnings ar
 ## <a name="validator">Validator
 
 The Rapier validator is implemented by `validate_rapier.py` in the util directory. It is written in python. It has a single external dependency—pyYAML. If you do not have pyYAML installed on your machine, you can install it using
-`pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the generator.
+`pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the validator.
 
 `usage: validate_rapier.py filename`
 
