@@ -43,8 +43,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010
 
 April 2 2016:
 
-A validator and an html generator are now provided. The implementations of both are in the util directory. Prerequisites are the same as for the
-OpenAPI Specification generator, which now uses the validator. For more detail, see [HTML Generator](#html_generator) and [Validator](#validator)
+A validator and an html generator are now provided. For more detail, see [HTML Generator](#html_generator) and [Validator](#validator)
 
 April 4 2016:
 
