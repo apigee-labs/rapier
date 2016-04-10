@@ -22,12 +22,12 @@ entities:
         format: uri
         relationship: '#Child'
 ```
-The URI of the Mother entity is <baseURL>#Mother. This is why the line `relationship: '#Child'` is valid - '#Mother' is a valid URI reference.
+The URI of the Mother entity is \<baseURL\>#Mother. This is why the line `relationship: '#Child'` is valid - '#Mother' is a valid URI reference.
 
 In Rapier, the following two URIs reference different things
 - `#Mother`
 - `#/entities/Mother`
-The first URI reference identifies an Entity, while the second identifies a JSON object. The JSON object is not the Entity - the JSON Object describes the Entity.
+The first URI reference identifies an Entity, while the second identifies a JSON object. The JSON object is not the Entity—the JSON Object describes the Entity.
 Because of this, `relationship: '#/entities/Child'` would be incorrect.
 
 This distinction becomes important in the following example:
@@ -41,34 +41,30 @@ entities:
         type: string
         format: uri
         relationship: '#Child'
-implementation_only:
+implementation_private_information:
   Child:
-    instance_url:
-      template: /aHVi-Z3Jw-{} 
-      key:
-        name: implementation_key
-        type: integer
+    permalink_template:
+      template: /c3Rvc-Z3Jw-{implementation_key} 
+      type: integer
 ``` 
 
-`#/entities/Child` and `#/implementation_only/Child` are two different JSON objects, but they both describe the same entity, whose URI reference is `#Child`.
-This means that `#/implementation_only/Child` is providing additional information about the same entity that was described by `#/entities/Child`. 
+`#/entities/Child` and `#/implementation_private_information/Child` are two different JSON objects, but they both describe the same entity, whose URI reference is `#Child`.
+This means that `#/implementation_private_information/Child` is providing additional information about the same entity that was described by `#/entities/Child`. 
 The API could also have been described as follows, although Rapier does not currently allow this syntax (maybe it should):
 
 ```yaml
-- kind: 'https://github.com/apigee/rapier#Entity'
+- kind: 'https://github.com/apigee-labs/rapier/ns#Entity'
+  id: '#Mother'
+- kind: 'https://github.com/apigee-labs/rapier/ns#Entity'
   id: '#Child'
   properties:
     - name: mother
       type: string
       format: uri
       relationship: '#Child'
-  instance_url:
-    template: /aHVi-Z3Jw-{} 
-    key:
-      name: implementation_key
-      type: integer    
-- kind: 'https://github.com/apigee/rapier#Entity'
-  id: '#Mother'
+    permalink_template:
+      template: /c3Rvc-Z3Jw-{implementation_key} 
+      type: integer
 ``` 
 
-Those of you who are familiar with RDF or with more thoughtful discussions of the meanings of URLs will find nothing original or suprising in this model.
+Those of you who are familiar with RDF or with some of the more thoughtful discussions of URLs and their meanings will find nothing original or suprising in this model.
