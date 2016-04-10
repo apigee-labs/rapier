@@ -315,19 +315,22 @@ also put the resource URL in a `self` property in the representation, as follows
   # ...
 ```                
 
-In JSON, the `To_do_list` at `/` will look like this:
+In JSON, the Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
-    {"todos": "http://example.org/xxxxx"}
-```
-The Collection at `http://example.org/xxxxx` will look like this in JSON:
+ {"contents": [
+     {"self": "http://example.org/yyyyy",
+      "description": "Get milk on the way home",
+      "due": "2016-10-30T09:30:10Z"
+     }
+   ]
+ }
+``` 
+The Item at `http://example.org/yyyyy` will look like:
 ```json
-    {"contents": [
-         {"self": "http://example.org/yyyyy",
-          "description": "Get milk on the way home",
-          "due": "2016-10-30T09:30:10Z"
-         }
-      ]
-    }
+  {"self": "http://example.org/yyyyy",
+   "description": "Get milk on the way home",
+   "due": "2016-10-30T09:30:10Z"
+  }
 ``` 
 
 The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `todos;{id}` query path. 
