@@ -27,6 +27,7 @@ The URI of the Mother entity is `<baseURL>#Mother`. This is why the line `relati
 In Rapier, the following two URIs reference different things
 - `#Mother`
 - `#/entities/Mother`
+
 The first URI reference identifies an Entity, while the second identifies a JSON object. The JSON object is not the Entity—the JSON Object describes the Entity.
 Because of this, `relationship: '#/entities/Child'` would be incorrect.
 
