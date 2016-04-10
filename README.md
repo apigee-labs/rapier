@@ -338,7 +338,7 @@ The Item at `http://example.org/yyyyy` will look like:
 ``` 
 
 The changes are to replace the integer- or string-valued `id` property with a URL-valued `self` property, and to eliminate the `todos;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client the template variable value it needed to form the URL that is now included in the `self` property.
+We don't need this query path any more because its only purpose was to give the client the template variable value it needed to form a URL, the equivalent of which is now included in the `self` property.
 The format of the `self` URL should be opaque to the API clients,
 and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque.
 
