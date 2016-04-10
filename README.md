@@ -180,7 +180,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
 
 ### Embedded multi-valued relationships
 
-In the previous example, the "collection" that holds the URLs of the multi-valued relationship is a separate resource with its own URL.
+In the previous example, the "collection" that holds the URLs of the multi-valued relationship is a separate resource with its own URL and representation.
 It is also possible to express a multi-valued relationship by embedding a collection of URLs directly in the entity that describes the relationship.
 Rapier does not have a special syntax for expressing this pattern because it can be expressed using the standard capabilities of 
 JSON Schema along with Rapier's single-valued relationships. Suppose, for example, that the JSON for a TodoList looked like this:
