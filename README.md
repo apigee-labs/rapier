@@ -47,7 +47,7 @@ A validator and an html generator are now provided. For more detail, see [HTML G
 
 April 4 2016:
 
-The utilities now support relative references between files on the same file-system. HTTP URL references
+The utilities now support relative references between files on the same file-system. HTTP URI references
 are not yet supported.
  
 
