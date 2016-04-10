@@ -5,7 +5,7 @@
 [Introduction](#introduction) | [News](#news) | [Tutorial](#tutorial) | [Specification](#specification)
 [Navigating the Repository](#navigating)|[OpenAPI Generator](#oas_generator) | [HTML Generator](#html_generator) | [Validator](#validator)
 
-## <a name="introduction">Introduction
+## <a name="introduction"></a>Introduction
 
 Rapier is a new API specification language created by Apigee. The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs. [\[1\]](#footnote1)
@@ -35,11 +35,11 @@ or follow different conventions to the ones Rapier currently understands, or are
 
 Rapier also includes SDK generators for Javascript and Python, a validator and an HTML generator. In the future we may work on test tools, and server implementation frameworks.  
 
-<a name="footnote1">\[1\] Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
+<a name="footnote1">[1]</a> Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010
 
-## <a name="news">News
+## <a name="news"></a>News
 
 April 2 2016:
 
@@ -51,7 +51,7 @@ The utilities now support relative references between files on the same file-sys
 are not yet supported.
  
 
-## <a name="tutorial">Tutorial
+## <a name="tutorial"></a>Tutorial
 
 Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
 so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
