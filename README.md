@@ -11,7 +11,7 @@
     <td><a href="#navigating">Navigating the Repository</a></td>
     <td><a href="#oas_generator">OpenAPI Generator</a></td>
     <td><a href="#html_generator">HTML Generator</a></td>
-    <td><a href="#validator">Validator]</a></td>
+    <td><a href="#validator">Validator</a></td>
   </tr>
 </table>
 
