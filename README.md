@@ -213,7 +213,7 @@ entities:
           relationship: '#Item'
 ```
 
-### Query Paths
+### <a name="query_paths"></a>Query Paths
  
 So far we have seen examples of APIs that are easy to navigate by following hyperlinks. What if I want to include URLs in my API that allow the user to
 quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs`. 
@@ -287,8 +287,8 @@ If you want to see the generated OpenAPI document for this API specification, [i
 
 ### Hiding the implementation detail
 
-This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the design of the [To-do List example](#to_do_list) above and a suggestion of a better one. If you are not interested in this opinion, you can [skip to the next section](#representing-urls).
-
+This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the design of 
+the example shown in [Query Paths](#query_paths) above and a suggestion of a better one. If you are not interested in this opinion, you can [skip to the next section](#representing-urls).
 
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation, and instead provide the client of the API with an opaque URL. 
