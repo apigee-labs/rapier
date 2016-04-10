@@ -80,19 +80,19 @@ entities:
 ```                    
 This is the complete specification. The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH. [\[2\]](#footnote2) You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH <a href="#footnote2"><sup>2</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-We know the JSON will look like this from the rules of JSON Schema—this is not specific to Rapier [\[3\]](#footnote3) .
+We know the JSON will look like this from the rules of JSON Schema—this is not specific to Rapier <a href="#footnote3"><sup>3</sup></a>.
 
 The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 
-<a name="footnote2">[2]</a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
+<a name="footnote2"><sup>2</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
-<a name="footnote3">[3]</a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additional properties, the JSON Schema really only says that the JSON *may* look like this 
+<a name="footnote3"><sup>3</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additional properties, the JSON Schema really only says that the JSON *may* look like this 
 
 ### Single-valued relationship — Webmaster
 
