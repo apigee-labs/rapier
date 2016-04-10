@@ -86,7 +86,7 @@ The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-We know the JSON will look like this from the rules of JSON Schema—this is not specific to Rapier <a href="#footnote3"><sup>3</sup></a>.
+We know the JSON will look like this from the rules of JSON Schema <a href="#footnote3"><sup>3</sup></a>—this is not specific to Rapier.
 
 The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 
