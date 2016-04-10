@@ -1,7 +1,19 @@
 # Rapier - REST APIs from Entities and Relationships
 
-<table><tr><td>[Introduction](#introduction)</td><td>[News](#news)</td><td>[Tutorial](#tutorial)</td><td>[Specification](#specification)</td></tr>
-<tr><td>[Navigating the Repository](#navigating)</td><td>[OpenAPI Generator](#oas_generator)</td><td>[HTML Generator](#html_generator)</td><td>[Validator](#validator)</td></tr></table>
+<table>
+  <tr>
+    <td><a href="#introduction">Introduction</a></td>
+    <td><a href="#news">News</a></td>
+    <td><a href" tutorial">Tutorial</a></td>
+    <td><a href="specification">Specification</a></td>
+  </tr>
+  <tr>
+    <td><a href="#navigating">Navigating the Repository</a></td>
+    <td><a href="#oas_generator">OpenAPI Generator</a></td>
+    <td>[HTML Generator](#html_generator)</td>
+    <td><a href="#validator">Validator]</a></td>
+  </tr>
+</table>
 
 ## <a name="introduction"></a>Introduction
 
