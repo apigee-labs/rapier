@@ -471,7 +471,7 @@ error_reponse | `schema` | the schema of the response for all error cases. the d
 
 #### <a name="entities"></a>Entities
 
-The set of entities defines the API.
+Its map of entities is the primary component of a Rapier API definition.
 
 Field Pattern | Type | Description
 ---|:---:|---
