@@ -86,7 +86,7 @@ The OpenAPI document generated from this Rapier specification can be [found here
 
 [\[2\]](#footnote2) Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
-### Webmaster
+### Single-valued relationship — Webmaster
 
 The next step beyond our simple hello-world example is to show a Rapier API that illustrates a relationship:
 
@@ -119,7 +119,7 @@ The `Person` at `http://example.org/xxxxx` will look like this in JSON:
     {"name": "Jane Doe"}
 ``` 
 
-### <a name="to_do_list"></a>To-do List
+### <a name="to_do_list"></a>Multi-valued relationship — To-do List
 
 The example above shows how to declare a single-valued realtionship. Here is what it looks like if your relationship is multi-valued:
 
@@ -177,6 +177,33 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml)
+
+### Embedded multi-valued relationships
+
+In this example, the "collection" that holds the URLs of the multi-valued relationship is a separate resource with its own URL.
+It is also possible to express multti-valued relationship by embedding a collection of URLs directly in one of the entities.
+Rapier does not have a special syntax for expressing this pattern because it can be expressed using the standard capabilities of 
+JSON Schema along with Rapier's single-valued relationships. Suppose, for example, that the JSON for a TodoList looked like this:
+
+```JSON
+{"todos": [
+    "http://example.org/xxxxx",
+    "http://example.org/xxxxx"
+  ]
+}
+```
+The Rapier description would look like this:
+```YAML
+entities:
+  TodoList:
+    properties:
+      todos:
+        type: array
+        items:
+          type: string
+          format: uri
+          relationship: #Item
+```
 
 ### Query Paths
  
