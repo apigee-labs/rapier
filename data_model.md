@@ -22,7 +22,7 @@ entities:
         format: uri
         relationship: '#Child'
 ```
-The URI of the Mother entity is \<baseURL\>#Mother. This is why the line `relationship: '#Child'` is valid - '#Mother' is a valid URI reference.
+The URI of the Mother entity is `<baseURL>#Mother`. This is why the line `relationship: '#Child'` is valid - '#Mother' is a valid URI reference.
 
 In Rapier, the following two URIs reference different things
 - `#Mother`
