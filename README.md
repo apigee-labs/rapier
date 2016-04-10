@@ -287,7 +287,7 @@ If you want to see the generated OpenAPI document for this API specification, [i
 
 ### Hiding the implementation detail
 
-This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the design of the [To-do List example](#to_do_list) above. If you are not interested in this opinion, you can [skip to the next section](#representing-urls).
+This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the design of the [To-do List example](#to_do_list) above and a suggestion of a better one. If you are not interested in this opinion, you can [skip to the next section](#representing-urls).
 
 
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
