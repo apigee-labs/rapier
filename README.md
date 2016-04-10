@@ -446,6 +446,8 @@ view of the API to be generated instead of the client view. It can be found [her
 
 ### Schema
 
+A Rapier Spec is a single YAML `map`—conceptually like a JSON object. Its format is described in the next heading entitled [Rapier](#rapier)
+
 All properties are optional unless otherwise specified.
 
 #### <a name="rapier"></a>Rapier
