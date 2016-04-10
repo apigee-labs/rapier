@@ -442,7 +442,7 @@ view of the API to be generated instead of the client view. It can be found [her
     - gen_js_sdk - a directory containing Javascript sdk files generated from the samples
     - gen_js_sdk - a directory containing Python sdk files generated from the samples
 
-## <a name="specification"></a>The Rapier Language Spec
+## <a name="specification"></a>The Rapier Language Specification
 
 ### Schema
 
