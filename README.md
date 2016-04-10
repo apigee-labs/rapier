@@ -202,7 +202,7 @@ entities:
         items:
           type: string
           format: uri
-          relationship: #Item
+          relationship: '#Item'
 ```
 
 ### Query Paths
