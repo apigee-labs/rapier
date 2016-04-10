@@ -300,23 +300,7 @@ when entities appear nested in collection resources, no header value is availabl
 also put the resource URL in a `self` property in the representation, as follows:
 
 ```yaml
-title: Todo List API
-version: "0.1"
-conventions:
-  selector_location: path-segment
-entities:
-  TodoList:
-    well_known_URLs: /
-    query_paths: [todos]
-    readOnly: true
-    properties:
-      todos:
-        type: string
-        format: uri
-        relationship:
-          collection_resource: '#Collection'
-          entities: '#Item'
-          multiplicity: O:n
+  # ...
   Item:
     properties:
       self:
@@ -328,13 +312,7 @@ entities:
       due:
         type: string
         format: date-time
-  Collection:
-    readOnly: true
-    properties:
-      contents:
-        type: array
-        items: 
-          $ref: '#/entities/Item'
+  # ...
 ```                
 
 In JSON, the `To_do_list` at `/` will look like this:
