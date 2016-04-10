@@ -4,7 +4,7 @@
   <tr>
     <td><a href="#introduction">Introduction</a></td>
     <td><a href="#news">News</a></td>
-    <td><a href"#tutorial">Tutorial</a></td>
+    <td><a href="#tutorial">Tutorial</a></td>
     <td><a href="#specification">Specification</a></td>
   </tr>
   <tr>
