@@ -292,7 +292,7 @@ This section contains some opinion about API design and is not specific to Rapie
 
 In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
 A better practice is to keep the `id` private to the implementation, and instead provide the client of the API with an opaque URL. 
-This avoids the need for the client programmer to find the template definition in the API documentation and plug an `id` value into the template to get the URL of an entity. 
+This avoids the need for the client programmer to find the template definition in the API documentation and plug an `id` value into the template to get a URL for an entity. 
 Effectively, this job has already been done by the server and the client just has to use the result. 
 The opaque URL can also be used in other URL templates, in the same maner that an `id` value can be used, so there is no loss of function in the API.
 The URL of each resource is already available to the API client in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
