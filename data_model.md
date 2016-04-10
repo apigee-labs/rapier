@@ -59,13 +59,13 @@ The API could also have been described as follows, although Rapier does not curr
 - kind: 'https://github.com/apigee-labs/rapier/ns#Entity'
   id: '#Child'
   properties:
-    - name: mother
-      type: string
-      format: uri
-      relationship: '#Child'
-    permalink_template:
-      template: /c3Rvc-Z3Jw-{implementation_key} 
-      type: integer
+  - name: mother
+    type: string
+    format: uri
+    relationship: '#Child'
+  permalink_template:
+    template: /c3Rvc-Z3Jw-{implementation_key} 
+    type: integer
 ``` 
 
 Those of you who are familiar with RDF or with some of the more thoughtful discussions of URLs and their meanings will find nothing original or suprising in this model.
