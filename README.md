@@ -82,7 +82,7 @@ The OpenAPI document generated from this Rapier specification can be [found here
 
 <a name="footnote2">[2]</a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents 
 
-<a name="footnote3">[3]</a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additioal properties, the JSON Schema really only says that the JSON *may* look like this 
+<a name="footnote3">[3]</a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additional properties, the JSON Schema really only says that the JSON *may* look like this 
 
 ### Single-valued relationship — Webmaster
 
