@@ -300,6 +300,10 @@ when entities appear nested in collection resources, no header value is availabl
 also put the resource URL in a `self` property in the representation, as follows:
 
 ```yaml
+entities:
+  TodoList:
+    well_known_URLs: /
+    query_paths: todos
   # ...
   Item:
     properties:
