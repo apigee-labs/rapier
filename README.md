@@ -18,7 +18,7 @@
 ## <a name="introduction"></a>Introduction
 
 Rapier is a new API specification language created by Apigee. The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
-produce specifications that describe higher quality APIs <a href="#footnote1"><sup>1</sup></a>.
+produce specifications that describe higher quality APIs <a href="#footnote1" id="ref1"><sup>1</sup></a>.
 
 You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
@@ -47,7 +47,7 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 
 <a name="footnote1"><sup>1</sup></a> Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
-the remainder” - Fred Brooks, "The Design of Design", 2010
+the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩</a>
 
 ## <a name="news"></a>News
 
