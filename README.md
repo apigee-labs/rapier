@@ -4,13 +4,13 @@
   <tr>
     <td><a href="#introduction">Introduction</a></td>
     <td><a href="#news">News</a></td>
-    <td><a href" tutorial">Tutorial</a></td>
-    <td><a href="specification">Specification</a></td>
+    <td><a href"#tutorial">Tutorial</a></td>
+    <td><a href="#specification">Specification</a></td>
   </tr>
   <tr>
     <td><a href="#navigating">Navigating the Repository</a></td>
     <td><a href="#oas_generator">OpenAPI Generator</a></td>
-    <td>[HTML Generator](#html_generator)</td>
+    <td><a href="#html_generator">HTML Generator</a></td>
     <td><a href="#validator">Validator]</a></td>
   </tr>
 </table>
