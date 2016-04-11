@@ -342,11 +342,11 @@ We don't need this query path any more because its only purpose was to give the 
 The format of the `self` URL can be opaque to the API clients,
 and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque hyperlinks.
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml).
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
 
-JSON has no built-in type for URLs. In the examples above, we exposed "links", as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
+JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
 can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—for example you
 cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
 ```json
@@ -394,7 +394,7 @@ This definition comes from the Pet Store example. The full Rapier document [is h
 
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
-- a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity
+- a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity. This pattern is used on regular entities as well as collections. 
 - parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
 
 Given this structure, we may model query parameters more carefully in the future.
