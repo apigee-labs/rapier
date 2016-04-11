@@ -400,7 +400,7 @@ This definition comes from the Pet Store example. The full Rapier document [is h
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
 - a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity. This pattern is used on regular entities as well as collections. 
-- parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
+- "selection" parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
 
 Given this structure, we may model query parameters more carefully in the future.
 
