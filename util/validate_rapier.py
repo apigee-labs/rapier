@@ -573,7 +573,6 @@ class OASValidator(object):
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
         'usage': validate_entity_usage})
-    entity_keywords.update(schema_keywords)
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
         'patch_consumes': validate_conventions_patch_consumes,
