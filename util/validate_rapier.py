@@ -437,9 +437,9 @@ class OASValidator(object):
         if part[1] == '':
             self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
 
-    def validate_permalink_template_type(self, node, key, a_type):
+    def validate_permalink_template_variable_type(self, node, key, a_type):
         if not (a_type == 'string' or a_type == 'integer' or a_type == 'number'):
-            self.error('permalink_template type must be "string" or "interger" or "number": %s' % required, key) 
+            self.error('permalink_template type must be "string" or "integer" or "number": %s' % required, key) 
     
     def validate_media_type(self, node, key, media_type):
         if not isinstance(media_type, basestring):
@@ -604,7 +604,7 @@ class OASValidator(object):
         'permalink_template': validate_permalink_template}
     permalink_template_keywords =  {
         'template': validate_permalink_template_template,
-        'type': validate_permalink_template_type}
+        'variable_type': validate_permalink_template_variable_type}
 
     def abs_url(self, url):
         split_url = url.split('#')

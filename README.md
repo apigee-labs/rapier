@@ -611,7 +611,7 @@ Field pattern | Type | Description
 #### <a name="entities_private_extensions"></a>Entities Private Extensions
 
 The primary goal of Rapier is to describe an API as seen by a client. However, it is sometimes useful to capture additional implementation-private extensions for use by
-proxies (like Apigee Edge) or implementation frameworks (like Apigee a127). This section exptresses such information. 
+proxies (like Apigee Edge) or implementation frameworks (like Apigee a127). This section expresses such information. 
 
 Field Pattern | Type | Description
 ---|:---:|---
@@ -621,14 +621,14 @@ Field Pattern | Type | Description
 
 Field Name | Type | Description
 ---|:---:|---
-permalink_template | [Permalink Template](#permalink_template) | A specification of the format of permalinks for this entity. These are the URLs that the server provides to identify an entity of this entity type.
+permalink_template | [Permalink Template](#permalink_template) | A specification of the format of permalinks for this entity. These are the client-opaque URLs that the server provides to identify an entity of this entity type.
 
 #### <a name="permalink_template"></a>Permalink Template
 
 Field Name | Type | Description
 ---|:---:|---
 template | `string` | A URL template that must contain a single variable.
-type | "string" or "integer" or "number" | The type of the variable
+variable_type | "string" or "integer" or "number" | The type of the variable
 
 ## <a name="oas_generator">OpenAPI Generator
 

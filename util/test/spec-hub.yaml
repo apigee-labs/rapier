@@ -272,12 +272,12 @@ implementation_private_information:
   Group:
     permalink_template:
       template: /c3Rvc-Z3Jw-{implementation_key} 
-      type: integer
+      variable_type: integer
   Doc:
     permalink_template:
       template: /c3Rvc-ZG9j-{implementation_key} 
-      type: integer
+      variable_type: integer
   Folder:
     permalink_template:
       template: /c3Rvc-Zmxk-{implementation_key} 
-      type: integer  
+      variable_type: integer  
