@@ -223,7 +223,7 @@ By contrast, query URLs, as the name implies, may return variable results over t
 store them in databases.
 `Query URLs` are defined in Rapier using `Query Paths`.
 A `Query Path` describes a path along the relationships between resources for quickly locating resources without having to retrieve all the resources along the path. 
-Each segment of a `query path` corresponds to a relationship declared in the data model.
+Each segment of a `query path` corresponds to a relationship declared in the entity at that position in the path.
 Each `Query Path` implies a URI or [URI Template](https://tools.ietf.org/html/rfc6570) that is part of the API.
 The following example should make this clearer.
 
