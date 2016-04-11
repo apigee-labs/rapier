@@ -347,6 +347,7 @@ The format of the `self` URL can be opaque to the API clients,
 and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque hyperlinks.
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml).
+An explanation of the generator output can be found [here](#openapi_generator_output).
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
 
