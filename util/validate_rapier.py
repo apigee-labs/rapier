@@ -108,6 +108,7 @@ class OASValidator(object):
                     self.info('information about %s is provided in multiple places - is this what you meant?' % id)
                 else:
                     self.entities[id] = entity
+                    entity['id'] = id
                     self.entities[self.abs_url('#/entities/%s' % name)] = entity
         self.checked_id_uniqueness = True
             
@@ -700,24 +701,25 @@ class OASValidator(object):
         entities = self.rapier_spec.setdefault('entities', {})
         self.check_id_uniqueness(entities)
         if 'implementation_private_information' in self.rapier_spec:
-            for entity_name, entity in self.rapier_spec['implementation_private_information'].iteritems():
-                if 'properties' in entity:
-                    for property in entity['properties'].itervalues():
+            for entity_name, entity_desc in self.rapier_spec['implementation_private_information'].iteritems():
+                if 'properties' in entity_desc:
+                    for property in entity_desc['properties'].itervalues():
                         property['implementation_private'] = True
-                if entity_name in entities:
-                    if 'properties' in entity:
-                        properties = entity['properties']
+                entity_id = self.abs_url(entity_desc.get('id', '#%s'%entity_name))
+                if entity_id in self.entities:
+                    if 'properties' in entity_desc:
+                        properties = entity_desc['properties']
                         if 'properties' in entities[entity_name]:
                             entities[entity_name]['properties'].update(properties)
                         else:
                             entities[entity_name]['properties'] = properties
-                    if 'query_paths' in entity:
+                    if 'query_paths' in entity_desc:
                         entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
-                        entities[entity_name]['query_paths'].extend(entity['query_paths'])
-                    if 'permalink_template' in entity:
-                        entities[entity_name]['permalink_template'] = entity['permalink_template']
+                        entities[entity_name]['query_paths'].extend(entity_desc['query_paths'])
+                    self.entities[entity_id].update({k:v for k,v in entity_desc.iteritems() if k not in ['properties', 'query_paths']})
                 else:
-                    entities[entity_name] = entity
+                    self.error('defining ne entities in implementation_private_information not yet supported: %s' % entity_id)
+                    
         for entity_name, entity in entities.iteritems():
             if entity is not None:
                 if 'name' in entity:
