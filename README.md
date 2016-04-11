@@ -217,7 +217,7 @@ entities:
  
 So far we have seen examples of APIs that are easy to navigate by following hyperlinks. What if I want to include URLs in my API that allow the user to
 quickly locate a particular resource without navigating the web of resources from the root to find it? In Rapier, those sorts of URLs are called `Query URLs`. 
-In contrast to hyperlinks, which are opaque, query URLs have formats that clients are expected to understand in order to compose them. Hyperlinks are
+In contrast to hyperlinks, which are intended to be opaque to clients, query URLs have formats that clients are expected to understand in order to compose them. Hyperlinks are
 expected to be stable over time—you should be able to safely bookmark them or store them in a database, and when you recover them and reuse them, they should identify the same permanent entity. 
 By contrast, query URLs, as the name implies, may return variable results over time, or may fail altogether in the future. For this reason, in most cases, it will be inappropriate to bookmark query URLs or to
 store them in databases.
