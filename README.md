@@ -195,8 +195,8 @@ JSON Schema along with Rapier's single-valued relationships. Suppose, for exampl
 
 ```JSON
 {"todos": [
-    "http://example.org/xxxxx",
-    "http://example.org/xxxxx"
+    "http://example.org/xxxxx-1",
+    "http://example.org/xxxxx-2"
   ]
 }
 ```
