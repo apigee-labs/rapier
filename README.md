@@ -117,7 +117,7 @@ entities:
 Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml) generated from this example spells out all the detail.
-An explanation of the generator output can be found [here](#openapi_generator_output). 
+An explanation of the generator output can be found [here](#openapi_generator_output).
 
 In JSON, the `Site` at `/` will look like this:
 ```json
@@ -185,7 +185,8 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml).
+An explanation of the generator output can be found [here](#openapi_generator_output).
 
 ### Embedded multi-valued relationships
 
@@ -284,7 +285,8 @@ of the URL `/todos` to form a URL that will identify a single `Item` amongst the
 In the [To-do List example](#to_do_list) above, the value of the `todos` property of the TodoList at `/` was shown as `http://example.org/xxxxx`. From this we know that `http://example.org/xxxxx` and 
 `http://example.org/todos` must be aliases of each other, and a particular implementation may choose to make them the same (or not).
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-id.yaml)
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-id.yaml).
+An explanation of the generator output can be found [here](#openapi_generator_output).
 
 ### Hiding the implementation detail
 
