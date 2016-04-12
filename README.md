@@ -189,7 +189,7 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
 
-Unless you say otherwise, Rapier will assume that clients can POST to the collection for a multi-valued relationship to create new entities. You can overide this by marking the relationship as readOnly.
+Unless you say otherwise, Rapier will assume that clients can POST to the collection for a multi-valued relationship to create new entities. You can overide this assumption by marking the relationship as readOnly.
 By default, you create a new entity by POSTing an entity of the type you want to create. Sometimes you want to create entities by POSTing an entity that is slightly different from the one 
 you are trying to create, with the server doing the conversion. [This example](https://github.com/apigee-labs/rapier/blob/master/util/test/ssl.yaml) illustrates how you can express that case in Rapier. 
 
