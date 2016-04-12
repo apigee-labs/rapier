@@ -692,8 +692,8 @@ Errors and warnings are written to stderr.
 
 ## <a name="sdk_generators">SDK Generators
 
-Rapier provides tools for generating SDK libraries for Javascript and Python from Rapier specifications. You can also genenrate SDKs by generating OpenAPI specifications from Rapier specs and
-then genenrating SDKs from those. We wrote separate SDKs generators for Rapier becuae we believe that we can produce better SDKs for Rapier APIs from Rapier's higher-level constructs than can
+Rapier provides tools for generating SDK libraries for Javascript and Python from Rapier specifications. You can also generate SDKs by generating OpenAPI specifications from Rapier specs and
+then generating SDKs from those. We wrote separate SDKs generators for Rapier becuae we believe that we can produce better SDKs for Rapier APIs from Rapier's higher-level constructs than can
 be generated from the lower-level OpenAPI specification. The generators are in the utils directory and have the same prereqs as the validators. 
 
 Usage of the generators is
@@ -709,4 +709,4 @@ gen_py_sdk.py my-rapier.yaml > my-sdk.py
 Both the generated python code and the generated Javascript code rely on a library, whose primary purpose is to provide a superclass/prototype for common behaviors.
 For Python, the library is in the /py directory of the repository. For Javascript, it is in the /js directory.
 
-In the interests of honesty, I would have to say that the generated SDKs have not seen much testing or usage and are probalby best considered 'proof of concept' at this point.
+The generated SDKs have not seen much testing or usage and are probably best considered 'proof of concept' at this point.
