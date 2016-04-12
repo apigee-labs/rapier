@@ -583,6 +583,7 @@ class OASValidator(object):
         'collection_resource': validate_relationship_collection_resource, 
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
+        'usage': validate_schema_usage,
         'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 
