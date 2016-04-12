@@ -64,8 +64,9 @@ are not yet supported.
 
 ## <a name="tutorial"></a>Tutorial
 
-Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
-so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
+Rapier is a small extension to [JSON Schema](http://json-schema.org/) and should be easy to understand and learn if you already know that standard. 
+If you are not familiar with [JSON Schema](http://json-schema.org/), you should spend a few minutes getting some level of understanding of what it looks like and what it does. 
+We think the easiest way to learn Rapier is by example.
 
 ### Hello World
 
