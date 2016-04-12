@@ -96,7 +96,7 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
 
 <a name="footnote2"><sup>2</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref2">↩</a>
 
-<a name="footnote3"><sup>3</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additional properties, the JSON Schema really only says that the JSON *may* look like this <a href="#ref3">↩</a>
+<a name="footnote3"><sup>3</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref3">↩</a>
 
 ### Single-valued relationship — Webmaster
 
