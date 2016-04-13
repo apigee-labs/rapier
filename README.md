@@ -12,15 +12,16 @@
     <td><a href="#oas_generator">OpenAPI Generator</a></td>
     <td><a href="#html_generator">HTML Generator</a></td>
     <td><a href="#validator">Validator</a></td>
+    <td><a href="#sdk_generators">SDK Generators</a></td>
   </tr>
 </table>
 
 ## <a name="introduction"></a>Introduction
 
-Rapier is a new API specification language created by Apigee. The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
+[Rapier](https://github.com/apigee-labs/rapier) is a new (2015) API specification language created by [Apigee](http://apigee.com). The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs <a href="#footnote1" id="ref1"><sup>1</sup></a>.
 
-You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
+You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships <a href="#footnote2" id="ref2"><sup>2</sup></a>. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and their methods, which vary only in the entities 
 they accept and return or the queries they express.
@@ -49,6 +50,11 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩</a>
 
+<a name="footnote2"><sup>2</sup></a> Some people may object that if a client is given prior information about properties and relationships that may be in the resources, then the API
+violates the hypertext-as-the-engine-of-application-state (HATEOAS) constraint of REST and therefore cannot be called REST. 
+They may be right—we've never seen a rigorous definition of HATEOAS and Roy Fielding isn't here to ask—but Rapier APIs indisputably make extensive use of hypertext. If Fielding tells us this is not REST, we will be pleased to
+rename the project from Rapier to Hap[p]ier.<a href="#ref2">↩</a>
+
 ## <a name="news"></a>News
 
 April 2 2016:
@@ -63,8 +69,9 @@ are not yet supported.
 
 ## <a name="tutorial"></a>Tutorial
 
-Rapier is very easy to understand and learn. The easiest way is by example. Rapier builds on top of [JSON Schema](http://json-schema.org/),
-so if you are not familiar with that standard, you should spend a few minutes getting some level of understanding of what it looks like and what it does.
+Rapier is a small extension to [JSON Schema](http://json-schema.org/) and should be easy to understand and learn if you already know that standard. 
+If you are not familiar with [JSON Schema](http://json-schema.org/), you should spend a few minutes getting some level of understanding of what it looks like and what it does. 
+We think the easiest way to learn Rapier is by example.
 
 ### Hello World
 
@@ -78,22 +85,23 @@ entities:
       text:
         type: string
 ```                    
-This is the complete specification. The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
+This is the complete Rapier specification of the API. The `entities` and `well_known_URLs` elements are specific to Rapier. The rest is generic JSON Schema, including the `properties` element.
+The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH <a href="#footnote2" id="ref2"><sup>2</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-We know the JSON will look like this from the rules of JSON Schema <a href="#footnote3" id="ref3"><sup>3</sup></a>—this is not specific to Rapier.
+We know the JSON will look like this from the rules of JSON Schema <a href="#footnote4" id="ref4"><sup>4</sup></a>—this is not specific to Rapier.
 
 The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 An explanation of the generator output can be found [here](#openapi_generator_output).
 
-<a name="footnote2"><sup>2</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref2">↩</a>
+<a name="footnote3"><sup>3</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref3">↩</a>
 
-<a name="footnote3"><sup>3</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow additional properties, the JSON Schema really only says that the JSON *may* look like this <a href="#ref3">↩</a>
+<a name="footnote4"><sup>4</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref4">↩</a>
 
 ### Single-valued relationship — Webmaster
 
@@ -185,6 +193,10 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
 ``` 
 
 The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
+
+Unless you say otherwise, Rapier will assume that clients can POST to the collection for a multi-valued relationship to create new entities. You can overide this assumption by marking the relationship as readOnly.
+By default, you create a new entity by POSTing an entity of the type you want to create. Sometimes you want to create entities by POSTing an entity that is slightly different from the one 
+you are trying to create, with the server doing the conversion. [This example](https://github.com/apigee-labs/rapier/blob/master/util/test/ssl.yaml) illustrates how you can express that case in Rapier. 
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml).
 An explanation of the generator output can be found [here](#openapi_generator_output).
@@ -688,3 +700,24 @@ The Rapier validator is implemented by `validate_rapier.py` in the util director
 `usage: validate_rapier.py filename`
 
 Errors and warnings are written to stderr.
+
+## <a name="sdk_generators">SDK Generators
+
+Rapier provides tools for generating SDK libraries for Javascript and Python from Rapier specifications. You can also generate SDKs by generating OpenAPI specifications from Rapier specs and
+then generating SDKs from those. We wrote separate SDKs generators for Rapier becuae we believe that we can produce better SDKs for Rapier APIs from Rapier's higher-level constructs than can
+be generated from the lower-level OpenAPI specification. The generators are in the utils directory and have the same prereqs as the validators. 
+
+Usage of the generators is
+```
+gen_js_sdk.py rapier-file
+gen_py_sdk.py rapier-file
+``` 
+The output is written to stdout, so a typical example would look like
+```
+gen_py_sdk.py my-rapier.yaml > my-sdk.py 
+```
+
+Both the generated python code and the generated Javascript code rely on a library, whose primary purpose is to provide a superclass/prototype for common behaviors.
+For Python, the library is in the /py directory of the repository. For Javascript, it is in the /js directory.
+
+The generated SDKs have not seen much testing or usage and are probably best considered 'proof of concept' at this point.

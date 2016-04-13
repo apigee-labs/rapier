@@ -22,4 +22,4 @@ cd $ROOT_DIR
 ./util/gen_openapispec.py util/test/build.yaml > util/test/gen_openapispec/build.yaml
 ./util/gen_openapispec.py util/test/ams.yaml > util/test/gen_openapispec/ams.yaml
 ./util/gen_openapispec.py util/test/use-common.yaml > util/test/gen_openapispec/use-common.yaml
-#./util/gen_openapispec.py util/test/kms.yaml > util/test/gen_openapispec/kms.yaml
+./util/gen_openapispec.py util/test/kms.yaml > util/test/gen_openapispec/kms.yaml

@@ -1,4 +1,6 @@
 title: KMS APIs
+conventions:
+  selector_location: path-segment
 entities:
   Apigee:
     well_known_URLs: /
@@ -10,7 +12,7 @@ entities:
         format: uri
         relationship:
           multiplicity: 0:n
-          entities: "#Organization"
+          entities: '#Organization'
           collection_resource: './common.yaml#MultiValuedRelationship'
   Organization:
     description: >

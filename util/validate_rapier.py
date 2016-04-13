@@ -283,7 +283,7 @@ class OASValidator(object):
             entity_urls = entities.split()
         else:
             if not isinstance(entities, list):
-                return self.error('entities must be a string or list %s' % s, key)
+                return self.error('entities must be a string or list %s' % entities, key)
             else:
                 entity_urls = entities
         entity_map = [self.validate_referenced_entity_url(entity_url, key) for entity_url in entity_urls]
@@ -522,8 +522,7 @@ class OASValidator(object):
     u_usage_values = {'u', 'update', 'put', 'patch'}
     d_usage_values = {'d', 'delete'}
     usage_entity_values = {'retrieve': r_usage_values, 'update': u_usage_values, 'delete': d_usage_values}
-    usage_schema_values = {'create': c_usage_values}
-    usage_schema_values.update(usage_entity_values)
+    usage_schema_values = {'create': c_usage_values, 'retrieve': r_usage_values, 'update': u_usage_values}
             
     rapier_spec_keywords = {
         'title': validate_title, 
@@ -572,8 +571,8 @@ class OASValidator(object):
         'allOf': validate_entity_allOf, 
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
-        'usage': validate_entity_usage})
-    entity_keywords.update(schema_keywords)
+        'usage': validate_entity_usage,
+        'permalink_template': validate_permalink_template})
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
         'patch_consumes': validate_conventions_patch_consumes,
@@ -584,6 +583,7 @@ class OASValidator(object):
         'collection_resource': validate_relationship_collection_resource, 
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
+        'usage': validate_schema_usage,
         'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 

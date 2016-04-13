@@ -29,6 +29,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -36,31 +37,37 @@
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>home</td>
                     <td>URL of the current user's 'home' Folder</td>
                     <td>url of <a href="#Folder">Folder</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>sharedWithMe</td>
                     <td>URL of a Collection of Folders and Docs</td>
                     <td>url of <a href="#Folder">Folder</a> or <a href="#Doc">Doc</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>docs</td>
                     <td>URL of a Collection of Docs</td>
                     <td>url of <a href="#Doc">Doc</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>folders</td>
                     <td>URL of a Collection of Folders</td>
                     <td>url of <a href="#Folder">Folder</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>groups</td>
                     <td>URL of a Collection of Groups</td>
                     <td>url of <a href="#Group">Group</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -78,6 +85,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -85,21 +93,25 @@
                     <td>contents</td>
                     <td>URL of a Collection of Docs and Folders</td>
                     <td>url of <a href="#Doc">Doc</a> or <a href="#Folder">Folder</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>folder</td>
                     <td>URL of a Folder</td>
                     <td>url of <a href="#Folder">Folder</a>                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>permissions</td>
@@ -111,6 +123,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -118,14 +131,17 @@
                     <td>actor</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>action</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>]                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -143,6 +159,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,26 +167,31 @@
                     <td>content_type</td>
                     <td>The media type of the content of the Doc</td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>content</td>
                     <td>URL of a Content</td>
                     <td>url of <a href="#Content">Content</a>                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>folder</td>
                     <td>URL of a Folder</td>
                     <td>url of <a href="#Folder">Folder</a>                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>permissions</td>
@@ -181,6 +203,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -188,14 +211,17 @@
                     <td>actor</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>action</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>]                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -213,6 +239,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -220,21 +247,25 @@
                     <td>members</td>
                     <td>Array of URLs of Users</td>
                     <td>[string]                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>folder</td>
                     <td>URL of a Folder</td>
                     <td>url of <a href="#Folder">Folder</a>                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>name</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>permissions</td>
@@ -246,6 +277,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -253,14 +285,17 @@
                     <td>actor</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>action</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>]                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -283,6 +318,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -290,26 +326,31 @@
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>items</td>
                     <td></td>
                     <td>[object]                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>collection</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>next_page</td>
                     <td></td>
                     <td>url of <a href="#Page">Page</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>previous_page</td>
                     <td></td>
                     <td>url of <a href="#Page">Page</a>                    </td>
+                    <td>r                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -327,6 +368,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -334,11 +376,13 @@
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>items</td>
                     <td></td>
                     <td>[object]                    </td>
+                    <td>r                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -358,6 +402,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -365,11 +410,13 @@
                     <td>self</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>kind</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
                   </tr>
                 </tbody>
               </table>            </td>
@@ -387,6 +434,7 @@
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -394,21 +442,25 @@
                     <td>created</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>creator</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>modified</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                   <tr>
                     <td>modifier</td>
                     <td></td>
                     <td>string                    </td>
+                    <td>r                    </td>
                   </tr>
                 </tbody>
               </table>            </td>

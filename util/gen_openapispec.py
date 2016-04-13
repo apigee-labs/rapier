@@ -413,12 +413,13 @@ class OASGenerator(object):
         if parameters:
             interface['parameters'] = parameters
         produces = self.openapispec.get('produces')
-        interface['get'] = self.build_collection_get(rel_property_spec, produces)
+        if rel_property_spec.readable():
+            interface['get'] = self.build_collection_get(rel_property_spec, produces)
         rel_property_specs = [spec for spec in rel_property_specs if spec.relationship_name == relationship_name]
         consumes_entities = [entity for spec in rel_property_specs for entity in spec.consumes_entities]
         consumes_media_types = [media_type for spec in rel_property_specs if spec.consumes_media_types for media_type in spec.consumes_media_types]
         self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])
-        if not rel_property_spec.readOnly:
+        if rel_property_spec.postable():
             if len(rel_property_specs) > 1:
                 schema = {}
                 schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
@@ -996,7 +997,6 @@ class RelMVPropertySpec(SegmentSpec):
         self._entity_uri = entity_uri
 
         self.entity_uri = target_entity_uri
-        self.readOnly = relationship.get('readOnly')                                 
         self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
         self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
         self.collection_resource = relationship.get('collection_resource')        
@@ -1004,6 +1004,20 @@ class RelMVPropertySpec(SegmentSpec):
         self.relationship_name = relationship['name']        
         self.implementation_private = property.get('implementation_private', False)                                
 
+    def readable(self):
+        usage = self._relationship.get('usage')
+        if usage is None:
+            return True
+        else:
+            return len(validate_rapier.OASValidator.r_usage_values & set(as_list(usage))) > 0
+    
+    def postable(self):
+        usage = self._relationship.get('usage')
+        if usage is None:
+            return not self._relationship.get('readOnly', False)
+        else:
+            return len(validate_rapier.OASValidator.c_usage_values & set(as_list(usage))) > 0
+        
     def is_multivalued(self):
         return True
         
