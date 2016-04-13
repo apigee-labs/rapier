@@ -59,7 +59,8 @@ class HTMLGenerator(object):
                     <td>%s</td>
                     <td>%s</td>
                     <td>%s                    </td>
-                  </tr>''' % (property_name, self.generate_property_cell(property), self.generate_property_type(property))
+                    <td>%s                    </td>
+                  </tr>''' % (property_name, self.generate_property_cell(property), self.generate_property_type(property), self.generate_property_usage(property))
         return rslt
 
     def generate_properties_table(self, properties):
@@ -71,6 +72,7 @@ class HTMLGenerator(object):
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
+                    <th>Usage</th>
                   </tr>
                 </thead>
                 <tbody>%s

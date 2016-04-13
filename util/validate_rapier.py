@@ -283,7 +283,7 @@ class OASValidator(object):
             entity_urls = entities.split()
         else:
             if not isinstance(entities, list):
-                return self.error('entities must be a string or list %s' % s, key)
+                return self.error('entities must be a string or list %s' % entities, key)
             else:
                 entity_urls = entities
         entity_map = [self.validate_referenced_entity_url(entity_url, key) for entity_url in entity_urls]
