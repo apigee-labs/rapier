@@ -52,7 +52,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩
 
 <a name="footnote2"><sup>2</sup></a> Some people may object that if a client is given prior information of a set of properties and relationships that may be in the resources, then the API
 violates the hypertext-as-the-engine-of-application-state (HATEOAS) constraint of REST and therefore cannot be called REST. 
-They may be right—I've never seen a rigorous definition of HATEOAS and Roy Fielding isn't here to ask—but it is still hypertext. If Fielding tells me this is not REST, we will be pleased to
+They may be right—I've never seen a rigorous definition of HATEOAS and Roy Fielding isn't here to ask—but it is still hypertext. If Fielding tells us this is not REST, we will be pleased to
 rename the project from Rapier to Hap[p]ier.<a href="#ref2">↩</a>
 
 ## <a name="news"></a>News
