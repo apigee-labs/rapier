@@ -65,8 +65,6 @@ class HTMLGenerator(object):
                     result += 'r'                    
                 if len(validate_rapier.OASValidator.u_usage_values & set(as_list(usage))) > 0:
                     result += 'u'
-                if len(validate_rapier.OASValidator.d_usage_values & set(as_list(usage))) > 0:
-                    result += 'd'
                 return result
         else:
             return 'r'            

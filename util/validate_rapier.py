@@ -522,8 +522,7 @@ class OASValidator(object):
     u_usage_values = {'u', 'update', 'put', 'patch'}
     d_usage_values = {'d', 'delete'}
     usage_entity_values = {'retrieve': r_usage_values, 'update': u_usage_values, 'delete': d_usage_values}
-    usage_schema_values = {'create': c_usage_values}
-    usage_schema_values.update(usage_entity_values)
+    usage_schema_values = {'create': c_usage_values, 'retrieve': r_usage_values, 'update': u_usage_values}
             
     rapier_spec_keywords = {
         'title': validate_title, 
