@@ -572,7 +572,8 @@ class OASValidator(object):
         'allOf': validate_entity_allOf, 
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
-        'usage': validate_entity_usage})
+        'usage': validate_entity_usage,
+        'permalink_template': validate_permalink_template})
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
         'patch_consumes': validate_conventions_patch_consumes,
