@@ -19,7 +19,7 @@ class HTMLGenerator(object):
         uri_ref = '#'.join(split_ref)
         return '<a href="{}">{}</a>'.format(uri_ref, split_ref[1])
     
-    def generate_property_type(self, property):
+    def generate_property_type(self, entity, property):
         if 'relationship' in property:
             relationship = property['relationship']
             if isinstance(relationship, basestring):
@@ -35,8 +35,8 @@ class HTMLGenerator(object):
                 multiplicity = relationship.get('multiplicity', '0:1')
             entity_links = [self.create_link(entity_url) for entity_url in entity_urls]
             upper_bound = multiplicity.split(':')[-1]
-            multi_valued = upper_bound == 'n' or int(upper_bound) == 1
-            return '%s (%s)' % (multiplicity, ' or '.join(entity_links)) if upper_bound == 1 else 'url of %s' % ' or '.join(entity_links)
+            multi_valued = upper_bound == 'n' or int(upper_bound) > 1
+            return '%s (%s)' % (multiplicity, ' or '.join(entity_links)) if multi_valued else 'url of %s' % ' or '.join(entity_links)
         elif '$ref' in property:
             ref = property['$ref']
             return self.create_link(ref)
@@ -44,32 +44,34 @@ class HTMLGenerator(object):
             type = property.get('type', '')
             if type == 'array':
                 items = property['items']
-                rslt = '[%s]' % self.generate_property_type(items)
+                rslt = '[%s]' % self.generate_property_type(entity, items)
             elif 'properties' in property:
-                rslt = self.generate_properties_table(property['properties'])
+                rslt = self.generate_properties_table(entity, property['properties'])
             else:
                 rslt = type
             return rslt
             
-    def generate_property_usage(self, property):
-        readOnly = property.get('readOnly')
-        if readOnly is None:
-            usage = property.get('usage')
-            if usage is None:
-                return 'crud'
-            else:
-                result = ''
-                if len(validate_rapier.OASValidator.c_usage_values & set(as_list(usage))) > 0:
-                    result += 'c'
-                if len(validate_rapier.OASValidator.r_usage_values & set(as_list(usage))) > 0:
-                    result += 'r'                    
-                if len(validate_rapier.OASValidator.u_usage_values & set(as_list(usage))) > 0:
-                    result += 'u'
-                return result
-        else:
-            return 'r'            
+    def generate_property_usage(self, entity, property):
+        entity_readOnly = entity.get('readOnly')
+        if entity_readOnly is None:
+            entity_usage = entity.get('usage')            
+            readOnly = property.get('readOnly')
+            if readOnly is None:
+                usage = property.get('usage')
+                if usage is None:
+                    return 'c r u'
+                else:
+                    result = ''
+                    if len(validate_rapier.OASValidator.c_usage_values & set(as_list(usage))) > 0:
+                        result += 'c'
+                    if len(validate_rapier.OASValidator.r_usage_values & set(as_list(usage))) > 0:
+                        result += 'r'                    
+                    if len(validate_rapier.OASValidator.u_usage_values & set(as_list(usage))) > 0:
+                        result += 'u'
+                    return ' '.join(result)
+        return 'r'            
     
-    def generate_property_rows(self, properties):
+    def generate_property_rows(self, entity, properties):
         rslt = ''
         for property_name, property in properties.iteritems():
             rslt += '''
@@ -78,11 +80,11 @@ class HTMLGenerator(object):
                     <td>%s</td>
                     <td>%s                    </td>
                     <td>%s                    </td>
-                  </tr>''' % (property_name, self.generate_property_cell(property), self.generate_property_type(property), self.generate_property_usage(property))
+                  </tr>''' % (property_name, self.generate_property_cell(property), self.generate_property_type(entity, property), self.generate_property_usage(entity, property))
         return rslt
 
-    def generate_properties_table(self, properties):
-        property_rows = self.generate_property_rows(properties)
+    def generate_properties_table(self, entity, properties):
+        property_rows = self.generate_property_rows(entity, properties)
         return '''
               <table class="table table-striped table-bordered">
                 <thead>
@@ -90,7 +92,7 @@ class HTMLGenerator(object):
                     <th>Property Name</th>
                     <th>Property Description</th>
                     <th>Property Type</th>
-                    <th>Usage</th>
+                    <th>usage</th>
                   </tr>
                 </thead>
                 <tbody>%s
@@ -127,7 +129,7 @@ class HTMLGenerator(object):
             rslt = rslt + self.allOf(entity['allOf'])
         properties = entity.get('properties')
         if properties is not None:
-            rslt += self.generate_properties_table(properties)
+            rslt += self.generate_properties_table(entity, properties)
         return rslt
     
     def create_anchor(self, name):

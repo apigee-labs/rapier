@@ -5,3 +5,4 @@ entities:
     properties:
       text:
         type: string
+        usage: 'r u'
