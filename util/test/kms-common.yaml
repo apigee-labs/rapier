@@ -1,0 +1,33 @@
+title: Common entities used in KMS API
+version: "0.1"
+entities:
+  Attribute:
+    description: A key value pair
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Attribute"
+        type: string
+        enum: [Attribute]
+      name:
+        description: name of a property
+        type: string
+      value:
+        description: value of a property
+        type: string
+  Quota:
+    description: Defines the quota of requests allowed by this APIProduct
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Quota"
+        type: string
+        enum: [Quota]
+      quota:
+        description: A name of a quota
+        type: string
+      quotaInterval: 
+        description: An interval for a quota
+        type: integer
+      quotaTimeUnit:
+        description: A time unit for a quota
+        type: string
+        enum: [second, minute, hour, day, month]
