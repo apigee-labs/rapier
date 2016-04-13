@@ -18,7 +18,7 @@
 
 ## <a name="introduction"></a>Introduction
 
-Rapier is a new (2015) API specification language created by [Apigee](http://apigee.com). The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
+[Rapier](https://github.com/apigee-labs/rapier) is a new (2015) API specification language created by [Apigee](http://apigee.com). The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs <a href="#footnote1" id="ref1"><sup>1</sup></a>.
 
 You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
