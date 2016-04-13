@@ -190,6 +190,19 @@ class HTMLGenerator(object):
         else:
             print >>sys.stderr, 'HTML generation of %s failed' % filename
 
+def as_list(value, separator = None):
+    if isinstance(value, basestring):
+        if separator:
+            result = [item.strip() for item in value.split(separator)]
+        else:
+            result = value.split()
+    else:
+        if isinstance(value, (list, tuple)):
+            result = value
+        else:
+            result = [value]
+    return result
+    
 def main(args):
     #try:
     if not len(args) == 1:
