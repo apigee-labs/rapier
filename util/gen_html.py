@@ -50,6 +50,26 @@ class HTMLGenerator(object):
             else:
                 rslt = type
             return rslt
+            
+    def generate_property_usage(self, property):
+        readOnly = property.get('readOnly')
+        if readOnly is None:
+            usage = property.get('usage')
+            if usage is None:
+                return 'crud'
+            else:
+                result = ''
+                if len(validate_rapier.OASValidator.c_usage_values & set(as_list(usage))) > 0:
+                    result += 'c'
+                if len(validate_rapier.OASValidator.r_usage_values & set(as_list(usage))) > 0:
+                    result += 'r'                    
+                if len(validate_rapier.OASValidator.u_usage_values & set(as_list(usage))) > 0:
+                    result += 'u'
+                if len(validate_rapier.OASValidator.d_usage_values & set(as_list(usage))) > 0:
+                    result += 'd'
+                return result
+        else:
+            return 'r'            
     
     def generate_property_rows(self, properties):
         rslt = ''
