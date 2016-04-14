@@ -50,10 +50,16 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩</a>
 
-<a name="footnote2"><sup>2</sup></a> Some people may object that if a client is given prior information about properties and relationships that may be in the resources, then the API
-violates the hypertext-as-the-engine-of-application-state (HATEOAS) constraint of REST and therefore cannot be called REST. 
-They may be right—we've never seen a rigorous definition of HATEOAS and Roy Fielding isn't here to ask—but Rapier APIs indisputably make extensive use of hypertext. If Fielding tells us this is not REST, we will be pleased to
-rename the project from Rapier to Hap[p]ier.<a href="#ref2">↩</a>
+<a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense tht there is nowhere in the API you can reach
+by composing URLs that you cannot also reach by following hyperlinks. Because of this is it possible to write a "generic" client that
+has no a-priori knowledge of a Rapier API and navigates it only by following hyperlinks. Such clients are relatively difficult to design and
+write and so are rare. We believe they are primarily written when, like browsers and web bots, their cost can be amortized across many
+APIs and the cost and time to code to each of those APIs individually is prohibitive. The primary reason for basing Rapier APIs on
+hypermedia is to make the APIs easier to learn and to make clients easier and cheaper to write and maintain—supporting "generic" clients 
+is a secondary benefit. The most often-discussed
+benefit of hypermedia is making systems more robust in the face of change, although we find that goal to be still elusive. Rapier does not
+automatically include any extra runtime metadata that would help a generic client use POST or PUT/PATCH operations—Rapier
+API designers must do that manually if that is their goal.<a href="#ref2">↩</a>
 
 ## <a name="news"></a>News
 
