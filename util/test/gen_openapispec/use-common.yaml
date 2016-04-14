@@ -79,27 +79,46 @@ definitions:
     type: object
     properties:
       self:
+        description: "The self property defines which resource's property-value pairs\
+          \ are in the data. On create, if no value for self is given, self will be\
+          \ set to the URL of the resource being created. It is possible to set a\
+          \ different value on create\u2014this is used to create a resource that\
+          \ contans information about a different resource than itself. self specifies\
+          \ RDF's 'subject' concept. It is similar to the @id property of RDF/JSON.\
+          \ It is permissible, although unusual, to update the value of self.\n"
         type: string
-        readOnly: true
+        format: uri
       kind:
+        description: "Specifies the type of the entity. We avoid the word type because\
+          \ it's a global function in some programing languages, and we don't want\
+          \ name collisions. Kind is usually set by the  client and then echo'd by\
+          \ the server. In most applications, kind is immutable after create, although\
+          \ some applications may allow change. \n"
         type: string
   PersistentResource:
     allOf:
     - $ref: '#/definitions/Resource'
     properties:
       created:
+        description: The date and time that the resource was created. An ISO-format
+          string.
         type: string
         format: date-time
         readOnly: true
       creator:
+        description: The identity of the creator of the resource. A URL.
         type: string
         format: URL
         readOnly: true
       modified:
+        description: The date and time of the last modification to the resource. An
+          ISO-format string.
         type: string
         format: date-time
         readOnly: true
       modifier:
+        description: The identity of the user that made the last modification to the
+          resource.
         type: string
         format: date-time
         readOnly: true
