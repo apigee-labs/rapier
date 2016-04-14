@@ -120,7 +120,7 @@ definitions:
       ratePlan:
         type: string
         format: uri
-        x-interface: ../mint.yaml#/x-interfaces/RatePlan
+        x-interface: mint.yaml#/x-interfaces/RatePlan
     x-interface: '#/x-interfaces/APIProduct'
   Bundle:
     description: 'Bundles allow providers to offer a set of APIProducts under a new
@@ -164,13 +164,13 @@ definitions:
           in the APIProducts
         type: string
         format: uri
-        x-interface: ../mint.yaml#/x-interfaces/RatePlan
+        x-interface: mint.yaml#/x-interfaces/RatePlan
     x-interface: '#/x-interfaces/Bundle'
   Subscription:
     description: "Subscriptions record the usage of an <a href=\"#APIProduct\">APIProduct</a>\
       \ or <a href=\"#Bundle\">Bundle</a> by a subscriber (a <a href=\"users/#User\"\
       >User</a> or <a href=\"users/#Group\">Group</a> or <a href=\"permissions/#Team\"\
-      >Team</a>).  <p>Historical Note: The App concept in Apigee Edge (circa 2016)\
+      >Team</a>).  <p>Historical Note: The App concept in Apigee Edge (circa 2015)\
       \ is similar to the Subscription concept, to the point where it can be considered\
       \ a renaming. App was not the best choice of name because the concept  being\
       \ modelled is not an app, it is just a key-protected usage of an APIProduct.\

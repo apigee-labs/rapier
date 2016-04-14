@@ -50,7 +50,7 @@ entities:
       APIProducts define a set of rules, such as quota, constraining client access to a specific API. 
       <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an amalgam of the API and APIProduct concepts
     allOf:
-    - '$ref': './common.yaml/#/entities/PersistentResource'
+    - '$ref': ./common.yaml/#/entities/PersistentResource
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"
@@ -88,12 +88,12 @@ entities:
       ratePlan:
         type: string
         format: uri
-        relationship: ../mint.yaml#RatePlan
+        relationship: ./mint.yaml#RatePlan
   Bundle:
     description: >
       Bundles allow providers to offer a set of APIProducts under a new ratePlan
     allOf:
-    - '$ref': './common.yaml/#/entities/PersistentResource'
+    - $ref: ./common.yaml/#/entities/PersistentResource
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "APIProduct"
@@ -123,18 +123,18 @@ entities:
         description: The ratePlan for the bundle. Overrides the individual ratePlans in the APIProducts
         type: string
         format: uri
-        relationship: ../mint.yaml#RatePlan
+        relationship: ./mint.yaml#RatePlan
   Subscription:
     description: >
       Subscriptions record the usage of an <a href="#APIProduct">APIProduct</a> or <a href="#Bundle">Bundle</a> by a
       subscriber (a <a href="users/#User">User</a> or <a href="users/#Group">Group</a> or <a href="permissions/#Team">Team</a>). 
-      <p>Historical Note: The App concept in Apigee Edge (circa 2016) is similar to the Subscription concept,
+      <p>Historical Note: The App concept in Apigee Edge (circa 2015) is similar to the Subscription concept,
       to the point where it can be considered a renaming. App was not the best choice of name because the concept 
       being modelled is not an app, it is just a key-protected usage of an APIProduct. Using
       one of these subscriptions per app is only a suggestion—it is not possible to know whether customers use 
       a single subscription for a single app, a single subscription for many apps, or a many subscriptions for one app. 
     allOf:
-    - '$ref': './common.yaml/#/entities/PersistentResource'
+    - $ref: ./common.yaml/#/entities/PersistentResource
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Subscription"
@@ -216,7 +216,6 @@ entities:
       timeunit:
         type: string
         enum: [minute, hour, day, month]     
-
   Apigee:
     description: >
       An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
