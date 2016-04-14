@@ -48,7 +48,7 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 
 <a name="footnote1"><sup>1</sup></a> Following Fred Brooks, we take consistency as being the primary measure of quality of an API. 
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
-the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩</a>
+the remainder” - Fred Brooks, "The Design of Design", 2010. <a href="#ref1">↩</a>
 
 <a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that there is nowhere in the API a client can reach
 by composing URLs that it cannot also reach by following hyperlinks. Because of this is it possible to write a "generic" client that
