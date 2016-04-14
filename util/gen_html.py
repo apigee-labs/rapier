@@ -48,7 +48,11 @@ class HTMLGenerator(object):
             elif 'properties' in property:
                 rslt = self.generate_properties_table(entity, property['properties'])
             else:
-                rslt = type
+                format = property.get('format')
+                if format is not None:
+                    rslt = format
+                else:
+                    rslt = type
             return rslt
             
     def generate_property_usage(self, entity, property):
