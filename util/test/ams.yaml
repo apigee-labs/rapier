@@ -11,6 +11,7 @@ entities:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "API"
         type: string
         enum: [API]
+        usage: c r
       name:
         description: >
           The name of the API. Must be unique amongst APIs of the same org. 

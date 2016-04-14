@@ -268,6 +268,10 @@ class OASValidator(object):
             self.error('format must be a string: %s' % format, key)    
             
     def validate_property_relationship(self, node, key, relationship):
+        if node.get('type') != 'string':
+            self.error('relationship properties must be of type string', key)
+        if node.get('format') != 'uri':
+            self.error('relationship properties must have "format: uri"', key)
         if hasattr(relationship, 'keys'):
             self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship, key)
         elif isinstance(relationship, basestring):

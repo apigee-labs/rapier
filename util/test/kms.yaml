@@ -57,30 +57,40 @@ entities:
             type: string
       apis:
         description: An API facade (and an API proxy configuration) which will be deployed in the environment(s)
+        type: string
+        format: uri
         relationship:
           multiplicity: 0:n
           entities: '#Proxy'
           collection_resource: './common.yaml#MultiValuedRelationship'
       environments:
         description: An environment represents a set of running components accessible at a single namespace
+        type: string
+        format: uri
         relationship:
           multiplicity: 0:n
           entities: "#Environment"
           collection_resource: './common.yaml#MultiValuedRelationship'
       apiproducts:
         description: An API product which represents one or more REST endpoints
+        type: string
+        format: uri
         relationship:
           multiplicity: 0:n
           entities: '#ApiProduct'
           collection_resource: './common.yaml#MultiValuedRelationship'
       apps:
         description: Apps are API consumers registered with an API provider's organization. Apps are registered with an organization to obtain credentials that enable access to one or more API products (or, a set of URIs). The default app profile can be extended by using custom attributes. Apps can be associated with developers (as developer apps) or with companies (company apps).
+        type: string
+        format: uri
         relationship:
           multiplicity: 0:n
           entities: '#App'
           collection_resource: './common.yaml#MultiValuedRelationship'
       companies:
         description: A company is a collection of developers managed as a single entity. A company can be any grouping that is appropriate to your organization, e.g., business unit, product line, or division. Grouping developers into companies is useful when your goal is to work with multiple developers associated under a single corporate entity for billing purposes, for example. However, it not required that the developers in your organization are associated with a company. This API is completely optional. Note that a developer is always a single entity, uniquely identified by the email element.
+        type: string
+        format: uri
         relationship:
           multiplicity: 0:n
           entities: '#Company'
@@ -267,8 +277,8 @@ entities:
         type: string
         enum: [Company]
       organization:
-        type: object
-        relationship: "#Organization"
+        description: The name of the organization that this company consumes products from
+        type: string
       name:
         description: A name of the Company
         type: string
