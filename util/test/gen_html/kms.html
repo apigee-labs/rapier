@@ -18,194 +18,6 @@
         </thead>
         <tbody>
           <tr>
-            <td><a name="Attribute"></a>Attribute</td>
-            <td>A key value properties
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Description</th>
-                    <th>Property Type</th>
-                    <th>usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>kind</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Attribute"</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>name</td>
-                    <td>name of a property</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>value</td>
-                    <td>value of a property</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
-            <td><a name="CredentialMethod"></a>CredentialMethod</td>
-            <td>organization's CredentialMethod
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Description</th>
-                    <th>Property Type</th>
-                    <th>usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>kind</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "CredentialMethod"</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>id</td>
-                    <td></td>
-                    <td>number                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>name</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>apiProducts</td>
-                    <td></td>
-                    <td>[url of <a href="#ApiProduct">ApiProduct</a>]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>attributes</td>
-                    <td></td>
-                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>scopes</td>
-                    <td></td>
-                    <td>[string]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
-            <td><a name="AppCredentialsRequest"></a>AppCredentialsRequest</td>
-            <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Description</th>
-                    <th>Property Type</th>
-                    <th>usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>kind</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsRequest"</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>app</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>consumerKey</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>consumerSecret</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>credentialMethod</td>
-                    <td></td>
-                    <td>url of <a href="#CredentialMethod">CredentialMethod</a>                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
-            <td><a name="AppCredentialsResponse"></a>AppCredentialsResponse</td>
-            <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Description</th>
-                    <th>Property Type</th>
-                    <th>usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>kind</td>
-                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "AppCredentialsResponse"</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>consumerKey</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>consumerSecret</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>status</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>app</td>
-                    <td></td>
-                    <td>url of <a href="#App">App</a>                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>scopes</td>
-                    <td></td>
-                    <td>[string]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                </tbody>
-              </table>            </td>
-          </tr>
-
-          <tr>
             <td><a name="Apigee"></a>Apigee</td>
             <td>
               <table class="table table-striped table-bordered">
@@ -220,8 +32,8 @@
                 <tbody>
                   <tr>
                     <td>organizations</td>
-                    <td></td>
-                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                    <td>The base entity for an account on Apigee Edge, an organization is a container for all managed entities, including APIs, API products, developers, apps, environments, etc.</td>
+                    <td>0:n (<a href="#Organization">Organization</a>)                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -230,7 +42,11 @@
 
           <tr>
             <td><a name="Organization"></a>Organization</td>
-            <td>
+            <td>The base entity for an account on Apigee Edge, an organization is a container for all managed entities, including APIs, API products, developers, apps, environments, etc.
+
+                <div> 
+                Includes properties and other constraints from <a href="common.html#PersistentResource">PersistentResource</a>
+                </div>
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -252,7 +68,7 @@
                     <td>The name of the Organization. Must be unique
 </td>
                     <td>string                    </td>
-                    <td>c r u                    </td>
+                    <td>c u                    </td>
                   </tr>
                   <tr>
                     <td>description</td>
@@ -269,22 +85,77 @@
                     <td>c r u                    </td>
                   </tr>
                   <tr>
-                    <td>flavour</td>
-                    <td>(Note: "type" is the key word) Type of the Organization which describe whether it's a trail or revenue Organization
+                    <td>type</td>
+                    <td>Type of the Organization which describe whether it's a trial or revenue Organization
 </td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>properties</td>
-                    <td></td>
-                    <td>[string]                    </td>
+                    <td>internal or custom properties</td>
+                    <td>[]                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>apis</td>
+                    <td>An API facade (and an API proxy configuration) which will be deployed in the environment(s)</td>
+                    <td>0:n (<a href="#Proxy">Proxy</a>)                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td></td>
-                    <td>url of <a href="#Environment">Environment</a>                    </td>
+                    <td>An environment represents a set of running components accessible at a single namespace</td>
+                    <td>0:n (<a href="#Environment">Environment</a>)                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>apiproducts</td>
+                    <td>An API product which represents one or more REST endpoints</td>
+                    <td>0:n (<a href="#ApiProduct">ApiProduct</a>)                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>apps</td>
+                    <td>Apps are API consumers registered with an API provider's organization. Apps are registered with an organization to obtain credentials that enable access to one or more API products (or, a set of URIs). The default app profile can be extended by using custom attributes. Apps can be associated with developers (as developer apps) or with companies (company apps).</td>
+                    <td>0:n (<a href="#App">App</a>)                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>companies</td>
+                    <td>A company is a collection of developers managed as a single entity. A company can be any grouping that is appropriate to your organization, e.g., business unit, product line, or division. Grouping developers into companies is useful when your goal is to work with multiple developers associated under a single corporate entity for billing purposes, for example. However, it not required that the developers in your organization are associated with a company. This API is completely optional. Note that a developer is always a single entity, uniquely identified by the email element.</td>
+                    <td>0:n (<a href="#Company">Company</a>)                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                </tbody>
+              </table>            </td>
+          </tr>
+
+          <tr>
+            <td><a name="Proxy"></a>Proxy</td>
+            <td>An API facade (and an API proxy configuration) which will be deployed in the environment(s)
+
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Property Name</th>
+                    <th>Property Description</th>
+                    <th>Property Type</th>
+                    <th>usage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>kind</td>
+                    <td>The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Proxy"</td>
+                    <td>string                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>name</td>
+                    <td>The name of the API
+</td>
+                    <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -334,8 +205,8 @@
                   </tr>
                   <tr>
                     <td>properties</td>
-                    <td></td>
-                    <td>[string]                    </td>
+                    <td>A list of properties</td>
+                    <td>[]                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -344,7 +215,8 @@
 
           <tr>
             <td><a name="ApiProduct"></a>ApiProduct</td>
-            <td>
+            <td>API products enable you to bundle and distribute your APIs to multiple developer groups simultaneously, without having to modify code. An API product consists of a list of API resources (URIs) combined with a Service Plan (rate-limiting policy settings) plus any custom metadata required by the API provider. API products provide the basis for access control in Apigee, since they provide control over the set of API resources that apps are allowed to consume.
+
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -383,66 +255,58 @@
                     <td>c r u                    </td>
                   </tr>
                   <tr>
-                    <td>organizaion</td>
-                    <td>The APIProduct within this Organization
-</td>
-                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                    <td>organization</td>
+                    <td>The name of the Organization (URL would have been better)</td>
+                    <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>attributes</td>
-                    <td></td>
-                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                    <td>A list of custom key/value pair</td>
+                    <td>[<a href="kms-common.html#Attribute">Attribute</a>]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>apiResources</td>
-                    <td></td>
+                    <td>A comma separated list of API resources to be bundled in the API Product.</td>
                     <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>environments</td>
-                    <td>Environments where this API is available. Defines the domain names where the paths of the API will be available</td>
+                    <td>Names of environments where this API is available. Defines the domain names where the paths of the API will be available</td>
                     <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>scopes</td>
-                    <td>Defines the OAUTH scopes to which this APIProduct gives access
+                    <td>A comma separated list of scopes. These must map to the scopes defined in an Oauth policy associated with the API Product. Any scope mismatch between an Acces Token presented and the API Product results in auth failure.
 </td>
                     <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>proxies</td>
-                    <td></td>
+                    <td>Name of an API facade (and an API proxy configuration) which will be deployed in the environment(s)</td>
                     <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>quota</td>
-                    <td>Defines the quota of requests allowed by this APIProduct.
-</td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>quotaInterval</td>
-                    <td></td>
-                    <td>integer                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>quotaTimeUnit</td>
-                    <td></td>
-                    <td>string                    </td>
+                    <td>The number of request messages permitted by this API product for the specified quotaInterval and quotaTimeUnit</td>
+                    <td><a href="kms-common.html#Quota">Quota</a>                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>approvalType</td>
-                    <td></td>
+                    <td>If manual, consumer key is generated and returned in 'pending' state. If auto consumer key generated and returned in 'Approved' state</td>
                     <td>string                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>appCredentials</td>
+                    <td>A list of token keys for an app</td>
+                    <td>[<a href="#AppCredential">AppCredential</a>]                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -451,7 +315,8 @@
 
           <tr>
             <td><a name="App"></a>App</td>
-            <td>
+            <td>Apps are API consumers registered with an API provider's organization. Apps are registered with an organization to obtain credentials that enable access to one or more API products (or, a set of URIs). The default app profile can be extended by using custom attributes. Apps can be associated with developers (as developer apps) or with companies (company apps).
+
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -482,10 +347,9 @@
                     <td>c r u                    </td>
                   </tr>
                   <tr>
-                    <td>organizaion</td>
-                    <td>The APIProduct within this Organization
-</td>
-                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                    <td>organization</td>
+                    <td>The name of the Organization the App is in</td>
+                    <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
@@ -501,87 +365,34 @@
                     <td>c r u                    </td>
                   </tr>
                   <tr>
-                    <td>appStatus</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
                     <td>status</td>
-                    <td></td>
+                    <td>status of an App</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>appFamily</td>
-                    <td></td>
-                    <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>appParentStatus</td>
-                    <td></td>
+                    <td>App families enable you to create functional groups of apps. A single app may be instantiated in several forms. For example, an app may have sandbox instance and a production instance. App families enable these app instances to be associated. You can do this by linking the instances of the app together in a an app family collection. Specify an app family name, associate that name with a developer or a company of your organization, and select one or more app IDs to add to the contents of the app family. You can create app families for developer apps or for company apps within your organization.
+</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>appType</td>
-                    <td></td>
+                    <td>A type relfects whether this belongs to Company or Developer</td>
                     <td>string                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>keyExpiresIn</td>
-                    <td></td>
-                    <td>number                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>appParent</td>
-                    <td></td>
-                    <td>
-              <table class="table table-striped table-bordered">
-                <thead>
-                  <tr>
-                    <th>Property Name</th>
-                    <th>Property Description</th>
-                    <th>Property Type</th>
-                    <th>usage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>uniqueId</td>
-                    <td></td>
+                    <td>The name of the parent app</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
-                    <td>organizaion</td>
-                    <td></td>
-                    <td>url of <a href="#Organization">Organization</a>                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                </tbody>
-              </table>                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
                     <td>attributes</td>
-                    <td></td>
-                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>appCredentialsRequest</td>
-                    <td></td>
-                    <td>[url of <a href="#AppCredentialsRequest">AppCredentialsRequest</a>]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>appCredentialsResponse</td>
-                    <td></td>
-                    <td>[url of <a href="#AppCredentialsResponse">AppCredentialsResponse</a>]                    </td>
+                    <td>A list of custom key/value pair</td>
+                    <td>[<a href="kms-common.html#Attribute">Attribute</a>]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
@@ -591,14 +402,19 @@
                     <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
+                  <tr>
+                    <td>appCredentials</td>
+                    <td></td>
+                    <td>[<a href="#AppCredential">AppCredential</a>]                    </td>
+                    <td>c r u                    </td>
+                  </tr>
                 </tbody>
               </table>            </td>
           </tr>
 
           <tr>
             <td><a name="AppCredential"></a>AppCredential</td>
-            <td>Token key for an app
-
+            <td>A token key for an app
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -617,32 +433,26 @@
                   </tr>
                   <tr>
                     <td>id</td>
-                    <td></td>
-                    <td>number                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>app</td>
-                    <td></td>
-                    <td>url of <a href="#App">App</a>                    </td>
+                    <td>a unique identifier</td>
+                    <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>consumerKey</td>
-                    <td></td>
+                    <td>a key or client ID for Oauth</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>consumerSecret</td>
-                    <td></td>
+                    <td>a client secret for Oauth</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>apiProduct</td>
-                    <td></td>
-                    <td>url of <a href="#ApiProduct">ApiProduct</a>                    </td>
+                    <td>A list of names of ApiProducts</td>
+                    <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -651,7 +461,8 @@
 
           <tr>
             <td><a name="Company"></a>Company</td>
-            <td>
+            <td>A company is a collection of developers managed as a single entity. A company can be any grouping that is appropriate to your organization, e.g., business unit, product line, or division. Grouping developers into companies is useful when your goal is to work with multiple developers associated under a single corporate entity for billing purposes, for example. However, it not required that the developers in your organization are associated with a company. This API is completely optional. Note that a developer is always a single entity, uniquely identified by the email element.
+
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -676,7 +487,7 @@
                   </tr>
                   <tr>
                     <td>name</td>
-                    <td></td>
+                    <td>A name of the Company</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
@@ -689,20 +500,26 @@
                   </tr>
                   <tr>
                     <td>status</td>
-                    <td></td>
+                    <td>status</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>apps</td>
-                    <td></td>
-                    <td>[url of <a href="#App">App</a>]                    </td>
+                    <td>A list of names of apps that belongs to this company</td>
+                    <td>[string]                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>developers</td>
+                    <td>A list of names of developers that belongs to this company</td>
+                    <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>attributes</td>
-                    <td></td>
-                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                    <td>A list of custom key/value pair</td>
+                    <td>[<a href="kms-common.html#Attribute">Attribute</a>]                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>
@@ -711,7 +528,8 @@
 
           <tr>
             <td><a name="Developer"></a>Developer</td>
-            <td>
+            <td>A developer within an organization who is associated with a company. The company developer creates apps on behalf of the company, and any apps created by a company developer are associated with the company and known as 'company apps'. The Company Developers API enables you to add developers to companies. A developer must exist in the system before you can associate them with a company.
+
               <table class="table table-striped table-bordered">
                 <thead>
                   <tr>
@@ -730,74 +548,74 @@
                   </tr>
                   <tr>
                     <td>userId</td>
-                    <td></td>
+                    <td>A unique identifier</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>organization</td>
-                    <td></td>
-                    <td>url of <a href="#Organization">Organization</a>                    </td>
+                    <td>The name of the organization the developer consumes products from</td>
+                    <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>userName</td>
-                    <td></td>
+                    <td>user name</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>firstName</td>
-                    <td></td>
+                    <td>first name</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>lastName</td>
-                    <td></td>
+                    <td>last name</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>email</td>
-                    <td></td>
+                    <td>email</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>encryptedPassword</td>
-                    <td></td>
+                    <td>hashed password</td>
+                    <td>string                    </td>
+                    <td>c r u                    </td>
+                  </tr>
+                  <tr>
+                    <td>salt</td>
+                    <td>the salt for the password</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>status</td>
-                    <td></td>
+                    <td>status</td>
                     <td>string                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>apps</td>
-                    <td></td>
-                    <td>[url of <a href="#App">App</a>]                    </td>
+                    <td>A list of apps created by this developer</td>
+                    <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>companies</td>
-                    <td></td>
-                    <td>[url of <a href="#Company">Company</a>]                    </td>
-                    <td>c r u                    </td>
-                  </tr>
-                  <tr>
-                    <td>salt</td>
-                    <td></td>
-                    <td>string                    </td>
+                    <td>A list of companies this developer belongs to</td>
+                    <td>[string]                    </td>
                     <td>c r u                    </td>
                   </tr>
                   <tr>
                     <td>attributes</td>
-                    <td></td>
-                    <td>[url of <a href="#Attribute">Attribute</a>]                    </td>
+                    <td>A list of custom key/value pair</td>
+                    <td>[<a href="kms-common.html#Attribute">Attribute</a>]                    </td>
                     <td>c r u                    </td>
                   </tr>
                 </tbody>

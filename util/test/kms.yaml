@@ -4,7 +4,14 @@ conventions:
 entities:
   Apigee:
     well_known_URLs: /
-    query_paths: organizations organizations;{name} organizations;{name}/environments organizations;{name}/api-products organizations;{name}/apps organizations;{name}/companies
+    query_paths: 
+    - organizations 
+    - organizations;{name} 
+    - organizations;{name}/environments 
+    - organizations;{name}/apiproducts 
+    - organizations;{name}/apps 
+    - organizations;{name}/companies
+    - organizations;{name}/apis
     properties:
       organizations:
         description: The base entity for an account on Apigee Edge, an organization is a container for all managed entities, including APIs, API products, developers, apps, environments, etc.
@@ -17,6 +24,8 @@ entities:
   Organization:
     description: >
       The base entity for an account on Apigee Edge, an organization is a container for all managed entities, including APIs, API products, developers, apps, environments, etc.
+    allOf:
+    - $ref: ./common.yaml#/entities/PersistentResource
     properties:
       kind:
         description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Organization"
@@ -26,6 +35,7 @@ entities:
         description: >
           The name of the Organization. Must be unique
         type: string
+        usage: c u
       description:
         description: >
           A textual description of the Organization
@@ -34,17 +44,18 @@ entities:
         description: >
           The name to be used to display to humans for this Organization. Used in the UI.
         type: string
-      flavour:
+      type:
         description: >
-          (Note: "type" is a keyword) Type of the Organization which describe whether it's a trail or revenue Organization
+          Type of the Organization which describe whether it's a trial or revenue Organization
         type: string
-        enum: [trail, revenue]
+        enum: [trial, revenue]
       properties:
         description: internal or custom properties
         type: array
         items:
-          type: string
-      proxy:
+          additionalProperties:
+            type: string
+      apis:
         description: An API facade (and an API proxy configuration) which will be deployed in the environment(s)
         relationship:
           multiplicity: 0:n
@@ -56,7 +67,7 @@ entities:
           multiplicity: 0:n
           entities: "#Environment"
           collection_resource: './common.yaml#MultiValuedRelationship'
-      apiProducts:
+      apiproducts:
         description: An API product which represents one or more REST endpoints
         relationship:
           multiplicity: 0:n
@@ -75,7 +86,6 @@ entities:
           entities: '#Company'
           collection_resource: './common.yaml#MultiValuedRelationship'
   Proxy:
-    well_known_URLs: /organizaions/{org}/apis
     description: >
       An API facade (and an API proxy configuration) which will be deployed in the environment(s)
     properties:
@@ -88,7 +98,6 @@ entities:
           The name of the API
         type: string
   Environment:
-    well_known_URLs: /organizaions/{org}/envs
     description: >
       An environment represents a set of running components accessible at a single namespace
     properties:
@@ -112,9 +121,9 @@ entities:
         description: A list of properties
         type: array
         items:
-          type: string
+          additionalProperties:
+            type: string
   ApiProduct:
-    well_known_URLs: /organizaions/{org}/api-product
     description: >
       API products enable you to bundle and distribute your APIs to multiple developer groups simultaneously, without having to modify code. An API product consists of a list of API resources (URIs) combined with a Service Plan (rate-limiting policy settings) plus any custom metadata required by the API provider. API products provide the basis for access control in Apigee, since they provide control over the set of API resources that apps are allowed to consume.
     properties:
@@ -134,24 +143,21 @@ entities:
         description: >
           The name to be used to display to humans for this API Product. Used in the UI.
         type: string
-      organizaion:
-        description: >
-          The APIProduct within this Organization
-        type: object
-        relationship: "#Organization"
+      organization:
+        description: The name of the Organization (URL would have been better)
+        type: string
       attributes:
         description: A list of custom key/value pair
         type: array
         items:
-          type: object
-          relationship: "./kms-common.yaml#Attribute"
+          $ref: ./kms-common.yaml#/entities/Attribute
       apiResources:
         description: A comma separated list of API resources to be bundled in the API Product.
         type: array
         items:
           type: string
       environments:
-        description: Environments where this API is available. Defines the domain names where the paths of the API will be available
+        description: Names of environments where this API is available. Defines the domain names where the paths of the API will be available
         type: array
         items:
           type: string
@@ -162,28 +168,23 @@ entities:
         items:
           type: string
       proxies:
-        description: An API facade (and an API proxy configuration) which will be deployed in the environment(s)
+        description: Name of an API facade (and an API proxy configuration) which will be deployed in the environment(s)
         type: array
         items:
-          type: object
-          relationship: "#Proxy"
+          type: string
       quota:
-        description: > 
-          The number of request messages permitted by this API product for the specified quotaInterval and quotaTimeUnit
-        type: object
-        relationship: "./kms-common.yaml#Quota"
+        description: The number of request messages permitted by this API product for the specified quotaInterval and quotaTimeUnit
+        $ref: ./kms-common.yaml#/entities/Quota
       approvalType:
         description: If manual, consumer key is generated and returned in 'pending' state. If auto consumer key generated and returned in 'Approved' state
         type: string
         enum: [manual, auto]
       appCredentials:
         description: A list of token keys for an app
-        relationship:
-          multiplicity: 0:n
-          entities: '#AppCredential'
-          collection_resource: './common.yaml#MultiValuedRelationship'
+        type: array
+        items:
+          $ref: '#/entities/AppCredential'
   App:
-    well_known_URLs: /organizaions/{org}/apps
     description: >
       Apps are API consumers registered with an API provider's organization. Apps are registered with an organization to obtain credentials that enable access to one or more API products (or, a set of URIs). The default app profile can be extended by using custom attributes. Apps can be associated with developers (as developer apps) or with companies (company apps).
     properties:
@@ -198,16 +199,14 @@ entities:
         description: >
           The name of the App. Must be unique within the pertaining Organization
         type: string
-      organizaion:
-        description: >
-          The APIProduct within this Organization
-        type: object
-        relationship: "#Organization"
+      organization:
+        description: The name of the Organization the App is in
+        type: string
       accessType:
         type: string
       callbackUrl:
         type: string
-        format: url
+        format: uri
       status:
         description: status of an App
         type: string
@@ -219,15 +218,15 @@ entities:
       appType:
         description: A type relfects whether this belongs to Company or Developer
         type: string
+        enum: [Company, Developer]
       appParent:
-        type: object
-        relationship: "#App"
+        description: The name of the parent app 
+        type: string
       attributes:
         description: A list of custom key/value pair
         type: array
         items:
-          type: object
-          relationship: "./kms-common.yaml#Attribute"
+          $ref: ./kms-common.yaml#/entities/Attribute
       scopes:
         description: > 
           Defines the OAUTH scopes to which this APIProduct gives access
@@ -235,13 +234,10 @@ entities:
         items:
           type: string
       appCredentials:
-        description: Token key for an app
-        relationship:
-          multiplicity: 0:n
-          entities: '#AppCredential'
-          collection_resource: './common.yaml#MultiValuedRelationship'
+        type: array
+        items: 
+          $ref: '#/entities/AppCredential'
   AppCredential:
-    well_known_URLs: /organizaions/{org}/apps/{app}/keys
     description: A token key for an app
     properties:
       kind:
@@ -250,11 +246,7 @@ entities:
         enum: [AppCredential]
       id:
         description: a unique identifier
-        type: number
-      app:
-        description: Apps are API consumers registered with an API provider's organization. Apps are registered with an organization to obtain credentials that enable access to one or more API products (or, a set of URIs). The default app profile can be extended by using custom attributes. Apps can be associated with developers (as developer apps) or with companies (company apps). 
-        type: object
-        relationship: "#App"
+        type: string
       consumerKey:
         description: a key or client ID for Oauth
         type: string
@@ -262,11 +254,11 @@ entities:
         description: a client secret for Oauth
         type: string
       apiProduct:
-        description: A list of ApiProducts
-        type: object
-        relationship: "#ApiProduct"
+        description: A list of names of ApiProducts
+        type: array
+        items:
+          type: string
   Company:
-    well_known_URLs: /organizaions/{org}/companies
     description: >
       A company is a collection of developers managed as a single entity. A company can be any grouping that is appropriate to your organization, e.g., business unit, product line, or division. Grouping developers into companies is useful when your goal is to work with multiple developers associated under a single corporate entity for billing purposes, for example. However, it not required that the developers in your organization are associated with a company. This API is completely optional. Note that a developer is always a single entity, uniquely identified by the email element.
     properties:
@@ -289,25 +281,23 @@ entities:
         type: string
         enum: [active, inactive, login_lock]
       apps:
-        description: A list of apps that belongs to this company
-        relationship:
-          multiplicity: 0:n
-          entities: '#App'
-          collection_resource: './common.yaml#MultiValuedRelationship'
+        description: A list of names of apps that belongs to this company
+        type: array
+        items:
+          description: The name of the app. Better would be to put the URL of the app
+          type: string
       developers:
-        description: A list of developers that belongs to this company
-        relationship:
-          multiplicity: 0:n
-          entities: '#Developer'
-          collection_resource: './common.yaml#MultiValuedRelationship'
+        description: A list of names of developers that belongs to this company
+        type: array
+        items:
+          description: The name of the developer. Better would be to put the URL of the developer
+          type: string
       attributes:
         description: A list of custom key/value pair
         type: array
         items:
-          type: object
-          relationship: "./kms-common.yaml#Attribute"
+          $ref: ./kms-common.yaml#/entities/Attribute
   Developer:
-    well_known_URLs: /organizaions/{org}/companies/{company}/developers 
     description: >
       A developer within an organization who is associated with a company. The company developer creates apps on behalf of the company, and any apps created by a company developer are associated with the company and known as 'company apps'. The Company Developers API enables you to add developers to companies. A developer must exist in the system before you can associate them with a company.
     properties:
@@ -319,8 +309,8 @@ entities:
         description: A unique identifier
         type: string
       organization:
-        type: object
-        relationship: "#Organization"
+        description: The name of the organization the developer consumes products from
+        type: string
       userName:
         description: user name
         type: string
@@ -334,10 +324,10 @@ entities:
         description: email
         type: string
       encryptedPassword:
-        description: encrypted password
+        description: hashed password
         type: string
       salt:
-        description: a phrase to decrypt a password
+        description: the salt for the password
         type: string
       status:
         description: status
@@ -347,17 +337,16 @@ entities:
         description: A list of apps created by this developer
         type: array
         items:
-          type: object
-          relationship: "#App"
+          description: The name of the App. Better would be to put the URL of the App
+          type: string
       companies:
         description: A list of companies this developer belongs to
         type: array
         items:
-          type: object
-          relationship: "#Company"
+          description: The name of the Company. Better would be to put the URL of the Company
+          type: string
       attributes:
         description: A list of custom key/value pair
         type: array
         items:
-          type: object
-          relationship: "./kms-common.yaml#Attribute"
+          $ref: ./kms-common.yaml#/entities/Attribute
