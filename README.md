@@ -55,7 +55,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010. <a href="#ref1">�
 <a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that there is no resource in the API that a client can address
 by composing URLs that it cannot also reach by following hyperlinks. It is thus possible to write a general client that
 has no a-priori knowledge of any specific Rapier API and navigates APIs only by following hyperlinks. General software is more difficult to design and
-write than specific software—we believe clients that work this way are primarily written when their costs, like those of browsers and web bots, can be 
+write than specific software—we believe clients that work this way are written primarily when their costs, like those of browsers and web bots, can be 
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make APIs easier to understand and learn and to make clients easier to write—supporting 
 general clients is a secondary benefit. Rapier does not
