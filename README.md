@@ -418,7 +418,7 @@ query string portion of URLs? Rapier allows you to specify this on entities usin
       required: false
     readOnly: true
 ```
-This definition comes from the Pet Store example. The full Rapier document [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml) and the generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
+This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
