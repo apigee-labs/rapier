@@ -55,13 +55,13 @@ the remainder” - Fred Brooks, "The Design of Design", 2010. <a href="#ref1">�
 <a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that there is no resource in the API that a client can address
 by composing URLs that it cannot also reach by following hyperlinks. It is thus possible to write a general client that
 has no a-priori knowledge of any specific Rapier API and navigates APIs only by following hyperlinks. General software is more difficult to design and
-write than specific software—we believe clients that work this way are primarily written when, like browsers' and web bots', their cost can be 
+write than specific software—we believe clients that work this way are primarily written when their costs, like those of browsers and web bots, can be 
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
-hypermedia is to make the APIs easier to understand and learn and to make conventional clients easier to write—supporting 
+hypermedia is to make APIs easier to understand and learn and to make clients easier to write—supporting 
 general clients is a secondary benefit. Rapier does not
 automatically include any extra runtime metadata that would help a general client use POST or PUT/PATCH operations—Rapier
 API designers must do that manually if that is their goal. The most often-discussed benefit of hypermedia is making systems more 
-robust in the face of change, although we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
+robust in the face of change, but we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
 
 <a name="footnote3"><sup>3</sup></a> See the section below on <a href="#representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
