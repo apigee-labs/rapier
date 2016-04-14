@@ -55,17 +55,19 @@ definitions:
           type: string
           format: uri
           x-interface: deployment.yaml#/x-interfaces/Environment
-      ui_namesOfProxiesProvidingPaths:
-        description: 'The API is specified by the uriPaths property, which defines
-          the paths of the API. As a convenience, the UI allows the uriPaths to be
-          specified by picking from the list of paths supported by a particular proxy.
-          If the user does this, the UI will use this  property to remember the names
-          of proxies that were used as sources
-
-          '
+      ui_proxiesProvidingPaths:
+        description: "The API is specified by the uriPaths property, which defines\
+          \ the paths of the API. As a convenience, the UI allows the uriPaths to\
+          \ be specified by picking from the list of paths supported by a particular\
+          \ proxy. If the user does this, the UI will use this  property to remember\
+          \ the proxies that were used as sources of paths. Note that the ui_ prefix\
+          \ on the name of this property indicates that it belongs to the ui namespace\u2014\
+          using namespaces this way guarantees that \"add-on\" properties like this\
+          \ will not collide \n"
         type: array
         items:
           type: string
+          format: uri
     x-interface: '#/x-interfaces/API'
   APIProduct:
     description: 'APIProducts define a set of rules, such as quota, constraining client
@@ -85,7 +87,7 @@ definitions:
       name:
         description: 'The name of the APIProduct. Must be unique amongst APIProduct
           of the same org.  The name of the APIProduct, along with the name of the
-          org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/apiproduct/{apiproduct-name}
+          org, may be used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/apiproduct/{apiproduct-name}
 
           '
         type: string
@@ -139,7 +141,7 @@ definitions:
       name:
         description: 'The name of the Bundle. Must be unique amongst Bundles of the
           same org.  The name of the Bundle, along with the name of the org, may be
-          used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/bundle/{bundle-name}
+          used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/bundle/{bundle-name}
 
           '
         type: string
@@ -223,14 +225,15 @@ definitions:
           \ versus the Android version versus the web site, or which users are using\
           \ a new experimental version versus the classic version. This information\
           \ is available (presumably) to the developer through the provider's API\
-          \ portal.git \n"
+          \ portal. \n"
         type: array
         items:
           $ref: '#/definitions/Key'
       subscriber:
-        description: 'The User who is subscribing.
-
-          '
+        description: "The <a href=\"users/#User\">User</a> or <a href=\"users/#Group\"\
+          >Group</a> or <a href=\"permissions/#Team\">Team</a> responsible for the\
+          \ subscription. This person, or group of people, may get occasional emails,\
+          \ for example concerning quota overages, or subscriptions elapsing. \n"
         type: string
         format: uri
         x-interface:
@@ -239,8 +242,13 @@ definitions:
           - users.yaml#/x-interfaces/Group
           - permissions.yaml#/x-interfaces/Team
       account:
+        description: The financial account to which the subscription should be charged.
+          A POST or PATCH that contains a value for this property will fail if the
+          user under whose credentials the call is made does not have permission to
+          access the specified account
         type: string
         format: uri
+        x-interface: mint.yaml#/x-interfaces/Account
       approved:
         description: "Whether or not the subscription has been approved by the API\
           \ owner \n"
@@ -276,12 +284,17 @@ definitions:
   Quota:
     properties:
       limit:
+        description: The maximum number of requests that are allowed in a particular
+          time-interval for a given subscription
         type: integer
       interval:
+        description: The size of the time-interval
         type: integer
       timeunit:
+        description: The time units that the interval value is expressed in.
         type: string
         enum:
+        - second
         - minute
         - hour
         - day
@@ -390,7 +403,7 @@ definitions:
       creator:
         description: The identity of the creator of the resource. A URL.
         type: string
-        format: URL
+        format: uri
         readOnly: true
       modified:
         description: The date and time of the last modification to the resource. An

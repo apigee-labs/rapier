@@ -601,7 +601,7 @@ definitions:
       creator:
         description: The identity of the creator of the resource. A URL.
         type: string
-        format: URL
+        format: uri
         readOnly: true
       modified:
         description: The date and time of the last modification to the resource. An
