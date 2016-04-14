@@ -92,7 +92,8 @@ class OASGenerator(object):
             self.responses = self.build_standard_responses()
             self.response_sets = self.build_standard_response_sets()
             self.methods = self.build_standard_methods()
-            for entity_name, entity_spec in self.validator.included_entity_iteritems():
+            for entity_uri, entity_spec in self.entities_and_dependencies_iteritems():
+                entity_name = entity_spec['name']
                 entity_uri = entity_spec['id']
                 entity_url_spec = EntityURLSpec(entity_uri, self)
                 interface = self.build_entity_interface(entity_url_spec)
@@ -106,7 +107,8 @@ class OASGenerator(object):
                         self.interfaces[rel_property_spec.interface_id()] = interface
                     else:
                         self.referenced_entities.update([spec.target_entity_uri for spec in rel_property_specs])        
-            for entity_name, entity_spec in self.validator.included_entity_iteritems():
+            for entity_uri, entity_spec in self.entities_and_dependencies_iteritems():
+                entity_name = entity_spec['name']
                 definition = self.to_openapispec(entity_spec)
                 self.definitions[entity_name] = definition
             for entity_spec in entities.itervalues():
@@ -144,6 +146,12 @@ class OASGenerator(object):
         if not self.openapispec_interfaces:
             del self.openapispec['x-interfaces']
         return self.openapispec
+
+    def entities_and_dependencies_iteritems(self):
+        for entity_item in self.rapier_spec.get('entities', {}).iteritems():
+            yield entity_item
+        for entity_item in self.validator.included_entity_iteritems():
+            yield entity_item
 
     def get_one_relationship_property_specs(self, prop_name, property, entity_uri, entity_spec):
         result = []

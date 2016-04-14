@@ -90,6 +90,7 @@ class OASValidator(object):
         self.included_spec_validators = dict()
         self.referenced_spec_validators = dict()
         self.relationship_targets = dict() 
+        self.included_entities = dict()
 
     def validate_title(self, key, title):
         if not isinstance(title, basestring):
@@ -677,6 +678,7 @@ class OASValidator(object):
                         spec = spec.get(part)
                         if spec is None:
                             return self.error('json ref segment value not found: %s' % part, key)
+                    self.included_entities[self.abs_url(json_ref)] = spec
                     return spec
                 else:
                     self.error('json ref fragment must begin with "#/": %s' % json_ref, key)
@@ -687,7 +689,10 @@ class OASValidator(object):
         return self.validate_entity_url(entity_url, key, self.referenced_spec_validators)
 
     def validate_included_entity_url(self, entity_url, key):
-        return self.validate_entity_url(entity_url, key, self.included_spec_validators)
+        abs_url, entity = self.validate_entity_url(entity_url, key, self.included_spec_validators)
+        if abs_url is not None:
+            self.included_entities[abs_url] = entity
+        return abs_url, entity
 
     def validate(self, filename):
         self.filename = filename
@@ -722,7 +727,7 @@ class OASValidator(object):
                         entities[entity_name]['query_paths'].extend(entity_desc['query_paths'])
                     self.entities[entity_id].update({k:v for k,v in entity_desc.iteritems() if k not in ['properties', 'query_paths']})
                 else:
-                    self.error('defining ne entities in implementation_private_information not yet supported: %s' % entity_id)
+                    self.error('defining new entities in implementation_private_information not yet supported: %s' % entity_id)
                     
         for entity_name, entity in entities.iteritems():
             if entity is not None:
@@ -735,23 +740,23 @@ class OASValidator(object):
         self.check_and_validate_keywords(self.__class__.rapier_spec_keywords, self.rapier_spec, None)
         return self.rapier_spec, self.errors
 
-    def included_entity_iteritems(self):
-        for entity_item in self.rapier_spec.get('entities', {}).iteritems():
-            yield entity_item
-        for validator in self.included_spec_validators.itervalues():
-            for entity_item in validator.included_entity_iteritems():
-                yield entity_item
-
     def build_included_entity_map(self):
         result = {}
-        result.update(self.entities)
+        result.update(self.included_entities)
         for validator in self.included_spec_validators.itervalues():
-            result.update(validator.entities)
+            result.update(validator.included_entities)
         return result
+
+    def included_entity_iteritems(self):
+        for item in self.included_entities.iteritems():
+            yield item
+        for validator in self.included_spec_validators.itervalues():
+            for item in validator.included_entity_iteritems():
+                yield item
 
     def resolve_included_entity(self, uri):
         abs_uri = self.abs_url(uri)
-        result = self.entities.get(abs_uri)
+        result = self.entities.get(abs_uri) or self.included_entities.get(abs_uri)
         if result is None:
             for validator in self.included_spec_validators.itervalues():
                 result = validator.resolve_included_entity(abs_uri)
