@@ -78,7 +78,9 @@ are not yet supported.
 Rapier is a small extension to [JSON Schema](http://json-schema.org/) and should be easy to understand and learn if you already know that standard. 
 If you are not familiar with [JSON Schema](http://json-schema.org/), you should spend a few minutes getting some level of understanding of what it looks like and what it does. 
 Using JSON Schema as a data modelling language does not prevent Rapier APIs from supporting
-other media types like YAML, XML or the various RDF formats. We think the easiest way to learn Rapier is by example. 
+other media types like YAML, XML or the various RDF formats. 
+
+We think the easiest way to learn Rapier is by example. 
 
 ### Hello World
 
