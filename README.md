@@ -63,7 +63,7 @@ automatically include any extra runtime metadata that would help a general clien
 API designers must do that manually if that is their goal. The most often-discussed benefit of hypermedia is making systems more 
 robust in the face of change, although we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
 
-<a name="footnote3"><sup>3</sup></a> See the section below on <a name="representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
+<a name="footnote3"><sup>3</sup></a> See the section below on <a href="#representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
 ## <a name="news"></a>News
 
