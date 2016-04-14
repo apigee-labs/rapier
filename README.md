@@ -57,7 +57,7 @@ write than specific software—we believe clients that work this way are primari
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make the APIs easier to understand and learn and to make conventional clients easier to write—supporting 
 general clients is a secondary benefit. Rapier does not
-automatically include any extra runtime metadata that would help a generic client use POST or PUT/PATCH operations—Rapier
+automatically include any extra runtime metadata that would help a general client use POST or PUT/PATCH operations—Rapier
 API designers must do that manually if that is their goal. The most often-discussed benefit of hypermedia is making systems more 
 robust in the face of change, although we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
 
