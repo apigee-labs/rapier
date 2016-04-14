@@ -21,7 +21,7 @@
 [Rapier](https://github.com/apigee-labs/rapier) is a new (2015) API specification language created by [Apigee](http://apigee.com). The goals of Rapier are to allow REST APIs to be specified and learned with one tenth the effort required with other API specification languages, and to
 produce specifications that describe higher quality APIs <a href="#footnote1" id="ref1"><sup>1</sup></a>.
 
-You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships <a href="#footnote2" id="ref2"><sup>2</sup></a>. The details of the API's 
+You specify an API with Rapier by specifying in YAML the entities and relationships of the data model that underlies the API, along with query paths traversing the relationships. The details of the API's 
 HTTP messages are deduced from this specification using the standard patterns described in the HTTP specifications, plus a few conventions 
 that we have added. Rapier thereby eliminates the need to repetitively document individual URLs and their methods, which vary only in the entities 
 they accept and return or the queries they express.
@@ -34,7 +34,7 @@ an API is a network of HTTP resources identified and located using URLs, you sho
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
 
 While Rapier APIs conform to the principles of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
-to changing server data formats—most clients of Rapier APIs are quite conventional.
+to changing server data formats—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>.
 
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger)
