@@ -55,7 +55,7 @@ by composing URLs that you cannot also reach by following hyperlinks. Because of
 has no a-priori knowledge of a Rapier API and navigates it only by following hyperlinks. Such clients are relatively difficult to design and
 write and so are rare. We believe they are primarily written when, like browsers and web bots, their cost can be amortized across many
 APIs and the cost and time to code to each of those APIs individually is prohibitive. The primary reason for basing Rapier APIs on
-hypermedia is to make the APIs easier to learn and to make conventional clients easier and cheaper to write and maintain—supporting 
+hypermedia is to make the APIs easier to learn and to make conventional clients easier to write—supporting 
 "generic" clients is a secondary benefit. The most often-discussed benefit of hypermedia is making systems more 
 robust in the face of change, although we find that achieving that goal is still not easy. Rapier does not
 automatically include any extra runtime metadata that would help a generic client use POST or PUT/PATCH operations—Rapier
