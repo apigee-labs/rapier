@@ -742,6 +742,7 @@ class OASValidator(object):
 
     def build_included_entity_map(self):
         result = {}
+        result.update(self.entities)
         result.update(self.included_entities)
         for validator in self.included_spec_validators.itervalues():
             result.update(validator.included_entities)
