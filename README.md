@@ -36,7 +36,7 @@ as a set of 'end-points' with 'parameters' (a traditional service-oriented or RP
 While Rapier APIs conform to the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require clients
 to be written in any special way—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>. Rapier does
 not require or promote any particular hypermedia format—any method of representing URLs that can be described with [JSON Schema](http://json-schema.org/)
-is compatible with Rapier.
+is compatible with Rapier <a href="#footnote3" id="ref3"><sup>3</sup></a>.
 
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger)
@@ -62,6 +62,8 @@ general clients is a secondary benefit. Rapier does not
 automatically include any extra runtime metadata that would help a general client use POST or PUT/PATCH operations—Rapier
 API designers must do that manually if that is their goal. The most often-discussed benefit of hypermedia is making systems more 
 robust in the face of change, although we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
+
+<a name="footnote3"><sup>3</sup></a> See the section below on <a name="representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
 ## <a name="news"></a>News
 
@@ -99,20 +101,20 @@ entities:
 This is the complete Rapier specification of the API. The `entities` and `well_known_URLs` elements are specific to Rapier. The rest is standard JSON Schema, including the `properties` element.
 The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH <a href="#footnote4" id="ref4"><sup>4</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-We know the JSON will look like this from the rules of JSON Schema <a href="#footnote4" id="ref4"><sup>4</sup></a>—this is not specific to Rapier.
+We know the JSON will look like this from the rules of JSON Schema <a href="#footnote5" id="ref5"><sup>5</sup></a>—this is not specific to Rapier.
 
 The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 An explanation of the generator output can be found [here](#openapi_generator_output).
 
-<a name="footnote3"><sup>3</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref3">↩</a>
+<a name="footnote4"><sup>4</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref3">↩</a>
 
-<a name="footnote4"><sup>4</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref4">↩</a>
+<a name="footnote5"><sup>5</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref4">↩</a>
 
 ### Single-valued relationship — Webmaster
 
