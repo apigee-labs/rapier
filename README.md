@@ -33,8 +33,8 @@ Rapier takes a data-oriented approach to API design, which aligns with the model
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
 
-While Rapier APIs conform to many of the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require special clients that adapt
-to changing server data formats—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>.
+While Rapier APIs conform to many of the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require
+to be written in any special way—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>.
 
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger)
