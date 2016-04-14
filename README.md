@@ -35,7 +35,7 @@ as a set of 'end-points' with 'parameters' (a traditional service-oriented or RP
 
 While Rapier APIs conform to many of the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require clients
 to be written in any special way—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>. Rapier does
-not require or promote any particular hypermedia format—any method of representing URLs that can be described in [JSON Schema](http://json-schema.org/)
+not require or promote any particular hypermedia format—any method of representing URLs that can be described with [JSON Schema](http://json-schema.org/)
 is compatible with Rapier.
 
 Since the Rapier specification language is not yet widely 
