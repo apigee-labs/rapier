@@ -54,7 +54,7 @@ the remainder” - Fred Brooks, "The Design of Design", 2010 <a href="#ref1">↩
 by composing URLs that it cannot also reach by following hyperlinks. Because of this is it possible to write a "generic" client that
 has no a-priori knowledge of a Rapier API and navigates it only by following hyperlinks. Such clients are relatively difficult to design and
 write—we believe they are primarily written when, like browsers and web bots, their cost can be amortized across many
-APIs and the cost and time to code to each of them specifically is prohibitive. The primary reason for basing Rapier APIs on
+APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make the APIs easier to understand and learn and to make conventional clients easier to write—supporting 
 "generic" clients is a secondary benefit. The most often-discussed benefit of hypermedia is making systems more 
 robust in the face of change, although we find that achieving that goal is still not easy. Rapier does not
