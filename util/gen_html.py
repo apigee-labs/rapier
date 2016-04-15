@@ -164,10 +164,16 @@ class HTMLGenerator(object):
         </tbody>
     </table>''' % entity_rows
         
+    def generate_header(self, spec):
+        return '''<h1>%s</h1>
+    %s
+        '''% (spec.get('title', 'untitled'), spec.get('description', 'undescribed'))
+    
     def generate_html(self, filename):
         self.validator = validate_rapier.OASValidator()
         spec, errors = self.validator.validate(filename)
         if errors == 0:
+            
             self.entities = self.validator.build_included_entity_map()
             entities = spec.get('entities')
             rslt = '''<!DOCTYPE html>
@@ -178,7 +184,7 @@ class HTMLGenerator(object):
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic,300,300italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
-
+  %s
   <div class="container">
     <div class="table-responsive">
     %s          
@@ -187,7 +193,7 @@ class HTMLGenerator(object):
 
 </body>
 </html>
-''' % self.generate_entities_table(spec) if entities is not None else ''
+''' % (self.generate_header(spec), self.generate_entities_table(spec) if entities is not None else '')
             UTF8Writer = codecs.getwriter('utf8')
             sys.stdout = UTF8Writer(sys.stdout)
             return rslt
