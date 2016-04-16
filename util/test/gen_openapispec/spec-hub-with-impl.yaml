@@ -1620,46 +1620,21 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Store.sharedWithMe
-x-templates:
-  '{Doc-URL}':
-    $ref: '#/x-interfaces/Doc'
-  '{Doc-URL}/content':
-    $ref: '#/x-interfaces/Content'
-  '{Folder-URL}':
-    $ref: '#/x-interfaces/Folder'
-  '{Folder-URL}/contents':
-    $ref: '#/x-interfaces/Folder.contents'
-  '{Group-URL}':
-    $ref: '#/x-interfaces/Group'
-  '{Store-URL}':
-    $ref: '#/x-interfaces/Store'
-  '{Store-URL}/docs':
-    $ref: '#/x-interfaces/Store.docs'
-  '{Store-URL}/folders':
-    $ref: '#/x-interfaces/Store.folders'
-  '{Store-URL}/groups':
-    $ref: '#/x-interfaces/Store.groups'
-  '{Store-URL}/home':
-    $ref: '#/x-interfaces/Folder'
-  '{Store-URL}/home/contents':
-    $ref: '#/x-interfaces/Folder.contents'
-  '{Store-URL}/sharedWithMe':
-    $ref: '#/x-interfaces/Store.sharedWithMe'
 paths:
   /store:
-    $ref: '#/x-templates/{Store-URL}'
+    $ref: '#/x-interfaces/Store'
   /store/home:
-    $ref: '#/x-templates/{Store-URL}~1home'
+    $ref: '#/x-interfaces/Folder'
   /store/home/contents:
-    $ref: '#/x-templates/{Store-URL}~1home~1contents'
+    $ref: '#/x-interfaces/Folder.contents'
   /store/sharedWithMe:
-    $ref: '#/x-templates/{Store-URL}~1sharedWithMe'
+    $ref: '#/x-interfaces/Store.sharedWithMe'
   /store/docs:
-    $ref: '#/x-templates/{Store-URL}~1docs'
+    $ref: '#/x-interfaces/Store.docs'
   /store/folders:
-    $ref: '#/x-templates/{Store-URL}~1folders'
+    $ref: '#/x-interfaces/Store.folders'
   /store/groups:
-    $ref: '#/x-templates/{Store-URL}~1groups'
+    $ref: '#/x-interfaces/Store.groups'
   /c3Rvc-Zmxk-{implementation_key}:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'

@@ -16,6 +16,7 @@ class OASGenerator(object):
         self.opts_keys = [k for k,v in opts]
         self.yaml_merge = '--yaml-merge' in self.opts_keys or '-m' in self.opts_keys
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
+        self.use_templates = not self.include_impl
 
     def openAPI_spec_from_rapier(self, filename):
         self.validator = validate_rapier.OASValidator()
@@ -43,7 +44,8 @@ class OASGenerator(object):
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
         self.openapispec_paths = PresortedOrderedDict()
-        self.openapispec_templates = dict()
+        if self.use_templates:
+            self.openapispec_templates = dict()
         self.openapispec_interfaces = dict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
@@ -61,7 +63,8 @@ class OASGenerator(object):
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
         self.openapispec['x-interfaces'] = self.openapispec_interfaces
-        self.openapispec['x-templates'] = self.openapispec_templates
+        if self.use_templates:
+            self.openapispec['x-templates'] = self.openapispec_templates
         self.openapispec['paths'] = self.openapispec_paths
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
@@ -215,26 +218,32 @@ class OASGenerator(object):
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
             if prefix.is_uri_spec():
-                path = '/'.join([prefix.template_id(), query_path.openapispec_path_string])
-                if path not in self.openapispec_templates:
-                    parameters = self.build_parameters(prefix, query_path)
-                    if parameters:
-                        path_spec = PresortedOrderedDict()
-                        path_spec['parameters'] = parameters
-                        path_spec['<<'] = self.interfaces[interface_id]
-                    else:
-                        path_spec = self.build_interface_reference(rel_property_spec_stack[-1])        
-                    self.openapispec_templates[path] = path_spec
+                if self.use_templates:
+                    path = '/'.join([prefix.template_id(), query_path.openapispec_path_string])
+                    if path not in self.openapispec_templates:
+                        path_spec = self.build_path_interface_ref(prefix, interface_id, rel_spec, query_path)        
+                        self.openapispec_templates[path] = path_spec
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
-                    path_spec = self.build_oas_path_spec(prefix, interface_id, rel_property_spec_stack[-1], query_path)
+                    path_spec = self.build_oas_path_spec(prefix, interface_id, rel_spec, query_path)
                     self.openapispec_paths[path] = path_spec
 
-    def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
-        parameters = self.build_parameters(prefix)
+    def build_path_interface_ref(self, prefix, interface_id, rel_spec, query_path):
+        parameters = self.build_parameters(prefix, query_path)
         if parameters:
-            self.build_template_reference(prefix, query_path)
+            path_spec = PresortedOrderedDict()
+            path_spec['parameters'] = parameters
+            path_spec['<<'] = self.interfaces[interface_id]
+        else:
+            path_spec = self.build_interface_reference(rel_spec)
+        return path_spec
+
+    def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
+        parameters = self.build_parameters(prefix) 
+        if parameters: # the prefix itself has parameters - a bit weird
+            if self.use_templates:
+                self.build_template_reference(prefix, query_path)
             parameters = self.build_parameters(prefix, query_path)
             oas_path_spec = PresortedOrderedDict()
             if prefix.is_impl_spec():            
@@ -242,7 +251,10 @@ class OASGenerator(object):
             oas_path_spec['parameters'] = parameters
             oas_path_spec['<<'] = self.interfaces[interface_id]
         else:
-            oas_path_spec = self.build_template_reference(prefix, query_path)
+            if self.use_templates:
+                oas_path_spec = self.build_template_reference(prefix, query_path)
+            else:
+                oas_path_spec = self.build_path_interface_ref(prefix, interface_id, path_spec, query_path)
         return oas_path_spec
     
     def build_template_reference(self, prefix, query_path=None):
