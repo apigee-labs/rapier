@@ -7,130 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Cloud:
-    readOnly: true
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Cloud
-      environments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Cloud.environments'
-      orgs:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Cloud.orgs'
-      deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Cloud.deployments'
-    x-interface: '#/x-interfaces/Cloud'
-  Environment:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Environment
-      org:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Org'
-      deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Environment.deployments'
-    x-interface: '#/x-interfaces/Environment'
-  Org:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Org
-      environments:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Org.environments'
-    x-interface: '#/x-interfaces/Org'
-  Deployment:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Deployment
-      environment:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Environment'
-      spec:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/PodTemplateSpec'
-    x-interface: '#/x-interfaces/Deployment'
-  PodTemplateSpec:
-    type: string
-    x-interface: '#/x-interfaces/PodTemplateSpec'
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-      kind:
-        type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
 x-interfaces:
   Cloud:
     get:
@@ -1285,6 +1161,130 @@ paths:
     $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments~1{name_1}~1deployments'
   /orgs/{name}/environments/{name_1}/deployments/{name_2}:
     $ref: '#/x-templates/{Cloud-URL}~1orgs~1{name}~1environments~1{name_1}~1deployments~1{name_2}'
+definitions:
+  Cloud:
+    readOnly: true
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Cloud
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Cloud.environments'
+      orgs:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Cloud.orgs'
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Cloud.deployments'
+    x-interface: '#/x-interfaces/Cloud'
+  Environment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Environment
+      org:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Org'
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.deployments'
+    x-interface: '#/x-interfaces/Environment'
+  Org:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Org
+      environments:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Org.environments'
+    x-interface: '#/x-interfaces/Org'
+  Deployment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Deployment
+      environment:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Environment'
+      spec:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/PodTemplateSpec'
+    x-interface: '#/x-interfaces/Deployment'
+  PodTemplateSpec:
+    type: string
+    x-interface: '#/x-interfaces/PodTemplateSpec'
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

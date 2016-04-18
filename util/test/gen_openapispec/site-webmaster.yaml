@@ -7,19 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Site:
-    properties:
-      webmaster:
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/Person'
-    x-interface: '#/x-interfaces/Site'
-  Person:
-    properties:
-      name:
-        type: string
-    x-interface: '#/x-interfaces/Person'
 x-interfaces:
   Person:
     get:
@@ -261,6 +248,19 @@ x-templates:
 paths:
   /:
     $ref: '#/x-templates/{Site-URL}'
+definitions:
+  Site:
+    properties:
+      webmaster:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Person'
+    x-interface: '#/x-interfaces/Site'
+  Person:
+    properties:
+      name:
+        type: string
+    x-interface: '#/x-interfaces/Person'
 parameters:
   Accept:
     description: specifies the requested media type - required

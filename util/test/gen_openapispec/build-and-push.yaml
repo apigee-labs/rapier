@@ -7,43 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Registry:
-    readOnly: true
-    type: object
-    properties:
-      repos:
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/Registry.repos'
-    x-interface: '#/x-interfaces/Registry'
-  Repo:
-    type: object
-    properties:
-      name:
-        type: string
-      buildRequests:
-        type: string
-        format: uri
-        readOnly: true
-        x-interface: '#/x-interfaces/Repo.buildRequests'
-    x-interface: '#/x-interfaces/Repo'
-  BuildRequest:
-    type: object
-    properties:
-      appName:
-        type: string
-      revision:
-        type: string
-      zip:
-        type: string
-    x-interface: '#/x-interfaces/BuildRequest'
-  Collection:
-    readOnly: true
-    properties:
-      items:
-        type: array
-        items: {}
 x-interfaces:
   BuildRequest:
     get:
@@ -592,6 +555,43 @@ paths:
     $ref: '#/x-templates/{Registry-URL}~1repos;{name}'
   /registry/repos;{name}/buildRequests:
     $ref: '#/x-templates/{Registry-URL}~1repos;{name}~1buildRequests'
+definitions:
+  Registry:
+    readOnly: true
+    type: object
+    properties:
+      repos:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Registry.repos'
+    x-interface: '#/x-interfaces/Registry'
+  Repo:
+    type: object
+    properties:
+      name:
+        type: string
+      buildRequests:
+        type: string
+        format: uri
+        readOnly: true
+        x-interface: '#/x-interfaces/Repo.buildRequests'
+    x-interface: '#/x-interfaces/Repo'
+  BuildRequest:
+    type: object
+    properties:
+      appName:
+        type: string
+      revision:
+        type: string
+      zip:
+        type: string
+    x-interface: '#/x-interfaces/BuildRequest'
+  Collection:
+    readOnly: true
+    properties:
+      items:
+        type: array
+        items: {}
 parameters:
   Accept:
     description: specifies the requested media type - required

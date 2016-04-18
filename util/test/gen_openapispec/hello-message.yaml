@@ -7,12 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  HelloMessage:
-    properties:
-      text:
-        type: string
-    x-interface: '#/x-interfaces/HelloMessage'
 x-interfaces:
   HelloMessage:
     get:
@@ -122,6 +116,12 @@ x-templates:
 paths:
   /message:
     $ref: '#/x-templates/{HelloMessage-URL}'
+definitions:
+  HelloMessage:
+    properties:
+      text:
+        type: string
+    x-interface: '#/x-interfaces/HelloMessage'
 parameters:
   Accept:
     description: specifies the requested media type - required

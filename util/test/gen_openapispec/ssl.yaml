@@ -7,216 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Environment:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Environment
-      keystores:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Environment.keystores'
-    x-interface: '#/x-interfaces/Environment'
-  Keystore:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Keystore
-      aliases:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Keystore.aliases'
-    x-interface: '#/x-interfaces/Keystore'
-  Alias:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Alias
-      name:
-        type: string
-      key:
-        type: string
-      certsInfo:
-        readOnly: true
-        type: array
-        items:
-          type: object
-          properties:
-            version:
-              type: integer
-            expiryDate:
-              type: string
-              format: date
-            issuer:
-              type: string
-            subject:
-              type: string
-      certificate:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Certificate'
-      csr:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/CSR'
-      selfSignedCertificate:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Certificate'
-    x-interface: '#/x-interfaces/Alias'
-  Certificate:
-    readOnly: true
-    type: string
-    x-interface: '#/x-interfaces/Certificate'
-  CSR:
-    readOnly: true
-    type: string
-    x-interface: '#/x-interfaces/CSR'
-  Pkcs12Alias:
-    type: object
-    properties:
-      kind:
-        type: string
-        enum:
-        - Pkcs12Alias
-      name:
-        type: string
-      password:
-        type: string
-      ignoreExpiryValidation:
-        type: boolean
-      pkcs12File:
-        type: string
-        format: file
-  SelfSignedCertAlias:
-    type: object
-    properties:
-      kind:
-        type: string
-        enum:
-        - SelfSignedCertAlias
-      alias:
-        type: string
-      keySize:
-        type: string
-      certValidityInDays:
-        type: integer
-      sigAlg:
-        type: string
-      issuer:
-        $ref: '#/definitions/X500Name'
-      subject:
-        $ref: '#/definitions/X500Name'
-      subjectAlternativeDNSNames:
-        type: array
-        items:
-          type: string
-  KeyCertFileAlias:
-    type: object
-    properties:
-      kind:
-        type: string
-        enum:
-        - KeyFileCertFileAlias
-      name:
-        type: string
-      password:
-        type: string
-      ignoreExpiryValidation:
-        type: boolean
-      keyFile:
-        type: string
-        format: file
-      certFile:
-        type: string
-        format: file
-  KeyCertJarAlias:
-    type: object
-    properties:
-      kind:
-        type: string
-        enum:
-        - KeyFileCertFileAlias
-      name:
-        type: string
-      password:
-        type: string
-      ignoreExpiryValidation:
-        type: boolean
-      keyCertJar:
-        type: string
-        format: file
-  X500Name:
-    type: object
-    properties:
-      countryCode:
-        type: string
-      state:
-        type: string
-      locality:
-        type: string
-      orgName:
-        type: string
-      orgUnitName:
-        type: string
-      email:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-      kind:
-        type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
 x-interfaces:
   Alias:
     get:
@@ -1037,6 +827,216 @@ paths:
       required: true
       type: string
     <<: *CSR
+definitions:
+  Environment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Environment
+      keystores:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.keystores'
+    x-interface: '#/x-interfaces/Environment'
+  Keystore:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Keystore
+      aliases:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Keystore.aliases'
+    x-interface: '#/x-interfaces/Keystore'
+  Alias:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Alias
+      name:
+        type: string
+      key:
+        type: string
+      certsInfo:
+        readOnly: true
+        type: array
+        items:
+          type: object
+          properties:
+            version:
+              type: integer
+            expiryDate:
+              type: string
+              format: date
+            issuer:
+              type: string
+            subject:
+              type: string
+      certificate:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Certificate'
+      csr:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/CSR'
+      selfSignedCertificate:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Certificate'
+    x-interface: '#/x-interfaces/Alias'
+  Certificate:
+    readOnly: true
+    type: string
+    x-interface: '#/x-interfaces/Certificate'
+  CSR:
+    readOnly: true
+    type: string
+    x-interface: '#/x-interfaces/CSR'
+  Pkcs12Alias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum:
+        - Pkcs12Alias
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      pkcs12File:
+        type: string
+        format: file
+  SelfSignedCertAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum:
+        - SelfSignedCertAlias
+      alias:
+        type: string
+      keySize:
+        type: string
+      certValidityInDays:
+        type: integer
+      sigAlg:
+        type: string
+      issuer:
+        $ref: '#/definitions/X500Name'
+      subject:
+        $ref: '#/definitions/X500Name'
+      subjectAlternativeDNSNames:
+        type: array
+        items:
+          type: string
+  KeyCertFileAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum:
+        - KeyFileCertFileAlias
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyFile:
+        type: string
+        format: file
+      certFile:
+        type: string
+        format: file
+  KeyCertJarAlias:
+    type: object
+    properties:
+      kind:
+        type: string
+        enum:
+        - KeyFileCertFileAlias
+      name:
+        type: string
+      password:
+        type: string
+      ignoreExpiryValidation:
+        type: boolean
+      keyCertJar:
+        type: string
+        format: file
+  X500Name:
+    type: object
+    properties:
+      countryCode:
+        type: string
+      state:
+        type: string
+      locality:
+        type: string
+      orgName:
+        type: string
+      orgUnitName:
+        type: string
+      email:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

@@ -59,12 +59,10 @@ class OASGenerator(object):
             self.openapispec['produces'] = as_list(spec.get('produces'))
         else:
             self.openapispec['produces'] = ['application/json', 'text/html']
-        self.definitions = PresortedOrderedDict()
-        self.openapispec['definitions'] = self.definitions
-        # Interfaces is better before paths and templates, otherwise YAML merge operstor (<<) gives awkward results            
+        # Interfaces is better before paths and templates, otherwise YAML merge operator (<<) gives awkward results            
         self.openapispec_interfaces = dict()
         self.openapispec['x-interfaces'] = self.openapispec_interfaces
-        # Templates is better before paths, otherwise YAML merge operstor (<<) gives awkward results            
+        # Templates is better before paths, otherwise YAML merge operator (<<) gives awkward results            
         if self.use_templates:
             self.openapispec_templates = dict()
         if self.use_templates:
@@ -72,6 +70,9 @@ class OASGenerator(object):
         # Now add paths
         self.openapispec_paths = PresortedOrderedDict()
         self.openapispec['paths'] = self.openapispec_paths
+        # Next put definitions. In OpenAPI, it is usual for definitions to come after paths
+        self.definitions = PresortedOrderedDict()
+        self.openapispec['definitions'] = self.definitions
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()

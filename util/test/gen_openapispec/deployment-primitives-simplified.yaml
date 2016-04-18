@@ -7,88 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Cloud:
-    readOnly: true
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Cloud
-      environments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Cloud.environments'
-      deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Cloud.deployments'
-    x-interface: '#/x-interfaces/Cloud'
-  Environment:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Environment
-      deployments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Environment.deployments'
-    x-interface: '#/x-interfaces/Environment'
-  Deployment:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      name:
-        type: string
-      kind:
-        type: string
-        enum:
-        - Deployment
-      environment:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Environment'
-      spec:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/PodTemplateSpec'
-      replicas:
-        type: integer
-    x-interface: '#/x-interfaces/Deployment'
-  PodTemplateSpec:
-    type: string
-    x-interface: '#/x-interfaces/PodTemplateSpec'
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
 x-interfaces:
   Cloud:
     get:
@@ -858,6 +776,88 @@ paths:
     $ref: '#/x-templates/{Cloud-URL}~1environments'
   /deployments:
     $ref: '#/x-templates/{Cloud-URL}~1deployments'
+definitions:
+  Cloud:
+    readOnly: true
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Cloud
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Cloud.environments'
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Cloud.deployments'
+    x-interface: '#/x-interfaces/Cloud'
+  Environment:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Environment
+      deployments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Environment.deployments'
+    x-interface: '#/x-interfaces/Environment'
+  Deployment:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      name:
+        type: string
+      kind:
+        type: string
+        enum:
+        - Deployment
+      environment:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Environment'
+      spec:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/PodTemplateSpec'
+      replicas:
+        type: integer
+    x-interface: '#/x-interfaces/Deployment'
+  PodTemplateSpec:
+    type: string
+    x-interface: '#/x-interfaces/PodTemplateSpec'
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

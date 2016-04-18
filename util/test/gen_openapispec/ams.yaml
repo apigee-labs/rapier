@@ -7,412 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  API:
-    description: 'APIs define sets of HTTP URL paths available on the World-wide Web
-      <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an
-      amalgam of the API and APIProduct concepts
-
-      '
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: The value of this property indicates the 'kind' or 'type' of
-          the object. Its value must be the string "API"
-        type: string
-        enum:
-        - API
-      name:
-        description: 'The name of the API. Must be unique amongst APIs of the same
-          org.  The name of the product, along with the name of the org, may be used
-          to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/apis/{api-name}
-
-          '
-        type: string
-      displayName:
-        description: 'The name to be used to display to humans for this API. Used
-          in the UI. type: string
-
-          '
-      description:
-        description: A textual description of the API
-        type: string
-      machine_readable_description:
-        description: 'Defines the URI paths to which this API gives access. The format
-          of the description is variable. The simplest is  a fragment URI that points
-          to an array of paths in the same document. An alternative is to point to
-          an OpenAPI Specification.
-
-          '
-        type: string
-        format: uri
-      environments:
-        description: Environments where this API is available. Defines the domain
-          names where the paths of the API will be available
-        type: array
-        items:
-          type: string
-          format: uri
-          x-interface: deployment.yaml#/x-interfaces/Environment
-      ui_proxiesProvidingPaths:
-        description: "The API is specified by the uriPaths property, which defines\
-          \ the paths of the API. As a convenience, the UI allows the uriPaths to\
-          \ be specified by picking from the list of paths supported by a particular\
-          \ proxy. If the user does this, the UI will use this  property to remember\
-          \ the proxies that were used as sources of paths. Note that the ui_ prefix\
-          \ on the name of this property indicates that it belongs to the ui namespace\u2014\
-          using namespaces this way guarantees that \"add-on\" properties like this\
-          \ will not collide \n"
-        type: array
-        items:
-          type: string
-          format: uri
-    x-interface: '#/x-interfaces/API'
-  APIProduct:
-    description: 'APIProducts define a set of rules, such as quota, constraining client
-      access to a specific API.  <p>Historical Note: The APIProduct concept in Apigee
-      Edge (circa 2016) is an amalgam of the API and APIProduct concepts
-
-      '
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: The value of this property indicates the 'kind' or 'type' of
-          the object. Its value must be the string "APIProduct"
-        type: string
-        enum:
-        - APIProduct
-      name:
-        description: 'The name of the APIProduct. Must be unique amongst APIProduct
-          of the same org.  The name of the APIProduct, along with the name of the
-          org, may be used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/apiproduct/{apiproduct-name}
-
-          '
-        type: string
-      displayName:
-        description: 'The name to be used to display to humans for this APIProduct.
-          Used in the UI.
-
-          '
-        type: string
-      description:
-        description: A textual description of the APIProduct
-        type: string
-      api:
-        description: 'The API exposed by this APIProduct.
-
-          '
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/API'
-      scopes:
-        description: 'Defines the OAUTH scopes to which this APIProduct gives access
-
-          '
-        type: array
-        items:
-          type: string
-      quota:
-        description: 'Defines the quota of requests allowed by this APIProduct.
-
-          '
-        $ref: '#/definitions/Quota'
-      ratePlan:
-        type: string
-        format: uri
-        x-interface: mint.yaml#/x-interfaces/RatePlan
-    x-interface: '#/x-interfaces/APIProduct'
-  Bundle:
-    description: 'Bundles allow providers to offer a set of APIProducts under a new
-      ratePlan
-
-      '
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: The value of this property indicates the 'kind' or 'type' of
-          the object. Its value must be the string "APIProduct"
-        type: string
-        enum:
-        - APIProduct
-      name:
-        description: 'The name of the Bundle. Must be unique amongst Bundles of the
-          same org.  The name of the Bundle, along with the name of the org, may be
-          used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/bundle/{bundle-name}
-
-          '
-        type: string
-      displayName:
-        description: 'The name to be used to display to humans for this APIProduct.
-          Used in the UI.
-
-          '
-        type: string
-      description:
-        description: A textual description of the Bundle
-        type: string
-      apiProducts:
-        description: The list of APIProducts in the bundle
-        type: array
-        items:
-          type: string
-          format: uri
-          x-interface: '#/x-interfaces/APIProduct'
-      ratePlan:
-        description: The ratePlan for the bundle. Overrides the individual ratePlans
-          in the APIProducts
-        type: string
-        format: uri
-        x-interface: mint.yaml#/x-interfaces/RatePlan
-    x-interface: '#/x-interfaces/Bundle'
-  Subscription:
-    description: "Subscriptions record the usage of an <a href=\"#APIProduct\">APIProduct</a>\
-      \ or <a href=\"#Bundle\">Bundle</a> by a subscriber (a <a href=\"users/#User\"\
-      >User</a> or <a href=\"users/#Group\">Group</a> or <a href=\"permissions/#Team\"\
-      >Team</a>).  <p>Historical Note: The App concept in Apigee Edge (circa 2015)\
-      \ is similar to the Subscription concept, to the point where it can be considered\
-      \ a renaming. App was not the best choice of name because the concept  being\
-      \ modelled is not an app, it is just a key-protected usage of an APIProduct.\
-      \ Using one of these subscriptions per app is only a suggestion\u2014it is not\
-      \ possible to know whether customers use  a single subscription for a single\
-      \ app, a single subscription for many apps, or a many subscriptions for one\
-      \ app. \n"
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: The value of this property indicates the 'kind' or 'type' of
-          the object. Its value must be the string "Subscription"
-        type: string
-        enum:
-        - Subscription
-      name:
-        description: 'The name of the Subscription. Must be unique amongst Subscription
-          of the same org.  The name of the Subscription, along with the name of the
-          org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/subscription/{Subscription-name}
-
-          '
-        type: string
-      displayName:
-        description: 'The name to be used to display to humans for this Subscription.
-          Used in the UI.
-
-          '
-      description:
-        description: A textual description of the Subscription
-        type: string
-      apiProducts:
-        description: 'The list of APIProducts to which this Subscription gives access
-
-          '
-        type: array
-        items:
-          type: string
-          format: uri
-          x-interface: '#/x-interfaces/APIProduct'
-      keys:
-        description: "Subscriptions may include an arbitrary number of keys. Each\
-          \ key unlocks the same APIProducts with the same quotas and ratePlans, so\
-          \ from a functional perspective, the keys are completely interchangeable.\
-          \ Managing multiple keys allows subscribers to track the usage of their\
-          \ subscriptions in different contexts. For example, a developer of a client\
-          \ app may wish to use the same subscription  in multiple editions of the\
-          \ same application, so all usage counts against the same quota. Using different\
-          \ keys allows the developer to track which users are using the iOS version\
-          \ versus the Android version versus the web site, or which users are using\
-          \ a new experimental version versus the classic version. This information\
-          \ is available (presumably) to the developer through the provider's API\
-          \ portal. \n"
-        type: array
-        items:
-          $ref: '#/definitions/Key'
-      subscriber:
-        description: "The <a href=\"users/#User\">User</a> or <a href=\"users/#Group\"\
-          >Group</a> or <a href=\"permissions/#Team\">Team</a> responsible for the\
-          \ subscription. This person, or group of people, may get occasional emails,\
-          \ for example concerning quota overages, or subscriptions elapsing. \n"
-        type: string
-        format: uri
-        x-interface:
-          oneOf:
-          - users.yaml#/x-interfaces/User
-          - users.yaml#/x-interfaces/Group
-          - permissions.yaml#/x-interfaces/Team
-      account:
-        description: The financial account to which the subscription should be charged.
-          A POST or PATCH that contains a value for this property will fail if the
-          user under whose credentials the call is made does not have permission to
-          access the specified account
-        type: string
-        format: uri
-        x-interface: mint.yaml#/x-interfaces/Account
-      approved:
-        description: "Whether or not the subscription has been approved by the API\
-          \ owner \n"
-        type: boolean
-    x-interface: '#/x-interfaces/Subscription'
-  Key:
-    properties:
-      key:
-        description: 'The API key
-
-          '
-        type: string
-      issued:
-        description: 'The date when the key and secret were issued
-
-          '
-        type: string
-        format: date-time
-      tags:
-        description: 'tags are an array of strings that may be associated with the
-          key. Tags will be displayed in analytics, allowing client application developers
-          to track which applications or application editions/versions genenrated
-          traffic.
-
-          '
-        type: array
-        items:
-          type: string
-      approved:
-        description: "Whether or not the credentials have been approved by the API\
-          \ owner \n"
-        type: boolean
-  Quota:
-    properties:
-      limit:
-        description: The maximum number of requests that are allowed in a particular
-          time-interval for a given subscription
-        type: integer
-      interval:
-        description: The size of the time-interval
-        type: integer
-      timeunit:
-        description: The time units that the interval value is expressed in.
-        type: string
-        enum:
-        - second
-        - minute
-        - hour
-        - day
-        - month
-  Apigee:
-    readOnly: true
-    properties:
-      apiProducts:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Apigee.apiProducts'
-      bundles:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Apigee.bundles'
-      subscriptions:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Apigee.subscriptions'
-      apis:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Apigee.apis'
-    x-interface: '#/x-interfaces/Apigee'
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        description: The date and time that the resource was created. An ISO-format
-          string.
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        description: The identity of the creator of the resource. A URL.
-        type: string
-        format: uri
-        readOnly: true
-      modified:
-        description: The date and time of the last modification to the resource. An
-          ISO-format string.
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        description: The identity of the user that made the last modification to the
-          resource.
-        type: string
-        format: date-time
-        readOnly: true
-  MultiValuedRelationship:
-    readOnly: true
-    x-oneOf:
-    - $ref: '#/definitions/Collection'
-    - $ref: '#/definitions/Page'
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        description: "The self property defines which resource's property-value pairs\
-          \ are in the data. On create, if no value for self is given, self will be\
-          \ set to the URL of the resource being created. It is possible to set a\
-          \ different value on create\u2014this is used to create a resource that\
-          \ contans information about a different resource than itself. self specifies\
-          \ RDF's 'subject' concept. It is similar to the @id property of RDF/JSON.\
-          \ It is permissible, although unusual, to update the value of self.\n"
-        type: string
-        format: uri
-      kind:
-        description: "Specifies the type of the entity. We avoid the word type because\
-          \ it's a global function in some programing languages, and we don't want\
-          \ name collisions. Kind is usually set by the  client and then echo'd by\
-          \ the server. In most applications, kind is immutable after create, although\
-          \ some applications may allow change. \n"
-        type: string
-  Page:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Page
-      items:
-        type: array
-        items:
-          type: object
-      collection:
-        type: string
-        format: uri
-      next_page:
-        type: string
-        format: uri
-        x-interface: common.yaml#/x-interfaces/Page
-      previous_page:
-        type: string
-        format: uri
-        x-interface: common.yaml#/x-interfaces/Page
-    readOnly: true
-    x-interface: common.yaml#/x-interfaces/Page
 x-interfaces:
   API:
     get:
@@ -1505,6 +1099,412 @@ paths:
     $ref: '#/x-templates/{Apigee-URL}~1subscriptions'
   /apis:
     $ref: '#/x-templates/{Apigee-URL}~1apis'
+definitions:
+  API:
+    description: 'APIs define sets of HTTP URL paths available on the World-wide Web
+      <p>Historical Note: The APIProduct concept in Apigee Edge (circa 2016) is an
+      amalgam of the API and APIProduct concepts
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of
+          the object. Its value must be the string "API"
+        type: string
+        enum:
+        - API
+      name:
+        description: 'The name of the API. Must be unique amongst APIs of the same
+          org.  The name of the product, along with the name of the org, may be used
+          to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/apis/{api-name}
+
+          '
+        type: string
+      displayName:
+        description: 'The name to be used to display to humans for this API. Used
+          in the UI. type: string
+
+          '
+      description:
+        description: A textual description of the API
+        type: string
+      machine_readable_description:
+        description: 'Defines the URI paths to which this API gives access. The format
+          of the description is variable. The simplest is  a fragment URI that points
+          to an array of paths in the same document. An alternative is to point to
+          an OpenAPI Specification.
+
+          '
+        type: string
+        format: uri
+      environments:
+        description: Environments where this API is available. Defines the domain
+          names where the paths of the API will be available
+        type: array
+        items:
+          type: string
+          format: uri
+          x-interface: deployment.yaml#/x-interfaces/Environment
+      ui_proxiesProvidingPaths:
+        description: "The API is specified by the uriPaths property, which defines\
+          \ the paths of the API. As a convenience, the UI allows the uriPaths to\
+          \ be specified by picking from the list of paths supported by a particular\
+          \ proxy. If the user does this, the UI will use this  property to remember\
+          \ the proxies that were used as sources of paths. Note that the ui_ prefix\
+          \ on the name of this property indicates that it belongs to the ui namespace\u2014\
+          using namespaces this way guarantees that \"add-on\" properties like this\
+          \ will not collide \n"
+        type: array
+        items:
+          type: string
+          format: uri
+    x-interface: '#/x-interfaces/API'
+  APIProduct:
+    description: 'APIProducts define a set of rules, such as quota, constraining client
+      access to a specific API.  <p>Historical Note: The APIProduct concept in Apigee
+      Edge (circa 2016) is an amalgam of the API and APIProduct concepts
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of
+          the object. Its value must be the string "APIProduct"
+        type: string
+        enum:
+        - APIProduct
+      name:
+        description: 'The name of the APIProduct. Must be unique amongst APIProduct
+          of the same org.  The name of the APIProduct, along with the name of the
+          org, may be used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/apiproduct/{apiproduct-name}
+
+          '
+        type: string
+      displayName:
+        description: 'The name to be used to display to humans for this APIProduct.
+          Used in the UI.
+
+          '
+        type: string
+      description:
+        description: A textual description of the APIProduct
+        type: string
+      api:
+        description: 'The API exposed by this APIProduct.
+
+          '
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/API'
+      scopes:
+        description: 'Defines the OAUTH scopes to which this APIProduct gives access
+
+          '
+        type: array
+        items:
+          type: string
+      quota:
+        description: 'Defines the quota of requests allowed by this APIProduct.
+
+          '
+        $ref: '#/definitions/Quota'
+      ratePlan:
+        type: string
+        format: uri
+        x-interface: mint.yaml#/x-interfaces/RatePlan
+    x-interface: '#/x-interfaces/APIProduct'
+  Bundle:
+    description: 'Bundles allow providers to offer a set of APIProducts under a new
+      ratePlan
+
+      '
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of
+          the object. Its value must be the string "APIProduct"
+        type: string
+        enum:
+        - APIProduct
+      name:
+        description: 'The name of the Bundle. Must be unique amongst Bundles of the
+          same org.  The name of the Bundle, along with the name of the org, may be
+          used to perform queries using URI templates of the form: https://apigee.com/organizations/{org-name}/bundle/{bundle-name}
+
+          '
+        type: string
+      displayName:
+        description: 'The name to be used to display to humans for this APIProduct.
+          Used in the UI.
+
+          '
+        type: string
+      description:
+        description: A textual description of the Bundle
+        type: string
+      apiProducts:
+        description: The list of APIProducts in the bundle
+        type: array
+        items:
+          type: string
+          format: uri
+          x-interface: '#/x-interfaces/APIProduct'
+      ratePlan:
+        description: The ratePlan for the bundle. Overrides the individual ratePlans
+          in the APIProducts
+        type: string
+        format: uri
+        x-interface: mint.yaml#/x-interfaces/RatePlan
+    x-interface: '#/x-interfaces/Bundle'
+  Subscription:
+    description: "Subscriptions record the usage of an <a href=\"#APIProduct\">APIProduct</a>\
+      \ or <a href=\"#Bundle\">Bundle</a> by a subscriber (a <a href=\"users/#User\"\
+      >User</a> or <a href=\"users/#Group\">Group</a> or <a href=\"permissions/#Team\"\
+      >Team</a>).  <p>Historical Note: The App concept in Apigee Edge (circa 2015)\
+      \ is similar to the Subscription concept, to the point where it can be considered\
+      \ a renaming. App was not the best choice of name because the concept  being\
+      \ modelled is not an app, it is just a key-protected usage of an APIProduct.\
+      \ Using one of these subscriptions per app is only a suggestion\u2014it is not\
+      \ possible to know whether customers use  a single subscription for a single\
+      \ app, a single subscription for many apps, or a many subscriptions for one\
+      \ app. \n"
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: The value of this property indicates the 'kind' or 'type' of
+          the object. Its value must be the string "Subscription"
+        type: string
+        enum:
+        - Subscription
+      name:
+        description: 'The name of the Subscription. Must be unique amongst Subscription
+          of the same org.  The name of the Subscription, along with the name of the
+          org, may be used to perform queries using URI templates of the form: https://api.enterprise.apigee.com/v1/organizations/{org-name}/subscription/{Subscription-name}
+
+          '
+        type: string
+      displayName:
+        description: 'The name to be used to display to humans for this Subscription.
+          Used in the UI.
+
+          '
+      description:
+        description: A textual description of the Subscription
+        type: string
+      apiProducts:
+        description: 'The list of APIProducts to which this Subscription gives access
+
+          '
+        type: array
+        items:
+          type: string
+          format: uri
+          x-interface: '#/x-interfaces/APIProduct'
+      keys:
+        description: "Subscriptions may include an arbitrary number of keys. Each\
+          \ key unlocks the same APIProducts with the same quotas and ratePlans, so\
+          \ from a functional perspective, the keys are completely interchangeable.\
+          \ Managing multiple keys allows subscribers to track the usage of their\
+          \ subscriptions in different contexts. For example, a developer of a client\
+          \ app may wish to use the same subscription  in multiple editions of the\
+          \ same application, so all usage counts against the same quota. Using different\
+          \ keys allows the developer to track which users are using the iOS version\
+          \ versus the Android version versus the web site, or which users are using\
+          \ a new experimental version versus the classic version. This information\
+          \ is available (presumably) to the developer through the provider's API\
+          \ portal. \n"
+        type: array
+        items:
+          $ref: '#/definitions/Key'
+      subscriber:
+        description: "The <a href=\"users/#User\">User</a> or <a href=\"users/#Group\"\
+          >Group</a> or <a href=\"permissions/#Team\">Team</a> responsible for the\
+          \ subscription. This person, or group of people, may get occasional emails,\
+          \ for example concerning quota overages, or subscriptions elapsing. \n"
+        type: string
+        format: uri
+        x-interface:
+          oneOf:
+          - users.yaml#/x-interfaces/User
+          - users.yaml#/x-interfaces/Group
+          - permissions.yaml#/x-interfaces/Team
+      account:
+        description: The financial account to which the subscription should be charged.
+          A POST or PATCH that contains a value for this property will fail if the
+          user under whose credentials the call is made does not have permission to
+          access the specified account
+        type: string
+        format: uri
+        x-interface: mint.yaml#/x-interfaces/Account
+      approved:
+        description: "Whether or not the subscription has been approved by the API\
+          \ owner \n"
+        type: boolean
+    x-interface: '#/x-interfaces/Subscription'
+  Key:
+    properties:
+      key:
+        description: 'The API key
+
+          '
+        type: string
+      issued:
+        description: 'The date when the key and secret were issued
+
+          '
+        type: string
+        format: date-time
+      tags:
+        description: 'tags are an array of strings that may be associated with the
+          key. Tags will be displayed in analytics, allowing client application developers
+          to track which applications or application editions/versions genenrated
+          traffic.
+
+          '
+        type: array
+        items:
+          type: string
+      approved:
+        description: "Whether or not the credentials have been approved by the API\
+          \ owner \n"
+        type: boolean
+  Quota:
+    properties:
+      limit:
+        description: The maximum number of requests that are allowed in a particular
+          time-interval for a given subscription
+        type: integer
+      interval:
+        description: The size of the time-interval
+        type: integer
+      timeunit:
+        description: The time units that the interval value is expressed in.
+        type: string
+        enum:
+        - second
+        - minute
+        - hour
+        - day
+        - month
+  Apigee:
+    readOnly: true
+    properties:
+      apiProducts:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.apiProducts'
+      bundles:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.bundles'
+      subscriptions:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.subscriptions'
+      apis:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.apis'
+    x-interface: '#/x-interfaces/Apigee'
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        description: The date and time that the resource was created. An ISO-format
+          string.
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        description: The identity of the creator of the resource. A URL.
+        type: string
+        format: uri
+        readOnly: true
+      modified:
+        description: The date and time of the last modification to the resource. An
+          ISO-format string.
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        description: The identity of the user that made the last modification to the
+          resource.
+        type: string
+        format: date-time
+        readOnly: true
+  MultiValuedRelationship:
+    readOnly: true
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        description: "The self property defines which resource's property-value pairs\
+          \ are in the data. On create, if no value for self is given, self will be\
+          \ set to the URL of the resource being created. It is possible to set a\
+          \ different value on create\u2014this is used to create a resource that\
+          \ contans information about a different resource than itself. self specifies\
+          \ RDF's 'subject' concept. It is similar to the @id property of RDF/JSON.\
+          \ It is permissible, although unusual, to update the value of self.\n"
+        type: string
+        format: uri
+      kind:
+        description: "Specifies the type of the entity. We avoid the word type because\
+          \ it's a global function in some programing languages, and we don't want\
+          \ name collisions. Kind is usually set by the  client and then echo'd by\
+          \ the server. In most applications, kind is immutable after create, although\
+          \ some applications may allow change. \n"
+        type: string
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Page
+      items:
+        type: array
+        items:
+          type: object
+      collection:
+        type: string
+        format: uri
+      next_page:
+        type: string
+        format: uri
+        x-interface: common.yaml#/x-interfaces/Page
+      previous_page:
+        type: string
+        format: uri
+        x-interface: common.yaml#/x-interfaces/Page
+    readOnly: true
+    x-interface: common.yaml#/x-interfaces/Page
 parameters:
   Accept:
     description: specifies the requested media type - required

@@ -7,95 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  Builder:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    readOnly: true
-    properties:
-      kind:
-        type: string
-        enum:
-        - Builder
-      buildRequests:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Builder.buildRequests'
-    x-interface: '#/x-interfaces/Builder'
-  BuildRequest:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - BuildRequest
-      environment:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Environment'
-      zip_contents:
-        type: string
-      status:
-        type: string
-        readOnly: true
-        enum:
-        - building
-        - done
-        - failed
-      spec:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/PodTemplateSpec'
-    x-interface: '#/x-interfaces/BuildRequest'
-  Environment:
-    readOnly: true
-    x-interface: '#/x-interfaces/Environment'
-  PodTemplateSpec:
-    readOnly: true
-    x-interface: '#/x-interfaces/PodTemplateSpec'
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    type: object
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-      kind:
-        type: string
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
 x-interfaces:
   BuildRequest:
     get:
@@ -522,6 +433,95 @@ paths:
     $ref: '#/x-templates/{Builder-URL}'
   /builder/buildRequests:
     $ref: '#/x-templates/{Builder-URL}~1buildRequests'
+definitions:
+  Builder:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    readOnly: true
+    properties:
+      kind:
+        type: string
+        enum:
+        - Builder
+      buildRequests:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Builder.buildRequests'
+    x-interface: '#/x-interfaces/Builder'
+  BuildRequest:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - BuildRequest
+      environment:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Environment'
+      zip_contents:
+        type: string
+      status:
+        type: string
+        readOnly: true
+        enum:
+        - building
+        - done
+        - failed
+      spec:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/PodTemplateSpec'
+    x-interface: '#/x-interfaces/BuildRequest'
+  Environment:
+    readOnly: true
+    x-interface: '#/x-interfaces/Environment'
+  PodTemplateSpec:
+    readOnly: true
+    x-interface: '#/x-interfaces/PodTemplateSpec'
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    type: object
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+      kind:
+        type: string
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

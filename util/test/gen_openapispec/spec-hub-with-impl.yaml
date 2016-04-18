@@ -12,213 +12,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  ErrorResponse:
-    type: string
-  Store:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Store
-      home:
-        description: URL of the current user's 'home' Folder
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Folder'
-      sharedWithMe:
-        description: URL of a Collection of Folders and Docs
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Store.sharedWithMe'
-      docs:
-        description: URL of a Collection of Docs
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Store.docs'
-      folders:
-        description: URL of a Collection of Folders
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Store.folders'
-      groups:
-        description: URL of a Collection of Groups
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Store.groups'
-    readOnly: true
-    x-interface: '#/x-interfaces/Store'
-  Folder:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      contents:
-        description: URL of a Collection of Docs and Folders
-        format: uri
-        readOnly: true
-        type: string
-        x-interface: '#/x-interfaces/Folder.contents'
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Folder'
-      kind:
-        type: string
-        enum:
-        - Folder
-      name:
-        type: string
-      permissions:
-        type: array
-        items:
-          properties:
-            actor:
-              format: URL
-              type: string
-            action:
-              type: string
-    x-interface: '#/x-interfaces/Folder'
-  Doc:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      content_type:
-        description: The media type of the content of the Doc
-        type: string
-      content:
-        description: URL of a Content
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Content'
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Folder'
-      kind:
-        type: string
-        enum:
-        - Doc
-      name:
-        type: string
-      permissions:
-        type: array
-        items:
-          properties:
-            actor:
-              format: URL
-              type: string
-            action:
-              type: string
-    x-interface: '#/x-interfaces/Doc'
-  Group:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      members:
-        description: Array of URLs of Users
-        type: array
-        items:
-          type: string
-          format: uri
-      folder:
-        description: URL of a Folder
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Folder'
-      kind:
-        type: string
-        enum:
-        - Group
-      name:
-        type: string
-      permissions:
-        type: array
-        items:
-          properties:
-            actor:
-              format: URL
-              type: string
-            action:
-              type: string
-    x-interface: '#/x-interfaces/Group'
-  Content:
-    type: string
-    x-interface: '#/x-interfaces/Content'
-  Page:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Page
-      items:
-        type: array
-        items:
-          type: object
-      collection:
-        type: string
-        format: uri
-      next_page:
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/Page'
-      previous_page:
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/Page'
-    readOnly: true
-    x-interface: '#/x-interfaces/Page'
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
-  MultiValuedRelationshipResource:
-    readOnly: true
-    x-oneOf:
-    - $ref: '#/definitions/Collection'
-    - $ref: '#/definitions/Page'
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
 x-interfaces:
   Content: &Content
     get:
@@ -1707,6 +1500,213 @@ paths:
       required: true
       type: integer
     <<: *Group
+definitions:
+  ErrorResponse:
+    type: string
+  Store:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Store
+      home:
+        description: URL of the current user's 'home' Folder
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Folder'
+      sharedWithMe:
+        description: URL of a Collection of Folders and Docs
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Store.sharedWithMe'
+      docs:
+        description: URL of a Collection of Docs
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Store.docs'
+      folders:
+        description: URL of a Collection of Folders
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Store.folders'
+      groups:
+        description: URL of a Collection of Groups
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Store.groups'
+    readOnly: true
+    x-interface: '#/x-interfaces/Store'
+  Folder:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      contents:
+        description: URL of a Collection of Docs and Folders
+        format: uri
+        readOnly: true
+        type: string
+        x-interface: '#/x-interfaces/Folder.contents'
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Folder'
+      kind:
+        type: string
+        enum:
+        - Folder
+      name:
+        type: string
+      permissions:
+        type: array
+        items:
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+    x-interface: '#/x-interfaces/Folder'
+  Doc:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      content_type:
+        description: The media type of the content of the Doc
+        type: string
+      content:
+        description: URL of a Content
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Content'
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Folder'
+      kind:
+        type: string
+        enum:
+        - Doc
+      name:
+        type: string
+      permissions:
+        type: array
+        items:
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+    x-interface: '#/x-interfaces/Doc'
+  Group:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      members:
+        description: Array of URLs of Users
+        type: array
+        items:
+          type: string
+          format: uri
+      folder:
+        description: URL of a Folder
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Folder'
+      kind:
+        type: string
+        enum:
+        - Group
+      name:
+        type: string
+      permissions:
+        type: array
+        items:
+          properties:
+            actor:
+              format: URL
+              type: string
+            action:
+              type: string
+    x-interface: '#/x-interfaces/Group'
+  Content:
+    type: string
+    x-interface: '#/x-interfaces/Content'
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Page
+      items:
+        type: array
+        items:
+          type: object
+      collection:
+        type: string
+        format: uri
+      next_page:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Page'
+      previous_page:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/Page'
+    readOnly: true
+    x-interface: '#/x-interfaces/Page'
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+  MultiValuedRelationshipResource:
+    readOnly: true
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

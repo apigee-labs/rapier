@@ -7,121 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  ErrorResponse:
-    type: string
-  Environment:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      kind:
-        description: "The value must always be the string \"Environment\". This property\
-          \ is always set  by the server in responses to GET. It must be set by the\
-          \ client on POST,  and must not be set by the client on PATCH. (PUT is not\
-          \ supported) \n"
-        type: string
-        enum:
-        - Environment
-    x-interface: '#/x-interfaces/Environment'
-  Apigee:
-    readOnly: true
-    properties:
-      environments:
-        format: uri
-        type: string
-        readOnly: true
-        x-interface: '#/x-interfaces/Apigee.environments'
-    x-interface: '#/x-interfaces/Apigee'
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        description: The date and time that the resource was created. An ISO-format
-          string.
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        description: The identity of the creator of the resource. A URL.
-        type: string
-        format: uri
-        readOnly: true
-      modified:
-        description: The date and time of the last modification to the resource. An
-          ISO-format string.
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        description: The identity of the user that made the last modification to the
-          resource.
-        type: string
-        format: date-time
-        readOnly: true
-  MultiValuedRelationship:
-    readOnly: true
-    x-oneOf:
-    - $ref: '#/definitions/Collection'
-    - $ref: '#/definitions/Page'
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
-  Resource:
-    type: object
-    properties:
-      self:
-        description: "The self property defines which resource's property-value pairs\
-          \ are in the data. On create, if no value for self is given, self will be\
-          \ set to the URL of the resource being created. It is possible to set a\
-          \ different value on create\u2014this is used to create a resource that\
-          \ contans information about a different resource than itself. self specifies\
-          \ RDF's 'subject' concept. It is similar to the @id property of RDF/JSON.\
-          \ It is permissible, although unusual, to update the value of self.\n"
-        type: string
-        format: uri
-      kind:
-        description: "Specifies the type of the entity. We avoid the word type because\
-          \ it's a global function in some programing languages, and we don't want\
-          \ name collisions. Kind is usually set by the  client and then echo'd by\
-          \ the server. In most applications, kind is immutable after create, although\
-          \ some applications may allow change. \n"
-        type: string
-  Page:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Page
-      items:
-        type: array
-        items:
-          type: object
-      collection:
-        type: string
-        format: uri
-      next_page:
-        type: string
-        format: uri
-        x-interface: common.yaml#/x-interfaces/Page
-      previous_page:
-        type: string
-        format: uri
-        x-interface: common.yaml#/x-interfaces/Page
-    readOnly: true
-    x-interface: common.yaml#/x-interfaces/Page
 x-interfaces:
   Apigee:
     get:
@@ -446,6 +331,121 @@ paths:
     $ref: '#/x-templates/{Apigee-URL}'
   /environments:
     $ref: '#/x-templates/{Apigee-URL}~1environments'
+definitions:
+  ErrorResponse:
+    type: string
+  Environment:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      kind:
+        description: "The value must always be the string \"Environment\". This property\
+          \ is always set  by the server in responses to GET. It must be set by the\
+          \ client on POST,  and must not be set by the client on PATCH. (PUT is not\
+          \ supported) \n"
+        type: string
+        enum:
+        - Environment
+    x-interface: '#/x-interfaces/Environment'
+  Apigee:
+    readOnly: true
+    properties:
+      environments:
+        format: uri
+        type: string
+        readOnly: true
+        x-interface: '#/x-interfaces/Apigee.environments'
+    x-interface: '#/x-interfaces/Apigee'
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        description: The date and time that the resource was created. An ISO-format
+          string.
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        description: The identity of the creator of the resource. A URL.
+        type: string
+        format: uri
+        readOnly: true
+      modified:
+        description: The date and time of the last modification to the resource. An
+          ISO-format string.
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        description: The identity of the user that made the last modification to the
+          resource.
+        type: string
+        format: date-time
+        readOnly: true
+  MultiValuedRelationship:
+    readOnly: true
+    x-oneOf:
+    - $ref: '#/definitions/Collection'
+    - $ref: '#/definitions/Page'
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
+  Resource:
+    type: object
+    properties:
+      self:
+        description: "The self property defines which resource's property-value pairs\
+          \ are in the data. On create, if no value for self is given, self will be\
+          \ set to the URL of the resource being created. It is possible to set a\
+          \ different value on create\u2014this is used to create a resource that\
+          \ contans information about a different resource than itself. self specifies\
+          \ RDF's 'subject' concept. It is similar to the @id property of RDF/JSON.\
+          \ It is permissible, although unusual, to update the value of self.\n"
+        type: string
+        format: uri
+      kind:
+        description: "Specifies the type of the entity. We avoid the word type because\
+          \ it's a global function in some programing languages, and we don't want\
+          \ name collisions. Kind is usually set by the  client and then echo'd by\
+          \ the server. In most applications, kind is immutable after create, although\
+          \ some applications may allow change. \n"
+        type: string
+  Page:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Page
+      items:
+        type: array
+        items:
+          type: object
+      collection:
+        type: string
+        format: uri
+      next_page:
+        type: string
+        format: uri
+        x-interface: common.yaml#/x-interfaces/Page
+      previous_page:
+        type: string
+        format: uri
+        x-interface: common.yaml#/x-interfaces/Page
+    readOnly: true
+    x-interface: common.yaml#/x-interfaces/Page
 parameters:
   Accept:
     description: specifies the requested media type - required

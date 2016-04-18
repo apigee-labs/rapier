@@ -7,92 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  DogTracker:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      dogs:
-        description: URL of a Collection of Dogs
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/DogTracker.dogs'
-      people:
-        description: URL of a Collection of Persons
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/DogTracker.people'
-    readOnly: true
-    x-interface: '#/x-interfaces/DogTracker'
-  Dog:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      birth_date:
-        type: string
-      fur_color:
-        type: string
-      owner:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Person'
-    x-interface: '#/x-interfaces/Dog'
-  Person:
-    allOf:
-    - $ref: '#/definitions/PersistentResource'
-    properties:
-      name:
-        type: string
-      birth-date:
-        type: string
-      dogs:
-        format: uri
-        type: string
-        x-interface: '#/x-interfaces/Person.dogs'
-    x-interface: '#/x-interfaces/Person'
-  Resource:
-    type: object
-    properties:
-      self:
-        type: string
-        readOnly: true
-      kind:
-        type: string
-  PersistentResource:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      created:
-        type: string
-        format: date-time
-        readOnly: true
-      creator:
-        type: string
-        format: URL
-        readOnly: true
-      modified:
-        type: string
-        format: date-time
-        readOnly: true
-      modifier:
-        type: string
-        format: date-time
-        readOnly: true
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
 x-interfaces:
   Dog: &Dog
     get:
@@ -757,6 +671,92 @@ paths:
     $ref: '#/x-templates/{DogTracker-URL}~1people;{name}'
   /people;{name}/dogs:
     $ref: '#/x-templates/{DogTracker-URL}~1people;{name}~1dogs'
+definitions:
+  DogTracker:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      dogs:
+        description: URL of a Collection of Dogs
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/DogTracker.dogs'
+      people:
+        description: URL of a Collection of Persons
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/DogTracker.people'
+    readOnly: true
+    x-interface: '#/x-interfaces/DogTracker'
+  Dog:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      birth_date:
+        type: string
+      fur_color:
+        type: string
+      owner:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Person'
+    x-interface: '#/x-interfaces/Dog'
+  Person:
+    allOf:
+    - $ref: '#/definitions/PersistentResource'
+    properties:
+      name:
+        type: string
+      birth-date:
+        type: string
+      dogs:
+        format: uri
+        type: string
+        x-interface: '#/x-interfaces/Person.dogs'
+    x-interface: '#/x-interfaces/Person'
+  Resource:
+    type: object
+    properties:
+      self:
+        type: string
+        readOnly: true
+      kind:
+        type: string
+  PersistentResource:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      created:
+        type: string
+        format: date-time
+        readOnly: true
+      creator:
+        type: string
+        format: URL
+        readOnly: true
+      modified:
+        type: string
+        format: date-time
+        readOnly: true
+      modifier:
+        type: string
+        format: date-time
+        readOnly: true
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

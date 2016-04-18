@@ -7,33 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-definitions:
-  TodoList:
-    readOnly: true
-    properties:
-      todos:
-        type: string
-        format: uri
-        x-interface: '#/x-interfaces/TodoList.todos'
-    x-interface: '#/x-interfaces/TodoList'
-  Item:
-    properties:
-      id:
-        type: string
-        readOnly: true
-      description:
-        type: string
-      due:
-        type: string
-        format: date-time
-    x-interface: '#/x-interfaces/Item'
-  Collection:
-    readOnly: true
-    properties:
-      contents:
-        type: array
-        items:
-          $ref: '#/definitions/Item'
 x-interfaces:
   Item: &Item
     get:
@@ -343,6 +316,33 @@ paths:
     $ref: '#/x-templates/{TodoList-URL}~1todos'
   /todos/{id}:
     $ref: '#/x-templates/{TodoList-URL}~1todos~1{id}'
+definitions:
+  TodoList:
+    readOnly: true
+    properties:
+      todos:
+        type: string
+        format: uri
+        x-interface: '#/x-interfaces/TodoList.todos'
+    x-interface: '#/x-interfaces/TodoList'
+  Item:
+    properties:
+      id:
+        type: string
+        readOnly: true
+      description:
+        type: string
+      due:
+        type: string
+        format: date-time
+    x-interface: '#/x-interfaces/Item'
+  Collection:
+    readOnly: true
+    properties:
+      contents:
+        type: array
+        items:
+          $ref: '#/definitions/Item'
 parameters:
   Accept:
     description: specifies the requested media type - required
