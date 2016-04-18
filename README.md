@@ -665,14 +665,19 @@ variable_type | "string" or "integer" or "number" | The type of the variable
 The Rapier OpenAPI generator is implemented by `gen_openapispec.py` in the util directory. It is written in python. It has a single external dependency—pyYAML. If you do not have pyYAML installed on your machine, you can install it using
 `pip install pyYAML` or `easy_install pyYAML` or `pip install -r requirements.txt` using the requirements.txt in the util directory. Adding the util directory to your $PATH and your $PYTHONPATH will make it easier to use the generator.
 
-`usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] filename`
+`usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] [-t, --suppress-templates] filename`
 
 The generated OpenAPI specification is written to stdout. Errors and warnings are written to stderr. The normal usage pattern is to pipe this output to a file, like this: 
 
 `gen_openapispec.py my-rapier-spec.yaml > my-openAPI-spec.yaml`
 
-The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. The `--include-impl` option will generate, from the optional implementation_private_information section,
+The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. 
+
+The `--include-impl` option will generate, from the optional implementation_private_information section,
 extra information that is otherwise ommitted from the output.
+
+The --suppress-templates option will generate paths but not templates. This simplifies the output a little for implementors who are only interested in the paths they need to implement. If you are generating for clients rather than implementors
+we con't recommend using this option.
 
 ### <a name="openapi_generator_output"></a>Understanding the outout of the Rapier OpenAPI generator
 
