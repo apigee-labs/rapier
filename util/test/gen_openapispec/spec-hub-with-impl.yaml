@@ -12,14 +12,6 @@ consumes:
 produces:
 - application/json
 - text/html
-securityDefinitions:
-  sso:
-    type: oauth2
-    scopes: {}
-    flow: application
-    tokenUrl: whatever
-security:
-- sso: []
 definitions:
   ErrorResponse:
     type: string
@@ -1620,21 +1612,46 @@ x-interfaces:
         default:
           $ref: '#/responses/default'
     x-id: Store.sharedWithMe
+x-templates:
+  '{Doc-URL}':
+    $ref: '#/x-interfaces/Doc'
+  '{Doc-URL}/content':
+    $ref: '#/x-interfaces/Content'
+  '{Folder-URL}':
+    $ref: '#/x-interfaces/Folder'
+  '{Folder-URL}/contents':
+    $ref: '#/x-interfaces/Folder.contents'
+  '{Group-URL}':
+    $ref: '#/x-interfaces/Group'
+  '{Store-URL}':
+    $ref: '#/x-interfaces/Store'
+  '{Store-URL}/docs':
+    $ref: '#/x-interfaces/Store.docs'
+  '{Store-URL}/folders':
+    $ref: '#/x-interfaces/Store.folders'
+  '{Store-URL}/groups':
+    $ref: '#/x-interfaces/Store.groups'
+  '{Store-URL}/home':
+    $ref: '#/x-interfaces/Folder'
+  '{Store-URL}/home/contents':
+    $ref: '#/x-interfaces/Folder.contents'
+  '{Store-URL}/sharedWithMe':
+    $ref: '#/x-interfaces/Store.sharedWithMe'
 paths:
   /store:
-    $ref: '#/x-interfaces/Store'
+    $ref: '#/x-templates/{Store-URL}'
   /store/home:
-    $ref: '#/x-interfaces/Folder'
+    $ref: '#/x-templates/{Store-URL}~1home'
   /store/home/contents:
-    $ref: '#/x-interfaces/Folder.contents'
+    $ref: '#/x-templates/{Store-URL}~1home~1contents'
   /store/sharedWithMe:
-    $ref: '#/x-interfaces/Store.sharedWithMe'
+    $ref: '#/x-templates/{Store-URL}~1sharedWithMe'
   /store/docs:
-    $ref: '#/x-interfaces/Store.docs'
+    $ref: '#/x-templates/{Store-URL}~1docs'
   /store/folders:
-    $ref: '#/x-interfaces/Store.folders'
+    $ref: '#/x-templates/{Store-URL}~1folders'
   /store/groups:
-    $ref: '#/x-interfaces/Store.groups'
+    $ref: '#/x-templates/{Store-URL}~1groups'
   /c3Rvc-Zmxk-{implementation_key}:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'
@@ -1786,4 +1803,12 @@ responses:
         description: this value must be echoed in the If-Match header of every PATCH
           or PUT
         type: string
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+- sso: []
 

@@ -43,6 +43,11 @@ class OASGenerator(object):
                 'If you are looking for the API specification, find the version that was generated without implementation extensions and modifications'
         self.openapispec['swagger'] = '2.0'
         self.openapispec['info'] = dict()
+        self.openapispec['info']['title'] = spec.get('title', 'untitled')
+        self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
+        description = spec.get('description')
+        if description is not None:
+            self.openapispec['info']['description'] = description
         self.openapispec_paths = PresortedOrderedDict()
         if self.use_templates:
             self.openapispec_templates = dict()
@@ -55,10 +60,6 @@ class OASGenerator(object):
             self.openapispec['produces'] = as_list(spec.get('produces'))
         else:
             self.openapispec['produces'] = ['application/json', 'text/html']
-        if 'securityDefinitions' in spec:
-            self.openapispec['securityDefinitions'] = spec['securityDefinitions']            
-        if 'security' in spec:
-            self.openapispec['security'] = spec['security']            
         self.definitions = PresortedOrderedDict()
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
@@ -69,11 +70,10 @@ class OASGenerator(object):
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
         self.openapispec['responses'] = dict()
-        self.openapispec['info']['title'] = spec.get('title', 'untitled')
-        self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
-        description = spec.get('description')
-        if description is not None:
-            self.openapispec['info']['description'] = description
+        if 'securityDefinitions' in spec:
+            self.openapispec['securityDefinitions'] = spec['securityDefinitions']            
+        if 'security' in spec:
+            self.openapispec['security'] = spec['security']            
 
         if 'entities' in spec:
             entities = spec['entities']

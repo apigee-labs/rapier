@@ -7,14 +7,6 @@ consumes:
 produces:
 - application/json
 - text/html
-securityDefinitions:
-  sso:
-    type: oauth2
-    scopes: {}
-    flow: application
-    tokenUrl: whatever
-security:
-- sso: []
 definitions:
   ErrorResponse:
     type: string
@@ -1607,4 +1599,12 @@ responses:
         description: this value must be echoed in the If-Match header of every PATCH
           or PUT
         type: string
+securityDefinitions:
+  sso:
+    type: oauth2
+    scopes: {}
+    flow: application
+    tokenUrl: whatever
+security:
+- sso: []
 
