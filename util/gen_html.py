@@ -165,9 +165,16 @@ class HTMLGenerator(object):
     </table>''' % entity_rows
         
     def generate_header(self, spec):
+        version = str(spec.get('version', 'initial'))
+        try:
+            number = float(version)
+            version_str = repr(version)
+        except ValueError:
+            version_str = version
         return '''<h1>%s</h1>
-    %s
-        '''% (spec.get('title', 'untitled'), spec.get('description', 'undescribed'))
+    <h2>Version: %s</h2>
+    <p>%s</p>
+        '''% (spec.get('title', 'untitled'), version_str, spec.get('description', 'undescribed'))
     
     def generate_html(self, filename):
         self.validator = validate_rapier.OASValidator()
