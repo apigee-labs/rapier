@@ -184,8 +184,9 @@ class HTMLGenerator(object):
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,700,700italic,300,300italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
-  %s
   <div class="container">
+    %s
+    <p>
     <div class="table-responsive">
     %s          
     </div>

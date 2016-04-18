@@ -16,7 +16,7 @@ class OASGenerator(object):
         self.opts_keys = [k for k,v in opts]
         self.yaml_merge = '--yaml-merge' in self.opts_keys or '-m' in self.opts_keys
         self.include_impl = '--include-impl' in self.opts_keys or '-i' in self.opts_keys
-        self.use_templates = not self.include_impl
+        self.use_templates = not ('--suppress-templates' in self.opts_keys or '-t' in self.opts_keys)
 
     def openAPI_spec_from_rapier(self, filename):
         self.validator = validate_rapier.OASValidator()
@@ -1306,7 +1306,7 @@ class CustomAnchorDumper(yaml.SafeDumper):
 
 def main(args):
     generator = OASGenerator()
-    usage = 'usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] filename'
+    usage = 'usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename'
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'mi', ['yaml-merge', 'include-impl'])
     except getopt.GetoptError as err:
