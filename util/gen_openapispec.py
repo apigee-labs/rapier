@@ -107,6 +107,8 @@ class OASGenerator(object):
                 entity_url_spec = EntityURLSpec(entity_uri, self)
                 interface = self.build_entity_interface(entity_url_spec)
                 self.interfaces[entity_uri] = interface
+                if entity_uri in self.referenced_entities:
+                    self.openapispec_interfaces[entity_url_spec.interface_id()] = interface
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                 for rel_property_spec in rel_property_specs:
                     q_p = QueryPath(rel_property_spec.relationship_name, self)
