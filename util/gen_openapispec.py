@@ -34,6 +34,7 @@ class OASGenerator(object):
             self.relationship_separator = '/' if self.conventions['selector_location'] == 'path-segment' else ';'
         else:
             self.relationship_separator = ';'
+        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         patterns = spec.get('patterns')
         self.openapispec = PresortedOrderedDict()
         if self.include_impl:
@@ -41,17 +42,15 @@ class OASGenerator(object):
                 '*** This document is not a specification of an API. This document includes implementation-specific additions and modifications ' \
                 'to an API that are designed to aid implementation-aware software like proxies and implementation frameworks. ' \
                 'If you are looking for the API specification, find the version that was generated without implementation extensions and modifications'
+        # Start building OpenAPI specification
         self.openapispec['swagger'] = '2.0'
+        # Build info object
         self.openapispec['info'] = dict()
         self.openapispec['info']['title'] = spec.get('title', 'untitled')
         self.openapispec['info']['version'] = spec['version'] if 'version' in spec else 'initial'
         description = spec.get('description')
         if description is not None:
             self.openapispec['info']['description'] = description
-        self.openapispec_paths = PresortedOrderedDict()
-        if self.use_templates:
-            self.openapispec_templates = dict()
-        self.openapispec_interfaces = dict()
         if 'consumes' in spec:
             self.openapispec['consumes'] = as_list(spec.get('consumes'))
         else:
@@ -61,11 +60,17 @@ class OASGenerator(object):
         else:
             self.openapispec['produces'] = ['application/json', 'text/html']
         self.definitions = PresortedOrderedDict()
-        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
         self.openapispec['definitions'] = self.definitions
+        # Interfaces is better before paths and templates, otherwise YAML merge operstor (<<) gives awkward results            
+        self.openapispec_interfaces = dict()
         self.openapispec['x-interfaces'] = self.openapispec_interfaces
+        # Templates is better before paths, otherwise YAML merge operstor (<<) gives awkward results            
+        if self.use_templates:
+            self.openapispec_templates = dict()
         if self.use_templates:
             self.openapispec['x-templates'] = self.openapispec_templates
+        # Now add paths
+        self.openapispec_paths = PresortedOrderedDict()
         self.openapispec['paths'] = self.openapispec_paths
         self.header_parameters = self.build_standard_header_parameters()
         self.openapispec['parameters'] = self.header_parameters
