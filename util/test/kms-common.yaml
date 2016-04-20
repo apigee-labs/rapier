@@ -4,10 +4,6 @@ entities:
   Attribute:
     description: A key value pair
     properties:
-      kind:
-        description: The value of this property indicates the 'kind' or 'type' of the object. Its value must be the string "Attribute"
-        type: string
-        enum: [Attribute]
       name:
         description: name of a property
         type: string
