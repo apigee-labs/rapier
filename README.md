@@ -383,8 +383,9 @@ cannot tell which properties are URL-valued versus string-valued without out-of-
     {"todos": {"href": "http://example.org/xxxxx"}
     }
 ```
-This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
-It is trivial to express this pattern in JSON Schema/Rapier.
+It is trivial to express this pattern in JSON Schema/Rapier. This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
+We like the fact the relationship name is still expressed as a simple JSON property name. Although there are several reasons to like this format, we discovered when we used it on a project that we made lots of programming errors forgetting to encode
+URLs this way and using simple strings instead. Because of this, we eventually reverted to the simpler form above.
 Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. The pattern looks like this:
 ```json
     {"links": [
@@ -393,8 +394,8 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
         ]
     }
 ```
-It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
-[From a JSON perspective, this pattern looks convoluted to us—perhaps someone can offer an explanation of its merits.]
+It is standardized (or at least specified) [here](http://json-schema.org/latest/json-schema-hypermedia.html) It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
+From a JSON perspective, this pattern looks convoluted to us and is even more difficult to program to.
 
 ### Query Parameters
 
