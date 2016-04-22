@@ -60,8 +60,7 @@ amortized across many APIs and the cost and time to code to each API specificall
 hypermedia is to make APIs that are easier to understand and learn and to make all clients easier to write—supporting 
 general clients is an additional benefit. Rapier does not
 automatically include any extra runtime metadata that would help a general client use POST or PUT/PATCH operations—Rapier
-API designers must do that manually if that is their goal. The most often-discussed benefit of hypermedia is making systems more 
-robust in the face of change, but we find that achieving that goal is still not easy. <a href="#ref2">↩</a>
+API designers must do that manually if that is their goal. <a href="#ref2">↩</a>
 
 <a name="footnote3"><sup>3</sup></a> See the section below on <a href="#representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
