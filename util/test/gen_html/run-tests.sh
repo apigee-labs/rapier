@@ -13,13 +13,6 @@ cd $ROOT_DIR
 ./util/gen_html.py util/test/spec-hub.yaml > util/test/gen_html/spec-hub.html
 ./util/gen_html.py util/test/spec-hub.yaml > util/test/gen_html/spec-hub-with-impl.html
 ./util/gen_html.py util/test/ssl.yaml > util/test/gen_html/ssl.html
-./util/gen_html.py util/test/deployment.yaml > util/test/gen_html/deployment.html
 ./util/gen_html.py util/test/site-webmaster.yaml > util/test/gen_html/site-webmaster.html
-./util/gen_html.py util/test/deployment-primitives.yaml > util/test/gen_html/deployment-primitives.html
-./util/gen_html.py util/test/deployment-primitives-simplified.yaml > util/test/gen_html/deployment-primitives-simplified.html
 ./util/gen_html.py util/test/petstore.yaml > util/test/gen_html/petstore.html
-./util/gen_html.py util/test/build-and-push.yaml > util/test/gen_html/build-and-push.html
-./util/gen_html.py util/test/build.yaml > util/test/gen_html/build.html
-./util/gen_html.py util/test/ams.yaml > util/test/gen_html/ams.html
 ./util/gen_html.py util/test/common.yaml > util/test/gen_html/common.html
-./util/gen_html.py util/test/kms.yaml > util/test/gen_html/kms.html
