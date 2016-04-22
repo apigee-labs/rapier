@@ -92,11 +92,7 @@ class OASValidator(object):
         self.relationship_targets = dict() 
         self.included_entities = dict()
 
-    def validate_title(self, key, title):
-        if not isinstance(title, basestring):
-            self.error('title must be a string: %s' %s, key)
-
-    def validate_id(self, key, id):
+    def validate_id(self, node, key, id):
         if not isinstance(id, basestring):
             self.error('id must be a string: %s' %s, key)
         elif len(id.split()) > 1:
@@ -125,10 +121,6 @@ class OASValidator(object):
 
     def validate_conventions(self, node, key, conventions):
         self.check_and_validate_keywords(self.__class__.conventions_keywords, conventions, key)
-
-    def validate_id(self, node, key, id):
-        if not isinstance(id, basestring):
-            self.error('id must be a string: %s' % id, key)
 
     def validate_query_paths(self, node, key, query_paths):
         if isinstance(query_paths, basestring):
