@@ -94,7 +94,13 @@ class OASValidator(object):
 
     def validate_title(self, key, title):
         if not isinstance(title, basestring):
-            self.error('title must be a string', key)
+            self.error('title must be a string: %s' %s, key)
+
+    def validate_id(self, key, id):
+        if not isinstance(id, basestring):
+            self.error('id must be a string: %s' %s, key)
+        elif len(id.split()) > 1:
+            self.error('id string must not contain whitespace: %s' %s, key)            
 
     def validate_version(self, node, key, version):
         if not isinstance(version, basestring):
@@ -531,6 +537,7 @@ class OASValidator(object):
             
     rapier_spec_keywords = {
         'title': validate_title, 
+        'id': validate_id,
         'entities': validate_entities, 
         'conventions': validate_conventions, 
         'version': validate_version,
