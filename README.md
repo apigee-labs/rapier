@@ -380,7 +380,7 @@ JSON has no built-in type for URLs. In the examples above, we exposed relationsh
 ```json
     "todos": "http://example.org/xxxxx"
 ```
- We like this pattern for its simplicity, and because it is faithful to the JSON data model (the relationship name is expressed as a simple JSON property name). Rapier does not manadate this style—you
+We like this pattern for its simplicity, and because it is faithful to the JSON data model (the relationship name is expressed as a simple JSON property name). Rapier does not manadate this style—you
 can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—for example you
 cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
 ```json
@@ -397,7 +397,7 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
         ]
     }
 ```
-This pattern is standardized (or at least specified) in the [JSON Hyper-schema specification](http://json-schema.org/latest/json-schema-hypermedia.html) It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
+This pattern is standardized (or at least specified) in the [JSON Hyper-schema specification](http://json-schema.org/latest/json-schema-hypermedia.html). This pattern can also be expressed in JSON Schema as shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
 From a JSON perspective, this pattern looks convoluted to us and is even more difficult to program to.
 
 ### Query Parameters
