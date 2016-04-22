@@ -376,12 +376,15 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
 
-JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple string-valued JSON properties, with the URL being encoded as a string value. We like this pattern for its simplicity, but Rapier does not manadate this style—you
+JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple string-valued JSON properties, with the URL being encoded as a string value, like this:
+```json
+    "todos": "http://example.org/xxxxx"
+```
+ We like this pattern for its simplicity, and because it is faithful to the JSON data model (the relationship name is expressed as a simple JSON property name). Rapier does not manadate this style—you
 can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—for example you
 cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
 ```json
-    {"todos": {"href": "http://example.org/xxxxx"}
-    }
+    "todos": {"href": "http://example.org/xxxxx"}
 ```
 It is trivial to express this pattern in JSON Schema/Rapier. This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
 We like the fact the relationship name is still expressed as a simple JSON property name. Although there are several reasons to like this format, we discovered when we used it on a project that we made lots of programming errors forgetting to encode
@@ -394,7 +397,7 @@ Another pattern that is popular is to create JSON "link objects" that (we guess)
         ]
     }
 ```
-It is standardized (or at least specified) [here](http://json-schema.org/latest/json-schema-hypermedia.html) It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
+This pattern is standardized (or at least specified) in the [JSON Hyper-schema specification](http://json-schema.org/latest/json-schema-hypermedia.html) It is a bit harder to express this pattern precisely in JSON Schema—our best effort is shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
 From a JSON perspective, this pattern looks convoluted to us and is even more difficult to program to.
 
 ### Query Parameters
