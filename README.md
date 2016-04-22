@@ -58,9 +58,7 @@ has no a-priori knowledge of any specific Rapier API and navigates APIs only by 
 write than specific software—we believe clients that work this way are written primarily when their costs, like those of browsers and web bots, can be 
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make APIs that are easier to understand and learn and to make all clients easier to write—supporting 
-general clients is an additional benefit. Rapier does not
-automatically include any extra runtime metadata that would help a general client use POST or PUT/PATCH operations—Rapier
-API designers must do that manually if that is their goal. <a href="#ref2">↩</a>
+general clients is an additional benefit. <a href="#ref2">↩</a>
 
 <a name="footnote3"><sup>3</sup></a> See the section below on <a href="#representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
