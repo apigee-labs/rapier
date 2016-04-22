@@ -283,12 +283,17 @@ class OASGenerator(object):
         path = prefix.interface_id()
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
-        split_entity_uri = prefix.entity_uri.split('#')
-        if split_entity_uri[0] == self.validator.abs_filename:
+        for entity in self.rapier_spec['entities'].itervalues():
+            if entity['id'] == prefix.entity_uri:
+                break
+        else:
+            entity = None        
+        if entity is not None:
             if path not in self.openapispec_interfaces: 
                 self.openapispec_interfaces[path] = self.interfaces[prefix.entity_uri]
             return {'$ref': '#/x-interfaces/%s' % path}
         else:
+            split_entity_uri = prefix.entity_uri.split('#')
             rel_path = self.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
 
@@ -1072,9 +1077,6 @@ class RelMVPropertySpec(SegmentSpec):
     def interface_id(self):
         return '%s.%s' % (self._entity_spec['name'], self.relationship_name)
         
-    def template_id(self):
-        return '{%s}' % self._generator.resolve_referenced_entity_name(self._entity_uri)
-      
     def source_entity_name(self):
         return self._entity_spec['name']
         
