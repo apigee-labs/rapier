@@ -388,7 +388,7 @@ cannot tell which properties are URL-valued versus string-valued without out-of-
 ```
 It is trivial to express this pattern in JSON Schema/Rapier. This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
 We like the fact the relationship name is still expressed as a simple JSON property name. Although there are several reasons to like this format, we discovered when we used it on a project that we made lots of programming errors forgetting to encode
-URLs this way and using simple strings instead. Because of this, we eventually reverted to the simpler form above.
+URLs this way and using simple strings instead—we eventually reverted to the simpler form above.
 Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. The pattern looks like this:
 ```json
     {"links": [
