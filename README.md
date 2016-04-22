@@ -376,7 +376,7 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
 
-JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple string-valued JSON properties, with the URL being encoded as a string value, like this:
+JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple JSON properties with the URL being encoded as a string value, like this:
 ```json
     "todos": "http://example.org/xxxxx"
 ```
