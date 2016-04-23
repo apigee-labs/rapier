@@ -382,30 +382,47 @@ class OASValidator(object):
     def validate_ignore(self, node, key, value):
         pass
     
-    def validate_starOf(self, node, key, starOf, keyword_validators):
-        if isinstance(starOf, list):
-            for one in starOf:
-                self.check_and_validate_keywords(keyword_validators, one, key)
-        else:
-            self.error('oneOf value must be a list: %s' % value, key)
-
     def validate_schema_allOf(self, node, key, value):
-        self.validate_starOf(node, key, value, self.__class__.schema_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.schema_keywords, one, key)
+        else:
+            self.error('allOf value must be a list: %s' % value, key)
                                     
     def validate_schema_oneOf(self, node, key, value):
-        self.validate_starOf(node, key, value, self.__class__.schema_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.schema_keywords, one, key)
+        else:
+            self.error('oneOf value must be a list: %s' % value, key)
                                     
     def validate_entity_allOf(self, node, key, value):
-        self.validate_starOf(node, key, value, self.__class__.entity_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.entity_keywords, one, key)
+        else:
+            self.error('allOf value must be a list: %s' % value, key)
                                     
     def validate_entity_oneOf(self, node, key, value):
-        self.validate_starOf(node, key, value, self.__class__.entity_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.entity_keywords, one, key)
+        else:
+            self.error('oneOf value must be a list: %s' % value, key)
                                     
     def validate_query_parameter_allOf(self, node, key, value):
-        self.validate_starOf(key, value, self.__class__.schema_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.schema_keywords, one, key)
+        else:
+            self.error('allOf value must be a list: %s' % value, key)
                                     
     def validate_query_parameter_oneOf(self, node, key, value):
-        self.validate_starOf(key, value, self.__class__.schema_keywords)
+        if isinstance(value, list):
+            for one in value:
+                self.check_and_validate_keywords(self.__class__.schema_keywords, one, key)
+        else:
+            self.error('oneOf value must be a list: %s' % value, key)
                                     
     def validate_query_parameter_name(self, node, key, name):
         if not isinstance(name, basestring):
