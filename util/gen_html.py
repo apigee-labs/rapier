@@ -166,15 +166,17 @@ class HTMLGenerator(object):
         
     def generate_header(self, spec):
         version = str(spec.get('version', 'initial'))
+        # If it's a string that looks like a number, add quotes around it so its clear it's a string
         try:
             number = float(version)
             version_str = repr(version)
         except ValueError:
             version_str = version
         return '''<h1>%s</h1>
+    <h2>Id: %s</h2>
     <h2>Version: %s</h2>
     <p>%s</p>
-        '''% (spec.get('title', 'untitled'), version_str, spec.get('description', 'undescribed'))
+        '''% (spec.get('title', 'untitled'), spec.get('id', '"#"'), version_str, spec.get('description', 'undescribed'))
     
     def generate_html(self, filename):
         self.validator = validate_rapier.OASValidator()
