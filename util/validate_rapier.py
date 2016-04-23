@@ -436,6 +436,12 @@ class OASValidator(object):
         if not isinstance(value, Number):
             self.error('%s must be a number %s' % (key, number), key)
             
+    def validate_integer(self, node, key, value):
+        try: 
+            int(value)
+        except ValueError:
+            self.error('%s must be an integer %s' % (key, value), key)
+
     def validate_implementation_private_information(self, node, key, entities):
         for key, entity in entities.iteritems():
             self.check_and_validate_keywords(self.__class__.implementation_private_keywords, entity, key)
@@ -536,6 +542,24 @@ class OASValidator(object):
     def validate_query_parameter_collection_format(self, node, key, collection_format):
         if collection_format not in ['csv', 'ssv', 'tsv', 'pipes', 'multi']:
             self.error("collection_format must be one of 'csv', 'ssv', 'tsv', 'pipes', 'multi': %s" % additional_properties, key)
+            
+    def validate_xItems(self, node, key, value, which):
+        self.validate_integer(node, key, value)
+        node_type = node.get('type')
+        if node_type is not None:
+            if node_type != 'array':
+                self.error('%s is only valid for type array: %s' % (which, node_type), key)            
+        else:
+            if 'allOf' in Node:
+                pass #todo follow the chain
+            else:
+                self.error('%s is only valid for type array' % which, key)
+                
+    def validate_maxItems(self, node, key, value):
+        self.validate_xItems(node, key, value, 'maxItems')
+    
+    def validate_minItems(self, node, key, value):
+        self.validate_xItems(node, key, value, 'minItems')
     
     c_usage_values = {'c', 'create'}
     r_usage_values = {'r', 'read', 'retrieve', 'g', 'get'}
@@ -573,7 +597,9 @@ class OASValidator(object):
         '$ref': validate_schema_ref,
         'required': validate_required,
         'additionalProperties': validate_additional_properties,
-        'usage': validate_schema_usage}
+        'usage': validate_schema_usage,
+        'minItems': validate_minItems,
+        'maxItems': validate_maxItems}
     property_keywords = {
         'relationship': validate_property_relationship,
         'default': validate_ignore,
