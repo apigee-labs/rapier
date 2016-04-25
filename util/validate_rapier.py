@@ -631,6 +631,7 @@ class OASValidator(object):
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
         'usage': validate_schema_usage,
+        'query_parameters': validate_query_parameters,
         'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 

@@ -783,6 +783,8 @@ class OASGenerator(object):
                     add_query_parameters(self.validator.resolve_included_entity_ref(entity_ref), query_params) 
         query_parameters = []
         add_query_parameters(collection_entity, query_parameters)
+        if 'query_parameters' in rel_property_spec.relationship:
+            add_query_parameters(rel_property_spec.relationship, query_parameters)
         query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
             rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
@@ -923,6 +925,19 @@ class OASGenerator(object):
             
 class SegmentSpec(object):
             
+    def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
+        self._generator = generator   
+        self._entity_uri = entity_uri                   
+        self._entity_spec = entity_spec      
+        self._property = property
+        self.relationship = relationship
+        self.target_entity_uri = target_entity_uri
+
+        self.readOnly = relationship.get('readOnly')                                 
+        self.entity_uri = target_entity_uri
+        self.relationship_name = relationship['name']        
+        self.implementation_private = property.get('implementation_private', False)    
+
     def __eq__(self, other):
         if type(other) is type(self):
             return self.__dict__ == other.__dict__
@@ -987,14 +1002,7 @@ class PathPrefix(object):
 class RelSVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
-        self.readOnly = relationship.get('readOnly')                                 
-        self.target_entity_uri = target_entity_uri
-        self.entity_uri = target_entity_uri
-        self.relationship_name = relationship['name']        
-        self.implementation_private = property.get('implementation_private', False)    
-        self._entity_spec = entity_spec      
-        self._generator = generator   
-        self._entity_uri = entity_uri                   
+        super(RelSVPropertySpec, self).__init__(generator, entity_uri, entity_spec, property, relationship, target_entity_uri)
         
     def is_multivalued(self):
         return False
@@ -1020,34 +1028,25 @@ class RelSVPropertySpec(SegmentSpec):
 class RelMVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
-        self._generator = generator
-        self._entity_spec = entity_spec
-        self._property = property
-        self._relationship = relationship
+        super(RelMVPropertySpec, self).__init__(generator, entity_uri, entity_spec, property, relationship, target_entity_uri)
         self._collection_resource = relationship.get('collection_resource', True)        
         self._consumes = relationship.get('consumes')
-        self._generator = generator
-        self._entity_uri = entity_uri
 
-        self.entity_uri = target_entity_uri
         self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
         self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
         self.collection_resource = relationship.get('collection_resource')        
-        self.target_entity_uri = target_entity_uri 
-        self.relationship_name = relationship['name']        
-        self.implementation_private = property.get('implementation_private', False)                                
 
     def readable(self):
-        usage = self._relationship.get('usage')
+        usage = self.relationship.get('usage')
         if usage is None:
             return True
         else:
             return len(validate_rapier.OASValidator.r_usage_values & set(as_list(usage))) > 0
     
     def postable(self):
-        usage = self._relationship.get('usage')
+        usage = self.relationship.get('usage')
         if usage is None:
-            return not self._relationship.get('readOnly', False)
+            return not self.relationship.get('readOnly', False)
         else:
             return len(validate_rapier.OASValidator.c_usage_values & set(as_list(usage))) > 0
         
