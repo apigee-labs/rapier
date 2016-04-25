@@ -375,6 +375,23 @@ class OASValidator(object):
                         names.add(name)
                 else:
                     self,error('name must not be null', name)
+
+    def validate_relationship_query_parameters(self, node, key, query_parameters):
+        self.validate_query_parameters(node, key, query_parameters)
+        multiplicity = node.get('multiplicity')
+        upperbound = 0
+        if multiplicity:
+            if isinstance(multiplicity, basestring):
+                upperbound = multiplicity.split(':')[-1]
+                if upperbound == 'n':
+                    upper_bound == 2
+                else:
+                    try:
+                        upper_bound = int(upper_bound)
+                    except ValueError:
+                        pass
+        if upper_bound > 2:
+            self.error('relationships with query paramaters must be multi-valued', key)
             
     def invalid(self, node, key, value):
         self.error('%s is not allowed: value' %key, key)
@@ -631,7 +648,7 @@ class OASValidator(object):
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
         'usage': validate_schema_usage,
-        'query_parameters': validate_query_parameters,
+        'query_parameters': validate_relationship_query_parameters,
         'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 
