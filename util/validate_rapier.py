@@ -384,7 +384,7 @@ class OASValidator(object):
             if isinstance(multiplicity, basestring):
                 upperbound = multiplicity.split(':')[-1]
                 if upperbound == 'n':
-                    upper_bound == 2
+                    upper_bound = 2
                 else:
                     try:
                         upper_bound = int(upper_bound)
