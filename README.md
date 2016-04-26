@@ -1,7 +1,8 @@
 # Rapier - REST APIs from Entities and Relationships
 
 <div>
-<img src='https://raw.githubusercontent.com/apigee-labs/rapier/master/RapierThumb.jpg' align="right"><strong>Cut through the tedium of API specification</strong>
+<img src='https://raw.githubusercontent.com/apigee-labs/rapier/master/RapierThumb.jpg' align="right">
+<h2>Cut through the tedium of API specification</h2>
 </div>
 <table>
   <tr>
