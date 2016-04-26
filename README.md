@@ -2,7 +2,7 @@
 
 <div>
 <h2 align="center">Cut through the tedium of API specification</h2>
-<img src='https://raw.githubusercontent.com/apigee-labs/rapier/master/RapierThumb.jpg' align="center">
+<img src='https://raw.githubusercontent.com/apigee-labs/rapier/master/RapierThumb.jpg' align="middle">
 </div>
 <table>
   <tr>
