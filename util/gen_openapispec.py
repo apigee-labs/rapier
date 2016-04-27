@@ -899,7 +899,7 @@ class OASGenerator(object):
                 elif k == 'relationship':
                     rel_property_specs = self.get_one_relationship_property_specs(property_name, node, entity_spec['id'], entity_spec)
                     if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
-                        result['x-interface'] = {'oneOf': [self.build_interface_reference(rel_property_spec)['$ref'] for rel_property_spec in rel_property_specs]}
+                        result['x-interface'] = {'oneOf': [rel_property_spec.build_interface_reference(self)['$ref'] for rel_property_spec in rel_property_specs]}
                     else:
                         result['x-interface'] = rel_property_specs[0].build_interface_reference(self)['$ref']
                 elif k == 'id' and v in self.referenced_entities:
@@ -934,7 +934,6 @@ class SegmentSpec(object):
         self.target_entity_uri = target_entity_uri
 
         self.readOnly = relationship.get('readOnly')                                 
-        self.entity_uri = target_entity_uri
         self.relationship_name = relationship['name']        
         self.implementation_private = property.get('implementation_private', False)    
 
@@ -960,63 +959,19 @@ class SegmentSpec(object):
         path = path.replace('~', '~0')
         path = path.replace('/', '~1')
         for entity in generator.rapier_spec['entities'].itervalues():
-            if entity['id'] == self.entity_uri:
+            if entity['id'] == self.target_entity_uri:
                 break
         else:
             entity = None        
         if entity is not None:
             if path not in generator.openapispec_interfaces: 
-                generator.openapispec_interfaces[path] = generator.interfaces[self.entity_uri]
+                generator.openapispec_interfaces[path] = generator.interfaces[self.target_entity_uri]
             return {'$ref': '#/x-interfaces/%s' % path}
         else:
-            split_entity_uri = self.entity_uri.split('#')
+            split_entity_uri = self.target_entity_uri.split('#')
             rel_path = generator.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
         
-class PathPrefix(object):
-            
-    def __init__(self, entity_uri, generator):
-        self.entity_uri = entity_uri
-        self.generator = generator
-
-    def build_param(self):
-        return None  
-        
-    def __eq__(self, other):
-        if type(other) is type(self):
-            return self.__dict__ == other.__dict__
-        return False
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        return self.__dict__.hash()
-
-    def __str__(self):
-        return str(self.__dict__)
-
-    def __repr__(self):
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
-        
-    def x_description(self):
-        return None
-        
-    def is_private(self):
-        return False
-        
-    def is_uri_spec(self):
-        return False
-        
-    def is_impl_spec(self):
-        return False
-        
-    def interface_id(self):
-        return self.entity_uri.split('#')[1]
-      
-    def template_id(self):
-        return '{%s-URL}' % self.interface_id()
-      
 class RelSVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
@@ -1103,6 +1058,50 @@ class RelMVPropertySpec(SegmentSpec):
         path = path.replace('/', '~1')
         return {'$ref': '#/x-interfaces/%s' % path}
         
+class PathPrefix(object):
+            
+    def __init__(self, entity_uri, generator):
+        self.entity_uri = entity_uri
+        self.generator = generator
+
+    def build_param(self):
+        return None  
+        
+    def __eq__(self, other):
+        if type(other) is type(self):
+            return self.__dict__ == other.__dict__
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        return self.__dict__.hash()
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
+        
+    def x_description(self):
+        return None
+        
+    def is_private(self):
+        return False
+        
+    def is_uri_spec(self):
+        return False
+        
+    def is_impl_spec(self):
+        return False
+        
+    def interface_id(self):
+        return self.entity_uri.split('#')[1]
+      
+    def template_id(self):
+        return '{%s-URL}' % self.interface_id()
+      
 class WellKnownURLSpec(PathPrefix):
     
     def __init__(self, base_URL, entity_uri, generator):
