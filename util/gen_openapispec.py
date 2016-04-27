@@ -246,20 +246,6 @@ class OASGenerator(object):
                     path_spec = prefix.build_oas_path_spec(interface_id, rel_spec, query_path)
                     self.openapispec_paths[path] = path_spec
 
-    def build_template_reference(self, prefix, query_path=None):
-        path = prefix.template_id()
-        if query_path:
-            path = '/'.join([path, query_path.openapispec_path_string])
-        path = path.replace('~', '~0')
-        path = path.replace('/', '~1')
-        rslt = {'$ref': '#/x-templates/%s' % path}
-        template_id = prefix.template_id()
-        if template_id not in self.openapispec_templates:
-            self.openapispec_templates[prefix.template_id()] = prefix.build_interface_reference(self)
-        if prefix.is_impl_spec():            
-            rslt['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'        
-        return rslt            
-
     def build_entity_interface(self, entity_url_spec):
         entity_uri = entity_url_spec.entity_uri
         entity_spec = self.validator.resolve_included_entity(entity_uri)
