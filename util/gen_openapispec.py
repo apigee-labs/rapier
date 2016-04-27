@@ -130,7 +130,7 @@ class OASGenerator(object):
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
                         spec = WellKnownURLSpec(path, entity_uri, self)
-                        path_spec = self.build_oas_path_spec(spec, entity_uri, spec)
+                        path_spec = spec.build_oas_path_spec(entity_uri)
                         self.openapispec_paths[path] = path_spec
                 uri_templates = entity_spec.get('uri_templates')
                 if False: #uri_templates is not None:
@@ -138,13 +138,13 @@ class OASGenerator(object):
                         template = uri_template['template'] 
                         path = template[:-1] if template.endswith('/') and len(template) > 1 else template
                         spec = URITemplateSpec(path, entity_uri, self)
-                        path_spec = spec.build_oas_path_spec(entity_uri, self)
+                        path_spec = spec.build_oas_path_spec(entity_uri)
                         self.openapispec_paths[path] = path_spec
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'permalink_template' in entity_spec:
                     implementation_spec = ImplementationPathSpec(entity_spec['permalink_template'], entity_uri, self)
                     entity_interface = implementation_spec.build_interface_reference()
-                    path_spec = self.build_oas_path_spec(implementation_spec, entity_uri, implementation_spec)
+                    path_spec = implementation_spec.build_oas_path_spec(entity_uri)
                     self.openapispec_paths[implementation_spec.path_segment()] = path_spec
                 if 'query_paths' in entity_spec:
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
@@ -243,27 +243,9 @@ class OASGenerator(object):
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
-                    path_spec = self.build_oas_path_spec(prefix, interface_id, rel_spec, query_path)
+                    path_spec = prefix.build_oas_path_spec(interface_id, rel_spec, query_path)
                     self.openapispec_paths[path] = path_spec
 
-    def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
-        parameters = prefix.build_parameters() 
-        if parameters: # the prefix itself has parameters - a bit weird
-            if self.use_templates:
-                prefix.build_template_reference(query_path)
-            parameters = query_path.build_parameters(prefix) if query_path else prefix.build_parameters()
-            oas_path_spec = PresortedOrderedDict()
-            if prefix.is_impl_spec():            
-                oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
-            oas_path_spec['parameters'] = parameters
-            oas_path_spec['<<'] = self.interfaces[interface_id]
-        else:
-            if self.use_templates:
-                oas_path_spec = prefix.build_template_reference(query_path)
-            else:
-                oas_path_spec = prefix.build_path_interface_ref(interface_id, path_spec, query_path)
-        return oas_path_spec
-    
     def build_template_reference(self, prefix, query_path=None):
         path = prefix.template_id()
         if query_path:
@@ -416,7 +398,7 @@ class OASGenerator(object):
         return interface
 
     def build_relationship_interface(self, entity_url_spec, query_path, rel_property_spec, rel_property_specs):
-        parameters = query_path.build_parameters(entity_url_spec) 
+        parameters = entity_url_spec.build_parameters(query_path) 
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.validator.resolve_referenced_entity(entity_uri)
@@ -1086,8 +1068,11 @@ class PathPrefix(object):
             rel_path = self.generator.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
 
-    def build_parameters(self):
-        return self.build_params()
+    def build_parameters(self, query_path=None):
+        result = self.build_params()
+        if query_path:
+            result.extend(query_path.build_parameters())
+        return result
                 
     def build_template_reference(self, query_path=None):
         template_id = self.template_id()
@@ -1102,7 +1087,7 @@ class PathPrefix(object):
         return rslt            
 
     def build_path_interface_ref(self, interface_id, rel_spec, query_path):
-        parameters = query_path.build_parameters(self)
+        parameters = self.build_parameters(query_path)
         if parameters:
             path_spec = PresortedOrderedDict()
             path_spec['parameters'] = parameters
@@ -1111,6 +1096,22 @@ class PathPrefix(object):
             path_spec = rel_spec.build_interface_reference()
         return path_spec
                 
+    def build_oas_path_spec(self, interface_id, path_spec=None, query_path=None):
+        parameters = self.build_parameters() 
+        if parameters: # the prefix itself has parameters - probably an ImplementationPathSpec
+            if self.generator.use_templates:
+                self.build_template_reference(query_path)
+            parameters = self.build_parameters(query_path)
+            oas_path_spec = PresortedOrderedDict()
+            oas_path_spec['parameters'] = parameters
+            oas_path_spec['<<'] = self.generator.interfaces[interface_id]
+        else:
+            if self.generator.use_templates:
+                oas_path_spec = self.build_template_reference(query_path)
+            else:
+                oas_path_spec = self.build_path_interface_ref(interface_id, path_spec or self, query_path)
+        return oas_path_spec
+        
 class WellKnownURLSpec(PathPrefix):
     
     def __init__(self, base_URL, entity_uri, generator):
@@ -1130,7 +1131,7 @@ class WellKnownURLSpec(PathPrefix):
                 'type': 'string',
                 'required': True
                 } for param_name in param_names]
-
+                
 class URITemplateSpec(PathPrefix):
     
     def __init__(self, uri_template, entity_uri, generator):
@@ -1188,6 +1189,11 @@ class ImplementationPathSpec(PathPrefix):
         rslt['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'        
         return rslt            
 
+    def build_oas_path_spec(self, interface_id, path_spec=None, query_path=None):
+        oas_path_spec = super(ImplementationPathSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
+        oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+        return oas_path_spec
+
 class QueryPath(object):
 
     def __init__(self, query_path, generator):
@@ -1215,9 +1221,8 @@ class QueryPath(object):
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
         
-    def build_parameters(self, prefix):
+    def build_parameters(self):
         result = []
-        result.extend(prefix.build_params())
         for query_segment in self.query_segments:
             result.extend(query_segment.build_params())
         return result
