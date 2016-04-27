@@ -238,23 +238,13 @@ class OASGenerator(object):
                 if self.use_templates:
                     path = '/'.join([prefix.template_id(), query_path.openapispec_path_string])
                     if path not in self.openapispec_templates:
-                        path_spec = self.build_path_interface_ref(prefix, interface_id, rel_spec, query_path)        
+                        path_spec = prefix.build_path_interface_ref(interface_id, rel_spec, query_path)        
                         self.openapispec_templates[path] = path_spec
             else:
                 path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
                 if path not in self.openapispec_paths:
                     path_spec = self.build_oas_path_spec(prefix, interface_id, rel_spec, query_path)
                     self.openapispec_paths[path] = path_spec
-
-    def build_path_interface_ref(self, prefix, interface_id, rel_spec, query_path):
-        parameters = query_path.build_parameters(prefix)
-        if parameters:
-            path_spec = PresortedOrderedDict()
-            path_spec['parameters'] = parameters
-            path_spec['<<'] = self.interfaces[interface_id]
-        else:
-            path_spec = rel_spec.build_interface_reference()
-        return path_spec
 
     def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
         parameters = prefix.build_parameters() 
@@ -271,7 +261,7 @@ class OASGenerator(object):
             if self.use_templates:
                 oas_path_spec = prefix.build_template_reference(query_path)
             else:
-                oas_path_spec = self.build_path_interface_ref(prefix, interface_id, path_spec, query_path)
+                oas_path_spec = prefix.build_path_interface_ref(interface_id, path_spec, query_path)
         return oas_path_spec
     
     def build_template_reference(self, prefix, query_path=None):
@@ -1110,6 +1100,16 @@ class PathPrefix(object):
         if template_id not in self.generator.openapispec_templates:
             self.generator.openapispec_templates[template_id] = self.build_interface_reference()
         return rslt            
+
+    def build_path_interface_ref(self, interface_id, rel_spec, query_path):
+        parameters = query_path.build_parameters(self)
+        if parameters:
+            path_spec = PresortedOrderedDict()
+            path_spec['parameters'] = parameters
+            path_spec['<<'] = self.generator.interfaces[interface_id]
+        else:
+            path_spec = rel_spec.build_interface_reference()
+        return path_spec
                 
 class WellKnownURLSpec(PathPrefix):
     
