@@ -247,7 +247,7 @@ class OASGenerator(object):
                     self.openapispec_paths[path] = path_spec
 
     def build_path_interface_ref(self, prefix, interface_id, rel_spec, query_path):
-        parameters = self.build_parameters(prefix, query_path)
+        parameters = query_path.build_parameters(prefix)
         if parameters:
             path_spec = PresortedOrderedDict()
             path_spec['parameters'] = parameters
@@ -257,11 +257,11 @@ class OASGenerator(object):
         return path_spec
 
     def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
-        parameters = self.build_parameters(prefix) 
+        parameters = prefix.build_parameters() 
         if parameters: # the prefix itself has parameters - a bit weird
             if self.use_templates:
                 self.build_template_reference(prefix, query_path)
-            parameters = self.build_parameters(prefix, query_path)
+            parameters = query_path.build_parameters(prefix) if query_path else prefix.build_parameters()
             oas_path_spec = PresortedOrderedDict()
             if prefix.is_impl_spec():            
                 oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
@@ -291,7 +291,7 @@ class OASGenerator(object):
     def build_entity_interface(self, entity_url_spec):
         entity_uri = entity_url_spec.entity_uri
         entity_spec = self.validator.resolve_included_entity(entity_uri)
-        parameters = self.build_parameters(entity_url_spec)
+        parameters = entity_url_spec.build_parameters()
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
         query_parameters = entity_spec.get('query_parameters') 
@@ -426,7 +426,7 @@ class OASGenerator(object):
         return interface
 
     def build_relationship_interface(self, entity_url_spec, query_path, rel_property_spec, rel_property_specs):
-        parameters = self.build_parameters(entity_url_spec, query_path) 
+        parameters = query_path.build_parameters(entity_url_spec) 
         relationship_name = rel_property_spec.relationship_name
         entity_uri = rel_property_spec.target_entity_uri
         entity_spec = self.validator.resolve_referenced_entity(entity_uri)
@@ -615,21 +615,6 @@ class OASGenerator(object):
     def global_definition_ref(self, key):
         return {'$ref': self.openapispec_uri_map[key]}
         
-    def build_parameters(self, prefix, query_path=None):
-        result = []
-        param = prefix.build_param()
-        if param:
-            if isinstance(param, list):
-                result.extend(param)
-            else:
-                result.append(param)
-        if query_path:
-            for query_segment in query_path.query_segments:
-                param = query_segment.build_param()
-                if param:
-                    result.append(param)
-        return result
-          
     def build_standard_200(self, produces=None):
         rslt = {
             'description': 'successful',
@@ -1055,8 +1040,8 @@ class PathPrefix(object):
         self.entity_uri = entity_uri
         self.generator = generator
 
-    def build_param(self):
-        return None  
+    def build_params(self):
+        return []  
         
     def __eq__(self, other):
         if type(other) is type(self):
@@ -1110,7 +1095,10 @@ class PathPrefix(object):
             split_entity_uri = self.entity_uri.split('#')
             rel_path = generator.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
-      
+
+    def build_parameters(self):
+        return self.build_params()
+                
 class WellKnownURLSpec(PathPrefix):
     
     def __init__(self, base_URL, entity_uri, generator):
@@ -1121,7 +1109,7 @@ class WellKnownURLSpec(PathPrefix):
     def path_segment(self, select_one_of_many = False):
         return self.base_URL[:-1] if self.base_URL.endswith('/') and len(self.base_URL) > 0 else self.base_URL
 
-    def build_param(self):
+    def build_params(self):
         formatter = string.Formatter()
         param_names = [part[1] for part in formatter.parse(self.base_URL) if part[1] is not None]
         return [{
@@ -1168,15 +1156,14 @@ class ImplementationPathSpec(PathPrefix):
     def path_segment(self, select_one_of_many = False):
         return self.permalink_template['template']
 
-    def build_param(self):
-        result = {
+    def build_params(self):
+        return [{
             'name': self.implementation_url_variable_name,
             'description': 'This parameter is a private part of the implementation. It is not part of the API',
             'in': 'path',
             'type': self.implementation_url_variable_type,
             'required': True
-            }
-        return result
+            }]
         
     def is_private(self):
         return True
@@ -1210,6 +1197,13 @@ class QueryPath(object):
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
+        
+    def build_parameters(self, prefix):
+        result = []
+        result.extend(prefix.build_params())
+        for query_segment in self.query_segments:
+            result.extend(query_segment.build_params())
+        return result
         
 class QuerySegment(object):
 
@@ -1266,7 +1260,7 @@ class QuerySegment(object):
         else:
             self.openapispec_segment_string = self.relationship
 
-    def build_param(self):
+    def build_params(self):
         if len(self.selectors) > 0:
             result = []
             for selector in self.selectors:
@@ -1284,9 +1278,9 @@ class QuerySegment(object):
                 if self.rel_property_spec.implementation_private:
                     rslt['description'] = 'This parameter is a private part of the implementation. It is not part of the API'
                 result.append(rslt)
-            return rslt
+            return result
         else:
-            return None
+            return []
             
     def selects_single_value(self):
         return len(self.selectors) > 0 and not self.is_multivalued
@@ -1306,8 +1300,8 @@ class EntityURLSpec(PathPrefix):
     def path_segment(self, select_one_of_many = False):
         return self.generator.resolve_referenced_entity_name(self.entity_uri)
 
-    def build_param(self):
-        return None
+    def build_params(self):
+        return []
             
     def is_uri_spec(self):
         return True
