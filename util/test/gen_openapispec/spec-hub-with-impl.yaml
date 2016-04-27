@@ -1446,6 +1446,8 @@ paths:
   /store/groups:
     $ref: '#/x-templates/{Store-URL}~1groups'
   /c3Rvc-Zmxk-{implementation_key}:
+    x-description: '*** This path is not part of the API - it is an implementation-private
+      extension'
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1454,9 +1456,9 @@ paths:
       required: true
       type: integer
     <<: *Folder
+  /c3Rvc-Zmxk-{implementation_key}/contents:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'
-  /c3Rvc-Zmxk-{implementation_key}/contents:
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1465,9 +1467,9 @@ paths:
       required: true
       type: integer
     <<: *Folder-contents
+  /c3Rvc-ZG9j-{implementation_key}:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'
-  /c3Rvc-ZG9j-{implementation_key}:
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1476,9 +1478,9 @@ paths:
       required: true
       type: integer
     <<: *Doc
+  /c3Rvc-ZG9j-{implementation_key}/content:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'
-  /c3Rvc-ZG9j-{implementation_key}/content:
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1487,9 +1489,9 @@ paths:
       required: true
       type: integer
     <<: *Content
+  /c3Rvc-Z3Jw-{implementation_key}:
     x-description: '*** This path is not part of the API - it is an implementation-private
       extension'
-  /c3Rvc-Z3Jw-{implementation_key}:
     parameters:
     - description: This parameter is a private part of the implementation. It is not
         part of the API
@@ -1498,8 +1500,6 @@ paths:
       required: true
       type: integer
     <<: *Group
-    x-description: '*** This path is not part of the API - it is an implementation-private
-      extension'
 definitions:
   ErrorResponse:
     type: string

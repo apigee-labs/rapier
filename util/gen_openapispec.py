@@ -138,6 +138,8 @@ class OASGenerator(object):
                         template = uri_template['template'] 
                         path = template[:-1] if template.endswith('/') and len(template) > 1 else template
                         spec = URITemplateSpec(path, entity_uri, self)
+                        path_spec = prefix.build_path_interface_ref(interface_id, rel_spec, query_path)        
+                        self.openapispec_templates[path] = path_spec
                         path_spec = spec.build_oas_path_spec(entity_uri)
                         self.openapispec_paths[path] = path_spec
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
@@ -1083,19 +1085,10 @@ class PathPrefix(object):
         return path_spec
                 
     def build_oas_path_spec(self, interface_id, path_spec=None, query_path=None):
-        parameters = self.build_parameters() 
-        if parameters: # the prefix itself has parameters - probably an ImplementationPathSpec
-            if self.generator.use_templates:
-                self.build_template_reference(query_path)
-            parameters = self.build_parameters(query_path)
-            oas_path_spec = PresortedOrderedDict()
-            oas_path_spec['parameters'] = parameters
-            oas_path_spec['<<'] = self.generator.interfaces[interface_id]
+        if self.generator.use_templates:
+            oas_path_spec = self.build_template_reference(query_path)
         else:
-            if self.generator.use_templates:
-                oas_path_spec = self.build_template_reference(query_path)
-            else:
-                oas_path_spec = self.build_path_interface_ref(interface_id, path_spec or self, query_path)
+            oas_path_spec = self.build_path_interface_ref(interface_id, path_spec or self, query_path)
         return oas_path_spec
         
 class WellKnownURLSpec(PathPrefix):
@@ -1117,6 +1110,19 @@ class WellKnownURLSpec(PathPrefix):
                 'type': 'string',
                 'required': True
                 } for param_name in param_names]
+
+    def build_oas_path_spec(self, interface_id, path_spec=None, query_path=None):
+        parameters = self.build_parameters() 
+        if parameters: # putting parameters in a Well_known_URL is not really kosher
+            if self.generator.use_templates:
+                self.build_template_reference(query_path)
+            parameters = self.build_parameters(query_path)
+            oas_path_spec = PresortedOrderedDict()
+            oas_path_spec['parameters'] = parameters
+            oas_path_spec['<<'] = self.generator.interfaces[interface_id]
+        else:
+            oas_path_spec = super(WellKnownURLSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
+        return oas_path_spec
                 
 class URITemplateSpec(PathPrefix):
     
@@ -1176,9 +1182,21 @@ class ImplementationPathSpec(PathPrefix):
         return rslt            
 
     def build_oas_path_spec(self, interface_id, path_spec=None, query_path=None):
-        oas_path_spec = super(ImplementationPathSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
-        oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+        parameters = self.build_parameters() 
+        if parameters: 
+            if self.generator.use_templates:
+                self.build_template_reference(query_path)
+            parameters = self.build_parameters(query_path)
+            oas_path_spec = PresortedOrderedDict()
+            oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+            oas_path_spec['parameters'] = parameters
+            oas_path_spec['<<'] = self.generator.interfaces[interface_id]
+        else:
+            oas_path_spec = super(ImplementationPathSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
+            oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
         return oas_path_spec
+        
+
 
 class QueryPath(object):
 
