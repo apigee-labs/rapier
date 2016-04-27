@@ -244,7 +244,7 @@ class OASGenerator(object):
             path_spec['parameters'] = parameters
             path_spec['<<'] = self.interfaces[interface_id]
         else:
-            path_spec = self.build_interface_reference(rel_spec)
+            path_spec = rel_spec.build_interface_reference(self)
         return path_spec
 
     def build_oas_path_spec(self, prefix, interface_id, path_spec, query_path=None):
@@ -901,7 +901,7 @@ class OASGenerator(object):
                     if len(rel_property_specs) > 1 and not rel_property_specs[0].is_multivalued():
                         result['x-interface'] = {'oneOf': [self.build_interface_reference(rel_property_spec)['$ref'] for rel_property_spec in rel_property_specs]}
                     else:
-                        result['x-interface'] = self.build_interface_reference(rel_property_specs[0])['$ref']
+                        result['x-interface'] = rel_property_specs[0].build_interface_reference(self)['$ref']
                 elif k == 'id' and v in self.referenced_entities:
                     result['x-interface'] = self.build_interface_reference(EntityURLSpec(v, self))['$ref']
             return result
@@ -954,6 +954,24 @@ class SegmentSpec(object):
 
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
+
+    def build_interface_reference(self, generator):
+        path = self.interface_id()
+        path = path.replace('~', '~0')
+        path = path.replace('/', '~1')
+        for entity in generator.rapier_spec['entities'].itervalues():
+            if entity['id'] == self.entity_uri:
+                break
+        else:
+            entity = None        
+        if entity is not None:
+            if path not in generator.openapispec_interfaces: 
+                generator.openapispec_interfaces[path] = generator.interfaces[self.entity_uri]
+            return {'$ref': '#/x-interfaces/%s' % path}
+        else:
+            split_entity_uri = self.entity_uri.split('#')
+            rel_path = generator.validator.relative_url(split_entity_uri[0])
+            return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
         
 class PathPrefix(object):
             
@@ -1078,6 +1096,12 @@ class RelMVPropertySpec(SegmentSpec):
         
     def source_entity_name(self):
         return self._entity_spec['name']
+        
+    def build_interface_reference(self, generator):
+        path = self.interface_id()
+        path = path.replace('~', '~0')
+        path = path.replace('/', '~1')
+        return {'$ref': '#/x-interfaces/%s' % path}
         
 class WellKnownURLSpec(PathPrefix):
     
