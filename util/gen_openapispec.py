@@ -134,11 +134,10 @@ class OASGenerator(object):
                         spec = WellKnownURLSpec(path, entity_uri, self)
                         path_spec = spec.build_oas_path_spec()
                         self.openapispec_paths[path] = path_spec
-                uri_templates = entity_spec.get('uri_templates')
+                uri_templates = entity_spec.get('URI_templates')
                 if uri_templates is not None:
                     for uri_template in as_list(uri_templates):
                         spec = URITemplateSpec(uri_template, entity_uri, self)
-                        spec.emit_openapi_template()
                         spec.emit_openapi_path()
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
                 if self.include_impl and 'permalink_template' in entity_spec:
@@ -1066,12 +1065,17 @@ class PathPrefix(object):
             self.generator.openapispec_templates[template_id] = self.build_interface_reference()
         return rslt            
 
-    def build_path_interface_ref(self, interface_id, rel_spec, query_path):
+    def build_interface_ref_with_params(self, interface_id=None, rel_spec=None, query_path=None):
+        interface_id = interface_id or self.entity_uri
+        oas_interface_id = interface_id.split('#')[-1]
+        rel_spec = rel_spec or self
         parameters = self.build_parameters(query_path)
         if parameters:
             path_spec = PresortedOrderedDict()
             path_spec['parameters'] = parameters
             path_spec['<<'] = self.generator.interfaces[interface_id]
+            if oas_interface_id not in self.generator.openapispec_interfaces: 
+                self.generator.openapispec_interfaces[oas_interface_id] = self.generator.interfaces[interface_id]
         else:
             path_spec = rel_spec.build_interface_reference()
         return path_spec
@@ -1081,7 +1085,7 @@ class PathPrefix(object):
         if self.generator.use_templates:
             oas_path_spec = self.build_template_reference(query_path)
         else:
-            oas_path_spec = self.build_path_interface_ref(interface_id, path_spec or self, query_path)
+            oas_path_spec = self.build_interface_ref_with_params(interface_id, path_spec or self, query_path)
         return oas_path_spec
 
     def emit_openapi_path(self, query_path, rel_spec):
@@ -1097,7 +1101,7 @@ class PathPrefix(object):
         interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
         path = '/'.join([self.template_id(), query_path.openapispec_path_string])
         if path not in self.generator.openapispec_templates:
-            path_spec = self.build_path_interface_ref(interface_id, rel_spec, query_path)        
+            path_spec = self.build_interface_ref_with_params(interface_id, rel_spec, query_path)        
             self.generator.openapispec_templates[path] = path_spec
 
 class WellKnownURLSpec(PathPrefix):
@@ -1144,20 +1148,24 @@ class URITemplateSpec(PathPrefix):
         self.template_string = uri_template['template'] 
         self.entity_uri = entity_uri
         self.generator = generator
-
-    def emit_openapi_path(self):
         split = self.template_string.split('{?')
         if len(split) > 0:
-            path = split[0]
+            self._template_id = split[0]
         else:
-            path = self.template_string.split('?')[0]
-        path_spec = self.build_oas_path_spec()
-        self.generator.openapispec_paths[path] = path_spec
+            self._template_id = self.template_string.split('?')[0]
+
+    def emit_openapi_path(self):
+        if self._template_id not in self.generator.openapispec_templates:
+            path_spec = self.build_interface_ref_with_params()        
+            self.generator.openapispec_templates[self._template_id] = path_spec
+        path_spec = self.build_template_reference()
+        self.generator.openapispec_paths[self._template_id] = path_spec
        
-    def emit_openapi_template(self):
-        template = uri_template['template'] 
-        path = template[:-1] if template.endswith('/') and len(template) > 1 else template
-        params = list(string.Formatter().parse(template))
+    def template_id(self):
+        return self._template_id
+       
+    def build_parameters(self, query_path=None):
+        return self.uri_template['variables']
 
 class ImplementationPathSpec(PathPrefix):
     
