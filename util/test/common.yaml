@@ -83,11 +83,11 @@ entities:
   Resource:
     type: object
     properties:
-      self:
+      _id:
         description: >
-          The self property defines which resource's property-value pairs are in the data. On create, if no value for self is given, self will be set to the URL of the resource being created.
-          It is possible to set a different value on create—this is used to create a resource that contans information about a different resource than itself. self specifies RDF's 'subject'
-          concept. It is similar to the @id property of RDF/JSON. It is permissible, although unusual, to update the value of self.
+          The _id property defines which resource's property-value pairs are in the data. On create, if no value for _id is given, _id will be set to the URL of the resource being created.
+          It is possible to set a different value on create—this is used to create a resource that contans information about a different resource than itself. _id specifies RDF's 'subject'
+          concept. It is similar to the @id property of RDF/JSON. It is permissible, although unusual, to update the value of _id.
         type: string
         format: uri
         usage: c r u

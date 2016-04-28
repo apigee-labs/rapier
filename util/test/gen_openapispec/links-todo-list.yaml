@@ -328,7 +328,7 @@ definitions:
     x-interface: '#/x-interfaces/TodoList'
   Item:
     properties:
-      self:
+      _id:
         type: string
         format: uri
         readOnly: true

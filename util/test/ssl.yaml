@@ -201,7 +201,7 @@ entities:
   Resource:
     type: object
     properties:
-      self:
+      _id:
         type: string
       kind:
         type: string
