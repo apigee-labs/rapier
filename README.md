@@ -526,7 +526,7 @@ readOnly | `boolean` | Indicates that resources of this Entity type can be read 
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 query_parameters | `sequence` of [Query Parameter](#query_parameter)s | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are read-only subsets of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
-URLTemplates | `string` or `sequence of string` | URLTemplates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application for the `query_parameters` feature above. The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4)
+URLTemplates | `string` or `sequence of string` or [URLTemplate](#url_template)s or array of `URLTemplates` | URLTemplates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application for the `query_parameters` feature above. The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4)
 usage | `string` or `sequence of string` | [Usage](#usage)s
 
 #### <a name="properties"></a>Properties
@@ -665,6 +665,21 @@ Field Name | Type | Description
 ---|:---:|---
 template | `string` | A URL template that must contain a single variable.
 variable_type | "string" or "integer" or "number" | The type of the variable
+
+#### <a name="url_template"></a>Permalink Template
+
+Field Name | Type | Description
+---|:---:|---
+template | `string` | A URL template that must contain a single variable.
+variables | [Template Variables](#template_variables) | The type of the variable
+
+#### <a name="template_variables"></a>Template Variables
+
+Describes a variable. 
+
+Field pattern | Type | Description
+---|:---:|---
+{variable_name} | Schema | the JSON Schema for the variable. Allows you to specify type, format and various JSON Schema constraints
 
 ## <a name="oas_generator">OpenAPI Generator
 
