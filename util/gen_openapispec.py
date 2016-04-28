@@ -126,7 +126,6 @@ class OASGenerator(object):
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
                 if 'well_known_URLs' in entity_spec:
-                    entity_url_spec = EntityURLSpec(entity_uri, self)
                     for well_known_URL in as_list(entity_spec['well_known_URLs']):
                         path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
                         spec = WellKnownURLSpec(path, entity_uri, self)
