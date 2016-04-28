@@ -499,9 +499,6 @@ class OASValidator(object):
         for key, entity in entities.iteritems():
             self.check_and_validate_keywords(self.__class__.implementation_private_keywords, entity, key)
 
-    def validate_permalink_template(self, node, key, entity):
-        self.check_and_validate_keywords(self.__class__.permalink_template_keywords, entity, key)
-        
     def validate_permalink_template_template(self, node, key, template):
         formatter = string.Formatter()
         try:
@@ -672,7 +669,7 @@ class OASValidator(object):
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
         'usage': validate_entity_usage,
-        'permalink_template': validate_permalink_template,
+        'permalink_template': validate_uri_templates,
         'URI_templates': validate_uri_templates})
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
@@ -717,10 +714,7 @@ class OASValidator(object):
         'maximum': validate_number,
         'collectionFormat': validate_query_parameter_collection_format}
     implementation_private_keywords =  {
-        'permalink_template': validate_permalink_template}
-    permalink_template_keywords =  {
-        'template': validate_permalink_template_template,
-        'variable_type': validate_permalink_template_variable_type}
+        'permalink_template': validate_uri_templates}
 
     def abs_url(self, url):
         split_url = url.split('#')
