@@ -1147,6 +1147,7 @@ class URITemplateSpec(PathPrefix):
     def __init__(self, uri_template, entity_uri, generator):
         self.uri_template = uri_template
         self.template_string = uri_template['template'] 
+        self.template_variables = uri_template.get('variables', {})
         self.entity_uri = entity_uri
         self.generator = generator
         split = self.template_string.split('{?')
@@ -1177,7 +1178,7 @@ class URITemplateSpec(PathPrefix):
                 varlist = expression
             varspecs = varlist.split(',')
             for var in varspecs:
-                param = {}
+                param = self.template_variables.get(var, {})
                 # handle prefix values
                 var_split = var.split(':')
                 var = var_split[0]
@@ -1186,10 +1187,10 @@ class URITemplateSpec(PathPrefix):
                 # handle composite values
                 if var.endswith('*'):
                     var = var[:-1]
-                    param['type'] = 'array' #in rfc6570 could also be a map
+                    param.setdefault('type', 'array') #in rfc6570 could also be a map
                     param['items'] = {'type': 'string'}
                 else:
-                    param['type'] = 'string'
+                    param.setdefault('type', 'string')
                 param['name'] = var
                 param['in'] = 'query' if is_query or expression[0] == '?' else 'path'
                 parameters.append(param)

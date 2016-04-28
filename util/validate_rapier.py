@@ -376,6 +376,42 @@ class OASValidator(object):
                 else:
                     self,error('name must not be null', name)
 
+    def validate_uri_templates(self, node, key, url_templates):
+        if isinstance(url_templates, basestring):
+            for template_string in url_templates.split():
+                self.validate_url_template(node, key, {"template": template_string})
+        elif isinstance(url_templates, list):
+            for url_template in url_templates:
+                template = {"template": template_string} if isinstance(url_template, basestring) else url_template
+                self.validate_url_template(node, key, template)
+        else:
+            self.validate_url_template(node, key, url_templates)
+            
+    def validate_url_template(self, node, key, url_template):
+        if hasattr(url_template, 'keys'):
+            template_string = url_template.get('template')
+            if not isinstance(template_string, basestring):
+                if template_string is None:
+                    self.error('URI template must have a `temnplate` property: %s' % url_template)
+                else:
+                    self.error('`template` property of URI template must be a string: %s' % template_string)
+            else:
+                if len(template_string.split()) > 1:
+                    self.error('template property of URI template must not contain whitespace: %s' % template_string)
+            template_variables = url_template.get('variables')
+            if template_variables is not None:
+                if hasattr(template_variables, 'keys'):
+                    for var_name, var in template_variables.iteritems():
+                        self.check_and_validate_keywords(self.__class__.template_variable_keywords, var, var_name)
+                else:
+                    self.error('`variable` property of URI template must be a map: %s' % template_variables)
+        elif isinstance(consumes, list):
+            for media_type in consumes:
+                self.validate_media_type(node, media_type, media_type)
+        else:
+            if not isinstance(consumes, basestring):
+                self.error('relationship consumes must be a list, string or relationship_consumes object: %s' % consumes, key)
+
     def validate_relationship_query_parameters(self, node, key, query_parameters):
         self.validate_query_parameters(node, key, query_parameters)
         multiplicity = node.get('multiplicity')
@@ -636,7 +672,8 @@ class OASValidator(object):
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
         'usage': validate_entity_usage,
-        'permalink_template': validate_permalink_template})
+        'permalink_template': validate_permalink_template,
+        'URI_templates': validate_uri_templates})
     conventions_keywords = {
         'selector_location': validate_conventions_selector_location,
         'patch_consumes': validate_conventions_patch_consumes,
@@ -661,6 +698,20 @@ class OASValidator(object):
         'title': validate_title,
         'description': validate_description,
         'name': validate_query_parameter_name,
+        'required': validate_query_parameter_required,
+        'minimum': validate_number,
+        'maximum': validate_number,
+        'collectionFormat': validate_query_parameter_collection_format}
+    template_variable_keywords =  {
+        'type': validate_query_parameter_property_type, 
+        'format': validate_property_format, 
+        'items': validate_property_items, 
+        'properties': invalid, 
+        'oneOf': validate_query_parameter_oneOf, 
+        'allOf': validate_query_parameter_allOf, 
+        'enum': validate_enum,
+        'title': validate_title,
+        'description': validate_description,
         'required': validate_query_parameter_required,
         'minimum': validate_number,
         'maximum': validate_number,
