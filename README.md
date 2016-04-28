@@ -657,14 +657,7 @@ Field Pattern | Type | Description
 
 Field Name | Type | Description
 ---|:---:|---
-permalink_template | [Permalink Template](#permalink_template) | A specification of the format of permalinks for this entity. These are the client-opaque URLs that the server provides to identify an entity of this entity type.
-
-#### <a name="permalink_template"></a>Permalink Template
-
-Field Name | Type | Description
----|:---:|---
-template | `string` | A URL template that must contain a single variable.
-variable_type | "string" or "integer" or "number" | The type of the variable
+permalink_template | [URI Template](#uri_template) | A specification of the format of permalinks for this entity. These are the client-opaque URLs that the server provides to identify an entity of this entity type. Documenting these templates is not important for clients, who are supposed to think of them as opaque, but can be important for implementation software and intermediate proxies.
 
 #### <a name="uri_template"></a>URI Template
 
