@@ -7,8 +7,6 @@ from validate_rapier import PresortedOrderedDict
 import os
 import re
 
-TEMPLATE = re.compile("{([^\}]+)}")
-
 class OASGenerator(object):
 
     def __init__(self):
@@ -1143,29 +1141,59 @@ class WellKnownURLSpec(PathPrefix):
                 
 class URITemplateSpec(PathPrefix):
     
+    TEMPLATE = re.compile("{([^\}]+)}")
+    OPERATOR = "+#./;?&|!@"
+
     def __init__(self, uri_template, entity_uri, generator):
         self.uri_template = uri_template
         self.template_string = uri_template['template'] 
         self.entity_uri = entity_uri
         self.generator = generator
         split = self.template_string.split('{?')
-        if len(split) > 0:
-            self._template_id = split[0]
+        if len(split) > 1:
+            self._path_id = split[0]
         else:
-            self._template_id = self.template_string.split('?')[0]
+            self._path_id = self.template_string.split('{?')
 
     def emit_openapi_path(self):
-        if self._template_id not in self.generator.openapispec_templates:
+        if self.template_string not in self.generator.openapispec_templates:
             path_spec = self.build_interface_ref_with_params()        
-            self.generator.openapispec_templates[self._template_id] = path_spec
+            self.generator.openapispec_templates[self.template_string] = path_spec
         path_spec = self.build_template_reference()
-        self.generator.openapispec_paths[self._template_id] = path_spec
+        self.generator.openapispec_paths[self._path_id] = path_spec
        
     def template_id(self):
-        return self._template_id
+        return self.template_string
        
     def build_parameters(self, query_path=None):
-        return self.uri_template['variables']
+        parameters = []
+        is_query = False
+        parts = self.__class__.TEMPLATE.split(self.template_string)
+        for text, expression in zip(parts[::2], parts[1::2]):
+            is_query = is_query or '?' in text
+            if expression[0] in self.__class__.OPERATOR:
+                varlist = expression[1:]
+            else:
+                varlist = expression
+            varspecs = varlist.split(',')
+            for var in varspecs:
+                param = {}
+                # handle prefix values
+                var_split = var.split(':')
+                var = var_split[0]
+                if len(var_split) > 1:
+                    param['maxLength'] = int(var_split[1])
+                # handle composite values
+                if var.endswith('*'):
+                    var = var[:-1]
+                    param['type'] = 'array' #in rfc6570 could also be a map
+                    param['items'] = {'type': 'string'}
+                else:
+                    param['type'] = 'string'
+                param['name'] = var
+                param['in'] = 'query' if is_query or expression[0] == '?' else 'path'
+                parameters.append(param)
+        return parameters
 
 class ImplementationPathSpec(PathPrefix):
     
