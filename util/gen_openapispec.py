@@ -1032,6 +1032,12 @@ class PathPrefix(object):
     def template_id(self):
         return '{%s-URL}' % self.interface_id()
         
+    def build_parameters(self, query_path=None):
+        result = self.build_params()
+        if query_path:
+            result.extend(query_path.build_parameters())
+        return result
+                
     def build_interface_reference(self):
         path = self.interface_id()
         path = path.replace('~', '~0')
@@ -1050,12 +1056,6 @@ class PathPrefix(object):
             rel_path = self.generator.validator.relative_url(split_entity_uri[0])
             return {'$ref': '%s#/x-interfaces/%s' % (rel_path, path)}
 
-    def build_parameters(self, query_path=None):
-        result = self.build_params()
-        if query_path:
-            result.extend(query_path.build_parameters())
-        return result
-                
     def build_template_reference(self, query_path=None):
         template_id = self.template_id()
         path = template_id
@@ -1147,6 +1147,9 @@ class URITemplateSpec(PathPrefix):
     def build_oas_path_spec(self, entity_spec):
         oas_path_spec = self.build_template_reference()
         return oas_path_spec
+
+    def emit_openapi_element(self, query_path, rel_spec):
+        self.emit_openapi_path(query_path, rel_spec)
 
 class ImplementationPathSpec(PathPrefix):
     
