@@ -236,17 +236,11 @@ class OASGenerator(object):
         interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
         is_private = reduce(lambda x, y: x or y.is_private(), rel_property_spec_stack, False)
         if not is_private or self.include_impl:
-            if prefix.is_uri_spec():
-                if self.use_templates:
-                    path = '/'.join([prefix.template_id(), query_path.openapispec_path_string])
-                    if path not in self.openapispec_templates:
-                        path_spec = prefix.build_path_interface_ref(interface_id, rel_spec, query_path)        
-                        self.openapispec_templates[path] = path_spec
-            else:
-                path = '/'.join([prefix.path_segment(), query_path.openapispec_path_string])
-                if path not in self.openapispec_paths:
-                    path_spec = prefix.build_oas_path_spec(interface_id, rel_spec, query_path)
-                    self.openapispec_paths[path] = path_spec
+            # There are multiple cases for getting here:
+            # 1. prefix is an ImplementationPathSpec. We need to create an OAS path (which may or may not reference a template)
+            # 2. prefix is an EntityURLSpec. We need to create an OAS template
+            # . prefix is a WellKnownURLSpec. We need to create an OAS path (which may or may not reference a template)
+            prefix.emit_openapi_element(query_path, rel_spec)
 
     def build_entity_interface(self, entity_url_spec):
         entity_uri = entity_url_spec.entity_uri
@@ -1090,7 +1084,23 @@ class PathPrefix(object):
         else:
             oas_path_spec = self.build_path_interface_ref(interface_id, path_spec or self, query_path)
         return oas_path_spec
-        
+
+    def emit_openapi_path(self, query_path, rel_spec):
+        is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].selects_single_value()
+        interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
+        path = '/'.join([self.path_segment(), query_path.openapispec_path_string])
+        if path not in self.generator.openapispec_paths:
+            path_spec = self.build_oas_path_spec(interface_id, rel_spec, query_path)
+            self.generator.openapispec_paths[path] = path_spec
+       
+    def emit_openapi_template(self, query_path, rel_spec):
+        is_collection_resource = rel_spec.is_collection_resource() and not query_path.query_segments[-1].selects_single_value()
+        interface_id = rel_spec.interface_id() if is_collection_resource else rel_spec.target_entity_uri
+        path = '/'.join([self.template_id(), query_path.openapispec_path_string])
+        if path not in self.generator.openapispec_templates:
+            path_spec = self.build_path_interface_ref(interface_id, rel_spec, query_path)        
+            self.generator.openapispec_templates[path] = path_spec
+
 class WellKnownURLSpec(PathPrefix):
     
     def __init__(self, base_URL, entity_uri, generator):
@@ -1123,6 +1133,9 @@ class WellKnownURLSpec(PathPrefix):
         else:
             oas_path_spec = super(WellKnownURLSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
         return oas_path_spec
+
+    def emit_openapi_element(self, query_path, rel_spec):
+        self.emit_openapi_path(query_path, rel_spec)
                 
 class URITemplateSpec(PathPrefix):
     
@@ -1195,9 +1208,29 @@ class ImplementationPathSpec(PathPrefix):
             oas_path_spec = super(ImplementationPathSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
             oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
         return oas_path_spec
-        
 
+    def emit_openapi_element(self, query_path, rel_spec):
+        self.emit_openapi_path(query_path, rel_spec)
+                
+class EntityURLSpec(PathPrefix):
+    
+    def __init__(self, entity_uri, generator):
+        self.entity_uri = entity_uri
+        self.generator = generator
 
+    def path_segment(self, select_one_of_many = False):
+        return self.generator.resolve_referenced_entity_name(self.entity_uri)
+
+    def build_params(self):
+        return []
+            
+    def is_uri_spec(self):
+        return True
+
+    def emit_openapi_element(self, query_path, rel_spec):
+        if self.generator.use_templates:
+            self.emit_openapi_template(query_path, rel_spec)
+ 
 class QueryPath(object):
 
     def __init__(self, query_path, generator):
@@ -1317,21 +1350,6 @@ class QuerySegment(object):
     def __repr__(self):
         return '%s(%s)' % (self.__class__.__name__, ', '.join(['%s=%s' % item for item in self.__dict__.iteritems()]))
         
-class EntityURLSpec(PathPrefix):
-    
-    def __init__(self, entity_uri, generator):
-        self.entity_uri = entity_uri
-        self.generator = generator
-
-    def path_segment(self, select_one_of_many = False):
-        return self.generator.resolve_referenced_entity_name(self.entity_uri)
-
-    def build_params(self):
-        return []
-            
-    def is_uri_spec(self):
-        return True
- 
 def as_list(value, separator = None):
     if isinstance(value, basestring):
         if separator:
