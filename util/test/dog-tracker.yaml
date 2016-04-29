@@ -57,7 +57,7 @@ entities:
   Resource:
     type: object
     properties:
-      _id:
+      _self:
         type: string
         readOnly: true
       kind:

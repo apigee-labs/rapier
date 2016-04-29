@@ -31,7 +31,7 @@ entities:
                   multiplicity: 0:n
   Item:
     properties:
-      _id:
+      _self:
         type: string
         format: uri
         readOnly: true

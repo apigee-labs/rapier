@@ -327,7 +327,7 @@ Effectively, this job has already been done by the server and the client just ha
 The opaque URL can also be used in other URL templates, in the same maner that an `id` value can be used, so there is no loss of function in the API.
 In a Rapier API, the URL of each resource is already available to the client in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
 when entities appear nested in collection resources, no header value is available to identify the nested resources, so it's useful to
-also put the resource URL in a `_id` property in the representation, as follows:
+also put the resource URL in a `_self` property in the representation, as follows:
 
 ```yaml
 entities:
@@ -337,7 +337,7 @@ entities:
   # ...
   Item:
     properties:
-      _id:
+      _self:
         type: string
         format: uri
         readOnly: true
@@ -352,7 +352,7 @@ entities:
 In JSON, the Collection at `http://example.org/xxxxx` will look like this in JSON:
 ```json
  {"contents": [
-     {"_id": "http://example.org/yyyyy",
+     {"_self": "http://example.org/yyyyy",
       "description": "Get milk on the way home",
       "due": "2016-10-30T09:30:10Z"
      }
@@ -361,18 +361,18 @@ In JSON, the Collection at `http://example.org/xxxxx` will look like this in JSO
 ``` 
 The Item at `http://example.org/yyyyy` will look like:
 ```json
-  {"_id": "http://example.org/yyyyy",
+  {"_self": "http://example.org/yyyyy",
    "description": "Get milk on the way home",
    "due": "2016-10-30T09:30:10Z"
   }
 ``` 
 
-The changes are to replace the integer- or string-valued `id` property with a URL-valued `_id` property, and to eliminate the `todos;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client the template variable value it needed to form a URL, the equivalent of which is now included in the `_id` property.
-The format of the `_id` URL can be opaque to the API clients,
+The changes are to replace the integer- or string-valued `id` property with a URL-valued `_self` property, and to eliminate the `todos;{id}` query path. 
+We don't need this query path any more because its only purpose was to give the client the template variable value it needed to form a URL, the equivalent of which is now included in the `_self` property.
+The format of the `_self` URL can be opaque to the API clients,
 and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque hyperlinks.
 
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-_id.yaml).
+If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml).
 An explanation of the generator output can be found [here](#openapi_generator_output).
  
 ### <a name="representing-urls"></a>Representing URLs in JSON
