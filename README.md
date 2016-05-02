@@ -643,7 +643,7 @@ Multiple query paths may be included in the same string as a space-deliminated l
 
 #### <a name="query_parameters"></a>Query Parameters
 
-A YAML map of query paramters
+A YAML map of query parameters
 
 Field pattern | Type | Description
 ---|:---:|---
