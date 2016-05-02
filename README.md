@@ -56,8 +56,8 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010. <a href="#ref1">↩</a>
 
-<a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that there is no resource in the API that a client can address
-by composing URLs that cannot also be reached by following hyperlinks. It is thus possible to write a general client that
+<a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that any resource that a client can address
+by composing URLs can usually also be reached by following hyperlinks. [There can be exceptions in the case of unbounded sets of related resources, where complete hyperlinking is not possible.] It is thus possible to write a general client that
 has no a-priori knowledge of any specific Rapier API and navigates APIs only by following hyperlinks. General software is more difficult to design and
 write than specific software—we believe clients that work this way are written primarily when their costs, like those of browsers and web bots, can be 
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
