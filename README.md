@@ -242,7 +242,7 @@ entities:
 
 ### <a name="query_paths"></a>Query Paths
  
-So far we have seen examples of APIs that are easy to navigate by following hyperlinks. Rapier, supports `Query URLs` in an API that allow the client to
+So far we have seen examples of APIs that are easy to navigate by following hyperlinks. Rapier also supports in an API. `Query URLs` allow the client to
 locate a particular resource directly without navigating the web of resources from the root to find it.
 In contrast to hyperlinks, which are intended to be opaque to clients, query URLs have formats that clients are expected to understand in order to compose them. Hyperlinks are
 expected to be stable over time—you should be able to safely bookmark them or store them in a database, and when you recover them and reuse them, they should identify the same permanent entity. 
