@@ -456,7 +456,7 @@ entities:
   FahrenheitTemperature:
     type: number
     URI_templates:
-      template: /allowed-actions{?celcius} # or /allowed-actions/{celcius} if you prefer that URI pattern
+      template: /fahrenheit{?celcius} # or /fahrenheit/{celcius} if you prefer that URI pattern
       variables:
         celcius:
           type: integer
