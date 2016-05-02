@@ -34,16 +34,16 @@ entities:
           entities: '#Page'
           readOnly: True
     query_parameters:
-    - name: properties
-      items:
-        type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
+      properties:
+        items:
+          type: string
+        type: array
+        required: false
+      limit:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        required: false
     readOnly: true
   Collection:
     allOf:
@@ -57,23 +57,23 @@ entities:
         items: 
           type: object
     query_parameters:
-    - name: properties
-      items:
+      properties:
+        items:
+          type: string
+        type: array
+        required: false
+      limit:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        required: false
+      orderBy: # required if limit is provided
         type: string
-      type: array
-      required: false
-    - name: limit
-      type: integer
-      minimum: 1
-      maximum: 1000
-      required: false
-    - name: orderBy # required if limit is provided
-      type: string
-      required: false
-    - name: direction
-      type: string
-      required: false
-      enum: ['ascending', 'descending']
+        required: false
+      direction:
+        type: string
+        required: false
+        enum: ['ascending', 'descending']
     readOnly: true
   MultiValuedRelationship:
     readOnly: true

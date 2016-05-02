@@ -163,14 +163,14 @@ entities:
         items: 
           $ref: '#/entities/Pet'
     query_parameters:
-    - name: tags
-      items:
-        type: string
-      type: array
-      collectionFormat: multi
-      required: false
-    - name: status
-      type: integer
-      collectionFormat: multi
-      required: false
+      tags:
+        items:
+          type: string
+        type: array
+        collectionFormat: multi
+        required: false
+      status:
+        type: integer
+        collectionFormat: multi
+        required: false
     readOnly: true

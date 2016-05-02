@@ -496,6 +496,18 @@ x-interfaces:
     get:
       parameters:
       - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
         name: orderBy
         required: false
         type: string
@@ -507,17 +519,17 @@ x-interfaces:
         required: false
         type: string
       - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         items:
           type: string
         name: properties
         required: false
         type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
       responses:
         '200':
           description: description
@@ -927,6 +939,18 @@ x-interfaces:
     get:
       parameters:
       - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
         name: orderBy
         required: false
         type: string
@@ -938,17 +962,17 @@ x-interfaces:
         required: false
         type: string
       - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         items:
           type: string
         name: properties
         required: false
         type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
       responses:
         '200':
           description: description
@@ -1059,6 +1083,18 @@ x-interfaces:
     get:
       parameters:
       - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
         name: orderBy
         required: false
         type: string
@@ -1070,17 +1106,17 @@ x-interfaces:
         required: false
         type: string
       - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         items:
           type: string
         name: properties
         required: false
         type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
       responses:
         '200':
           description: description
@@ -1191,6 +1227,18 @@ x-interfaces:
     get:
       parameters:
       - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
         name: orderBy
         required: false
         type: string
@@ -1202,17 +1250,17 @@ x-interfaces:
         required: false
         type: string
       - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         items:
           type: string
         name: properties
         required: false
         type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
       responses:
         '200':
           description: description
@@ -1323,6 +1371,18 @@ x-interfaces:
     get:
       parameters:
       - in: query
+        items:
+          type: string
+        name: properties
+        required: false
+        type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
+      - in: query
         name: orderBy
         required: false
         type: string
@@ -1334,17 +1394,17 @@ x-interfaces:
         required: false
         type: string
       - in: query
-        maximum: 1000
-        minimum: 1
-        name: limit
-        required: false
-        type: integer
-      - in: query
         items:
           type: string
         name: properties
         required: false
         type: array
+      - in: query
+        maximum: 1000
+        minimum: 1
+        name: limit
+        required: false
+        type: integer
       responses:
         '200':
           description: description
@@ -1682,7 +1742,7 @@ definitions:
   Resource:
     type: object
     properties:
-      _id:
+      _self:
         type: string
         readOnly: true
       kind:

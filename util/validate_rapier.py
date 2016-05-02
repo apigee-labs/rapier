@@ -260,7 +260,7 @@ class OASValidator(object):
             
     def validate_query_parameter_property_type(self, node, key, p_type):
         if not p_type in ['array', 'boolean', 'integer', 'number', 'string']:
-            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'string': " % p_type, key)   
+            self.error("type must be one of 'array', 'boolean', 'integer', 'number', 'string': %s" % p_type, key)   
             
     def validate_property_format(self, node, key, format):
         if not isinstance(format, basestring):
@@ -361,20 +361,13 @@ class OASValidator(object):
         pass #self.info('Security not yet validated')
 
     def validate_query_parameters(self, node, key, query_parameters):
-        if not isinstance(query_parameters, list):
-            return self.error('query_parameters must be a list: %s' % query_parameters, key)
+        if not hasattr(query_parameters, 'keys'):
+            return self.error('query_parameters must be a map: %s' % query_parameters, key)
         names = set()
-        for query_parameter in query_parameters:
+        for param_name, query_parameter in query_parameters.iteritems():
             self.check_and_validate_keywords(self.__class__.query_parameter_keywords, query_parameter, key)
-            if hasattr(query_parameter, 'keys'):
-                name = query_parameter.get('name')
-                if name:
-                    if name in names:
-                        self.error('duplicate name: %s' %name, name)
-                    else:
-                        names.add(name)
-                else:
-                    self,error('name must not be null', name)
+            if not isinstance(param_name, basestring):
+                self.error('name must be a string: %s' % name, param_name)
 
     def validate_uri_templates(self, node, key, url_templates):
         if isinstance(url_templates, basestring):

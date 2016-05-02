@@ -276,7 +276,7 @@ class OASGenerator(object):
         if produces:
             interface['get']['produces'] = produces if self.yaml_merge else produces[:]
         if query_parameters:
-            interface['get']['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
+            interface['get']['parameters'] = [{k: v for d in [{'in': 'query'}, {'name': param_name}, query_parameter] for k, v in d.iteritems()} for param_name, query_parameter in query_parameters.iteritems()]
         if not self.yaml_merge:
             interface['get']['responses'].update(self.build_entity_get_responses())
         else:
@@ -693,16 +693,16 @@ class OASGenerator(object):
         def add_query_parameters(entity, query_params):
             if 'query_parameters' in entity:
                 params = entity['query_parameters']
-                if not self.yaml_merge:
-                    new_params = []
-                    for param in params:
-                        new_param = param.copy()
-                        if 'enum' in param:
-                            new_param['enum'] = param['enum'][:]
-                        if 'items' in param:
-                            new_param['items'] = param['items'].copy()
-                        new_params.append(new_param)
-                query_params.extend(new_params)
+                for param_name, param in params.iteritems():
+                    new_param = dict()
+                    new_param.update(param)
+                    if 'enum' in param:
+                        new_param['enum'] = param['enum'][:]
+                    if 'items' in param:
+                        new_param['items'] = param['items'].copy()
+                    new_param['name'] = param_name
+                    new_param['in'] = 'query'
+                    query_params.append(new_param)
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
                     add_query_parameters(self.validator.resolve_included_entity_ref(entity_ref), query_params) 
@@ -710,9 +710,8 @@ class OASGenerator(object):
         add_query_parameters(collection_entity, query_parameters)
         if 'query_parameters' in rel_property_spec.relationship:
             add_query_parameters(rel_property_spec.relationship, query_parameters)
-        query_parameters = {param['name']: param for param in query_parameters}.values() #get rid of duplicates
         if query_parameters:
-            rslt['parameters'] = [{k: v for d in [{'in': 'query'}, query_parameter] for k, v in d.iteritems()} for query_parameter in query_parameters]
+            rslt['parameters'] = query_parameters
         return rslt        
  
     def define_put_if_match_header(self):
