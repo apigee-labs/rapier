@@ -40,7 +40,7 @@ as a set of 'end-points' with 'parameters' (a traditional service-oriented or RP
 While Rapier APIs conform to the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require clients
 to be written in any special way—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>. Rapier does
 not require or promote any particular hypermedia format—any method of representing URLs that can be described with [JSON Schema](http://json-schema.org/)
-is compatible with Rapier <a href="#footnote3" id="ref3"><sup>3</sup></a>.
+is compatible with Rapier.
 
 Since the Rapier specification language is not yet widely 
 known and adopted, we provide a tool that will generate an OpenAPI (formerly known as Swagger)
@@ -63,8 +63,6 @@ write than specific software—we believe clients that work this way are written
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make APIs that are easier to understand and learn and to make all clients easier to write—supporting 
 general clients is an additional benefit. <a href="#ref2">↩</a>
-
-<a name="footnote3"><sup>3</sup></a> See the section below on <a href="#representing-urls">Representing URLs in JSON</a>. <a href="#ref3">↩</a>
 
 ## <a name="news"></a>News
 
@@ -102,20 +100,20 @@ entities:
 This is the complete Rapier specification of the API. The `entities` and `well_known_URLs` elements are specific to Rapier. The rest is standard JSON Schema, including the `properties` element.
 The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
-retrieved using GET and modified using PATCH <a href="#footnote4" id="ref4"><sup>4</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
+retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 The `Hello-message` at `/message` will look like this:
 ```json
     {"text": "Hello, world"}
 ``` 
-We know the JSON will look like this from the rules of JSON Schema <a href="#footnote5" id="ref5"><sup>5</sup></a>—this is not specific to Rapier.
+We know the JSON will look like this from the rules of JSON Schema <a href="#footnote4" id="ref4"><sup>4</sup></a>—this is not specific to Rapier.
 
 The OpenAPI document generated from this Rapier specification can be [found here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/hello-message.yaml). 
 An explanation of the generator output can be found [here](#openapi_generator_output).
 
-<a name="footnote4"><sup>4</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref3">↩</a>
+<a name="footnote3"><sup>3</sup></a> Rapier assumes PATCH for structured objects and PUT for unstructured or semi-structured documents <a href="#ref3">↩</a>
 
-<a name="footnote5"><sup>5</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref4">↩</a>
+<a name="footnote4"><sup>4</sup></a> Since we didn't use a `required` property in our JSON Schema, and since we didn't disallow `additionalProperties`, the JSON Schema really only says that the JSON *may* look like this <a href="#ref4">↩</a>
 
 ### Single-valued relationship — Webmaster
 
@@ -314,92 +312,6 @@ In the [To-do List example](#to_do_list) above, the value of the `todos` propert
 
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-id.yaml).
 An explanation of the generator output can be found [here](#openapi_generator_output).
-
-### Hiding the implementation detail
-
-This section contains some opinion about API design and is not specific to Rapier—it is really an apology for the design of 
-the example shown in [Query Paths](#query_paths) above and a suggestion of a better one. If you are not interested in this opinion, you can [skip to the next section](#representing-urls).
-
-In the example above, we exposed an `id` property of an item and used it in a `query path`. This is a very common pattern in API design, but we do not consider it a best practice.
-A better practice is to keep the `id` private to the implementation, and instead provide the client of the API with an opaque URL. 
-This avoids the need for the client programmer to find the template definition in the API documentation and plug an `id` value into the template to get a URL for an entity. 
-Effectively, this job has already been done by the server and the client just has to use the result. 
-The opaque URL can also be used in other URL templates, in the same maner that an `id` value can be used, so there is no loss of function in the API.
-In a Rapier API, the URL of each resource is already available to the client in the `Location` and `Content-Location` response headers of POST and GET or HEAD requests, but
-when entities appear nested in collection resources, no header value is available to identify the nested resources, so it's useful to
-also put the resource URL in a `_self` property in the representation, as follows:
-
-```yaml
-entities:
-  TodoList:
-    well_known_URLs: /
-    query_paths: todos
-  # ...
-  Item:
-    properties:
-      _self:
-        type: string
-        format: uri
-        readOnly: true
-      description:
-        type: string
-      due:
-        type: string
-        format: date-time
-  # ...
-```                
-
-In JSON, the Collection at `http://example.org/xxxxx` will look like this in JSON:
-```json
- {"contents": [
-     {"_self": "http://example.org/yyyyy",
-      "description": "Get milk on the way home",
-      "due": "2016-10-30T09:30:10Z"
-     }
-   ]
- }
-``` 
-The Item at `http://example.org/yyyyy` will look like:
-```json
-  {"_self": "http://example.org/yyyyy",
-   "description": "Get milk on the way home",
-   "due": "2016-10-30T09:30:10Z"
-  }
-``` 
-
-The changes are to replace the integer- or string-valued `id` property with a URL-valued `_self` property, and to eliminate the `todos;{id}` query path. 
-We don't need this query path any more because its only purpose was to give the client the template variable value it needed to form a URL, the equivalent of which is now included in the `_self` property.
-The format of the `_self` URL can be opaque to the API clients,
-and you could even obfuscate these URLs to clearly indicate which URLs are client-parsable `query URLs`, and which URLs are opaque hyperlinks.
-
-If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-self.yaml).
-An explanation of the generator output can be found [here](#openapi_generator_output).
- 
-### <a name="representing-urls"></a>Representing URLs in JSON
-
-JSON has no built-in type for URLs. In the examples above, we exposed relationship "links" as simple JSON properties with the URL being encoded as a string value, like this:
-```json
-    "todos": "http://example.org/xxxxx"
-```
-We like this pattern for its simplicity, and because it is faithful to the JSON data model (the relationship name is expressed as a simple JSON property name). Rapier does not manadate this style—you
-can use any style you like for links with Rapier so long as it can be expressed in JSON Schema. Our simple pattern has disadvantages—for example you
-cannot tell which properties are URL-valued versus string-valued without out-of-band information or by guessing based on the format of the value. The next-simplest pattern we know looks like this:
-```json
-    "todos": {"href": "http://example.org/xxxxx"}
-```
-It is trivial to express this pattern in JSON Schema/Rapier. This pattern has the advantage that—provided I know the pattern—I can find all the URL-valued properties without out-of-band information. It also gives a place to put extra "link properties".
-We like the fact the relationship name is still expressed as a simple JSON property name. Although there are several reasons to like this format, we discovered when we used it on a project that we made lots of programming errors forgetting to encode
-URLs this way and using simple strings instead—we eventually reverted to the simpler form above.
-Another pattern that is popular is to create JSON "link objects" that (we guess) are inspired by the link element in HTML. The pattern looks like this:
-```json
-    {"links": [
-        {"rel": "todos",
-         "href": "http://example.org/xxxxx"}
-        ]
-    }
-```
-This pattern is standardized (or at least specified) in the [JSON Hyper-schema specification](http://json-schema.org/latest/json-schema-hypermedia.html). This pattern can also be expressed in JSON Schema as shown in [this example](https://github.com/apigee-labs/rapier/blob/master/util/test/todo-list-with-links.yaml).
-From a JSON perspective, this pattern looks convoluted to us and is even more difficult to program to.
 
 ### Query Parameters
 
