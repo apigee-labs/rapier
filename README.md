@@ -459,7 +459,7 @@ entities:
       template: /fahrenheit{?celcius} # or /fahrenheit/{celcius} if you prefer that URI pattern
       variables:
         celcius:
-          type: integer
+          type: number
 ``` 
 
 ### Dog Tracker
