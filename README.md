@@ -454,7 +454,7 @@ The following YAML shows how to express the Fahrenheit example.
 ```yaml
 entities:
   FahrenheitTemperature:
-    well_known_URLs: /fahrenheit
+    type: number
     URI_templates:
       template: /allowed-actions{?celcius} # or /allowed-actions/{celcius} if you prefer that URI pattern
       variables:
