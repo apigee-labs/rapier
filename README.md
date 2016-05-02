@@ -357,8 +357,9 @@ The idea is that the client will know the URI Template and use it to "manufactur
 URI Templates are often used where the number of resources is so large that it is impossible or impractical to provide hyperlinks for them all.
 Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the 
 corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`, according to your API style preference. 
-There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application of
-the [Query Parameters](#t_query_parameter) feature above. `celcius` is not a declared property or relationship of any entity, so this is not an application of [Query Paths](#query_paths).
+This is this is not an application of the [Query Parameters](#t_query_parameter) feature above, because there is no larger resource at 
+`http://example.org/fahrenheit` and no entity type corresponding to that larger resource. 
+This is not an application of [Query Paths](#query_paths) feature because `celcius` is not a declared property or relationship of any entity.
 The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
 The following YAML shows how to express the Fahrenheit example.
 
