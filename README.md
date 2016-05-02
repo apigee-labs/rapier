@@ -313,10 +313,10 @@ In the [To-do List example](#to_do_list) above, the value of the `todos` propert
 If you want to see the generated OpenAPI document for this API specification, [it is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-with-id.yaml).
 An explanation of the generator output can be found [here](#openapi_generator_output).
 
-### Query Parameters
+### <a name="t_query_parameter"></a>Query Parameters
 
 Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
-query string portion of URLs? Rapier allows you to specify this on entities using the same syntax as OpenAPI. Here is an example:
+query string portion of URLs? Rapier allows you to specify this on entities using a similar syntax to OpenAPI. Here is an example:
 ```yaml
 entities:
   PetCollection:
@@ -326,16 +326,16 @@ entities:
         items: 
           $ref: '#/entities/Pet'
     query_parameters:
-    - name: tags
-      items:
-        type: string
-      type: array
-      collectionFormat: multi
-      required: false
-    - name: status
-      type: integer
-      collectionFormat: multi
-      required: false
+      tags:
+        items:
+          type: string
+        type: array
+        collectionFormat: multi
+        required: false
+      status:
+        type: integer
+        collectionFormat: multi
+        required: false
     readOnly: true
 ```
 This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
@@ -358,8 +358,8 @@ from [Query Paths](#query_paths) in that the variable portions of the template a
 URI Templates are often used where the number of resources is so large that it is impossible or impractical to provide hyperlinks for them all.
 Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the 
 corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. 
-There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application f
-or the `query_parameters` feature above. `celcius` is not a declared property or relationship of any entity, so this is not an application of `query_paths`
+There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application of
+the [Query Parameters](#t_query_parameter) feature above. `celcius` is not a declared property or relationship of any entity, so this is not an application of [Query Paths](#query_paths).
 The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
 The following YAML shows how to express the Fahrenheit example.
 
