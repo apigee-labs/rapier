@@ -440,7 +440,16 @@ Given this structure, we may model query parameters more precisely in the future
 
 ### <a name="templates"></a>URI Templates
 
-URI Templates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application for the `query_parameters` feature above. The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). The following YAML shows how to express the Fahrenheit example.
+URI Templates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. 
+The idea is that the client will know the URL Template and use it to "manufacture" a URL from other information. URI Templates are different
+from [Query Paths](#query_paths) in that the variable portions of the template are not based on declared properties and relationships of entities. 
+URI Templates are often used where the number of resources is so large that it is impossible or impractical to provide hyperlinks for them all.
+Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the 
+corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. 
+There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application f
+or the `query_parameters` feature above. `celcius` is not a declared property or relationship of any entity, so this is not an application of `query_paths`
+The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
+The following YAML shows how to express the Fahrenheit example.
 
 ```yaml
 entities:
