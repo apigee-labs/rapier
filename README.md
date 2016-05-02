@@ -461,6 +461,14 @@ entities:
         celcius:
           type: number
 ``` 
+or, more simply,
+```yaml
+entities:
+  FahrenheitTemperature:
+    type: number
+    URI_templates: /fahrenheit{?celcius} # or /fahrenheit/{celcius} if you prefer that URI pattern
+``` 
+if you don't care about the type of the variable.
 
 ### Dog Tracker
  
