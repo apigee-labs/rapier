@@ -544,7 +544,7 @@ properties | [Properties](#properties) | The properties of the entity. This is t
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
-query_parameters | `sequence` of [Query Parameter](#query_parameter)s | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
+query_parameters | [Query Parameters](#query_parameters) | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
 URI_templates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| See [URI Templates](#templates) for an explanation of the meaning.
 usage | `string` or `sequence of string` | [Usage](#usage)s
 
@@ -640,6 +640,14 @@ A `query path` can be represented as a string. Here are some examples with their
 - `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings.  URL template is \{`child-URL`\}/siblings;name=\{name\}/siblings}  
 
 Multiple query paths may be included in the same string as a space-deliminated list.
+
+#### <a name="query_parameters"></a>Query Parameters
+
+A YAML map of query paramters
+
+Field pattern | Type | Description
+---|:---:|---
+{paramter_id} | [Query Parameter](#query_parameter) | The names of the query parameters with their associated definitions 
 
 #### <a name="query_parameter"></a>Query Parameter
 
