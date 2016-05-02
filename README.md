@@ -353,8 +353,7 @@ Given this structure, we may model query parameters more precisely in the future
 ### <a name="templates"></a>URI Templates
 
 URI Templates are used to define a family of resources of the same entity type whose URLs are similar except for some variable elements of the URL. 
-The idea is that the client will know the URI Template and use it to "manufacture" a URL by sustituting variable values. URI Templates are different
-from [Query Paths](#query_paths) in that the variable of the template do not correspond to declared properties and relationships of entities. 
+The idea is that the client will know the URI Template and use it to "manufacture" a URL by sustituting variable values.
 URI Templates are often used where the number of resources is so large that it is impossible or impractical to provide hyperlinks for them all.
 Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the 
 corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`, according to your API style preference. 
