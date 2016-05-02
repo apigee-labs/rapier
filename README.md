@@ -406,6 +406,7 @@ From a JSON perspective, this pattern looks convoluted to us and is even more di
 Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
 query string portion of URLs? Rapier allows you to specify this on entities using the same syntax as OpenAPI. Here is an example:
 ```yaml
+entities:
   PetCollection:
     properties:
       items:
@@ -427,12 +428,30 @@ query string portion of URLs? Rapier allows you to specify this on entities usin
 ```
 This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
+Query Parameters are used to subset an entity. Adding a query parameter to the URL of a resource defines the URL of a related resource that is a "view" onto that larger resource. The complete set of possible query paramter values defines a set of such 'view resources'.
+There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
+
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
 - a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity. This pattern is used on regular entities as well as collections. 
 - "selection" parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
 
 Given this structure, we may model query parameters more precisely in the future.
+
+### <a name="templates"></a>URI Templates
+
+URI Templates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application for the `query_parameters` feature above. The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). The following YAML shows how to express the Fahrenheit example.
+
+```yaml
+entities:
+  FahrenheitTemperature:
+    well_known_URLs: /fahrenheit
+    URI_templates:
+      template: /allowed-actions{?celcius}
+      variables:
+        celcius:
+          type: integer
+``` 
 
 ### Dog Tracker
  
@@ -526,7 +545,7 @@ readOnly | `boolean` | Indicates that resources of this Entity type can be read 
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 query_parameters | `sequence` of [Query Parameter](#query_parameter)s | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
-URI_templates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| URLTemplates are used to define a family of resources of the same type whose URLs are similar except for some variable elements of the URL. Suppose for example that I have an API that provides a fahrenheit resource for every celcius value. For the celcius value `19.7234`, the URL of the corresponding fahrenheit resource might be `http://example.org/fahrenheit/19.7234` or `http://example.org/fahrenheit?celcius=19.7234`. There is no larger resource at `http://example.org/fahrenheit` and no entity type corresponding to that larger resource, so this is not an application for the `query_parameters` feature above. The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4)
+URI_templates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| See [URI Templates](#templates) for an explanation of the meaning.
 usage | `string` or `sequence of string` | [Usage](#usage)s
 
 #### <a name="properties"></a>Properties
@@ -693,7 +712,7 @@ extra information that is otherwise ommitted from the output.
 The --suppress-templates option will generate paths but not templates. This simplifies the output a little for implementors who are only interested in the paths they need to implement. If you are generating for clients rather than implementors
 we con't recommend using this option.
 
-### <a name="openapi_generator_output"></a>Understanding the outout of the Rapier OpenAPI generator
+### <a name="openapi_generator_output"></a>Understanding the output of the Rapier OpenAPI generator
 
 The OpenAPI generated by the Rapier utility is valid OpenAPI that captures all the meaning of the Rapier API to the degree that OpenAPI can express it.
 In simple cases, OpenAPI can capture the full meaning, but OpenAPI has trouble with some cases, like heterogeneous relationships. The Rapier OpenAPI generator
