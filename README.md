@@ -656,7 +656,6 @@ A common use is to restrict the fields returned.
 
 Field Name | Type | Description
 ---|:---:|---
-name | `string` | The name
 description | `string` | The description
 required | `true or false` | The default is `false`
 type | "string", "number", "integer", "boolean", or "array" | Required. The type of the parameter. Since the parameter is not located at the request body, it is limited to simple types (that is, not an object).
