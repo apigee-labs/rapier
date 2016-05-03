@@ -106,8 +106,10 @@ The API does not allow this resource to be deleted, because it is well-known, bu
 retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 
-We don't have to specify the details of the methods, requests and responses for the API in Rapier,
-because these details are already specified in the HTTP standards. Where the specifications offer options, Rapier picks defaults and [sometimes] lets you
+We don't have to specify the details of the methods, requests and responses of the API in Rapier,
+because these details are already specified in the HTTP standards. Specifying the details of individual requests would only be interesting if we wanted to document
+the ways in which we are not following the standards—Rapier assumes you want to follow them.
+Where the specifications offer options, Rapier picks defaults and [sometimes] lets you
 override these defaults in the `conventions` section of the Rapier document.
 
 The `Hello-message` at `/message` will look like this:
