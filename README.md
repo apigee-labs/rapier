@@ -110,7 +110,7 @@ We don't have to specify the details of the methods, requests and responses of t
 because these details are already specified in the HTTP standards. Specifying the details of individual requests and responses would only be useful for documenting
 ways in which we are diverging from the standards—Rapier assumes we want to follow them.
 Where the standards offer options, Rapier picks defaults and lets you
-override these defaults in the `conventions` section of the Rapier document [,sometimes, it needs more work].
+override these defaults in the `conventions` section of the Rapier document [sometimes, it needs more work].
 
 The `Hello-message` at `/message` will look like this:
 ```json
