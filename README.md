@@ -347,6 +347,7 @@ The generated OpenAPI specification [is here](https://github.com/apigee-labs/rap
 These query parameters imply that, for each PetCollection whose url is `a_pet_collection_URL`, there is an unbounded set of related resources whose URL is of the form `a_pet_collection_URL?tags=tag1,..,tagn&status=a-status`.
 In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), the API includes a URI-template of the form `{a_pet_collection_url}{?tags*,status}`.
 Each of these resources is a "view" onto the larger `a_pet_collection_URL` resource.
+
 There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
 
 We have seen three common patterns for query parameters on entities:
