@@ -343,7 +343,7 @@ entities:
     readOnly: true
 ```
 These query parameters imply that, for each PetCollection whose url is <a-pet-collection>, there is an unbounded set of related resources whose URL is of the form <a-pet-collection>?tags=tag1,..,tagn&status=a-status.
-In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), the API includes a URI-template of the form {a_pet_collection}{?tags*,status}.
+In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), the API includes a URI-template of the form `{a_pet_collection}{?tags*,status}`.
 This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). 
 The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
