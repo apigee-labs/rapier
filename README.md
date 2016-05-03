@@ -344,7 +344,7 @@ entities:
 ```
 This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). 
 The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
-These query parameters imply that, for each PetCollection whose url is `a_pet_collection_URL`, there is an unbounded set of related resources whose URL is of the form `a_pet_collection_URL?tags=tag1,..,tagn&status=a-status.
+These query parameters imply that, for each PetCollection whose url is `a_pet_collection_URL`, there is an unbounded set of related resources whose URL is of the form `a_pet_collection_URL?tags=tag1,..,tagn&status=a-status`.
 In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), the API includes a URI-template of the form `{a_pet_collection_url}{?tags*,status}`.
 
 Adding a query parameter to the URL of a resource defines the URL of a related resource that is a "view" onto that larger resource. The complete set of possible query parameter values defines a set of such 'view resources'.
