@@ -107,8 +107,8 @@ retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup
 includes an ETag header that must be echoed in the 'If-Match' request header of the PATCH. This catches problems when two people try to update the resource at the same time.
 
 We don't have to specify the details of the methods, requests and responses of the API in Rapier,
-because these details are already specified in the HTTP standards. Specifying the details of individual requests would only be interesting if we wanted to document
-the ways in which we are not following the standards—Rapier assumes you want to follow them.
+because these details are already specified in the HTTP standards. Specifying the details of individual requests and responses would only be useful for documenting
+the ways in which we are not following the standards—Rapier assumes we want to follow them.
 Where the specifications offer options, Rapier picks defaults and [sometimes] lets you
 override these defaults in the `conventions` section of the Rapier document.
 
