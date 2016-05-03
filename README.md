@@ -137,7 +137,10 @@ entities:
 
 Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
-that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml) generated from this example spells out all the detail.
+that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. We don't have to specify the details of the requests and responses for these methods in Rapier,
+because these details are already specified in the HTTP standards. Where the specifications offer options, we pick defaults and [sometimes] let you
+override these defaults in the `conventions` section of the Rapier document.
+The [OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/todo-list-basic.yaml) generated from this example spells out all the detail.
 An explanation of the generator output can be found [here](#openapi_generator_output).
 
 In JSON, the `Site` at `/` will look like this:
