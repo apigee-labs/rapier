@@ -100,7 +100,7 @@ entities:
       text:
         type: string
 ```                    
-This is the complete Rapier specification of the API. The `entities` and `well_known_URLs` elements are specific to Rapier. The rest is standard JSON Schema, including the `properties` element.
+This is the complete Rapier specification of the API. The `title`, `entities` and `well_known_URLs` elements are specific to Rapier. The `properties` element is standard JSON Schema, and the object that contains `properties` is a valid schema in JSON Schmea.
 The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
