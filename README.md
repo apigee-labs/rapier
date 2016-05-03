@@ -75,7 +75,10 @@ April 4 2016:
 The utilities now support relative references between files on the same file-system. HTTP URI references
 are not yet supported.
  
+April 28 2016:
 
+Added support for [URI Tewmplates](#templates).
+ 
 ## <a name="tutorial"></a>Tutorial
 
 Rapier is a small extension to [JSON Schema](http://json-schema.org/) and should be easy to understand and learn if you already know that standard. 
