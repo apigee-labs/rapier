@@ -355,8 +355,6 @@ We have seen three common patterns for query parameters on entities:
 - a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity. This pattern is used on regular entities as well as collections. 
 - "selection" parameters that limit the contents of a collection to entities that match a particular property value. In this case the parameter is really a property of the the entity (or entities) that define(s) the elements of the collection
 
-Given this structure, we may model query parameters more precisely in the future.
-
 ### <a name="templates"></a>URI Templates
 
 URI Templates are used to define a family of resources of the same entity type whose URLs are similar except for some variable elements of the URL. 
