@@ -318,8 +318,8 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
 
 ### <a name="t_query_parameter"></a>Query Parameters
 
-Specifying Query URLs using `query paths` provides an interesting way to traverse a web of resources using query resources. Another important class of queries
-are 'projection queries'—queries that subset the information returned for a particular resource. This is specified with the `Query Parameter` feature. 
+Specifying Query URLs using `query paths` provides an interesting way to traverse a web of resources using query resources. Other important classes of queries,
+are 'projection queries', `selection queries' and queries that control order or grouping of information. These queries are specified with the `Query Parameter` feature. 
 Here is an example:
 ```yaml
 entities:
@@ -342,7 +342,10 @@ entities:
         required: false
     readOnly: true
 ```
-This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
+These query parameters imply that, for each PetCollection whose url is <a-pet-collection>, there is an unbounded set of related resources whose URL is of the form <a-pet-collection>?tags=tag1,..,tagn&status=a-status.
+In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), the API includes a URI-template of the form {a_pet_collection}{?tags*,status}.
+This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). 
+The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
 Adding a query parameter to the URL of a resource defines the URL of a related resource that is a "view" onto that larger resource. The complete set of possible query parameter values defines a set of such 'view resources'.
 There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
