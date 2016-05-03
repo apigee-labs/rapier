@@ -77,7 +77,7 @@ are not yet supported.
  
 April 28 2016:
 
-Added support for [URI Tewmplates](#templates).
+Added support for [URI Templates](#templates).
  
 ## <a name="tutorial"></a>Tutorial
 
