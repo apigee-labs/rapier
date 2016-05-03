@@ -145,7 +145,7 @@ entities:
         type: string
 ```
 
-Here you see the definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
+Here you see the JSON Schema definition of a property called webmaster whose value is a URI. The extra Rapier property `relationship` tells you that the entity
 that is identified by that URI is a Person. Since Rapier is designed to describe HTTP APIs, we further assume that the URI will be an HTTP URL
 that supports methods like GET, PATCH, DELETE, OPTIONS, and HEAD. As mentioned above, we don't have to specify the details of the requests and responses for these methods in the Rapier document,
 because these details are already specified in the HTTP standards.
