@@ -315,7 +315,7 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
 
 ### <a name="t_query_parameter"></a>Query Parameters
 
-Specifying Query URLs using `query paths` provides an interesting way to traverse a web of resources using Query. Another important class of queries
+Specifying Query URLs using `query paths` provides an interesting way to traverse a web of resources using query resources. Another important class of queries
 are 'projection queries'—queries that subset the information returned for a particular resource. This is specified with the `Query Paramter` feature. 
 Here is an example:
 ```yaml
