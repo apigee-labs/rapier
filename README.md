@@ -369,11 +369,11 @@ We have seen three common patterns for query parameters on entities:
 URI Templates are used to define a family of resources of the same entity type whose URLs are similar except for some variable elements of the URL. 
 The idea is that the client will know the URI Template and use it to "manufacture" a URL by sustituting variable values.
 URI Templates are often used when the number of resources is unbounded, so that it is impossible or impractical to provide hyperlinks for them all.
-Suppose for example that I have an API that provides a Fahrenheit resource for every Celcius value. For the Celcius value `19.7234`, the URL of the 
-corresponding Fahrenheit resource might be `http://example.org/Fahrenheit/19.7234` or `http://example.org/Fahrenheit?Celcius=19.7234`, according to your API style preference. 
+Suppose for example that I have an API that provides a Fahrenheit resource for every Celsius value. For the Celsius value `19.7234`, the URL of the 
+corresponding Fahrenheit resource might be `http://example.org/Fahrenheit/19.7234` or `http://example.org/Fahrenheit?Celsius=19.7234`, according to your API style preference. 
 This is this is not an application of the [Query Parameters](#t_query_parameter) feature above, because there is no larger resource at 
 `http://example.org/Fahrenheit` that is being queried. 
-This is not an application of [Query Paths](#query_paths) feature because `Celcius` is not a declared property or relationship of any entity.
+This is not an application of [Query Paths](#query_paths) feature because `Celsius` is not a declared property or relationship of any entity.
 The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
 The following YAML shows how to express the Fahrenheit example.
 
@@ -382,9 +382,9 @@ entities:
   FahrenheitTemperature:
     type: number
     URI_templates:
-      template: /Fahrenheit{?Celcius} # or /Fahrenheit/{Celcius} if you prefer that URI pattern
+      template: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
       variables:
-        Celcius:
+        Celsius:
           type: number
 ``` 
 or, more simply, if you don't care about the type of the variable:
@@ -392,7 +392,7 @@ or, more simply, if you don't care about the type of the variable:
 entities:
   FahrenheitTemperature:
     type: number
-    URI_templates: /Fahrenheit{?Celcius} # or /Fahrenheit/{Celcius} if you prefer that URI pattern
+    URI_templates: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
 ``` 
 
 
