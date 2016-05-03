@@ -315,8 +315,9 @@ An explanation of the generator output can be found [here](#openapi_generator_ou
 
 ### <a name="t_query_parameter"></a>Query Parameters
 
-Specifying Query URLs using `query paths` covers some interesting cases, but what about straightforward query parameters in the
-query string portion of URLs? Rapier allows you to specify this on entities using a similar syntax to OpenAPI. Here is an example:
+Specifying Query URLs using `query paths` provides an interesting way to traverse a web of resources using Query. Another important class of queries
+are 'projection queries'—queries that subset the information returned for a particular resource. This is specified with the `Query Paramter` feature. 
+Here is an example:
 ```yaml
 entities:
   PetCollection:
@@ -340,7 +341,7 @@ entities:
 ```
 This definition is an extract from [the Pet Store example](https://github.com/apigee-labs/rapier/blob/master/util/test/petstore.yaml). The generated OpenAPI specification [is here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/petstore.yaml). 
 
-Query Parameters are used to subset an entity. Adding a query parameter to the URL of a resource defines the URL of a related resource that is a "view" onto that larger resource. The complete set of possible query paramter values defines a set of such 'view resources'.
+Adding a query parameter to the URL of a resource defines the URL of a related resource that is a "view" onto that larger resource. The complete set of possible query paramter values defines a set of such 'view resources'.
 There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
 
 We have seen three common patterns for query parameters on entities:
