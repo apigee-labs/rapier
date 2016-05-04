@@ -37,7 +37,7 @@ entities:
           collection_resource: '#Collection'
           entities: '#Institution'
           multiplicity: 0:n
-    well_known_URLs: /
+    wellKnownURLs: /
     query_paths: 
     - dogs
     - "dogs;{name}"

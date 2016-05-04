@@ -1,7 +1,7 @@
 title: Pet Store
 entities:
   Store:
-    well_known_URLs: /store
+    wellKnownURLs: /store
     query_paths: pets orders users
     properties:
       pets:

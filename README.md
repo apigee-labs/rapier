@@ -95,12 +95,12 @@ Here is a 'Hello-world' example in Rapier:
 title: HelloWorldAPI
 entities:
   HelloMessage:
-    well_known_URLs: /message
+    wellKnownURLs: /message
     properties:
       text:
         type: string
 ```                    
-This is the complete Rapier specification of the API. The `title`, `entities` and `well_known_URLs` elements are specific to Rapier. The `properties` element is standard JSON Schema.
+This is the complete Rapier specification of the API. The `title`, `entities` and `wellKnownURLs` elements are specific to Rapier. The `properties` element is standard JSON Schema.
 The API described by this Rapier specification exposes a single resource whose type is `HelloMessage` (a JSON Schema schema) at the URL `/message`. This resource has a single property called `text`.
 The API does not allow this resource to be deleted, because it is well-known, but it does allow it to be
 retrieved using GET and modified using PATCH <a href="#footnote3" id="ref3"><sup>3</sup></a>. You don't have to say this explicitly — it is implied by the standard HTTP patterns and our conventions. Rapier also assumes that a GET response
@@ -133,7 +133,7 @@ The next step beyond our simple hello-world example is to show a Rapier API that
 title: Site Webmaster API
 entities:
   Site:
-    well_known_URLs: /
+    wellKnownURLs: /
     properties:
       webmaster:
         type: string
@@ -169,7 +169,7 @@ The example above shows how to declare a single-valued realtionship. Here is wha
 title: Todo List API
 entities:
   TodoList:
-    well_known_URLs: /
+    wellKnownURLs: /
     readOnly: true
     properties:
       todos:
@@ -272,7 +272,7 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /
+    wellKnownURLs: /
     query_paths: [todos, "todos;{id}"]
     readOnly: true
     properties:
@@ -302,7 +302,7 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `well_known_URLs` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
+The combination of the `wellKnownURLs` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /todos
     /todos/{id}
@@ -482,7 +482,7 @@ Field Name | Type | Description
 ---|:---:|---
 id | `string` | The URI of the entity. Can be any URI, although the use of URL fragments is popular for obvious reasons. The default value is a URL fragment composed from the entity name which is the YAML key of the entity. If the Entity has an explicit id value, it can be addressed using that URI. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
 query_paths | `string` or `sequence of [Query Path](#query_path)` | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
-well_known_URLs | `string` or `sequence of URLs` | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'. A well_known_URL is the URL of a single entity. If you are want to define a set of entities with a common URL pattern, see `URI Templates`
+wellKnownURLs | `string` or `sequence of URLs` | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'. A well_known_URL is the URL of a single entity. If you are want to define a set of entities with a common URL pattern, see `URI Templates`
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types

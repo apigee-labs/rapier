@@ -20,7 +20,7 @@ entities:
         enum: [Environment]
   Apigee:
    readOnly: true
-   well_known_URLs: /
+   wellKnownURLs: /
    query_paths:  environments 
    properties:
      environments:

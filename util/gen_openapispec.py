@@ -88,7 +88,7 @@ class OASGenerator(object):
             self.included_entity_map = self.validator.build_included_entity_map()
             self.openapispec_uri_map = self.oas_definition_map(self.validator)
             self.openapispec['definitions'] = self.definitions
-            self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'well_known_URLs' in entity}
+            self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'wellKnownURLs' in entity}
             self.referenced_entities.update({entity['id'] for entity in entities.itervalues() if 'URL_templates' in entity})                        
             error_response = self.conventions.get('error_response')
             if error_response:
@@ -126,8 +126,8 @@ class OASGenerator(object):
                 self.definitions[entity_name] = definition
             for entity_spec in entities.itervalues():
                 entity_uri = entity_spec['id']
-                if 'well_known_URLs' in entity_spec:
-                    for well_known_URL in as_list(entity_spec['well_known_URLs']):
+                if 'wellKnownURLs' in entity_spec:
+                    for well_known_URL in as_list(entity_spec['wellKnownURLs']):
                         path = well_known_URL[:-1] if well_known_URL.endswith('/') and len(well_known_URL) > 1 else well_known_URL
                         spec = WellKnownURLSpec(path, entity_uri, self)
                         path_spec = spec.build_oas_path_spec()
@@ -150,9 +150,9 @@ class OASGenerator(object):
                         if self.include_impl and 'permalink_template' in entity_spec:
                             implementation_spec = ImplementationPathSpec(entity_spec['permalink_template'], entity_uri, self)
                             self.add_query_paths(query_paths[:], implementation_spec, rel_property_spec_stack, rel_property_specs)
-                        if 'well_known_URLs' in entity_spec:
+                        if 'wellKnownURLs' in entity_spec:
                             qps = query_paths[:]
-                            well_known_URLs = as_list(entity_spec['well_known_URLs'])
+                            well_known_URLs = as_list(entity_spec['wellKnownURLs'])
                             for well_known_URL in well_known_URLs:
                                 baseURL_spec = WellKnownURLSpec(well_known_URL, entity_uri, self)
                                 self.add_query_paths(qps, baseURL_spec, rel_property_spec_stack, rel_property_specs)
@@ -343,7 +343,7 @@ class OASGenerator(object):
 
             if produces:
                 interface[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
-        well_known = entity_spec.get('well_known_URLs')
+        well_known = entity_spec.get('wellKnownURLs')
         if not well_known and deletable:        
             interface['delete'] = {
                 'description': 'Delete %s' % articled(self.validator.resolve_included_entity_name(entity_uri)),

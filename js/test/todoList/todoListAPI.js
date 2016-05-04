@@ -5,7 +5,7 @@ var exports = function() {
     function API() {}
     
     API.prototype = Object.create(baseAPI.BaseAPI.prototype);
-    API.prototype.well_known_URLs = function() {
+    API.prototype.wellKnownURLs = function() {
         return ['/to-dos']
     }
     API.prototype.resourceClass = function(type_name) {

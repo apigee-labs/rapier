@@ -60,7 +60,7 @@ entities:
           collection_resource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: 0:n
-    well_known_URLs: /store
+    wellKnownURLs: /store
     query_paths: 
     - home
     - home/contents

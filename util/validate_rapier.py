@@ -159,16 +159,16 @@ class OASValidator(object):
             if len ([part for part in leading_parts if part[1] == '']) > 0:
                 self.error('property name required between {} characters after %s in query segment %s' %([part[0] for part in leading_parts if part[1]] ,query_path_segment_string))            
 
-    def validate_well_known_URLs(self, nod, key, urls):
+    def validate_wellKnownURLs(self, nod, key, urls):
         if not isinstance(urls, (basestring, list)):
-            self.error('well_known_URLs must be a string or an array: %s' % id, key)
+            self.error('wellKnownURLs must be a string or an array: %s' % id, key)
         else:
             if isinstance(urls, basestring):
                 urls = urls.split()
             for url in urls:
                 parsed_url = urlsplit(url)
                 if parsed_url.scheme or parsed_url.netloc or not parsed_url.path.startswith('/'):
-                    self.error('validate_well_known_URLs must be begin with a single slash %s' % url, key)
+                    self.error('wellKnownURLs must be begin with a single slash %s' % url, key)
 
     def validate_entity_consumes(self, node, key, consumes):
         if isinstance(consumes, basestring):
@@ -651,7 +651,7 @@ class OASValidator(object):
     entity_keywords = schema_keywords.copy()
     entity_keywords.update({
         'query_paths': validate_query_paths, 
-        'well_known_URLs': validate_well_known_URLs,
+        'wellKnownURLs': validate_wellKnownURLs,
         'consumes': validate_entity_consumes,
         'produces': validate_entity_produces,
         'query_parameters': validate_query_parameters,

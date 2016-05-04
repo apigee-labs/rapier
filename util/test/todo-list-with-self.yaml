@@ -3,7 +3,7 @@ conventions:
   selector_location: path-segment
 entities:
   TodoList:
-    well_known_URLs: /
+    wellKnownURLs: /
     query_paths: [todos]
     readOnly: true
     properties:

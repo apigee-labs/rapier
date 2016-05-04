@@ -12,7 +12,7 @@ class ClientGenerator(object):
             self.set_rapier_spec_from_filename(filename)
             
         entities = spec.get('entities',{})
-        well_known_urls = [as_list(entity.get('well_known_URLs')) for entity in entities.itervalues() if 'well_known_URLs' in entity]
+        well_known_urls = [as_list(entity.get('wellKnownURLs')) for entity in entities.itervalues() if 'wellKnownURLs' in entity]
         well_known_urls = [url for urls in well_known_urls for url in urls]
         
         print '''

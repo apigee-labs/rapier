@@ -5,7 +5,7 @@ entities:
     description: >
       An Apigee is the root of the tree of resources in an Apigee Environment (that is, an Environment that contains Apigee's own software)
     readOnly: true
-    well_known_URLs: /
+    wellKnownURLs: /
     type: object  
   Page:
     allOf:
