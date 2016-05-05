@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  title: HelloWorldAPI
+  title: Hello World API
   version: initial
 consumes:
 - application/json

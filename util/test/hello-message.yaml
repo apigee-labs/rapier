@@ -1,4 +1,4 @@
-title: HelloWorldAPI
+title: Hello World API
 entities:
   HelloMessage:
     wellKnownURLs: /message

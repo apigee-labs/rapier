@@ -96,7 +96,7 @@ We think the easiest way to learn Rapier is by example.
 
 Here is a 'Hello-world' example in Rapier:
 ```yaml
-title: HelloWorldAPI
+title: Hello World API
 entities:
   HelloMessage:
     wellKnownURLs: /message
