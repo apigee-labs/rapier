@@ -220,7 +220,7 @@ The `Collection` at `http://example.org/xxxxx` will look like this in JSON:
     }
 ``` 
 
-The format of the resource for multi-valued relationships is under the control of the Rapier author - this Collection format is used here as an example.
+The format of the resource for multi-valued relationships is under the control of the Rapier author - the Collection format used here is just an example.
 
 Unless you say otherwise, Rapier will assume that clients can POST to the collection for a multi-valued relationship to create new entities. You can overide this assumption by marking the relationship as readOnly.
 By default, you create a new entity by POSTing an entity of the type you want to create. Sometimes you want to create entities by POSTing an entity that is different from the one 
@@ -468,8 +468,8 @@ implementationPrivateInformation | [Entities Private Extensions](#entities_priva
 Field Name | Type | Description
 ---|:---:|---
 queryPathSelectorLocation | `string` | Either the string "path-segment" or "path-parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
-patch_consumes | `string` | The media type used for PATCH requests. Default is `['application/merge-patch+json']`
-error_reponse | `schema` | the schema of the response for all error cases. the default is `{}`
+patchConsumes | `string` | The media type used for PATCH requests. Default is `['application/merge-patch+json']`
+errorResponse | `schema` | the schema of the response for all error cases. the default is `{}`
 
 #### <a name="entities"></a>Entities
 
