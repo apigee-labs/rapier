@@ -268,21 +268,21 @@ entities:
         type: string
         format: date-time
         readOnly: true
-implementation_private_information:
+implementationPrivateInformation:
   Group:
-    permalink_template:
+    permalinkTemplate:
       template: /c3Rvc-Z3Jw-{implementation_key} 
       variables:
         implementation_key:
           type: integer
   Doc:
-    permalink_template:
+    permalinkTemplate:
       template: /c3Rvc-ZG9j-{implementation_key} 
       variables:
         implementation_key:
           type: integer
   Folder:
-    permalink_template:
+    permalinkTemplate:
       template: /c3Rvc-Zmxk-{implementation_key} 
       variables:
         implementation_key:

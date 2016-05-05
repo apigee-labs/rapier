@@ -456,7 +456,7 @@ produces | `sequence` of [Media Type](media_type) | The media-types that clients
 conventions | [Conventions](#conventions) | Conventions that affect the details of the HTTP messages of the API
 securityDefinitions | [Security Definitions Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityDefinitionsObject) | From the OpenAPI specification
 security | [Security Requirement Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#securityRequirementObject) | From the OpenAPI specification
-implementation_private_information | [Entities Private Extensions](#entities_private_extensions)
+implementationPrivateInformation | [Entities Private Extensions](#entities_private_extensions)
 
 #### <a name="conventions"></a>Conventions
 
@@ -626,7 +626,7 @@ Field Pattern | Type | Description
 
 Field Name | Type | Description
 ---|:---:|---
-permalink_template | [URI Template](#uri_template) | A specification of the format of permalinks for this entity. These are the client-opaque URLs that the server provides to identify an entity of this entity type. Documenting these templates is not important for clients, who are supposed to think of them as opaque, but can be important for implementation software and intermediate proxies.
+permalinkTemplate | [URI Template](#uri_template) | A specification of the format of permalinks for this entity. These are the client-opaque URLs that the server provides to identify an entity of this entity type. Documenting these templates is not important for clients, who are supposed to think of them as opaque, but can be important for implementation software and intermediate proxies.
 
 #### <a name="uri_template"></a>URI Template
 
@@ -656,7 +656,7 @@ The generated OpenAPI specification is written to stdout. Errors and warnings ar
 
 The `--yaml-merge` option makes more aggressive use of the yaml merge operator to make more compact (if sometimes less readable) output. 
 
-The `--include-impl` option will generate, from the optional implementation_private_information section,
+The `--include-impl` option will generate, from the optional implementationPrivateInformation section,
 extra information that is otherwise ommitted from the output.
 
 The --suppress-templates option will generate paths but not templates. This simplifies the output a little for implementors who are only interested in the paths they need to implement. If you are generating for clients rather than implementors

@@ -42,15 +42,15 @@ entities:
         type: string
         format: uri
         relationship: '#Child'
-implementation_private_information:
+implementationPrivateInformation:
   Child:
-    permalink_template:
+    permalinkTemplate:
       template: /c3Rvc-Z3Jw-{implementation_key} 
       type: integer
 ``` 
 
-`#/entities/Child` and `#/implementation_private_information/Child` are two different JSON objects, but they both describe the same entity, whose URI reference is `#Child`.
-This means that `#/implementation_private_information/Child` is providing additional information about the same entity that was described by `#/entities/Child`. 
+`#/entities/Child` and `#/implementationPrivateInformation/Child` are two different JSON objects, but they both describe the same entity, whose URI reference is `#Child`.
+This means that `#/implementationPrivateInformation/Child` is providing additional information about the same entity that was described by `#/entities/Child`. 
 The API could also have been described as follows, although Rapier does not currently allow this syntax (maybe it should):
 
 ```yaml
@@ -63,7 +63,7 @@ The API could also have been described as follows, although Rapier does not curr
     type: string
     format: uri
     relationship: '#Child'
-  permalink_template:
+  permalinkTemplate:
     template: /c3Rvc-Z3Jw-{implementation_key} 
     type: integer
 ``` 

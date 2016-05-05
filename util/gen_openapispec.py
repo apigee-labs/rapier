@@ -136,8 +136,8 @@ class OASGenerator(object):
                         spec = URITemplateSpec(uri_template, entity_uri, self)
                         spec.emit_openapi_path()
                 rel_property_specs = self.get_entity_relationship_property_specs(entity_uri, entity_spec)
-                if self.include_impl and 'permalink_template' in entity_spec:
-                    implementation_spec = ImplementationPathSpec(entity_spec['permalink_template'], entity_uri, self)
+                if self.include_impl and 'permalinkTemplate' in entity_spec:
+                    implementation_spec = ImplementationPathSpec(entity_spec['permalinkTemplate'], entity_uri, self)
                     entity_interface = implementation_spec.build_interface_reference()
                     path_spec = implementation_spec.build_oas_path_spec()
                     self.openapispec_paths[implementation_spec.path_segment()] = path_spec
@@ -145,8 +145,8 @@ class OASGenerator(object):
                     query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['queryPaths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
-                        if self.include_impl and 'permalink_template' in entity_spec:
-                            implementation_spec = ImplementationPathSpec(entity_spec['permalink_template'], entity_uri, self)
+                        if self.include_impl and 'permalinkTemplate' in entity_spec:
+                            implementation_spec = ImplementationPathSpec(entity_spec['permalinkTemplate'], entity_uri, self)
                             self.add_query_paths(query_paths[:], implementation_spec, rel_property_spec_stack, rel_property_specs)
                         if 'wellKnownURLs' in entity_spec:
                             qps = query_paths[:]
@@ -1204,14 +1204,14 @@ class ImplementationPathSpec(PathPrefix):
         try:
             parsed_format = list(formatter.parse(template))
         except Exception as e:
-            sys.exit('error parsing permalink_template template: %s e:' % (template, e))
+            sys.exit('error parsing permalinkTemplate template: %s e:' % (template, e))
         leading_parts = [part for part in parsed_format if part[1] is not None]
         if len(leading_parts) != 1:
-            sys.exit('permalink_template template %s must include exactly one {name} element after ;' % query_path_segment_string)
+            sys.exit('permalinkTemplate template %s must include exactly one {name} element after ;' % query_path_segment_string)
         else:
             part = leading_parts[0]
         if part[1] == '':
-            self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
+            self.error('property name required between {} characters after %s in permalinkTemplate template %s' %(leading_parts[0] ,query_path_segment_string))
         else:
             self.implementation_url_variable_name = part[1]
             self.implementation_url_variable_type = self.permalink_template.get('variables',{}).get(self.implementation_url_variable_name,{}).get('type','string')

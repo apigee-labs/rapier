@@ -500,15 +500,15 @@ class OASValidator(object):
             return self.error('error parsing query path segment string: %s' % e, key)
         leading_parts = [part for part in parsed_format if part[1] is not None]
         if len(leading_parts) != 1:
-            self.error('permalink_template template %s must include exactly one {name} element after ;' % query_path_segment_string)
+            self.error('permalinkTemplate template %s must include exactly one {name} element after ;' % query_path_segment_string)
         else:
             part = leading_parts[0]
         if part[1] == '':
-            self.error('property name required between {} characters after %s in permalink_template template %s' %(leading_parts[0] ,query_path_segment_string))
+            self.error('property name required between {} characters after %s in permalinkTemplate template %s' %(leading_parts[0] ,query_path_segment_string))
 
     def validate_permalink_template_variable_type(self, node, key, a_type):
         if not (a_type == 'string' or a_type == 'integer' or a_type == 'number'):
-            self.error('permalink_template type must be "string" or "integer" or "number": %s' % required, key) 
+            self.error('permalinkTemplate type must be "string" or "integer" or "number": %s' % required, key) 
     
     def validate_media_type(self, node, key, media_type):
         if not isinstance(media_type, basestring):
@@ -621,7 +621,7 @@ class OASValidator(object):
         'produces': validate_rapier_produces,
         'securityDefinitions': validate_rapier_security_definitions,
         'security': validate_rapier_security,
-        'implementation_private_information': validate_implementation_private_information,
+        'implementationPrivateInformation': validate_implementation_private_information,
         'description': validate_rapier_description}
     schema_keywords =  {
         'id': validate_id, 
@@ -656,13 +656,12 @@ class OASValidator(object):
         'produces': validate_entity_produces,
         'queryParameters': validate_query_parameters,
         'name': validate_ignore,
-        'permalink_template': validate_ignore,
         'oneOf': validate_entity_oneOf, 
         'allOf': validate_entity_allOf, 
         'readOnly': validate_entity_readOnly, 
         '$ref': validate_entity_ref,
         'usage': validate_entity_usage,
-        'permalink_template': validate_uri_templates,
+        'permalinkTemplate': validate_uri_templates,
         'uriTemplates': validate_uri_templates})
     conventions_keywords = {
         'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
@@ -707,7 +706,7 @@ class OASValidator(object):
         'maximum': validate_number,
         'collectionFormat': validate_query_parameter_collection_format}
     implementation_private_keywords =  {
-        'permalink_template': validate_uri_templates}
+        'permalinkTemplate': validate_uri_templates}
 
     def abs_url(self, url):
         split_url = url.split('#')
@@ -807,8 +806,8 @@ class OASValidator(object):
             self.fatal_error('rapier specification must be a YAML mapping: %s' % self.filename)
         entities = self.rapier_spec.setdefault('entities', {})
         self.check_id_uniqueness(entities)
-        if 'implementation_private_information' in self.rapier_spec:
-            for entity_name, entity_desc in self.rapier_spec['implementation_private_information'].iteritems():
+        if 'implementationPrivateInformation' in self.rapier_spec:
+            for entity_name, entity_desc in self.rapier_spec['implementationPrivateInformation'].iteritems():
                 if 'properties' in entity_desc:
                     for property in entity_desc['properties'].itervalues():
                         property['implementation_private'] = True
@@ -825,7 +824,7 @@ class OASValidator(object):
                         entities[entity_name]['queryPaths'].extend(entity_desc['queryPaths'])
                     self.entities[entity_id].update({k:v for k,v in entity_desc.iteritems() if k not in ['properties', 'queryPaths']})
                 else:
-                    self.error('defining new entities in implementation_private_information not yet supported: %s' % entity_id)
+                    self.error('defining new entities in implementationPrivateInformation not yet supported: %s' % entity_id)
                     
         for entity_name, entity in entities.iteritems():
             if entity is not None:
