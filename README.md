@@ -302,7 +302,7 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `wellKnownURLs` and `queryPaths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
+The combination of the `wellKnownURLs` and `queryPaths` properties of `To_do_list` implies that the following `Query URL` and URI template are valid:
 
     /todos
     /todos/{id}
@@ -311,7 +311,7 @@ The provision of
 hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the `todos` property of the resource at `/`". In other words, we are starting at `/`
 and following the `todos` relationship declared in the data model, but without having to retrieve the resource at `/`. 
-The second URL template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
+The second URI template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
 of the URL `/todos` to form a URL that will identify a single `Item` amongst the collection of items at `/todos`. 
 
 `/todos` and `/todos/{id}` are valid because there is a TodoList at `/`, but the template is valid for any TodoList URL, like this:
@@ -374,7 +374,7 @@ corresponding Fahrenheit resource might be `http://example.org/Fahrenheit/19.723
 This is this is not an application of the [Query Parameters](#t_query_parameter) feature above, because there is no larger resource at 
 `http://example.org/Fahrenheit` that is being queried. 
 This is not an application of [Query Paths](#query_paths) feature because `Celsius` is not a declared property or relationship of any entity.
-The URL template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
+The URI template language supported is documented in [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4). 
 The following YAML shows how to express the Fahrenheit example.
 
 ```yaml
@@ -413,7 +413,7 @@ This example strains the expressive power of OpenAPI - you can see a generated [
 Not every resource has structured content that can be expressed as JSON. Even for resources whose content can be expressed as JSON, there is sometimes a requirement to preserve the exact document format, character-by-character.
 Resources with this characteristic must be updated with PUT instead of PATCH, and their properties must be stored outside of the resource content. [This sample](https://github.com/apigee-labs/rapier/blob/master/util/test/spec-hub.yaml) 
 shows an example of how this case can be handled in Rapier. Here is the [corresponding generated OpenAPI document](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub.yaml).
-The SpecHub API includes some 'internal' URL templates that are used in the implementation but are not part of the API. The Rapier OpenAPI generator supports a -i command-line option that allows the implementation
+The SpecHub API includes some 'internal' URI templates that are used in the implementation but are not part of the API. The Rapier OpenAPI generator supports a -i command-line option that allows the implementation
 view of the API to be generated instead of the client view. It can be found [here](https://github.com/apigee-labs/rapier/blob/master/util/test/gen_openapispec/spec-hub-with-impl.yaml).
 
 ## <a name="navigating"></a>Navigating the Repository
@@ -487,7 +487,7 @@ properties | [Properties](#properties) | The properties of the entity. This is t
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
-queryParameters | [Query Parameters](#query_parameters) | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
+queryParameters | [Query Parameters](#query_parameters) | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URI templates` instead
 uriTemplates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| See [URI Templates](#templates) for an explanation of the meaning.
 usage | `string` or `sequence of string` | [Usage](#usage)s
 
@@ -576,11 +576,11 @@ it is guaranteed to be an alias of the URL in the 'mother' property of the resou
 
 A `query path` can be represented as a string. Here are some examples with their meaning:  
  
-- `mother` - traverse the mother relationship. URL template is \{`child-URL`\}/mother  
-- `siblings` - traverse the siblings relationship.  URL template is \{`child-URL`\}/siblings. Will return a collection  
-- `siblings;{name}` - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URL template is \{`child-URL`\}/siblings;\{name\}  
-- `siblings;name={name}` - same as the previous example except the URL template is \{`child-URL`\}/siblings;name=\{name\}  
-- `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings.  URL template is \{`child-URL`\}/siblings;name=\{name\}/siblings}  
+- `mother` - traverse the mother relationship. URI template is \{`child-URL`\}/mother  
+- `siblings` - traverse the siblings relationship.  URI template is \{`child-URL`\}/siblings. Will return a collection  
+- `siblings;{name}` - traverse the sibling relationship. Use the `name` property of the siblings to select a single sibling. URI template is \{`child-URL`\}/siblings;\{name\}  
+- `siblings;name={name}` - same as the previous example except the URI template is \{`child-URL`\}/siblings;name=\{name\}  
+- `siblings;name={name}/siblings` - traverse the siblings relationship, select a specific sibling, and then traverse their siblings.  URI template is \{`child-URL`\}/siblings;name=\{name\}/siblings}  
 
 Multiple query paths may be included in the same string as a space-deliminated list.
 
@@ -632,7 +632,7 @@ permalinkTemplate | [URI Template](#uri_template) | A specification of the forma
 
 Field Name | Type | Description
 ---|:---:|---
-template | `string` | A URL template that must contain a single variable.
+template | `string` | A URI template that must contain a single variable.
 variables | [Template Variables](#template_variables) | The type of the variable
 
 #### <a name="template_variables"></a>Template Variables
