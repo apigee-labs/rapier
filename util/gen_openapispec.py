@@ -88,12 +88,12 @@ class OASGenerator(object):
             self.openapispec['definitions'] = self.definitions
             self.referenced_entities = {entity['id'] for entity in entities.itervalues() if 'wellKnownURLs' in entity}
             self.referenced_entities.update({entity['id'] for entity in entities.itervalues() if 'URL_templates' in entity})                        
-            error_response = self.conventions.get('error_response')
+            error_response = self.conventions.get('errorResponse')
             if error_response:
                 if isinstance(error_response, basestring):
                     self.error_response = self.global_definition_ref(self.abs_url(error_response))                   
                 else:
-                    self.definitions['ErrorResponse'] = self.conventions['error_response']
+                    self.definitions['ErrorResponse'] = self.conventions['errorResponse']
                     self.openapispec_uri_map[self.abs_url('#ErrorResponse')] = '#/definitions/ErrorResponse'
                     self.error_response = self.global_definition_ref(self.abs_url('#ErrorResponse'))
             else:

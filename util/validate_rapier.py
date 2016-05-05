@@ -224,7 +224,7 @@ class OASValidator(object):
         elif hasattr(error_response, 'keys'):
             self.check_and_validate_keywords(self.__class__.schema_keywords, error_response, key)
         else:
-            self.error('error_response must be URL of entity or schema: %s' % error_response, key)
+            self.error('errorResponse must be URL of entity or schema: %s' % error_response, key)
 
     def similar(self, a, b):
         return SequenceMatcher(None, a, b).ratio() > self.similarity_ratio
@@ -666,7 +666,7 @@ class OASValidator(object):
     conventions_keywords = {
         'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
         'patchConsumes': validate_conventions_patch_consumes,
-        'error_response': validate_conventions_error_response}
+        'errorResponse': validate_conventions_error_response}
     relationship_keywords = {
         'entities': validate_relationship_entities, 
         'multiplicity': validate_relationship_multiplicity, 

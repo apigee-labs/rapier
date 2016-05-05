@@ -4,7 +4,7 @@ consumes: application/json
 produces: application/json text/html
 conventions:
   patchConsumes: application/merge-patch+json
-  error_response:
+  errorResponse:
     type: string
 securityDefinitions:
   sso:
