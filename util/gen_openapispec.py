@@ -33,7 +33,7 @@ class OASGenerator(object):
             self.relationship_separator = '/' if self.conventions['queryPathSelectorLocation'] == 'path-segment' else ';'
         else:
             self.relationship_separator = ';'
-        self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']
+        self.patch_consumes = as_list(self.conventions['patchConsumes']) if 'patchConsumes' in self.conventions else ['application/merge-patch+json']
         patterns = spec.get('patterns')
         self.openapispec = PresortedOrderedDict()
         if self.include_impl:

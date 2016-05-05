@@ -216,7 +216,7 @@ class OASValidator(object):
 
     def validate_conventions_patch_consumes(self, node, key, patch_consumes):
         if not isinstance(patch_consumes, basestring):
-            self.error('patch_consumes must be a string: %s' % patch_consumes)
+            self.error('patchConsumes must be a string: %s' % patch_consumes)
 
     def validate_conventions_error_response(self, node, key, error_response):
         if isinstance(error_response, basestring):
@@ -665,7 +665,7 @@ class OASValidator(object):
         'uriTemplates': validate_uri_templates})
     conventions_keywords = {
         'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
-        'patch_consumes': validate_conventions_patch_consumes,
+        'patchConsumes': validate_conventions_patch_consumes,
         'error_response': validate_conventions_error_response}
     relationship_keywords = {
         'entities': validate_relationship_entities, 
