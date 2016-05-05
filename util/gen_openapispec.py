@@ -241,7 +241,7 @@ class OASGenerator(object):
         parameters = entity_url_spec.build_parameters()
         consumes = as_list(entity_spec['consumes']) if 'consumes' in entity_spec else None 
         produces = as_list(entity_spec['produces']) if 'produces' in entity_spec else None 
-        query_parameters = entity_spec.get('query_parameters') 
+        query_parameters = entity_spec.get('queryParameters') 
         structured = 'type' not in entity_spec or entity_spec['type'] == 'object'
         def build_response_200():
             response_200 = {
@@ -689,8 +689,8 @@ class OASGenerator(object):
                 'description': 'Make sure a cache of one content type is not returned to a client wanting a different one.'
                 }
         def add_query_parameters(entity, query_params):
-            if 'query_parameters' in entity:
-                params = entity['query_parameters']
+            if 'queryParameters' in entity:
+                params = entity['queryParameters']
                 for param_name, param in params.iteritems():
                     new_param = dict()
                     new_param.update(param)
@@ -706,7 +706,7 @@ class OASGenerator(object):
                     add_query_parameters(self.validator.resolve_included_entity_ref(entity_ref), query_params) 
         query_parameters = []
         add_query_parameters(collection_entity, query_parameters)
-        if 'query_parameters' in rel_property_spec.relationship:
+        if 'queryParameters' in rel_property_spec.relationship:
             add_query_parameters(rel_property_spec.relationship, query_parameters)
         if query_parameters:
             rslt['parameters'] = query_parameters

@@ -193,7 +193,7 @@ entities:
         relationship:
           entities: '#Page'
           readOnly: True
-    query_parameters:
+    queryParameters:
       properties:
         items:
           type: string
@@ -216,7 +216,7 @@ entities:
         type: array
         items: 
           type: object
-    query_parameters:
+    queryParameters:
       properties:
         items : 
           type: string

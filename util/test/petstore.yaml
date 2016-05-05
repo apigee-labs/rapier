@@ -162,7 +162,7 @@ entities:
         type: array
         items: 
           $ref: '#/entities/Pet'
-    query_parameters:
+    queryParameters:
       tags:
         items:
           type: string

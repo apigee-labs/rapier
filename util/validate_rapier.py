@@ -362,7 +362,7 @@ class OASValidator(object):
 
     def validate_query_parameters(self, node, key, query_parameters):
         if not hasattr(query_parameters, 'keys'):
-            return self.error('query_parameters must be a map: %s' % query_parameters, key)
+            return self.error('queryParameters must be a map: %s' % query_parameters, key)
         names = set()
         for param_name, query_parameter in query_parameters.iteritems():
             self.check_and_validate_keywords(self.__class__.query_parameter_keywords, query_parameter, key)
@@ -654,7 +654,7 @@ class OASValidator(object):
         'wellKnownURLs': validate_wellKnownURLs,
         'consumes': validate_entity_consumes,
         'produces': validate_entity_produces,
-        'query_parameters': validate_query_parameters,
+        'queryParameters': validate_query_parameters,
         'name': validate_ignore,
         'permalink_template': validate_ignore,
         'oneOf': validate_entity_oneOf, 
@@ -675,7 +675,7 @@ class OASValidator(object):
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
         'usage': validate_schema_usage,
-        'query_parameters': validate_relationship_query_parameters,
+        'queryParameters': validate_relationship_query_parameters,
         'consumes': validate_relationship_consumes}
     query_parameter_keywords =  {
         'type': validate_query_parameter_property_type, 
