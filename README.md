@@ -368,7 +368,7 @@ We have seen three common patterns for query parameters on entities:
 ### <a name="templates"></a>URI Templates
 
 URI Templates are used to define a family of resources of the same entity type whose URLs are similar except for some variable elements of the URL. 
-The idea is that the client will know the URI Template and use it to "manufacture" a URL by sustituting variable values.
+The client must learn the URI Template and use it to "manufacture" a URL by sustituting variable values.
 URI Templates are often used when the number of resources is unbounded, so that it is impossible or impractical to provide hyperlinks for them all.
 Suppose for example that I have an API that provides a Fahrenheit resource for every Celsius value. For the Celsius value `19.7234`, the URL of the 
 corresponding Fahrenheit resource might be `http://example.org/Fahrenheit/19.7234` or `http://example.org/Fahrenheit?Celsius=19.7234`, according to your API style preference. 
