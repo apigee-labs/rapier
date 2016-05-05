@@ -32,7 +32,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
+          collectonResource: '#MultiValuedRelationshipResource'
           entities: '#Folder #Doc'
           multiplicity: 0:n
           readOnly: true
@@ -41,7 +41,7 @@ entities:
         format: uri
         type: string        
         relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
+          collectonResource: '#MultiValuedRelationshipResource'
           entities: '#Doc'
           multiplicity: 0:n
       folders:
@@ -49,7 +49,7 @@ entities:
         format: uri
         type: string        
         relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
+          collectonResource: '#MultiValuedRelationshipResource'
           entities: '#Folder'
           multiplicity: 0:n
       groups:
@@ -57,7 +57,7 @@ entities:
         format: uri
         type: string        
         relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
+          collectonResource: '#MultiValuedRelationshipResource'
           entities: '#Group'
           multiplicity: 0:n
     wellKnownURLs: /store
@@ -80,7 +80,7 @@ entities:
         readOnly: true
         type: string
         relationship:
-          collection_resource: '#MultiValuedRelationshipResource'
+          collectonResource: '#MultiValuedRelationshipResource'
           entities: '#Doc #Folder'
           multiplicity: 0:n
       folder:

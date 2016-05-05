@@ -22,7 +22,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Keystore'
           multiplicity: 0:n
   Keystore:
@@ -39,7 +39,7 @@ entities:
         type: string
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Alias'
           multiplicity: 0:n
           consumes: 

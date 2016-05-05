@@ -926,12 +926,12 @@ class RelMVPropertySpec(SegmentSpec):
     
     def __init__(self, generator, entity_uri, entity_spec, property, relationship, target_entity_uri):
         super(RelMVPropertySpec, self).__init__(generator, entity_uri, entity_spec, property, relationship, target_entity_uri)
-        self._collection_resource = relationship.get('collection_resource', True)        
+        self._collection_resource = relationship.get('collectonResource', True)        
         self._consumes = relationship.get('consumes')
 
         self.consumes_media_types = self._consumes.keys() if isinstance(self._consumes, dict) else as_list(self._consumes) if self._consumes is not None else None
         self.consumes_entities = [entity for entity_list in self._consumes.values() for entity in as_list(entity_list)] if isinstance(self._consumes, dict) else [target_entity_uri]
-        self.collection_resource = relationship.get('collection_resource')        
+        self.collection_resource = relationship.get('collectonResource')        
 
     def readable(self):
         usage = self.relationship.get('usage')

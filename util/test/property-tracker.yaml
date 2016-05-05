@@ -10,7 +10,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Dog'
           multiplicity: 0:n
       people:
@@ -18,7 +18,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Person'
           multiplicity: 0:n
       bicycles:
@@ -26,7 +26,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Bicycle'
           multiplicity: 0:n
       institutions:
@@ -34,7 +34,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Institution'
           multiplicity: 0:n
     wellKnownURLs: /
@@ -95,7 +95,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
   Institution:
@@ -111,7 +111,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Dog #Bicycle'
           multiplicity: 0:n
   Resource:

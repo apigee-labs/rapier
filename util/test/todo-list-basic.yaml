@@ -9,7 +9,7 @@ entities:
         format: uri
         readOnly: true
         relationship:
-          collection_resource: '#Collection'
+          collectonResource: '#Collection'
           entities: '#Item'
           multiplicity: 0:n
     query_paths: todos

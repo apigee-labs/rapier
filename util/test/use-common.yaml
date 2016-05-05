@@ -28,6 +28,6 @@ entities:
        type: string
        readOnly: true
        relationship:
-         collection_resource: './common.yaml#MultiValuedRelationship'
+         collectonResource: './common.yaml#MultiValuedRelationship'
          multiplicity: 0:n
          entities: '#Environment'
