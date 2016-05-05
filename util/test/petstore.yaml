@@ -10,21 +10,21 @@ entities:
         relationship:
           entities: '#Pet'
           multiplicity: n
-          collectonResource: '#PetCollection'
+          collectionResource: '#PetCollection'
       orders:
         type: string
         format: uri
         relationship:
           entities: '#Order'
           multiplicity: n
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
       users:
         type: string
         format: uri
         relationship:
           entities: '#User'
           multiplicity: n
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
       logins: #or is logsin ?
         description: POST a Login to log yourself in. You will get back the URL of a Session. DELETE the Session to log out 
         type: string
@@ -32,7 +32,7 @@ entities:
         relationship:
           entities: '#Session'
           multiplicity: n
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           consumes:
             application/json: '#Login'
         readOnly: true
@@ -111,7 +111,7 @@ entities:
         relationship: 
           entities: '#Image'
           multiplicity: n
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
   Inventory:
     type: object
     additionalProperties:

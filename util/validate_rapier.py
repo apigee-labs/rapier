@@ -315,7 +315,7 @@ class OASValidator(object):
                     if int(upper_bound) < int(lower_bound):
                         self.error('multiplicity upper bound must be greater than or equal to lower bound %s %s' % (upper_bound, lower_bound), key)
                         
-    def validate_relationship_collectonResource(self, node, key, collection_resource):
+    def validate_relationship_collectionResource(self, node, key, collection_resource):
         abs_url, _ = self.validate_included_entity_url(collection_resource, key)
         if abs_url:
             node[key] = abs_url
@@ -671,7 +671,7 @@ class OASValidator(object):
     relationship_keywords = {
         'entities': validate_relationship_entities, 
         'multiplicity': validate_relationship_multiplicity, 
-        'collectonResource': validate_relationship_collectonResource, 
+        'collectionResource': validate_relationship_collectionResource, 
         'name': validate_relationship_name,
         'readOnly': validate_relationship_readOnly,
         'usage': validate_schema_usage,

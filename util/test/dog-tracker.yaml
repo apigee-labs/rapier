@@ -10,7 +10,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           entities: '#Dog'
           multiplicity: 0:n
       people:
@@ -18,7 +18,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           entities: '#Person'
           multiplicity: 0:n
     wellKnownURLs: /
@@ -51,7 +51,7 @@ entities:
         format: uri
         type: string
         relationship:
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           entities: '#Dog'
           multiplicity: 0:n
   Resource:

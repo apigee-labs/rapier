@@ -176,7 +176,7 @@ entities:
         type: string
         format: uri
         relationship:
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           entities: '#Item'
           multiplicity: 0:n
     query_paths: todos
@@ -198,7 +198,7 @@ entities:
 
 This API defines a single resource at the well_known_URL `/` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
 property called `todos`. In addition to declaring the entity type at the end of the relationship, we declare the type of the resource that will be used to hold the list of 
-entities of the relationship. This is specified in the `collectonResource` property. When `collectonResource` is present, the relationship property (`todos` in this case) is assumed to be
+entities of the relationship. This is specified in the `collectionResource` property. When `collectionResource` is present, the relationship property (`todos` in this case) is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
 
@@ -280,7 +280,7 @@ entities:
         type: string
         format: uri
         relationship:
-          collectonResource: '#Collection'
+          collectionResource: '#Collection'
           entities: '#Item'
           multiplicity: 0:n
   Item:
@@ -549,7 +549,7 @@ Field Name | Type | Description
 ---|:---:|---
 entities | `string` or `sequence of URLs` | A set of URLs of the entities this relationship may reference. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL.
 multiplicity | `string` | The multiplicity of the relationship. The value is of the form x:y or just y. If the value of y is `n`, or a number greater than 1, then the relationship is multi-valued. If x is missing, it is presumed to be 0.
-collectonResource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
+collectionResource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
 readOnly | "true" or "false" | For multi-valued relationships, says whether a POST is valid. default is `false`
 consumes | `string` or [Relationship Consumes](#relationship_consumes) | Specifies the media types and entities that can be POSTed to a multi-valued relationship. If the value is a string, it is a single media-type or a space-delimited list of media types
 

@@ -26,7 +26,7 @@ entities:
                 format: uri
                 relationship:
                   name: todos
-                  collectonResource: '#Collection'
+                  collectionResource: '#Collection'
                   entities: '#Item'
                   multiplicity: 0:n
   Item:
