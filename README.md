@@ -381,7 +381,7 @@ The following YAML shows how to express the Fahrenheit example.
 entities:
   FahrenheitTemperature:
     type: number
-    URI_templates:
+    uriTemplates:
       template: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
       variables:
         Celsius:
@@ -392,7 +392,7 @@ or, more simply, if you don't care about the type of the variable:
 entities:
   FahrenheitTemperature:
     type: number
-    URI_templates: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
+    uriTemplates: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
 ``` 
 
 
@@ -488,7 +488,7 @@ readOnly | `boolean` | Indicates that resources of this Entity type can be read 
 consumes | `string` or `sequence of string` | Overrides the global value fo consumes for this entity. Specifies the media types clients may provide to create or update the entity with POST, PUT (for string entities). If the value is a string, it must be a space-delimited list of media types
 produces | `string` or `sequence of string` | Overrides the global value fo produces for this entity. Specifies the media types clients may request to GET the entity. If the value is a string, it must be a space-delimited list of media types
 queryParameters | [Query Parameters](#query_parameters) | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a larger entity. If there is an entity at the URL http://example/org/resource1, and it has query parameters a and b, then http://example/org/resource1?a=value1&b=value2 are resources that provide a subset of the data of http://example/org/resource1. If your need is instead to define a family of resources of the same type whose URLs are similar except for the query string portion, use `URL Templates` instead
-URI_templates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| See [URI Templates](#templates) for an explanation of the meaning.
+uriTemplates | `string` or `sequence of string` or [URI Template](#uri_template) or array of `URI Template`s| See [URI Templates](#templates) for an explanation of the meaning.
 usage | `string` or `sequence of string` | [Usage](#usage)s
 
 #### <a name="properties"></a>Properties

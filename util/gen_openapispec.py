@@ -130,7 +130,7 @@ class OASGenerator(object):
                         spec = WellKnownURLSpec(path, entity_uri, self)
                         path_spec = spec.build_oas_path_spec()
                         self.openapispec_paths[path] = path_spec
-                uri_templates = entity_spec.get('URI_templates')
+                uri_templates = entity_spec.get('uriTemplates')
                 if uri_templates is not None:
                     for uri_template in as_list(uri_templates):
                         spec = URITemplateSpec(uri_template, entity_uri, self)

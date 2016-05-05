@@ -663,7 +663,7 @@ class OASValidator(object):
         '$ref': validate_entity_ref,
         'usage': validate_entity_usage,
         'permalink_template': validate_uri_templates,
-        'URI_templates': validate_uri_templates})
+        'uriTemplates': validate_uri_templates})
     conventions_keywords = {
         'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
         'patch_consumes': validate_conventions_patch_consumes,
