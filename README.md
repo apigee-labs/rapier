@@ -78,6 +78,10 @@ are not yet supported.
 April 28 2016:
 
 Added support for [URI Templates](#templates).
+
+May 4, 2016:
+
+Renamed snake_case properties to match camelCase style of JSON Schema.
  
 ## <a name="tutorial"></a>Tutorial
 
