@@ -61,7 +61,7 @@ entities:
           entities: '#Group'
           multiplicity: 0:n
     wellKnownURLs: /store
-    query_paths: 
+    queryPaths: 
     - home
     - home/contents
     - sharedWithMe
@@ -72,7 +72,7 @@ entities:
   Folder:
     allOf:
     - $ref: '#/entities/PersistentResource'
-    query_paths: [contents]
+    queryPaths: [contents]
     properties:
       contents:
         description: URL of a Collection of Docs and Folders
@@ -105,7 +105,7 @@ entities:
   Doc:
     allOf:
     - $ref: '#/entities/PersistentResource'
-    query_paths: [content]
+    queryPaths: [content]
     properties:
       content_type:
         description: The media type of the content of the Doc

@@ -21,7 +21,7 @@ entities:
   Apigee:
    readOnly: true
    wellKnownURLs: /
-   query_paths:  environments 
+   queryPaths:  environments 
    properties:
      environments:
        format: uri

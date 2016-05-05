@@ -4,7 +4,7 @@ conventions:
 entities:
   TodoList:
     wellKnownURLs: /
-    query_paths: [todos, "todos;{id}"]
+    queryPaths: [todos, "todos;{id}"]
     readOnly: true
     properties:
       todos:

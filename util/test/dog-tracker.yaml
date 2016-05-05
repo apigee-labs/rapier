@@ -22,7 +22,7 @@ entities:
           entities: '#Person'
           multiplicity: 0:n
     wellKnownURLs: /
-    query_paths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
+    queryPaths: [dogs, "dogs;{name}", people, "people;{name}", "dogs;{name}/owner", "people;{name}/dogs"]
     readOnly: true
   Dog:
     allOf:

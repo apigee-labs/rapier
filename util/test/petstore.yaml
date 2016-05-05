@@ -2,7 +2,7 @@ title: Pet Store
 entities:
   Store:
     wellKnownURLs: /store
-    query_paths: pets orders users
+    queryPaths: pets orders users
     properties:
       pets:
         type: string

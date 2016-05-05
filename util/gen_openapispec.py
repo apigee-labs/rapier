@@ -141,8 +141,8 @@ class OASGenerator(object):
                     entity_interface = implementation_spec.build_interface_reference()
                     path_spec = implementation_spec.build_oas_path_spec()
                     self.openapispec_paths[implementation_spec.path_segment()] = path_spec
-                if 'query_paths' in entity_spec:
-                    query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['query_paths'])]
+                if 'queryPaths' in entity_spec:
+                    query_paths = [QueryPath(query_path, self) for query_path in as_list(entity_spec['queryPaths'])]
                     for rel_property_spec in rel_property_specs:
                         rel_property_spec_stack = [rel_property_spec]
                         if self.include_impl and 'permalink_template' in entity_spec:

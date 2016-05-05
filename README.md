@@ -179,7 +179,7 @@ entities:
           collectionResource: '#Collection'
           entities: '#Item'
           multiplicity: 0:n
-    query_paths: todos
+    queryPaths: todos
   Item:
     properties:
       description:
@@ -273,7 +273,7 @@ conventions:
 entities:
   TodoList:
     wellKnownURLs: /
-    query_paths: [todos, "todos;{id}"]
+    queryPaths: [todos, "todos;{id}"]
     readOnly: true
     properties:
       todos:
@@ -302,7 +302,7 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `wellKnownURLs` and `query_paths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
+The combination of the `wellKnownURLs` and `queryPaths` properties of `To_do_list` implies that the following `Query URL` and URL template are valid:
 
     /todos
     /todos/{id}
@@ -481,7 +481,7 @@ Each entity is a [JSON Schema](http://json-schema.org/). It includes the standar
 Field Name | Type | Description
 ---|:---:|---
 id | `string` | The URI of the entity. Can be any URI, although the use of URL fragments is popular for obvious reasons. The default value is a URL fragment composed from the entity name which is the YAML key of the entity. If the Entity has an explicit id value, it can be addressed using that URI. If it does not have an explicit id value, it can be addressed using the URI fragment `#{entity name}`. For more infomation on this, see the [Rapier data model decription](https://github.com/apigee-labs/rapier/blob/master/data_model.md)
-query_paths | `string` or `sequence of [Query Path](#query_path)` | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
+queryPaths | `string` or `sequence of [Query Path](#query_path)` | If the value is a string, it is interpreted as a space-deliminated list of `query paths`.
 wellKnownURLs | `string` or `sequence of URLs` | Well-known URLs at which a resource of this entity type can be found. If the value is a string, it is interpreted as a space-deliminated list of URLs. If the value is an sequence, each item is interpreted as a single URL. URLs must be path-absolute - i.e. they must begin with a single '/'. A well_known_URL is the URL of a single entity. If you are want to define a set of entities with a common URL pattern, see `URI Templates`
 properties | [Properties](#properties) | The properties of the entity. This is the standard JSON Schema `properties` property, with some Rapier extensions.
 readOnly | `boolean` | Indicates that resources of this Entity type can be read (GET, HEAD and OPTIONS methods are supported), but not written (PATCH, PUT and DELETE are not allowed). Exceptionally, this property name is in camelCase rather than snake_case to align with the JSON Schema property of the same name.

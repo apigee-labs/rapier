@@ -12,7 +12,7 @@ entities:
           collectionResource: '#Collection'
           entities: '#Item'
           multiplicity: 0:n
-    query_paths: todos
+    queryPaths: todos
   Item:
     properties:
       description:

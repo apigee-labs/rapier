@@ -5,7 +5,7 @@ conventions:
 entities:
   Environment:
     wellKnownURLs: /v1/o/{org}/e/{env}
-    query_paths: 
+    queryPaths: 
     - keystores 
     - keystores;{name} 
     - keystores;{name}/aliases 

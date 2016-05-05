@@ -38,7 +38,7 @@ entities:
           entities: '#Institution'
           multiplicity: 0:n
     wellKnownURLs: /
-    query_paths: 
+    queryPaths: 
     - dogs
     - "dogs;{name}"
     - bicycles

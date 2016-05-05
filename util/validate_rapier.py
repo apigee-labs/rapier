@@ -650,7 +650,7 @@ class OASValidator(object):
     property_keywords.update(schema_keywords)
     entity_keywords = schema_keywords.copy()
     entity_keywords.update({
-        'query_paths': validate_query_paths, 
+        'queryPaths': validate_query_paths, 
         'wellKnownURLs': validate_wellKnownURLs,
         'consumes': validate_entity_consumes,
         'produces': validate_entity_produces,
@@ -820,10 +820,10 @@ class OASValidator(object):
                             entities[entity_name]['properties'].update(properties)
                         else:
                             entities[entity_name]['properties'] = properties
-                    if 'query_paths' in entity_desc:
-                        entities[entity_name]['query_paths'] = as_list(entities[entity_name].get('query_paths', []))
-                        entities[entity_name]['query_paths'].extend(entity_desc['query_paths'])
-                    self.entities[entity_id].update({k:v for k,v in entity_desc.iteritems() if k not in ['properties', 'query_paths']})
+                    if 'queryPaths' in entity_desc:
+                        entities[entity_name]['queryPaths'] = as_list(entities[entity_name].get('queryPaths', []))
+                        entities[entity_name]['queryPaths'].extend(entity_desc['queryPaths'])
+                    self.entities[entity_id].update({k:v for k,v in entity_desc.iteritems() if k not in ['properties', 'queryPaths']})
                 else:
                     self.error('defining new entities in implementation_private_information not yet supported: %s' % entity_id)
                     

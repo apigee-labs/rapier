@@ -9,7 +9,7 @@ conventions:
 entities:
   TodoList:
     wellKnownURLs: /
-    query_paths: [todos]
+    queryPaths: [todos]
     readOnly: true
     properties:
       links:
