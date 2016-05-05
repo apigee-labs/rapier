@@ -5,7 +5,7 @@
 title: Todo List API
 version: "0.1"
 conventions:
-  selector_location: path-segment
+  queryPathSelectorLocation: path-segment
 entities:
   TodoList:
     wellKnownURLs: /

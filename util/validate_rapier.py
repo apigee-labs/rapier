@@ -210,7 +210,7 @@ class OASValidator(object):
         if not (readOnly is True or readOnly is False) :
             self.error('readOnly must be a boolean: %s' % readOnly, key)
 
-    def validate_conventions_selector_location(self, node, key, location):
+    def validate_conventions_queryPathSelectorLocation(self, node, key, location):
         if not location in ['path-segment', 'path-parameter']:
             self.error('%s must be either the string "path-segment" or "path-parameter"' % location)
 
@@ -665,7 +665,7 @@ class OASValidator(object):
         'permalink_template': validate_uri_templates,
         'URI_templates': validate_uri_templates})
     conventions_keywords = {
-        'selector_location': validate_conventions_selector_location,
+        'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
         'patch_consumes': validate_conventions_patch_consumes,
         'error_response': validate_conventions_error_response}
     relationship_keywords = {

@@ -29,10 +29,8 @@ class OASGenerator(object):
         else:
             self.rapier_spec = spec
         self.conventions = spec.get('conventions',{})     
-        if 'selector_location' in self.conventions:
-            if self.conventions['selector_location'] not in ['path-segment', 'path-parameter']:
-                sys.exit('error: invalid value for selector_location: %s' % self.selector_location)
-            self.relationship_separator = '/' if self.conventions['selector_location'] == 'path-segment' else ';'
+        if 'queryPathSelectorLocation' in self.conventions:
+            self.relationship_separator = '/' if self.conventions['queryPathSelectorLocation'] == 'path-segment' else ';'
         else:
             self.relationship_separator = ';'
         self.patch_consumes = as_list(self.conventions['patch_consumes']) if 'patch_consumes' in self.conventions else ['application/merge-patch+json']

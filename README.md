@@ -269,7 +269,7 @@ The following example should make this clearer.
 ```yaml
 title: Todo List API
 conventions:
-  selector_location: path-segment
+  queryPathSelectorLocation: path-segment
 entities:
   TodoList:
     wellKnownURLs: /
@@ -462,7 +462,7 @@ implementation_private_information | [Entities Private Extensions](#entities_pri
 
 Field Name | Type | Description
 ---|:---:|---
-selector_location | `string` | Either the string "path-segment" or "path-parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
+queryPathSelectorLocation | `string` | Either the string "path-segment" or "path-parameter". The default is "path-parameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
 patch_consumes | `string` | The media type used for PATCH requests. Default is `['application/merge-patch+json']`
 error_reponse | `schema` | the schema of the response for all error cases. the default is `{}`
 
