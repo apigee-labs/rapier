@@ -200,13 +200,13 @@ entities:
           $ref: '#/entities/Item'
 ```
 
-This API defines a single resource at the well_known_URL `/` whose type is `To_do_list`. You can see that each `To_do_list` has a relationship 
+This API defines a single resource at the well_known_URL `/` whose type is `ToDoList`. You can see that each `ToDoList` has a relationship 
 property called `todos`. In addition to declaring the entity type at the end of the relationship, we declare the type of the resource that will be used to hold the list of 
 entities of the relationship. This is specified in the `collectionResource` property. When `collectionResource` is present, the relationship property (`todos` in this case) is assumed to be
 a URL that will point to a resource of this type. Clients can perform a GET on this resource to obtain information on the entities of the
 relationship and can POST to make new ones.
 
-In JSON, the `To_do_list` at `/` will look like this:
+In JSON, the `ToDoList` at `/` will look like this:
 ```json
     {"todos": "http://example.org/xxxxx"}
 ```
@@ -306,7 +306,7 @@ entities:
           $ref: '#/entities/Item'
 ```                
 
-The combination of the `wellKnownURLs` and `queryPaths` properties of `To_do_list` implies that the following `Query URL` and URI template are valid:
+The combination of the `wellKnownURLs` and `queryPaths` properties of `ToDoList` implies that the following `Query URL` and URI template are valid:
 
     /todos
     /todos/{id}
