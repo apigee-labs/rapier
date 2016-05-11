@@ -30,7 +30,7 @@ class OASGenerator(object):
             self.rapier_spec = spec
         self.conventions = spec.get('conventions',{})     
         if 'queryPathSelectorLocation' in self.conventions:
-            self.relationship_separator = '/' if self.conventions['queryPathSelectorLocation'] == 'path-segment' else ';'
+            self.relationship_separator = '/' if self.conventions['queryPathSelectorLocation'] == 'pathSegment' else ';'
         else:
             self.relationship_separator = ';'
         self.patch_consumes = as_list(self.conventions['patchConsumes']) if 'patchConsumes' in self.conventions else ['application/merge-patch+json']

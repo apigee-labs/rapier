@@ -211,8 +211,8 @@ class OASValidator(object):
             self.error('readOnly must be a boolean: %s' % readOnly, key)
 
     def validate_conventions_queryPathSelectorLocation(self, node, key, location):
-        if not location in ['path-segment', 'path-parameter']:
-            self.error('%s must be either the string "path-segment" or "path-parameter"' % location)
+        if not location in ['pathSegment', 'pathParameter']:
+            self.error('%s must be either the string "pathSegment" or "pathParameter"' % location)
 
     def validate_conventions_patch_consumes(self, node, key, patch_consumes):
         if not isinstance(patch_consumes, basestring):

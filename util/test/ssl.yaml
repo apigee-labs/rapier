@@ -1,7 +1,7 @@
 title: SSL API
 version: "0.1"
 conventions:
-  queryPathSelectorLocation: path-segment
+  queryPathSelectorLocation: pathSegment
 entities:
   Environment:
     wellKnownURLs: /v1/o/{org}/e/{env}
