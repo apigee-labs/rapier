@@ -341,8 +341,7 @@ class OASGenerator(object):
 
             if produces:
                 interface[update_verb]['produces'] = produces if self.yaml_merge else produces[:]
-        well_known = entity_spec.get('wellKnownURLs')
-        if not well_known and deletable:        
+        if deletable:        
             interface['delete'] = {
                 'description': 'Delete %s' % articled(self.validator.resolve_included_entity_name(entity_uri)),
                 'responses': {
