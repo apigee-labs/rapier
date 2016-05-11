@@ -1038,16 +1038,16 @@ x-interfaces:
       parameters:
       - collectionFormat: multi
         in: query
+        name: status
+        required: false
+        type: integer
+      - collectionFormat: multi
+        in: query
         items:
           type: string
         name: tags
         required: false
         type: array
-      - collectionFormat: multi
-        in: query
-        name: status
-        required: false
-        type: integer
       responses:
         '200':
           description: description

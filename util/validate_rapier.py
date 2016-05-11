@@ -799,6 +799,7 @@ class OASValidator(object):
             with open(filename) as f:
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
+            self.error('unable to open file: %s' % filename)
             return None, e
         if self.rapier_spec is None:
             return None

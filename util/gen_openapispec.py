@@ -700,16 +700,16 @@ class OASGenerator(object):
                         new_param['items'] = param['items'].copy()
                     new_param['name'] = param_name
                     new_param['in'] = 'query'
-                    query_params.append(new_param)
+                    query_params[param_name] = new_param
             if 'oneOf' in entity:
                 for entity_ref in entity['oneOf']:
                     add_query_parameters(self.validator.resolve_included_entity_ref(entity_ref), query_params) 
-        query_parameters = []
+        query_parameters = dict()
         add_query_parameters(collection_entity, query_parameters)
         if 'queryParameters' in rel_property_spec.relationship:
             add_query_parameters(rel_property_spec.relationship, query_parameters)
         if query_parameters:
-            rslt['parameters'] = query_parameters
+            rslt['parameters'] = query_parameters.values()
         return rslt        
  
     def define_put_if_match_header(self):
