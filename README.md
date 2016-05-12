@@ -700,7 +700,7 @@ The generated OpenAPI specification is written to stdout. Errors and warnings ar
 
 Since rapier files can reference each other, the HTML files need to reference each other too. For these references, the HTML generator assumes that all the HTML
 files are generated in a parallel file directory structure of files with the same name as the rapier spec but with an html file extension. This means that links between
-HTML files will only work if they are all generated using the pattern `gen_html.py source-base-path/spec-file-name.yaml > target-base-path/spec-file-name.html` with the same value for `target-base-path` for each `spec-file-name`.
+HTML files will only work if they are all generated using the pattern `gen_html.py source-base-path/spec-file-name.yaml > target-base-path/spec-file-name.html` with the same value of `target-base-path` for each `spec-file-name`.
 
 ## <a name="validator">Validator
 
