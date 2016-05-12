@@ -665,7 +665,7 @@ The `--include-impl` option will generate, from the optional implementationPriva
 extra information that is otherwise ommitted from the output.
 
 The --suppress-templates option will generate paths but not templates. This simplifies the output a little for implementors who are only interested in the paths they need to implement. If you are generating for clients rather than implementors
-we con't recommend using this option.
+we don't recommend using this option.
 
 ### <a name="openapi_generator_output"></a>Understanding the output of the Rapier OpenAPI generator
 
