@@ -696,7 +696,11 @@ The Rapier HTML generator is implemented by `gen_html.py` in the util directory.
 
 The generated OpenAPI specification is written to stdout. Errors and warnings are written to stderr. The normal usage pattern is to pipe this output to a file, like this: 
 
-`gen_html.py my-rapier-spec.yaml > my-html.html`
+`gen_html.py my-rapier-spec.yaml > my-rapier-spec.html`
+
+Since rapier files can reference each other, the HTML files need to reference each other too. For these references, the HTML generator assumes that all the HTML
+files are generated in a parallel file directory structure of files with the same name as the rapier spec but with an html file extension. This means that links between
+HTML files will only work if they are all generated using the pattern `gen_html.py my-rapier-spec.yaml > some-base-path/my-rapier-spec.html` with the same value for `some-base-path`.
 
 ## <a name="validator">Validator
 
