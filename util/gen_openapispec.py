@@ -1342,14 +1342,17 @@ class QuerySegment(object):
             elif len(parts) == 2:
                 params_part = parts[1]
                 formatter = string.Formatter()
-                parsed_format = list(formatter.parse(params_part))
-                self.selectors = [{
-                    'property': parsed_format_part[1],
-                    'openapispec_param': parsed_format_part[1]
-                    } for parsed_format_part in parsed_format if parsed_format_part[1] is not None] 
-                if len(self.selectors) == 0:
-                    sys.exit('query segment %s must include {} element after ;' % query_segment)
-                selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
+                try:
+                    parsed_format = list(formatter.parse(params_part))
+                    self.selectors = [{
+                        'property': parsed_format_part[1],
+                        'openapispec_param': parsed_format_part[1]
+                        } for parsed_format_part in parsed_format if parsed_format_part[1] is not None] 
+                    if len(self.selectors) == 0:
+                        sys.exit('query segment %s must include {} element after ;' % query_segment)
+                    selector_template = ''.join([part[0] if part[1] is None else part[0] + '{%s}'%inx for inx, part in enumerate(parsed_format)])
+                except ValueError as e:
+                    sys.exit('error parsing query path segment: %s' % e)
             else:
                 sys.exit('query path segment contains more than 1 ; - %s' % query_segment_string)
             self.relationship = parts[0]
@@ -1369,7 +1372,7 @@ class QuerySegment(object):
             for selector in self.selectors:
                 property = self.generator.resolve_property(self.rel_property_spec.target_entity_uri, selector['property'])
                 if not property:
-                    sys.exit('Property named %s not found in Entity %s in file %s' % (selector['property'], self.rel_property_spec.target_entity_uri, self.generator.filename))
+                    sys.exit('Property named %s not found in Entity %s in file %s' % (selector['property'], self.rel_property_spec.target_entity_uri, self.generator.validator.filename))
                 rslt = {
                     'name': selector['openapispec_param'],
                     'in': 'path',
