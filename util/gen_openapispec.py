@@ -1,7 +1,6 @@
 #!/usr/bin/env python 
 
 import yaml, sys, getopt, itertools, string, re
-from collections import OrderedDict
 import validate_rapier
 from validate_rapier import PresortedOrderedDict
 import os
