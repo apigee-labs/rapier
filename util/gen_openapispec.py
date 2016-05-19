@@ -1443,7 +1443,7 @@ def main(args):
     generator = OASGenerator()
     usage = 'usage: gen_openapispec.py [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename'
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'mi', ['yaml-merge', 'include-impl'])
+        opts, args = getopt.getopt(sys.argv[1:], 'mit', ['yaml-merge', 'include-impl', 'suppress-templates'])
     except getopt.GetoptError as err:
         sys.exit(str(err) + '\n' + usage)
     if not len(args) == 1:
