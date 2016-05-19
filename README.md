@@ -390,7 +390,7 @@ entities:
   FahrenheitTemperature:
     type: number
     uriTemplates:
-      template: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
+    - template: /Fahrenheit{?Celsius} # or /Fahrenheit/{Celsius} if you prefer that URI pattern
       variables:
         Celsius:
           type: number
