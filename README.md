@@ -395,7 +395,7 @@ entities:
         Celsius:
           type: number
 ``` 
-or, more simply, if you don't care about the type of the variable:
+or, more simply, if you don't care about specifying the type of the variable:
 ```yaml
 entities:
   FahrenheitTemperature:
