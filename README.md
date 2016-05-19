@@ -364,6 +364,9 @@ In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), 
 Each of these resources is a "view" onto the larger `pet-collection-1` resource.
 There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
 
+Query Parameters can also be added to a relationship, rather than the resource the relationship references. In this case the query paramter is valid for that relationship URL, but not for other
+URLs that reference the same Entity.
+
 We have seen three common patterns for query parameters on entities:
 - parameters that are specific to querying a collection. Examples are `limit`, `orderBy`, `direction` (ascending | descending). These are essentially properties of the collection itself. 
 - a "projection" parameter that limits the fields being returned. In that case, the query parameter itself is not declared elsewhere, but its valid values would be declared properties of the entity. This pattern is used on regular entities as well as collections. 
