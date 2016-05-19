@@ -455,16 +455,17 @@ class OASGenerator(object):
                 interface['post']['responses'].update(self.build_post_responses())
             else:
                 interface['post']['responses']['<<'] = self.response_sets['post_responses']
-        interface['head'] = {
-                'description': 'Retrieve HEAD'
-                }
-        if not self.yaml_merge:
-            interface['head'].update(self.build_head_method())
-        else:
-            interface['head']['<<'] = self.methods['head']
+        if rel_property_spec.readable():
+            interface['head'] = {
+                    'description': 'Retrieve HEAD'
+                    }
+            if not self.yaml_merge:
+                interface['head'].update(self.build_head_method())
+            else:
+                interface['head']['<<'] = self.methods['head']
         interface['options'] = {
                 'description': 'Retrieve OPTIONS',
-               }
+            }
         if not self.yaml_merge:
             interface['options'].update(self.build_options_method())
         else:
