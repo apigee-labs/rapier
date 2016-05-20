@@ -1223,7 +1223,6 @@ class ImplementationPathSpec(PathPrefix):
             self.error('property name required between {} characters after %s in permalinkTemplate template %s' %(leading_parts[0] ,query_path_segment_string))
         else:
             self.implementation_url_variable_name = part[1]
-            self.implementation_url_variable_type = self.permalink_template.get('variables',{}).get(self.implementation_url_variable_name,{}).get('type','string')
 
     def path_segment(self, select_one_of_many = False):
         return self.permalink_template['template']
@@ -1231,9 +1230,9 @@ class ImplementationPathSpec(PathPrefix):
     def build_params(self):
         return [{
             'name': self.implementation_url_variable_name,
-            'description': 'This parameter is a private part of the implementation. It is not part of the API',
+            'description': self.permalink_template.get('variables',{}).get(self.implementation_url_variable_name,{}).get('description','This parameter is a private part of the implementation. It is not part of the API'),
             'in': 'path',
-            'type': self.implementation_url_variable_type,
+            'type': self.permalink_template.get('variables',{}).get(self.implementation_url_variable_name,{}).get('type','string'),
             'required': True
             }]
         
@@ -1245,7 +1244,7 @@ class ImplementationPathSpec(PathPrefix):
         
     def build_template_reference(self, query_path=None):
         rslt = super(ImplementationPathSpec, self).build_template_reference(query_path)
-        rslt['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'        
+        rslt['x-description'] = self.permalink_template.get('description', '*** This path is not part of the API - it is an implementation-private extension')        
         return rslt            
 
     def build_oas_path_spec(self, interface_id=None, path_spec=None, query_path=None):
@@ -1256,12 +1255,12 @@ class ImplementationPathSpec(PathPrefix):
                 self.build_template_reference(query_path)
             parameters = self.build_parameters(query_path)
             oas_path_spec = PresortedOrderedDict()
-            oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+            oas_path_spec['x-description'] = self.permalink_template.get('description', '*** This path is not part of the API - it is an implementation-private extension')
             oas_path_spec['parameters'] = parameters
             oas_path_spec['<<'] = self.generator.interfaces[interface_id]
         else:
             oas_path_spec = super(ImplementationPathSpec, self).build_oas_path_spec(interface_id, path_spec, query_path)
-            oas_path_spec['x-description'] = '*** This path is not part of the API - it is an implementation-private extension'
+            oas_path_spec['x-description'] = self.permalink_template.get('description', '*** This path is not part of the API - it is an implementation-private extension')
         return oas_path_spec
 
     def emit_openapi_element(self, query_path, rel_spec):
