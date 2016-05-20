@@ -33,6 +33,7 @@ class OASGenerator(object):
         else:
             self.relationship_separator = ';'
         self.patch_consumes = as_list(self.conventions['patchConsumes']) if 'patchConsumes' in self.conventions else ['application/merge-patch+json']
+        self.use_etag = self.conventions.get('useEtag', True) is True
         patterns = spec.get('patterns')
         self.openapispec = PresortedOrderedDict()
         if self.include_impl:
@@ -303,7 +304,6 @@ class OASGenerator(object):
             interface[update_verb] = {
                 'description': description,
                 'parameters': [
-                    {'$ref': parameter_ref}, 
                     {'name': 'body',
                     'in': 'body',
                     'description': body_desciption,
@@ -314,6 +314,8 @@ class OASGenerator(object):
                     '200': response_200 if self.yaml_merge else build_response_200()
                     }
                 }
+            if self.use_etag:
+                interface[update_verb]['parameters'].insert(0, {'$ref': parameter_ref})
             if not self.yaml_merge:
                 interface[update_verb]['responses'].update(self.build_put_patch_responses())
             else:
@@ -431,10 +433,6 @@ class OASGenerator(object):
                                 'type': 'string',
                                 'description': location_desciption
                                 },
-                            'ETag': {
-                                'type': 'string',
-                                'description': 'Value of ETag required for subsequent updates'
-                                },
                             'Content-Type': {
                                 'type': 'string',
                                 'description': 'The media type of the returned body'
@@ -443,6 +441,11 @@ class OASGenerator(object):
                         }
                     }                
                 }
+            if self.use_etag:
+                interface['post']['responses']['201']['headers']['ETag'] = {
+                     'type': 'string',
+                     'description': 'Value of ETag required for subsequent updates'
+                    }
             if self.include_impl and produces and len(produces)> 1:
                 interface['post']['responses']['201']['headers']['Vary'] = {
                     'type': 'string',
@@ -483,15 +486,17 @@ class OASGenerator(object):
             }
                     
     def build_put_patch_responses(self):
-        return  {
+        rslt = {
             '400': self.global_response_ref('400'),
             '401': self.global_response_ref('401'), 
             '403': self.global_response_ref('403'), 
             '404': self.global_response_ref('404'), 
             '406': self.global_response_ref('406'), 
-            '409': self.global_response_ref('409'),
             'default': self.global_response_ref('default')
-            }  
+            } 
+        if self.use_etag:
+            rslt['409'] = self.global_response_ref('409')
+        return rslt
 
     def build_delete_responses(self):
         return  {
@@ -569,16 +574,17 @@ class OASGenerator(object):
                     'type': 'string',
                     'description': 'perma-link URL of resource'
                     },
-                'ETag': {
-                    'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
-                    'type': 'string'
-                    },
                 'Content-Type': {
                     'type': 'string',
                     'description': 'The media type of the returned body'
                     }
                 }
             }
+        if self.use_etag:
+            rslt['headers']['ETag'] = \
+                {'description': 'this value must be echoed in the If-Match header of every PATCH or PUT',
+                 'type': 'string'
+                }
         if self.include_impl and produces and len(produces)> 1:
             rslt['headers']['Vary'] = {
                 'type': 'string',
@@ -588,7 +594,7 @@ class OASGenerator(object):
         return rslt
 
     def build_standard_responses(self):
-        return {
+        rslt = {
             'standard_200': self.build_standard_200(),
             'options_200': {
                 'description': 'successful',
@@ -640,15 +646,17 @@ class OASGenerator(object):
                 'description': 'Not Acceptable. Requested media type not available',
                 'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
-            '409': {
-                'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
-                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
-                }, 
             'default': {
                 'description': '5xx errors and other stuff',
                 'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }
             }
+        if self.use_etag: 
+            rslt['409'] = \
+                {'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
+                 'schema': self.error_response if self.yaml_merge else self.error_response.copy()
+                }
+        return rslt
         
     def build_collection_get(self, rel_property_spec, produces):
         collection_entity_uri = rel_property_spec.collection_resource
@@ -712,7 +720,7 @@ class OASGenerator(object):
         return rslt        
  
     def define_put_if_match_header(self):
-        if not 'Put-If-Match' in self.header_parameters:
+        if self.use_etag and not 'Put-If-Match' in self.header_parameters:
             self.header_parameters['Put-If-Match'] = {
                 'name': 'If-Match',
                 'in': 'header',
@@ -722,14 +730,7 @@ class OASGenerator(object):
                 }
     
     def build_standard_header_parameters(self):
-        return {
-            'If-Match': {
-                'name': 'If-Match',
-                'in': 'header',
-                'type': 'string',
-                'description': 'specifies the last known ETag value of the resource being modified',
-                'required': True
-                },
+        rslt = {
             'Accept': {
                 'name': 'Accept',
                 'in': 'header',
@@ -752,6 +753,15 @@ class OASGenerator(object):
                 'type': 'string'
                 }
             }
+        if self.use_etag:
+            rslt['If-Match'] = {
+                'name': 'If-Match',
+                'in': 'header',
+                'type': 'string',
+                'description': 'specifies the last known ETag value of the resource being modified',
+                'required': True
+                }
+        return rslt
                 
     def resolve_ref_uri(self, ref_uri):
         if ref_uri.startswith('#/'):
@@ -1141,9 +1151,9 @@ class URITemplateSpec(PathPrefix):
     OPERATOR = "+#./;?&|!@"
 
     def __init__(self, uri_template, entity_uri, generator):
-        self.uri_template = uri_template
-        self.template_string = uri_template['template'] 
-        self.template_variables = uri_template.get('variables', {})
+        self.uri_template = uri_template if hasattr(uri_template, 'keys') else {'template': uri_template}
+        self.template_string = self.uri_template['template'] 
+        self.template_variables = self.uri_template.get('variables', {})
         self.entity_uri = entity_uri
         self.generator = generator
         split = self.template_string.split('{?')
@@ -1195,7 +1205,7 @@ class URITemplateSpec(PathPrefix):
 class ImplementationPathSpec(PathPrefix):
     
     def __init__(self, permalink_template, entity_uri, generator):
-        self.permalink_template = permalink_template 
+        self.permalink_template = permalink_template if hasattr(permalink_template, 'keys') else {'template': permalink_template}
         self.entity_uri = entity_uri
         self.generator = generator
         template = self.permalink_template['template']

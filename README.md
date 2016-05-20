@@ -473,6 +473,7 @@ Field Name | Type | Description
 queryPathSelectorLocation | `string` | Either the string "pathSegment" or "pathParameter". The default is "pathParameter". This controls whether the selector for a multi-valued relationship appears in a separate path segment of the URL, or as a path parameter in the same path segment as the relationship name.
 patchConsumes | `string` | The media type used for PATCH requests. Default is `['application/merge-patch+json']`
 errorResponse | `schema` | the schema of the response for all error cases. the default is `{}`
+useEtag | `boolean` | Whether or not the ETag and If-Match headers are used to detect update collisions. default is True
 
 #### <a name="entities"></a>Entities
 

@@ -204,7 +204,11 @@ class OASValidator(object):
 
     def validate_readOnly(self, node, key, readOnly):
         if not (readOnly is True or readOnly is False) :
-            self.error('id must be a boolean: %s' % readOnly, key)
+            self.error('readOnly must be a boolean: %s' % readOnly, key)
+
+    def validate_useEtag(self, node, key, readOnly):
+        if not (readOnly is True or readOnly is False) :
+            self.error('useEtag must be a boolean: %s' % readOnly, key)
 
     def validate_entity_readOnly(self, node, key, readOnly):
         if not (readOnly is True or readOnly is False) :
@@ -666,6 +670,7 @@ class OASValidator(object):
     conventions_keywords = {
         'queryPathSelectorLocation': validate_conventions_queryPathSelectorLocation,
         'patchConsumes': validate_conventions_patch_consumes,
+        'useEtag': validate_useEtag,
         'errorResponse': validate_conventions_error_response}
     relationship_keywords = {
         'entities': validate_relationship_entities, 
