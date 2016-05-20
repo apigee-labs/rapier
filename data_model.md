@@ -8,7 +8,7 @@ entities:
       mother:
         type: string
         format: uri
-        relationship: '#Child'
+        relationship: '#Mother'
 ```
 In Rapier, this is a shorthand syntax for this:
 ```yaml
@@ -20,7 +20,7 @@ entities:
       mother:
         type: string
         format: uri
-        relationship: '#Child'
+        relationship: '#Mother'
 ```
 The URI of the Mother entity is `<baseURL>#Mother`. This is why the line `relationship: '#Child'` is valid - `#Mother` is a valid URI reference.
 
@@ -41,7 +41,7 @@ entities:
       mother:
         type: string
         format: uri
-        relationship: '#Child'
+        relationship: '#Mother'
 implementationPrivateInformation:
   Child:
     permalinkTemplate:
@@ -54,15 +54,15 @@ This means that `#/implementationPrivateInformation/Child` is providing addition
 The API could also have been described as follows, although Rapier does not currently allow this syntax (maybe it should):
 
 ```yaml
-- kind: 'https://github.com/apigee-labs/rapier/ns#Entity'
+- isA: 'https://github.com/apigee-labs/rapier/ns#Entity'
   id: '#Mother'
-- kind: 'https://github.com/apigee-labs/rapier/ns#Entity'
+- isA: 'https://github.com/apigee-labs/rapier/ns#Entity'
   id: '#Child'
   properties:
   - name: mother
     type: string
     format: uri
-    relationship: '#Child'
+    relationship: '#Mother'
   permalinkTemplate:
     template: /c3Rvc-Z3Jw-{implementation_key} 
     type: integer
