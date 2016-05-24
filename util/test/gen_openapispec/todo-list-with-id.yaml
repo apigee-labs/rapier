@@ -48,6 +48,7 @@ x-interfaces:
       - description: The subset of properties of the Item being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Item'
       responses:
@@ -233,6 +234,7 @@ x-interfaces:
       - description: The representation of the new Item being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Item'
       - description: The media type of the body

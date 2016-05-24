@@ -46,6 +46,7 @@ x-interfaces:
       - description: The representation of the Image being replaced
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Image'
       responses:
@@ -189,6 +190,7 @@ x-interfaces:
       - description: The subset of properties of the Order being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Order'
       responses:
@@ -321,6 +323,7 @@ x-interfaces:
       - description: The subset of properties of the Pet being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Pet'
       responses:
@@ -445,6 +448,7 @@ x-interfaces:
       - description: The representation of the new Image being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Image'
       - description: The media type of the body
@@ -541,6 +545,7 @@ x-interfaces:
       - description: The representation of the new Image being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Image'
       - description: The media type of the body
@@ -645,6 +650,7 @@ x-interfaces:
       - description: The subset of properties of the Session being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Session'
       responses:
@@ -777,6 +783,7 @@ x-interfaces:
       - description: The subset of properties of the Store being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Store'
       responses:
@@ -903,6 +910,7 @@ x-interfaces:
       - description: The representation of the new Session being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Login'
       - description: The media type of the body
@@ -999,6 +1007,7 @@ x-interfaces:
       - description: The representation of the new Order being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Order'
       - description: The media type of the body
@@ -1108,6 +1117,7 @@ x-interfaces:
       - description: The representation of the new Pet being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Pet'
       - description: The media type of the body
@@ -1204,6 +1214,7 @@ x-interfaces:
       - description: The representation of the new User being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/User'
       - description: The media type of the body
@@ -1308,6 +1319,7 @@ x-interfaces:
       - description: The subset of properties of the User being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/User'
       responses:

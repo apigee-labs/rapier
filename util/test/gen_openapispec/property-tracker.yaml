@@ -48,6 +48,7 @@ x-interfaces:
       - description: The subset of properties of the Bicycle being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Bicycle'
       responses:
@@ -180,6 +181,7 @@ x-interfaces:
       - description: The subset of properties of the Dog being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Dog'
       responses:
@@ -312,6 +314,7 @@ x-interfaces:
       - description: The subset of properties of the Institution being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Institution'
       responses:
@@ -436,6 +439,7 @@ x-interfaces:
       - description: The representation of the new Dog or Bicycle being created
         in: body
         name: body
+        required: true
         schema:
           x-oneOf:
           - $ref: '#/definitions/Dog'
@@ -544,6 +548,7 @@ x-interfaces:
       - description: The subset of properties of the Person being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Person'
       responses:
@@ -668,6 +673,7 @@ x-interfaces:
       - description: The representation of the new Dog or Bicycle being created
         in: body
         name: body
+        required: true
         schema:
           x-oneOf:
           - $ref: '#/definitions/Dog'
@@ -829,6 +835,7 @@ x-interfaces:
       - description: The representation of the new Bicycle being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Bicycle'
       - description: The media type of the body
@@ -925,6 +932,7 @@ x-interfaces:
       - description: The representation of the new Dog being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Dog'
       - description: The media type of the body
@@ -1021,6 +1029,7 @@ x-interfaces:
       - description: The representation of the new Institution being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Institution'
       - description: The media type of the body
@@ -1117,6 +1126,7 @@ x-interfaces:
       - description: The representation of the new Person being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Person'
       - description: The media type of the body

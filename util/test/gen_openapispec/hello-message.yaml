@@ -48,6 +48,7 @@ x-interfaces:
       - description: The subset of properties of the HelloMessage being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/HelloMessage'
       responses:

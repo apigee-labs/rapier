@@ -48,6 +48,7 @@ x-interfaces:
       - description: The subset of properties of the Dog being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Dog'
       responses:
@@ -233,6 +234,7 @@ x-interfaces:
       - description: The representation of the new Dog being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Dog'
       - description: The media type of the body
@@ -329,6 +331,7 @@ x-interfaces:
       - description: The representation of the new Person being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Person'
       - description: The media type of the body
@@ -433,6 +436,7 @@ x-interfaces:
       - description: The subset of properties of the Person being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Person'
       responses:
@@ -557,6 +561,7 @@ x-interfaces:
       - description: The representation of the new Dog being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Dog'
       - description: The media type of the body

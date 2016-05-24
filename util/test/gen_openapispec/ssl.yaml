@@ -48,6 +48,7 @@ x-interfaces:
       - description: The subset of properties of the Alias being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Alias'
       responses:
@@ -302,6 +303,7 @@ x-interfaces:
       - description: The subset of properties of the Environment being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Environment'
       responses:
@@ -426,6 +428,7 @@ x-interfaces:
       - description: The representation of the new Keystore being created
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Keystore'
       - description: The media type of the body
@@ -530,6 +533,7 @@ x-interfaces:
       - description: The subset of properties of the Keystore being updated
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/Keystore'
       responses:
@@ -657,6 +661,7 @@ x-interfaces:
       - description: The representation of the new Alias being created
         in: body
         name: body
+        required: true
         schema:
           x-oneOf:
           - $ref: '#/definitions/Pkcs12Alias'

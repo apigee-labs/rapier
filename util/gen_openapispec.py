@@ -307,7 +307,8 @@ class OASGenerator(object):
                     {'name': 'body',
                     'in': 'body',
                     'description': body_desciption,
-                    'schema': schema
+                    'schema': schema,
+                    'required': True
                     }
                     ],
                 'responses': { 
@@ -415,7 +416,8 @@ class OASGenerator(object):
                     {'name': 'body',
                      'in': 'body',
                      'description': body_desciption,
-                     'schema': post_schema
+                     'schema': post_schema,
+                     'required': True
                     },
                     {'name': 'Content-Type',
                      'in': 'header',
