@@ -364,7 +364,7 @@ In the language of [RFC 6570](https://tools.ietf.org/html/rfc6570#section-2.4), 
 Each of these resources is a "view" onto the larger `pet-collection-1` resource.
 There is a different Rapier capability—[URI Templates](#templates)—that allows you to define a family of sibling resources, rather than subset resources.  
 
-Query Parameters can also be added to a relationship, rather than the resource the relationship references. In this case the query paramter is valid for that relationship URL, but not for other
+Query Parameters can also be added to a relationship, rather than the resource the relationship references. In this case the query parameter is valid for that relationship URL, but not for other
 URLs that reference the same Entity.
 
 We have seen three common patterns for query parameters on entities:
