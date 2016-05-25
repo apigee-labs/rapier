@@ -561,6 +561,7 @@ multiplicity | `string` | The multiplicity of the relationship. The value is of 
 collectionResource | `url` | May only be set if the relationship is multi-valued. Its value is the URL of a JSON Schema for the 'collection-like' resource that represents the multi-valued relationship. The 'collection-like' resource should include, at a minimum, the URLs of the entities in the relationship.
 readOnly | "true" or "false" | For multi-valued relationships, says whether a POST is valid. default is `false`
 consumes | `string` or [Relationship Consumes](#relationship_consumes) | Specifies the media types and entities that can be POSTed to a multi-valued relationship. If the value is a string, it is a single media-type or a space-delimited list of media types
+queryParameters | [Query Parameters](#query_parameters) | Query parameters are used to form the URLs of a set of smaller "view entities" that subset a multi-valued relationship collection. If there is a collection at the URL http://example/org/collection1, and it has query parameters a and b, then http://example/org/collection1?a=value1&b=value2 are collections that provide a subset of the data of http://example/org/collection1. If there are queryParameters specified for the collection entity itself, the set of valid queryParameters for the relationship is the the union of the two sets.
 
 #### <a name="relationship_consumes"></a>Relationship Consumes
 
