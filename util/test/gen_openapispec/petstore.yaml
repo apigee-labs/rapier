@@ -1075,8 +1075,7 @@ x-interfaces:
   Store.pets:
     get:
       parameters:
-      - collectionFormat: multi
-        in: query
+      - in: query
         name: status
         required: false
         type: integer

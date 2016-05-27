@@ -351,7 +351,6 @@ entities:
         required: false
       status:
         type: integer
-        collectionFormat: multi
         required: false
     readOnly: true
 ```
