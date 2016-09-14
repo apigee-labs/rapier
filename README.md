@@ -92,7 +92,7 @@ Rapier generation utilities are available as a command installed using `pip inst
 
 Rapier is available as a command installed using `pip install rapier` or `easy_install rapier`. 
 
-The usage is `rapier [-v, --validate] [-p, --gen-python] [-j --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename`
+The usage is `rapier [-v, --validate] [-p, --gen-python] [-j, --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename`
 
 `rapier myRapierSpec.yaml` will write an OpenAPI (formerly known as Swagger) document to stdout.
  
