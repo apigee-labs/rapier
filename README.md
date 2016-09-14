@@ -86,7 +86,7 @@ Renamed snake_case properties to match camelCase style of JSON Schema.
 
 September 14, 2016:
 
-Rapier genenration utilities are available as a command installed using `pip install rapier` or `easy_install rapier`.
+Rapier generation utilities are available as a command installed using `pip install rapier` or `easy_install rapier`.
 
 ## <a name="install"></a>Install
 
