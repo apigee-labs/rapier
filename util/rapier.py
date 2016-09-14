@@ -6,7 +6,7 @@ from gen_js_sdk import main as gen_js_main
 from gen_py_sdk import main as gen_py_main
 
 def main():
-    usage = 'usage: rapier [-v, --validate] [-p, --gen-python] [-j --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename'
+    usage = 'usage: rapier [-v, --validate] [-p, --gen-python] [-j, --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename'
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'vpjmit', ['validate', 'gen-python', 'gen-js', 'yaml-merge', 'include-impl', 'suppress-templates'])
     except getopt.GetoptError as err:
