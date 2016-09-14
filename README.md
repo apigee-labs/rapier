@@ -94,9 +94,12 @@ Rapier is available as a command installed using `pip install rapier` or `easy_i
 
 The usage is `rapier [-v, --validate] [-p, --gen-python] [-j, --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename`
 
-`rapier myRapierSpec.yaml` will write an OpenAPI (formerly known as Swagger) document to stdout. See [OpenAPI Generator](#oas_generator) for a description of other flag that can be used here. 
+`rapier myRapierSpec.yaml` will write an OpenAPI (formerly known as Swagger) document to stdout. See [OpenAPI Generator](#oas_generator) for a description of other flag that can be used here.
+
 `rapier -p myRapierSpec.yaml` will write an python SDK file to stdout.
+
 `rapier -j myRapierSpec.yaml` will write a JavaScripot SDK file to stdout.
+
 `rapier -v myRapierSpec.yaml` will write a JavaScripot SDK file to stdout.
  
 ## <a name="tutorial"></a>Tutorial
