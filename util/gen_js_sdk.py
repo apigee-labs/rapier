@@ -80,8 +80,8 @@ def as_list(value, separator = None):
     
 def main(args):
     generator = ClientGenerator()
-    generator.set_rapier_spec_from_filename(*args[1:])
+    generator.set_rapier_spec_from_filename(args[0])
     generator.client_from_rapier()
         
 if __name__ == "__main__":
-    main(sys.argv)
+    main(sys.argv[1:])
