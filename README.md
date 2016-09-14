@@ -9,6 +9,7 @@
     <td><a href="#introduction">Introduction</a></td>
     <td><a href="#news">News</a></td>
     <td><a href="#tutorial">Tutorial</a></td>
+    <td><a href="#install">Install</a></td>
     <td><a href="#specification">Specification</a></td>
   </tr>
   <tr>
@@ -82,6 +83,18 @@ Added support for [URI Templates](#templates).
 May 4, 2016:
 
 Renamed snake_case properties to match camelCase style of JSON Schema.
+
+September 14, 2016:
+
+Rapier genenration utilities are available as a command installed using `pip install rapier` or `easy_install rapier`.
+
+## <a name="install"></a>Install
+
+Rapier is available as a command installed using `pip install rapier` or `easy_install rapier`. 
+
+The usage is `rapier [-v, --validate] [-p, --gen-python] [-j --gen-js] [-m, --yaml-merge] [-i, --include-impl] [-t --suppress-templates] filename`
+
+`rapier myRapierSpec.yaml` will write an OpenAPI (formerly known as Swagger) document to stdout.
  
 ## <a name="tutorial"></a>Tutorial
 
