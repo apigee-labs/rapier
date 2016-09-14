@@ -38,7 +38,7 @@ Rapier takes a data-oriented approach to API design, which aligns with the model
 an API is a network of HTTP resources identified and located using URLs, you should be comfortable with Rapier. If you think of a web API
 as a set of 'end-points' with 'parameters' (a traditional service-oriented or RPC model), the Rapier approach may not resonate with you.
 
-While Rapier APIs conform to the constraints of REST, including the provision of hypermedia links, Rapier APIs do not require clients
+While Rapier APIs conform to the constraints of REST, including the provision of links in the data, Rapier APIs do not require clients
 to be written in any special way—most clients of Rapier APIs are quite conventional <a href="#footnote2" id="ref2"><sup>2</sup></a>. Rapier does
 not require or promote any particular hypermedia format—any method of representing URLs that can be described with [JSON Schema](http://json-schema.org/)
 is compatible with Rapier.
@@ -57,9 +57,9 @@ Rapier also includes SDK generators for Javascript and Python, a validator and a
 “Blaauw and I believe that consistency underlies all principles. A good architecture is consistent in the sense that, given a partial knowledge of the system, one can predict 
 the remainder” - Fred Brooks, "The Design of Design", 2010. <a href="#ref1">↩</a>
 
-<a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully hyperlinked, in the sense that any resource that a client can address
-by composing URLs can usually also be reached by following hyperlinks. [There can be exceptions for unbounded sets of related resources, where complete hyperlinking is not possible.] It is thus possible to write a general client that
-has no a-priori knowledge of any specific Rapier API and navigates APIs only by following hyperlinks. General software is more difficult to design and
+<a name="footnote2"><sup>2</sup></a> All Rapier APIs are fully linked, in the sense that any resource that a client can address
+by composing URLs can also be reached by following links. [There can be exceptions for unbounded sets of related resources, where complete linking is not possible.] It is thus possible to write a general client that
+has no a-priori knowledge of any specific Rapier API and navigates APIs only by following links. General software is more difficult to design and
 write than specific software—we believe clients that work this way are written primarily when their costs, like those of browsers and web bots, can be 
 amortized across many APIs and the cost and time to code to each API specifically is prohibitive. The primary reason for basing Rapier APIs on
 hypermedia is to make APIs that are easier to understand and learn and to make all clients easier to write—supporting 
@@ -271,9 +271,9 @@ entities:
 
 ### <a name="query_paths"></a>Query Paths
  
-So far we have seen examples of APIs that are easy to navigate by following hyperlinks. Rapier also supports `Query URLs` in an API. `Query URLs` allow the client to
+So far we have seen examples of APIs that are easy to navigate by following links. Rapier also supports `Query URLs` in an API. `Query URLs` allow the client to
 locate a particular resource directly without navigating the web of resources from the root to find it.
-In contrast to hyperlinks, which are intended to be opaque to clients, query URLs have formats that clients are expected to understand in order to compose them. Hyperlinks are
+In contrast to links, which are intended to be opaque to clients, query URLs have formats that clients are expected to understand in order to compose them. Links are
 expected to be stable over time—you should be able to safely bookmark them or store them in a database, and when you recover them and reuse them, they should identify the same permanent entity. 
 By contrast, query URLs, as the name implies, may return variable results over time, or may fail altogether in the future, as data changes. For this reason, in most cases, it will be inappropriate to bookmark query URLs or to
 store them in databases.
@@ -325,7 +325,7 @@ The combination of the `wellKnownURLs` and `queryPaths` properties of `ToDoList`
     /todos/{id}
 
 The provision of
-hyperlinks in the resources themselves reduces the need for query URLs compared with an API that lacks hyperlinks, but there are still situations where query URLs are important.
+links in the resources themselves reduces the need for query URLs compared with an API that lacks links, but there are still situations where query URLs are important.
 The meaning of the first URL is "the resource that is referenced by the `todos` property of the resource at `/`". In other words, we are starting at `/`
 and following the `todos` relationship declared in the data model, but without having to retrieve the resource at `/`. 
 The second URI template indicates that we can form a query URL by appending the value of the `id` property of an `Item` on to the end 
@@ -388,7 +388,7 @@ We have seen three common patterns for query parameters on entities and multi-va
 
 URI Templates are used to define a family of resources of the same entity type whose URLs are similar except for some variable elements of the URL. 
 The client must learn the URI Template and use it to "manufacture" a URL by sustituting variable values.
-URI Templates are often used when the number of resources is unbounded, so that it is impossible or impractical to provide hyperlinks for them all.
+URI Templates are often used when the number of resources is unbounded, so that it is impossible or impractical to provide links for them all.
 Suppose for example that I have an API that provides a Fahrenheit resource for every Celsius value. For the Celsius value `19.7234`, the URL of the 
 corresponding Fahrenheit resource might be `http://example.org/Fahrenheit/19.7234` or `http://example.org/Fahrenheit?Celsius=19.7234`, according to your API style preference. 
 This is this is not an application of the [Query Parameters](#t_query_parameter) feature above, because there is no larger resource at 
