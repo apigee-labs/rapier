@@ -1,4 +1,4 @@
-# Rapier - REST APIs from Entities and Relationships
+<h1 align="center">Rapier - REST APIs from Entities and Relationships</h1>
 
 <div>
 <p align="center"><img src='https://raw.githubusercontent.com/apigee-labs/rapier/master/RapierThumb.jpg'></p>
