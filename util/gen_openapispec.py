@@ -20,7 +20,7 @@ class OASGenerator(object):
 
     def openAPI_spec_from_rapier(self, filename):
         self.validator = validate_rapier.OASValidator()
-        spec, errors = self.validator.validate(filename)
+        spec, errors = self.validator.validate(filename, None)
         if errors > 0:
             sys.exit('Validation of %s failed. OpenAPI spec generation not attempted' % filename)
         elif spec is None:
@@ -394,21 +394,21 @@ class OASGenerator(object):
         if rel_property_spec.postable():
             if len(rel_property_specs) > 1:
                 schema = {}
-                schema['x-oneOf'] = [self.global_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
+                schema['x-oneOf'] = [self.referenced_definition_ref(spec.target_entity_uri) for spec in rel_property_specs]
                 i201_description = 'Created new %s' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
                 location_desciption =  'perma-link URL of newly-created %s' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
                 body_desciption =  'The representation of the new %s being created' % ' or '.join([self.validator.resolve_referenced_entity_name(spec.target_entity_uri) for spec in rel_property_specs])
             else:    
-                schema = self.global_definition_ref(entity_uri)
+                schema = self.referenced_definition_ref(entity_uri)
                 i201_description = 'Created new %s' % self.validator.resolve_referenced_entity_name(entity_uri)
                 location_desciption = 'perma-link URL of newly-created %s'  % self.validator.resolve_referenced_entity_name(entity_uri)
                 body_desciption =  'The representation of the new %s being created' % self.validator.resolve_referenced_entity_name(entity_uri) 
             if len(consumes_entities) > 1:
                 post_schema = {}
-                post_schema['x-oneOf'] = [self.global_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
+                post_schema['x-oneOf'] = [self.referenced_definition_ref(consumes_entity) for consumes_entity in consumes_entities]
                 description = 'Create a new %s' % ' or '.join([self.validator.resolve_referenced_entity_name(rel_prop_spec.target_entity_uri) for rel_prop_spec in rel_property_specs])
             else:
-                post_schema = self.global_definition_ref(consumes_entities[0])
+                post_schema = self.referenced_definition_ref(consumes_entities[0])
                 description = 'Create a new %s' % self.validator.resolve_referenced_entity_name(consumes_entities[0])
             interface['post'] = {
                 'description': description,
@@ -567,6 +567,24 @@ class OASGenerator(object):
 
     def global_definition_ref(self, key):
         return {'$ref': self.openapispec_uri_map[key]}
+        
+    def referenced_definition_ref(self, key):
+        if key in self.openapispec_uri_map:
+            return {'$ref': self.openapispec_uri_map[key]}
+        else: 
+            #print >> sys.stderr, 'need to handle references to entities in external files'
+            #print key
+            abs_filename, entityname = key.split('#')
+            for validator in self.validator.referenced_spec_validators.itervalues():
+                if abs_filename == validator.abs_filename:
+                    filename_parts = validator.filename.split('.')
+                    if len(filename_parts) > 1:
+                        filename_parts.insert(-1, 'oas')
+                    else:
+                        filename_parts.append('oas')
+                    return {'$ref': '%s#/definitions/%s' % ('.'.join(filename_parts), entityname)}
+            print 'internal error - failed to resolve reference %s' % key
+            sys.exit(-1)
         
     def build_standard_200(self, produces=None):
         rslt = {

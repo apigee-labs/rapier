@@ -462,19 +462,6 @@ definitions:
     x-oneOf:
     - $ref: '#/definitions/Collection'
     - $ref: '#/definitions/Page'
-  Collection:
-    allOf:
-    - $ref: '#/definitions/Resource'
-    properties:
-      kind:
-        type: string
-        enum:
-        - Collection
-      items:
-        type: array
-        items:
-          type: object
-    readOnly: true
   Resource:
     type: object
     properties:
@@ -520,6 +507,19 @@ definitions:
         x-interface: common.yaml#/x-interfaces/Page
     readOnly: true
     x-interface: common.yaml#/x-interfaces/Page
+  Collection:
+    allOf:
+    - $ref: '#/definitions/Resource'
+    properties:
+      kind:
+        type: string
+        enum:
+        - Collection
+      items:
+        type: array
+        items:
+          type: object
+    readOnly: true
 parameters:
   Accept:
     description: specifies the requested media type - required

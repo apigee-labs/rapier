@@ -738,7 +738,8 @@ class OASValidator(object):
         else:
             if abs_namespace_url not in validators:
                 validator = OASValidator()
-                spec, errors = validator.validate(abs_namespace_url)
+                rel_spec_url = entity_url.split('#')[0]
+                spec, errors = validator.validate(rel_spec_url, self.abs_directoryname)
                 if spec is None:
                     return None, errors
                 if errors > 0:
@@ -796,12 +797,16 @@ class OASValidator(object):
             self.included_entities[abs_url] = entity
         return abs_url, entity
 
-    def validate(self, filename):
+    def validate(self, filename, abs_base_directory):
         self.filename = filename
-        self.abs_filename = os.path.abspath(filename)
-        self.abs_directoryname = os.path.dirname(self.abs_filename)
+        if abs_base_directory != None:
+            self.abs_directoryname = abs_base_directory
+            self.abs_filename = self.abs_url(filename)
+        else:
+            self.abs_filename = os.path.abspath(filename)
+            self.abs_directoryname = os.path.dirname(self.abs_filename)
         try:
-            with open(filename) as f:
+            with open(self.abs_filename) as f:
                 self.rapier_spec = self.marked_load(f.read())
         except IOError as e:
             self.error('unable to open file: %s' % filename)
