@@ -276,6 +276,8 @@ class OASValidator(object):
         if node.get('format') != 'uri':
             self.error('relationship properties must have "format: uri"', key)
         if hasattr(relationship, 'keys'):
+            if relationship.get('entities') is None:
+              self.error('relationship must have property "entities"', key)
             self.check_and_validate_keywords(self.__class__.relationship_keywords, relationship, key)
         elif isinstance(relationship, basestring):
             self.validate_relationship_entities(node, key, relationship)
@@ -299,7 +301,7 @@ class OASValidator(object):
             
     def validate_relationship_multiplicity(self, node, key, multiplicity):
         if not isinstance(multiplicity, basestring):
-            self.error('relationship multiplicity mut be a string %s' %s, key)
+            self.error('relationship multiplicity mut be a string %s' % multiplicity, key)
         else:
             parts = multiplicity.split(':')
             if len(parts) == 1:

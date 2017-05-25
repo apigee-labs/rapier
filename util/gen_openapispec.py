@@ -494,10 +494,11 @@ class OASGenerator(object):
             '403': self.global_response_ref('403'), 
             '404': self.global_response_ref('404'), 
             '406': self.global_response_ref('406'), 
+            '409': self.global_response_ref('409'), 
             'default': self.global_response_ref('default')
             } 
         if self.use_etag:
-            rslt['409'] = self.global_response_ref('409')
+            rslt['412'] = self.global_response_ref('412')
         return rslt
 
     def build_delete_responses(self):
@@ -517,6 +518,7 @@ class OASGenerator(object):
             '403': self.global_response_ref('403'), 
             '404': self.global_response_ref('404'), 
             '406': self.global_response_ref('406'), 
+            '409': self.global_response_ref('409'), 
             'default': self.global_response_ref('default')
             }
 
@@ -666,14 +668,18 @@ class OASGenerator(object):
                 'description': 'Not Acceptable. Requested media type not available',
                 'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }, 
+            '409': {
+                'description': 'Conflict. May be a duplicate',
+                'schema': self.error_response if self.yaml_merge else self.error_response.copy()
+                }, 
             'default': {
                 'description': '5xx errors and other stuff',
                 'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }
             }
         if self.use_etag: 
-            rslt['409'] = \
-                {'description': 'Conflict. Value provided in If-Match header does not match current ETag value of resource',
+            rslt['412'] = \
+                {'description': 'Precondition Failed. Value provided in If-Match header does not match current ETag value of resource',
                  'schema': self.error_response if self.yaml_merge else self.error_response.copy()
                 }
         return rslt
