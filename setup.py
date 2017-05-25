@@ -6,7 +6,7 @@ setup(
     entry_points = {
         'console_scripts': ['rapier = util.rapier:main']
         },
-    version = '0.0.3',
+    version = '0.0.4',
     description = 'Generate OpenAPI specification from Rapier specification',
     long_description = 'Generate OpenAPI specification from Rapier specification',
     author = 'Martin Nally',
