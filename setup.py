@@ -12,5 +12,5 @@ setup(
     author = 'Martin Nally',
     author_email = 'mnally@apigee.com',
     url = 'https://github.com/apigee-labs/rapier',
-    install_requires = ['PyYAML==3.11']
+    install_requires = ['PyYAML==5.1']
     )
